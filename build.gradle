@@ -2,14 +2,19 @@ buildscript {
     repositories {
         jcenter()
     }
-    
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jlleitschuh.gradle:ktlint-gradle:$ktlint_version"
     }
+}
+
+plugins {
+    id 'com.github.autostyle' version '3.1'
 }
 
 apply plugin: 'kotlin'
 apply plugin: 'application'
+apply plugin: 'org.jlleitschuh.gradle.ktlint-idea'
 
 group 'com.lunatech'
 version '0.0.1'
@@ -45,4 +50,29 @@ dependencies {
     implementation "io.github.config4k:config4k:$config4k_version"
     implementation "org.postgresql:postgresql:$postgresql_version"
     testImplementation "io.ktor:ktor-server-tests:$ktor_version"
+}
+
+autostyle {
+    kotlin {
+        // optionally takes a version
+        ktlint()
+        // Optional user arguments can be set as such:
+        ktlint {
+            userData(['indent_size': '2', 'continuation_indent_size' : '2'])
+        }
+        trimTrailingWhitespace()
+        indentWithSpaces()
+        endWithNewline()
+    }
+    kotlinGradle {
+        // same as kotlin, but for .gradle.kts files (defaults to '*.gradle.kts')
+        filter.include 'additionalScripts/*.gradle.kts'
+
+        ktlint()
+
+        // Optional user arguments can be set as such:
+        ktlint {
+            userData(['indent_size': '2', 'continuation_indent_size' : '2'])
+        }
+    }
 }

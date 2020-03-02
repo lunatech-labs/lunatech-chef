@@ -13,7 +13,7 @@
   is_gluten_intolerant BOOLEAN NOT NULL DEFAULT FALSE,
   is_lactose_intolerant BOOLEAN NOT NULL DEFAULT FALSE,
   other_restriction TEXT,
-  is_deleted Boolean DEFAULT false,
+  is_deleted Boolean NOT NULL,
   CONSTRAINT users_pkey PRIMARY KEY (uuid),
   CONSTRAINT users_locations FOREIGN KEY (location) REFERENCES locations (uuid) MATCH FULL
 );

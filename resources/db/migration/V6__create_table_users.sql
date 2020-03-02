@@ -1,7 +1,7 @@
  CREATE TABLE users (
   uuid UUID NOT NULL,
-  name TEXT NOT NULL,
-  email_address TEXT NOT NULL,
+  name VARCHAR(100) NOT NULL,
+  email_address VARCHAR(100) NOT NULL,
   is_admin BOOLEAN NOT NULL DEFAULT FALSE,
   location UUID NOT NULL,
   is_inactive BOOLEAN NOT NULL DEFAULT FALSE,
@@ -12,8 +12,8 @@
   has_beef_restriction BOOLEAN NOT NULL DEFAULT FALSE,
   is_gluten_intolerant BOOLEAN NOT NULL DEFAULT FALSE,
   is_lactose_intolerant BOOLEAN NOT NULL DEFAULT FALSE,
-  other_restriction TEXT,
-  is_deleted Boolean NOT NULL,
+  other_restriction VARCHAR(100),
+  is_deleted BOOLEAN NOT NULL,
   CONSTRAINT users_pkey PRIMARY KEY (uuid),
   CONSTRAINT users_locations FOREIGN KEY (location) REFERENCES locations (uuid) MATCH FULL
 );

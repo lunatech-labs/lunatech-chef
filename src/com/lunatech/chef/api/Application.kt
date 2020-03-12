@@ -1,7 +1,13 @@
 package com.lunatech.chef.api
 
 import com.lunatech.chef.api.persistence.DBEvolution
+import com.lunatech.chef.api.persistence.Database
+import com.lunatech.chef.api.persistence.FlywayConfig
+import com.lunatech.chef.api.persistence.schemas.Locations
+import com.typesafe.config.ConfigFactory
 import io.ktor.application.Application
+import me.liuwj.ktorm.dsl.from
+import me.liuwj.ktorm.dsl.select
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -9,7 +15,16 @@ fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 @kotlin.jvm.JvmOverloads
 fun Application.module(testing: Boolean = false) {
 
-    DBEvolution.runDBMigration()
+    val flywayConfig = FlywayConfig.fromConfig(
+        ConfigFactory.load().getConfig("flyway")
+    )
+
+    DBEvolution.runDBMigration(flywayConfig)
+
+    // TODO singletons? injection?
+    val database = Database.connect(flywayConfig)
+
+    database.from(Locations).select().map { Locations.createEntity(it) }.map { println() }
 
     // install(CORS) {
     //     method(HttpMethod.Options)

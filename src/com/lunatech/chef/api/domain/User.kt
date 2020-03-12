@@ -16,6 +16,6 @@ data class User(
   val hasBeefRestriction: Boolean = false,
   val isGlutenIntolerant: Boolean = false,
   val isLactoseIntolerant: Boolean = false,
-  val otherRestriction: Boolean = false,
+  val otherRestriction: String = "",
   val isDeleted: Boolean = false
 )

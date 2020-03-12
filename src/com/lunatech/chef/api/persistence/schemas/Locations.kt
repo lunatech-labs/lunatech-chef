@@ -1,13 +1,22 @@
 package com.lunatech.chef.api.persistence.schemas
 
-import me.liuwj.ktorm.schema.Table
+import com.lunatech.chef.api.domain.Location
+import me.liuwj.ktorm.dsl.QueryRowSet
+import me.liuwj.ktorm.schema.BaseTable
 import me.liuwj.ktorm.schema.boolean
 import me.liuwj.ktorm.schema.uuid
 import me.liuwj.ktorm.schema.varchar
 
-object Locations : Table<Location>("locations") {
-    val uuid by uuid("uuid").primaryKey().bindTo { it.uuid }
-    val city by varchar("city").bindTo { it.city }
-    val country by varchar("country").bindTo { it.country }
-    val isDeleted by boolean("is_deleted").bindTo { it.isDeleted }
+object Locations : BaseTable<Location>("locations") {
+    val uuid by uuid("uuid").primaryKey()
+    val city by varchar("city")
+    val country by varchar("country")
+    val isDeleted by boolean("is_deleted")
+
+    override fun doCreateEntity(row: QueryRowSet, withReferences: Boolean) = Location(
+        uuid = row[uuid] ?: DEFAULT_UUID,
+        city = row[city] ?: DEFAULT_STRING,
+        country = row[country] ?: DEFAULT_STRING,
+        isDeleted = row[isDeleted] ?: DEFAULT_FALSE
+    )
 }

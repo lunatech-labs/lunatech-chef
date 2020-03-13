@@ -1,11 +1,33 @@
 package com.lunatech.chef.api
 
+import com.fasterxml.jackson.databind.SerializationFeature
 import com.lunatech.chef.api.persistence.DBEvolution
 import com.lunatech.chef.api.persistence.Database
 import com.lunatech.chef.api.persistence.FlywayConfig
 import com.lunatech.chef.api.persistence.schemas.Locations
+import com.lunatech.chef.api.routes.healthCheck
+import com.lunatech.chef.api.routes.locations
 import com.typesafe.config.ConfigFactory
 import io.ktor.application.Application
+import io.ktor.application.call
+import io.ktor.application.install
+import io.ktor.auth.Authentication
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.apache.Apache
+import io.ktor.client.features.logging.LogLevel
+import io.ktor.client.features.logging.Logging
+import io.ktor.features.CORS
+import io.ktor.features.ContentNegotiation
+import io.ktor.features.StatusPages
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpMethod
+import io.ktor.http.HttpStatusCode
+import io.ktor.jackson.jackson
+import io.ktor.response.respond
+import io.ktor.response.respondText
+import io.ktor.routing.get
+import io.ktor.routing.routing
 import me.liuwj.ktorm.dsl.from
 import me.liuwj.ktorm.dsl.select
 
@@ -22,9 +44,8 @@ fun Application.module(testing: Boolean = false) {
     DBEvolution.runDBMigration(flywayConfig)
 
     // TODO singletons? injection?
-    val database = Database.connect(flywayConfig)
-
-    database.from(Locations).select().map { Locations.createEntity(it) }.map { println() }
+    // val database = Database.connect(flywayConfig)
+    // database.from(Locations).select().map { Locations.createEntity(it) }.map { println() }
 
     // install(CORS) {
     //     method(HttpMethod.Options)
@@ -36,40 +57,43 @@ fun Application.module(testing: Boolean = false) {
     //     allowCredentials = true
     //     anyHost() // @TODO: Don't do this in production if possible. Try to limit it.
     // }
-    //
+
     // install(Authentication) {
     // }
-    //
-    // install(ContentNegotiation) {
-    //     jackson {
-    //         enable(SerializationFeature.INDENT_OUTPUT)
-    //     }
+
+    install(ContentNegotiation) {
+        jackson {
+            enable(SerializationFeature.INDENT_OUTPUT)
+        }
+    }
+
+    // install(StatusPages) {
+        // exception<AuthenticationException> { cause ->
+        //     call.respond(HttpStatusCode.Unauthorized)
+        // }
+        // exception<AuthorizationException> { cause ->
+        //     call.respond(HttpStatusCode.Forbidden)
+        // }
     // }
-    //
-    // val client = HttpClient(Apache) {
-    //     install(Logging) {
-    //         level = LogLevel.HEADERS
-    //     }
-    // }
-    //
-    // routing {
-    //     get("/") {
-    //         call.respondText("HELLO WORLD!", contentType = ContentType.Text.Plain)
-    //     }
-    //
-    //     install(StatusPages) {
-    //         exception<AuthenticationException> { cause ->
-    //             call.respond(HttpStatusCode.Unauthorized)
-    //         }
-    //         exception<AuthorizationException> { cause ->
-    //             call.respond(HttpStatusCode.Forbidden)
-    //         }
-    //     }
-    //
-    //     get("/json/jackson") {
-    //         call.respond(mapOf("hello" to "world"))
-    //     }
-    // }
+
+    val client = HttpClient(Apache) {
+        install(Logging) {
+            level = LogLevel.HEADERS
+        }
+    }
+
+    routing {
+        healthCheck()
+        // locations()
+
+        get("/") {
+            call.respondText("Hello world!", contentType = ContentType.Text.Plain)
+        }
+
+        // get("/json/jackson") {
+        //     call.respond(mapOf("hello" to "world"))
+        // }
+    }
 }
 
 // class AuthenticationException : RuntimeException()

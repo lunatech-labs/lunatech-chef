@@ -1,12 +1,12 @@
 package com.lunatech.chef.api.persistence.schemas
 
 import com.lunatech.chef.api.domain.Schedule
+import java.time.LocalDate
 import me.liuwj.ktorm.dsl.QueryRowSet
 import me.liuwj.ktorm.schema.BaseTable
 import me.liuwj.ktorm.schema.boolean
 import me.liuwj.ktorm.schema.date
 import me.liuwj.ktorm.schema.uuid
-import java.time.LocalDate
 
 object Schedules : BaseTable<Schedule>("schedules") {
     val uuid by uuid("uuid").primaryKey()

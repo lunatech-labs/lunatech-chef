@@ -41,6 +41,7 @@ dependencies {
     implementation "io.ktor:ktor-server-host-common:$ktor_version"
     implementation "io.ktor:ktor-auth:$ktor_version"
     implementation "io.ktor:ktor-jackson:$ktor_version"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jackson_module_version"
     implementation "io.ktor:ktor-client-core:$ktor_version"
     implementation "io.ktor:ktor-client-core-jvm:$ktor_version"
     implementation "io.ktor:ktor-client-apache:$ktor_version"

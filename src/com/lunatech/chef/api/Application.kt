@@ -8,11 +8,13 @@ import com.lunatech.chef.api.persistence.services.DishesOnMenusService
 import com.lunatech.chef.api.persistence.services.DishesService
 import com.lunatech.chef.api.persistence.services.LocationsService
 import com.lunatech.chef.api.persistence.services.MenusService
+import com.lunatech.chef.api.persistence.services.SchedulesService
 import com.lunatech.chef.api.routes.dishes
 import com.lunatech.chef.api.routes.dishesOnMenus
 import com.lunatech.chef.api.routes.healthCheck
 import com.lunatech.chef.api.routes.locations
 import com.lunatech.chef.api.routes.menus
+import com.lunatech.chef.api.routes.schedules
 import com.typesafe.config.ConfigFactory
 import io.ktor.application.Application
 import io.ktor.application.call
@@ -23,8 +25,9 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.jackson.jackson
 import io.ktor.response.respondText
-import io.ktor.routing.get
 import io.ktor.routing.routing
+import com.fasterxml.jackson.datatype.jsr310.*
+import io.ktor.jackson.JacksonConverter
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -42,6 +45,7 @@ fun Application.module(testing: Boolean = false) {
     val dishesService = DishesService(dbConnection)
     val menusService = MenusService(dbConnection)
     val dishesOnMenusService = DishesOnMenusService(dbConnection)
+    val schedulesService = SchedulesService(dbConnection)
 
     // install(CORS) {
     //     method(HttpMethod.Options)
@@ -59,7 +63,8 @@ fun Application.module(testing: Boolean = false) {
 
     install(ContentNegotiation) {
         jackson {
-            enable(SerializationFeature.INDENT_OUTPUT)
+            configure(SerializationFeature.INDENT_OUTPUT, true)
+            registerModule(JavaTimeModule())  // support java.time.* types
         }
     }
     install(StatusPages) {
@@ -86,6 +91,7 @@ fun Application.module(testing: Boolean = false) {
         dishes(dishesService)
         menus(menusService)
         dishesOnMenus(dishesOnMenusService)
+        schedules(schedulesService)
     }
 }
 

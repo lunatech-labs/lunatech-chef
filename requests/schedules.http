@@ -1,0 +1,46 @@
+POST {{ host }}/schedules
+Content-Type: application/json
+
+{ "uuid" : "{{ $uuid }}",
+  "menuUuid": "bc868425-74c4-4c74-9cb0-ec789d8d474d",
+  "date": "2020-04-20",
+  "location": "61edaf14-b018-4ffa-afba-dc5844426176",
+  "isDeleted": "false"
+}
+
+###
+
+POST {{ host }}/schedules
+Content-Type: application/json
+
+{ "uuid" : "4403ce6b-24b5-40b2-8482-211a1da7731f",
+  "menuUuid": "bc868425-74c4-4c74-9cb0-ec789d8d474d",
+  "date": "2020-04-20",
+  "location": "61edaf14-b018-4ffa-afba-dc5844426176",
+  "isDeleted": "false"
+}
+
+###
+
+GET {{ host }}/schedules
+
+###
+
+GET {{ host }}/schedules/4403ce6b-24b5-40b2-8482-211a1da7731f
+
+###
+
+PUT {{ host }}/schedules/4403ce6b-24b5-40b2-8482-211a1da7731f
+Content-Type: application/json
+
+{ "menuUuid": "bc868425-74c4-4c74-9cb0-ec789d8d474d",
+  "date": "2020-04-25",
+  "location": "61edaf14-b018-4ffa-afba-dc5844426176"
+}
+
+###
+
+DELETE {{ host }}/schedules/4403ce6b-24b5-40b2-8482-211a1da7731f
+
+###
+

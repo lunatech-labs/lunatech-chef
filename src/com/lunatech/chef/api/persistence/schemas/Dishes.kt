@@ -12,6 +12,7 @@ object Dishes : BaseTable<Dish>("dishes") {
     val name by varchar("name")
     val description by varchar("description")
     val isVegetarian by boolean("is_vegetarian")
+    val hasNuts by boolean("has_nuts")
     val hasSeafood by boolean("has_seafood")
     val hasPork by boolean("has_pork")
     val hasBeef by boolean("has_beef")
@@ -23,7 +24,8 @@ object Dishes : BaseTable<Dish>("dishes") {
         uuid = row[uuid] ?: DEFAULT_UUID,
         name = row[name] ?: DEFAULT_STRING,
         description = row[description] ?: DEFAULT_STRING,
-        isVegetarian = row[isVegetarian] ?: DEFAULT_FALSE,
+        isVegetarian = row[hasNuts] ?: DEFAULT_FALSE,
+        hasNuts = row[isVegetarian] ?: DEFAULT_FALSE,
         hasSeafood = row[hasSeafood] ?: DEFAULT_FALSE,
         hasPork = row[hasPork] ?: DEFAULT_FALSE,
         hasBeef = row[hasBeef] ?: DEFAULT_FALSE,

@@ -3,6 +3,7 @@ CREATE TABLE dishes (
   name VARCHAR(100) NOT NULL,
   description VARCHAR(200) NOT NULL,
   is_vegetarian BOOLEAN NOT NULL,
+  has_nuts BOOLEAN NOT NULL,
   has_seafood BOOLEAN NOT NULL,
   has_pork BOOLEAN NOT NULL,
   has_beef BOOLEAN NOT NULL,

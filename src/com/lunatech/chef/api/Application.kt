@@ -27,7 +27,8 @@ import io.ktor.jackson.jackson
 import io.ktor.response.respondText
 import io.ktor.routing.routing
 import com.fasterxml.jackson.datatype.jsr310.*
-import io.ktor.jackson.JacksonConverter
+import com.lunatech.chef.api.persistence.services.UsersService
+import com.lunatech.chef.api.routes.users
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -46,6 +47,7 @@ fun Application.module(testing: Boolean = false) {
     val menusService = MenusService(dbConnection)
     val dishesOnMenusService = DishesOnMenusService(dbConnection)
     val schedulesService = SchedulesService(dbConnection)
+    val usersService = UsersService(dbConnection)
 
     // install(CORS) {
     //     method(HttpMethod.Options)
@@ -92,6 +94,7 @@ fun Application.module(testing: Boolean = false) {
         menus(menusService)
         dishesOnMenus(dishesOnMenusService)
         schedules(schedulesService)
+        users(usersService)
     }
 }
 

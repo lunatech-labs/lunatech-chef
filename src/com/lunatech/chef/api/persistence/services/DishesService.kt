@@ -24,6 +24,7 @@ class DishesService(val database: Database) {
             it.name to dish.name
             it.description to dish.description
             it.isVegetarian to dish.isVegetarian
+            it.hasNuts to dish.hasNuts
             it.hasSeafood to dish.hasSeafood
             it.hasPork to dish.hasPork
             it.hasBeef to dish.hasBeef
@@ -37,6 +38,7 @@ class DishesService(val database: Database) {
             it.name to dish.name
             it.description to dish.description
             it.isVegetarian to dish.isVegetarian
+            it.hasNuts to dish.hasNuts
             it.hasSeafood to dish.hasSeafood
             it.hasPork to dish.hasPork
             it.hasBeef to dish.hasBeef

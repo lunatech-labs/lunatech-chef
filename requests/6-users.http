@@ -1,0 +1,77 @@
+POST {{ host }}/users
+Content-Type: application/json
+
+{ "uuid" : "{{ $uuid }}",
+  "name": "Leonor",
+  "emailAddress": "leonor.boga@lunatech.nl",
+  "isAdmin": "true",
+  "location": "61edaf14-b018-4ffa-afba-dc5844426176",
+  "isInactive": "false",
+  "isVegetarian": "false",
+  "hasNutsRestriction": "false",
+  "hasSeafoodRestriction": "false",
+  "hasPorkRestriction": "true",
+  "hasBeefRestriction": "false",
+  "isGlutenIntolerant": "false",
+  "isLactoseIntolerant": "false",
+  "otherRestriction": "",
+  "isDeleted": "false"
+}
+
+###
+
+POST {{ host }}/users
+Content-Type: application/json
+
+{ "uuid" : "f0daa634-8ec7-4fef-88c7-a92d608b6eea",
+  "name": "Leonor",
+  "emailAddress": "leonor.boga@lunatech.nl",
+  "isAdmin": "true",
+  "location": "61edaf14-b018-4ffa-afba-dc5844426176",
+  "isInactive": "false",
+  "isVegetarian": "false",
+  "hasNutsRestriction": "false",
+  "hasSeafoodRestriction": "false",
+  "hasPorkRestriction": "true",
+  "hasBeefRestriction": "false",
+  "isGlutenIntolerant": "false",
+  "isLactoseIntolerant": "false",
+  "otherRestriction": "",
+  "isDeleted": "false"
+}
+
+###
+
+GET {{ host }}/users
+
+###
+
+GET {{ host }}/users/f0daa634-8ec7-4fef-88c7-a92d608b6eea
+
+###
+
+PUT {{ host }}/users/f0daa634-8ec7-4fef-88c7-a92d608b6eea
+Content-Type: application/json
+
+{
+  "name": "Leonor",
+  "emailAddress": "leonor.boga@lunatech.nl",
+  "isAdmin": "true",
+  "location": "61edaf14-b018-4ffa-afba-dc5844426176",
+  "isInactive": "false",
+  "isVegetarian": "false",
+  "hasNutsRestriction": "false",
+  "hasSeafoodRestriction": "false",
+  "hasPorkRestriction": "true",
+  "hasBeefRestriction": "false",
+  "isGlutenIntolerant": "false",
+  "isLactoseIntolerant": "true",
+  "otherRestriction": "I like vegetarian food a lot"
+}
+
+###
+
+DELETE {{ host }}/users/f0daa634-8ec7-4fef-88c7-a92d608b6eea
+
+###
+

@@ -17,11 +17,11 @@ import java.util.UUID
 data class UpdatedMenu(val name: String)
 
 fun Routing.menus(menusService: MenusService) {
-    val menuRoute = "/menus"
+    val menusRoute = "/menus"
     val uuidRoute = "/{uuid}"
     val uuidParam = "uuid"
 
-    route(menuRoute) {
+    route(menusRoute) {
         // get all menus
         get {
             val menus = menusService.getAll()

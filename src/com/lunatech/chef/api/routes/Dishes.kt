@@ -18,6 +18,7 @@ data class UpdatedDish(
   val name: String,
   val description: String = "",
   val isVegetarian: Boolean = false,
+  val hasNuts: Boolean = false,
   val hasSeafood: Boolean = false,
   val hasPork: Boolean = false,
   val hasBeef: Boolean = false,

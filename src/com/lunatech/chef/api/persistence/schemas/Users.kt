@@ -13,7 +13,6 @@ object Users : BaseTable<User>("users") {
     val emailAddress by varchar("email_address")
     val isAdmin by boolean("is_admin")
     val location by uuid("location")
-    val isInactive by boolean("is_inactive")
     val isVegetarian by boolean("is_vegetarian")
     val hasNutsRestriction by boolean("has_nuts_restriction")
     val hasSeafoodRestriction by boolean("has_seafood_restriction")
@@ -22,6 +21,7 @@ object Users : BaseTable<User>("users") {
     val isGlutenIntolerant by boolean("is_gluten_intolerant")
     val isLactoseIntolerant by boolean("is_lactose_intolerant")
     val otherRestriction by varchar("other_restriction")
+    val isInactive by boolean("is_inactive")
     val isDeleted by boolean("is_deleted")
 
     override fun doCreateEntity(row: QueryRowSet, withReferences: Boolean) = User(
@@ -30,7 +30,6 @@ object Users : BaseTable<User>("users") {
         emailAddress = row[emailAddress] ?: DEFAULT_STRING,
         isAdmin = row[isAdmin] ?: DEFAULT_FALSE,
         location = row[location] ?: DEFAULT_UUID,
-        isInactive = row[isInactive] ?: DEFAULT_FALSE,
         isVegetarian = row[isVegetarian] ?: DEFAULT_FALSE,
         hasNutsRestriction = row[hasNutsRestriction] ?: DEFAULT_FALSE,
         hasSeafoodRestriction = row[hasSeafoodRestriction] ?: DEFAULT_FALSE,
@@ -39,6 +38,7 @@ object Users : BaseTable<User>("users") {
         isGlutenIntolerant = row[isGlutenIntolerant] ?: DEFAULT_FALSE,
         isLactoseIntolerant = row[isLactoseIntolerant] ?: DEFAULT_FALSE,
         otherRestriction = row[otherRestriction] ?: DEFAULT_STRING,
+        isInactive = row[isInactive] ?: DEFAULT_FALSE,
         isDeleted = row[isDeleted] ?: DEFAULT_FALSE
     )
 }

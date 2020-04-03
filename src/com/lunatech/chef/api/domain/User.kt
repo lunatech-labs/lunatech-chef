@@ -8,7 +8,6 @@ data class User(
   val emailAddress: String,
   val isAdmin: Boolean,
   val location: UUID,
-  val isInactive: Boolean = false,
   val isVegetarian: Boolean = false,
   val hasNutsRestriction: Boolean = false,
   val hasSeafoodRestriction: Boolean = false,
@@ -17,5 +16,6 @@ data class User(
   val isGlutenIntolerant: Boolean = false,
   val isLactoseIntolerant: Boolean = false,
   val otherRestriction: String = "",
+  val isInactive: Boolean = false,
   val isDeleted: Boolean = false
 )

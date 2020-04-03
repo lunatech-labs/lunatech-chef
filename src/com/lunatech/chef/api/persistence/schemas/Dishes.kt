@@ -7,7 +7,7 @@ import me.liuwj.ktorm.schema.boolean
 import me.liuwj.ktorm.schema.uuid
 import me.liuwj.ktorm.schema.varchar
 
-object Dishes : BaseTable<Dish>("dish") {
+object Dishes : BaseTable<Dish>("dishes") {
     val uuid by uuid("uuid").primaryKey()
     val name by varchar("name")
     val description by varchar("description")

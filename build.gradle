@@ -35,8 +35,8 @@ repositories {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation "io.ktor:ktor-server-netty:$ktor_version"
     implementation "ch.qos.logback:logback-classic:$logback_version"
+    implementation "io.ktor:ktor-server-netty:$ktor_version"
     implementation "io.ktor:ktor-server-core:$ktor_version"
     implementation "io.ktor:ktor-server-host-common:$ktor_version"
     implementation "io.ktor:ktor-auth:$ktor_version"
@@ -50,7 +50,12 @@ dependencies {
     implementation "io.github.config4k:config4k:$config4k_version"
     implementation "org.postgresql:postgresql:$postgresql_version"
     implementation "me.liuwj.ktorm:ktorm-core:$ktorm_version"
+    implementation "uy.kohesive.injekt:injekt-core:$injekt_version"
     testImplementation "io.ktor:ktor-server-tests:$ktor_version"
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions.freeCompilerArgs += ["-Xuse-experimental=io.ktor.locations.KtorExperimentalLocationsAPI"]
 }
 
 autostyle {

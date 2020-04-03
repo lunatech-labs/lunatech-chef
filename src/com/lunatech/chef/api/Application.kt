@@ -4,8 +4,13 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.lunatech.chef.api.persistence.DBEvolution
 import com.lunatech.chef.api.persistence.Database
 import com.lunatech.chef.api.persistence.FlywayConfig
+import com.lunatech.chef.api.persistence.services.DishesService
+import com.lunatech.chef.api.persistence.services.LocationsService
+import com.lunatech.chef.api.persistence.services.MenusService
+import com.lunatech.chef.api.routes.dishes
 import com.lunatech.chef.api.routes.healthCheck
 import com.lunatech.chef.api.routes.locations
+import com.lunatech.chef.api.routes.menus
 import com.typesafe.config.ConfigFactory
 import io.ktor.application.Application
 import io.ktor.application.call
@@ -29,15 +34,15 @@ fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 @kotlin.jvm.JvmOverloads
 fun Application.module(testing: Boolean = false) {
 
-    val flywayConfig = FlywayConfig.fromConfig(
-        ConfigFactory.load().getConfig("flyway")
+    val dbConfig = FlywayConfig.fromConfig(
+        ConfigFactory.load().getConfig("database")
     )
+    runDBEvolutions(dbConfig)
 
-    DBEvolution.runDBMigration(flywayConfig)
-
-    // TODO singletons? injection?
-    val database = Database.connect(flywayConfig)
-    // database.from(Locations).select().map { Locations.createEntity(it) }.map { println() }
+    val dbConnection = Database.connect(dbConfig)
+    val locationsService = LocationsService(dbConnection)
+    val dishesService = DishesService(dbConnection)
+    val menusService = MenusService(dbConnection)
 
     // install(CORS) {
     //     method(HttpMethod.Options)
@@ -58,7 +63,6 @@ fun Application.module(testing: Boolean = false) {
             enable(SerializationFeature.INDENT_OUTPUT)
         }
     }
-
     install(StatusPages) {
         exception<Throwable> { e ->
             call.respondText(e.localizedMessage, ContentType.Text.Plain, HttpStatusCode.InternalServerError)
@@ -71,21 +75,21 @@ fun Application.module(testing: Boolean = false) {
         // }
     }
 
-    val client = HttpClient(Apache) {
-        install(Logging) {
-            level = LogLevel.HEADERS
-        }
-    }
+    // val client = HttpClient(Apache) {
+    //     install(Logging) {
+    //         level = LogLevel.HEADERS
+    //     }
+    // }
 
     routing {
         healthCheck()
-        locations(database)
-
-        get("/") {
-            call.respondText("Hello world!", contentType = ContentType.Text.Plain)
-        }
+        locations(locationsService)
+        dishes(dishesService)
+        menus(menusService)
     }
 }
+
+fun runDBEvolutions(flywayConfig: FlywayConfig) = DBEvolution.runDBMigration(flywayConfig)
 
 // class AuthenticationException : RuntimeException()
 // class AuthorizationException : RuntimeException()

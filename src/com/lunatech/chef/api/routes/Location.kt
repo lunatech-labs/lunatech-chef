@@ -1,27 +1,64 @@
+
 package com.lunatech.chef.api.routes
 
 import com.lunatech.chef.api.domain.Location
-import com.lunatech.chef.api.persistence.schemas.Locations
+import com.lunatech.chef.api.persistence.services.LocationsService
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.Routing
+import io.ktor.routing.delete
+import io.ktor.routing.get
 import io.ktor.routing.post
-import me.liuwj.ktorm.database.Database
-import me.liuwj.ktorm.dsl.insert
+import io.ktor.routing.put
+import io.ktor.routing.route
+import java.util.UUID
 
-fun Routing.locations(database: Database) {
-    post("/locations") {
-        val newLocation = call.receive<Location>()
+data class UpdatedLocation(val city: String, val country: String)
 
-        val result = database.insert(Locations) {
-            it.uuid to newLocation.uuid
-            it.city to newLocation.city
-            it.country to newLocation.country
-            it.isDeleted to newLocation.isDeleted
+fun Routing.locations(locationsService: LocationsService) {
+    val locationsRoute = "/locations"
+    val uuidRoute = "/{uuid}"
+    val uuidParam = "uuid"
+
+    route(locationsRoute) {
+        // get all locations
+        get {
+            val locations = locationsService.getAll()
+            call.respond(HttpStatusCode.OK, locations)
+        }
+        // create a new single location
+        post {
+            val newLocation = call.receive<Location>()
+            val inserted = locationsService.insert(newLocation)
+            if (inserted == 1) call.respond(HttpStatusCode.Created) else call.respond(HttpStatusCode.InternalServerError)
         }
 
-        if (result == 1) call.respond(HttpStatusCode.Created) else call.respond(HttpStatusCode.InternalServerError)
+        route(uuidRoute) {
+            // get single location
+            get {
+                val uuid = call.parameters[uuidParam]
+                val locations = locationsService.getByUuid(UUID.fromString(uuid))
+                if (locations.isEmpty()) {
+                    call.respond(HttpStatusCode.NotFound)
+                } else {
+                    call.respond(HttpStatusCode.OK, locations.first())
+                }
+            }
+            // modify existing location
+            put {
+                val uuid = call.parameters[uuidParam]
+                val updatedLocation = call.receive<UpdatedLocation>()
+                val result = locationsService.update(UUID.fromString(uuid), updatedLocation)
+                if (result == 1) call.respond(HttpStatusCode.OK) else call.respond(HttpStatusCode.InternalServerError)
+            }
+            // delete a single location
+            delete {
+                val uuid = call.parameters[uuidParam]
+                val result = locationsService.delete(UUID.fromString(uuid))
+                if (result == 1) call.respond(HttpStatusCode.OK) else call.respond(HttpStatusCode.InternalServerError)
+            }
+        }
     }
 }

@@ -1,0 +1,31 @@
+POST {{host}}/menus
+Content-Type: application/json
+
+{ "uuid" : "bc868425-74c4-4c74-9cb0-ec789d8d474d",
+  "name": "Menu italiano",
+  "isDeleted": "false"
+}
+
+###
+
+GET {{host}}/menus
+
+###
+
+GET {{host}}/menus/bc868425-74c4-4c74-9cb0-ec789d8d474d
+
+###
+
+PUT {{host}}/menus/bc868425-74c4-4c74-9cb0-ec789d8d474d
+Content-Type: application/json
+
+{
+  "name": "Menu lasagna italiana"
+}
+
+###
+
+DELETE {{host}}/menus/bc868425-74c4-4c74-9cb0-ec789d8d474d
+
+###
+

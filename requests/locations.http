@@ -1,0 +1,31 @@
+POST {{host}}/locations
+Content-Type: application/json
+
+{ "uuid" : "61edaf14-b018-4ffa-afba-dc5844426176",
+  "city": "Rotterdam",
+  "country": "Netherlands"
+}
+
+###
+
+GET {{host}}/locations
+
+###
+
+GET {{host}}/locations/61edaf14-b018-4ffa-afba-dc5844426176
+
+###
+
+PUT {{host}}/locations/61edaf14-b018-4ffa-afba-dc5844426176
+Content-Type: application/json
+
+{
+  "city": "Rotterdam",
+  "country": "The Netherlands"
+}
+
+###
+
+DELETE {{host}}/locations/61edaf14-b018-4ffa-afba-dc5844426176
+
+###

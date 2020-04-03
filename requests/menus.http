@@ -1,4 +1,14 @@
-POST {{host}}/menus
+POST {{ host }}/menus
+Content-Type: application/json
+
+{ "uuid" : "{{ $uuid }}",
+  "name": "Menu italiano",
+  "isDeleted": "false"
+}
+
+###
+
+POST {{ host }}/menus
 Content-Type: application/json
 
 { "uuid" : "bc868425-74c4-4c74-9cb0-ec789d8d474d",
@@ -8,15 +18,15 @@ Content-Type: application/json
 
 ###
 
-GET {{host}}/menus
+GET {{ host }}/menus
 
 ###
 
-GET {{host}}/menus/bc868425-74c4-4c74-9cb0-ec789d8d474d
+GET {{ host }}/menus/bc868425-74c4-4c74-9cb0-ec789d8d474d
 
 ###
 
-PUT {{host}}/menus/bc868425-74c4-4c74-9cb0-ec789d8d474d
+PUT {{ host }}/menus/bc868425-74c4-4c74-9cb0-ec789d8d474d
 Content-Type: application/json
 
 {
@@ -25,7 +35,7 @@ Content-Type: application/json
 
 ###
 
-DELETE {{host}}/menus/bc868425-74c4-4c74-9cb0-ec789d8d474d
+DELETE {{ host }}/menus/bc868425-74c4-4c74-9cb0-ec789d8d474d
 
 ###
 

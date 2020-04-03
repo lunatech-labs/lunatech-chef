@@ -1,4 +1,21 @@
-POST {{host}}/dishes
+POST {{ host }}/dishes
+Content-Type: application/json
+
+{ "uuid" : "{{ $uuid }}",
+  "name": "Lasagna",
+  "description": "Lasagna de ragu e espinafres",
+  "isVegetarian": "false",
+  "hasSeafood": "false",
+  "hasPork": "true",
+  "hasBeef": "false",
+  "isGlutenFree": "false",
+  "hasLactose": "false",
+  "isDeleted": "false"
+}
+
+###
+
+POST {{ host }}/dishes
 Content-Type: application/json
 
 { "uuid" : "7399b112-59a2-44d7-bd95-c4df1dfd63e9",
@@ -15,15 +32,15 @@ Content-Type: application/json
 
 ###
 
-GET {{host}}/dishes
+GET {{ host }}/dishes
 
 ###
 
-GET {{host}}/dishes/7399b112-59a2-44d7-bd95-c4df1dfd63e9
+GET {{ host }}/dishes/7399b112-59a2-44d7-bd95-c4df1dfd63e9
 
 ###
 
-PUT {{host}}/dishes/7399b112-59a2-44d7-bd95-c4df1dfd63e9
+PUT {{ host }}/dishes/7399b112-59a2-44d7-bd95-c4df1dfd63e9
 Content-Type: application/json
 
 {
@@ -39,7 +56,7 @@ Content-Type: application/json
 
 ###
 
-DELETE {{host}}/dishes/7399b112-59a2-44d7-bd95-c4df1dfd63e9
+DELETE {{ host }}/dishes/7399b112-59a2-44d7-bd95-c4df1dfd63e9
 
 ###
 

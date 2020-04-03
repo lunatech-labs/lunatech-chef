@@ -4,10 +4,12 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.lunatech.chef.api.persistence.DBEvolution
 import com.lunatech.chef.api.persistence.Database
 import com.lunatech.chef.api.persistence.FlywayConfig
+import com.lunatech.chef.api.persistence.services.DishesOnMenusService
 import com.lunatech.chef.api.persistence.services.DishesService
 import com.lunatech.chef.api.persistence.services.LocationsService
 import com.lunatech.chef.api.persistence.services.MenusService
 import com.lunatech.chef.api.routes.dishes
+import com.lunatech.chef.api.routes.dishesOnMenus
 import com.lunatech.chef.api.routes.healthCheck
 import com.lunatech.chef.api.routes.locations
 import com.lunatech.chef.api.routes.menus
@@ -15,10 +17,6 @@ import com.typesafe.config.ConfigFactory
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.apache.Apache
-import io.ktor.client.features.logging.LogLevel
-import io.ktor.client.features.logging.Logging
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.StatusPages
 import io.ktor.http.ContentType
@@ -43,6 +41,7 @@ fun Application.module(testing: Boolean = false) {
     val locationsService = LocationsService(dbConnection)
     val dishesService = DishesService(dbConnection)
     val menusService = MenusService(dbConnection)
+    val dishesOnMenusService = DishesOnMenusService(dbConnection)
 
     // install(CORS) {
     //     method(HttpMethod.Options)
@@ -86,6 +85,7 @@ fun Application.module(testing: Boolean = false) {
         locations(locationsService)
         dishes(dishesService)
         menus(menusService)
+        dishesOnMenus(dishesOnMenusService)
     }
 }
 

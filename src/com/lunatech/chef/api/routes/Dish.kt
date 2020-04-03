@@ -14,16 +14,18 @@ import io.ktor.routing.put
 import io.ktor.routing.route
 import java.util.UUID
 
-data class UpdatedDish(val name: String,
-                       val description: String = "",
-                       val isVegetarian: Boolean = false,
-                       val hasSeafood: Boolean = false,
-                       val hasPork: Boolean = false,
-                       val hasBeef: Boolean = false,
-                       val isGlutenFree: Boolean = false,
-                       val hasLactose: Boolean = false)
+data class UpdatedDish(
+  val name: String,
+  val description: String = "",
+  val isVegetarian: Boolean = false,
+  val hasSeafood: Boolean = false,
+  val hasPork: Boolean = false,
+  val hasBeef: Boolean = false,
+  val isGlutenFree: Boolean = false,
+  val hasLactose: Boolean = false
+)
 
-fun Routing.dishes(dishesService: DishesService){
+fun Routing.dishes(dishesService: DishesService) {
     val dishRoute = "/dishes"
     val uuidRoute = "/{uuid}"
     val uuidParam = "uuid"
@@ -38,7 +40,7 @@ fun Routing.dishes(dishesService: DishesService){
         post {
             val newDish = call.receive<Dish>()
             val inserted = dishesService.insert(newDish)
-            if(inserted == 1) call.respond(HttpStatusCode.Created) else call.respond(HttpStatusCode.InternalServerError)
+            if (inserted == 1) call.respond(HttpStatusCode.Created) else call.respond(HttpStatusCode.InternalServerError)
         }
 
         route(uuidRoute) {

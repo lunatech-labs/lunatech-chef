@@ -1,7 +1,7 @@
 package com.lunatech.chef.api.routes
 
-import com.lunatech.chef.api.domain.Menu
-import com.lunatech.chef.api.persistence.services.MenusService
+import com.lunatech.chef.api.domain.DishOnMenu
+import com.lunatech.chef.api.persistence.services.DishesOnMenusService
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.request.receive
@@ -14,48 +14,48 @@ import io.ktor.routing.put
 import io.ktor.routing.route
 import java.util.UUID
 
-data class UpdatedMenu(val name: String)
+data class UpdatedDishOnMenu(val menuUuid: UUID, val dishUuid: UUID)
 
-fun Routing.menus(menusService: MenusService) {
-    val menuRoute = "/menus"
+fun Routing.dishesOnMenus(dishesOnMenusService: DishesOnMenusService) {
+    val dishOnMenuRoute = "/dishesonmenus"
     val uuidRoute = "/{uuid}"
     val uuidParam = "uuid"
 
-    route(menuRoute) {
-        // get all menus
+    route(dishOnMenuRoute) {
+        // get all dishes on menus
         get {
-            val menus = menusService.getAll()
-            call.respond(HttpStatusCode.OK, menus)
+            val dishesMenus = dishesOnMenusService.getAll()
+            call.respond(HttpStatusCode.OK, dishesMenus)
         }
-        // create a new single menu
+        // create a new single dish on a many
         post {
-            val newMenu = call.receive<Menu>()
-            val inserted = menusService.insert(newMenu)
+            val newDishMenu = call.receive<DishOnMenu>()
+            val inserted = dishesOnMenusService.insert(newDishMenu)
             if (inserted == 1) call.respond(HttpStatusCode.Created) else call.respond(HttpStatusCode.InternalServerError)
         }
 
         route(uuidRoute) {
-            // get single menu
+            // get single dish on menu
             get {
                 val uuid = call.parameters[uuidParam]
-                val menu = menusService.getByUuid(UUID.fromString(uuid))
-                if (menu.isEmpty()) {
+                val dishMenu = dishesOnMenusService.getByUuid(UUID.fromString(uuid))
+                if (dishMenu.isEmpty()) {
                     call.respond(HttpStatusCode.NotFound)
                 } else {
-                    call.respond(HttpStatusCode.OK, menu.first())
+                    call.respond(HttpStatusCode.OK, dishMenu.first())
                 }
             }
-            // modify existing menu
+            // modify existing dish on menu
             put {
                 val uuid = call.parameters[uuidParam]
-                val updatedMenu = call.receive<UpdatedMenu>()
-                val result = menusService.update(UUID.fromString(uuid), updatedMenu)
+                val updatedDishMenu = call.receive<UpdatedDishOnMenu>()
+                val result = dishesOnMenusService.update(UUID.fromString(uuid), updatedDishMenu)
                 if (result == 1) call.respond(HttpStatusCode.OK) else call.respond(HttpStatusCode.InternalServerError)
             }
-            // delete a single menu
+            // delete a single dish on menu
             delete {
                 val uuid = call.parameters[uuidParam]
-                val result = menusService.delete(UUID.fromString(uuid))
+                val result = dishesOnMenusService.delete(UUID.fromString(uuid))
                 if (result == 1) call.respond(HttpStatusCode.OK) else call.respond(HttpStatusCode.InternalServerError)
             }
         }

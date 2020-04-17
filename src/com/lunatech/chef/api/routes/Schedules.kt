@@ -3,7 +3,10 @@ package com.lunatech.chef.api.routes
 import com.lunatech.chef.api.domain.Schedule
 import com.lunatech.chef.api.persistence.services.SchedulesService
 import io.ktor.application.call
-import io.ktor.http.HttpStatusCode
+import io.ktor.http.HttpStatusCode.Companion.Created
+import io.ktor.http.HttpStatusCode.Companion.InternalServerError
+import io.ktor.http.HttpStatusCode.Companion.NotFound
+import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.Routing
@@ -25,14 +28,14 @@ fun Routing.schedules(schedulesService: SchedulesService) {
     route(schedulesRoute) {
         // get all schedules
         get {
-            val schedule = schedulesService.getAll()
-            call.respond(HttpStatusCode.OK, schedule)
+            val schedules = schedulesService.getAll()
+            call.respond(OK, schedules)
         }
         // create a new single schedule
         post {
             val newSchedule = call.receive<Schedule>()
             val inserted = schedulesService.insert(newSchedule)
-            if (inserted == 1) call.respond(HttpStatusCode.Created) else call.respond(HttpStatusCode.InternalServerError)
+            if (inserted == 1) call.respond(Created) else call.respond(InternalServerError)
         }
 
         route(uuidRoute) {
@@ -41,9 +44,9 @@ fun Routing.schedules(schedulesService: SchedulesService) {
                 val uuid = call.parameters[uuidParam]
                 val schedule = schedulesService.getByUuid(UUID.fromString(uuid))
                 if (schedule.isEmpty()) {
-                    call.respond(HttpStatusCode.NotFound)
+                    call.respond(NotFound)
                 } else {
-                    call.respond(HttpStatusCode.OK, schedule.first())
+                    call.respond(OK, schedule.first())
                 }
             }
             // modify existing schedule
@@ -51,13 +54,13 @@ fun Routing.schedules(schedulesService: SchedulesService) {
                 val uuid = call.parameters[uuidParam]
                 val updatedSchedule = call.receive<UpdatedSchedule>()
                 val result = schedulesService.update(UUID.fromString(uuid), updatedSchedule)
-                if (result == 1) call.respond(HttpStatusCode.OK) else call.respond(HttpStatusCode.InternalServerError)
+                if (result == 1) call.respond(OK) else call.respond(InternalServerError)
             }
             // delete a single schedule
             delete {
                 val uuid = call.parameters[uuidParam]
                 val result = schedulesService.delete(UUID.fromString(uuid))
-                if (result == 1) call.respond(HttpStatusCode.OK) else call.respond(HttpStatusCode.InternalServerError)
+                if (result == 1) call.respond(OK) else call.respond(InternalServerError)
             }
         }
     }

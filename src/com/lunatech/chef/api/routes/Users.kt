@@ -3,7 +3,10 @@ package com.lunatech.chef.api.routes
 import com.lunatech.chef.api.domain.User
 import com.lunatech.chef.api.persistence.services.UsersService
 import io.ktor.application.call
-import io.ktor.http.HttpStatusCode
+import io.ktor.http.HttpStatusCode.Companion.Created
+import io.ktor.http.HttpStatusCode.Companion.InternalServerError
+import io.ktor.http.HttpStatusCode.Companion.NotFound
+import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.Routing
@@ -39,13 +42,13 @@ fun Routing.users(usersService: UsersService) {
         // get all users
         get {
             val users = usersService.getAll()
-            call.respond(HttpStatusCode.OK, users)
+            call.respond(OK, users)
         }
         // create a new single users
         post {
             val newUser = call.receive<User>()
             val inserted = usersService.insert(newUser)
-            if (inserted == 1) call.respond(HttpStatusCode.Created) else call.respond(HttpStatusCode.InternalServerError)
+            if (inserted == 1) call.respond(Created) else call.respond(InternalServerError)
         }
 
         route(uuidRoute) {
@@ -54,9 +57,9 @@ fun Routing.users(usersService: UsersService) {
                 val uuid = call.parameters[uuidParam]
                 val user = usersService.getByUuid(UUID.fromString(uuid))
                 if (user.isEmpty()) {
-                    call.respond(HttpStatusCode.NotFound)
+                    call.respond(NotFound)
                 } else {
-                    call.respond(HttpStatusCode.OK, user.first())
+                    call.respond(OK, user.first())
                 }
             }
             // modify existing user
@@ -64,13 +67,13 @@ fun Routing.users(usersService: UsersService) {
                 val uuid = call.parameters[uuidParam]
                 val updatedUser = call.receive<UpdatedUser>()
                 val result = usersService.update(UUID.fromString(uuid), updatedUser)
-                if (result == 1) call.respond(HttpStatusCode.OK) else call.respond(HttpStatusCode.InternalServerError)
+                if (result == 1) call.respond(OK) else call.respond(InternalServerError)
             }
             // delete a single user
             delete {
                 val uuid = call.parameters[uuidParam]
                 val result = usersService.delete(UUID.fromString(uuid))
-                if (result == 1) call.respond(HttpStatusCode.OK) else call.respond(HttpStatusCode.InternalServerError)
+                if (result == 1) call.respond(OK) else call.respond(InternalServerError)
             }
         }
     }

@@ -3,7 +3,10 @@ package com.lunatech.chef.api.routes
 import com.lunatech.chef.api.domain.Menu
 import com.lunatech.chef.api.persistence.services.MenusService
 import io.ktor.application.call
-import io.ktor.http.HttpStatusCode
+import io.ktor.http.HttpStatusCode.Companion.Created
+import io.ktor.http.HttpStatusCode.Companion.InternalServerError
+import io.ktor.http.HttpStatusCode.Companion.NotFound
+import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.Routing
@@ -25,13 +28,13 @@ fun Routing.menus(menusService: MenusService) {
         // get all menus
         get {
             val menus = menusService.getAll()
-            call.respond(HttpStatusCode.OK, menus)
+            call.respond(OK, menus)
         }
         // create a new single menu
         post {
             val newMenu = call.receive<Menu>()
             val inserted = menusService.insert(newMenu)
-            if (inserted == 1) call.respond(HttpStatusCode.Created) else call.respond(HttpStatusCode.InternalServerError)
+            if (inserted == 1) call.respond(Created) else call.respond(InternalServerError)
         }
 
         route(uuidRoute) {
@@ -40,9 +43,9 @@ fun Routing.menus(menusService: MenusService) {
                 val uuid = call.parameters[uuidParam]
                 val menu = menusService.getByUuid(UUID.fromString(uuid))
                 if (menu.isEmpty()) {
-                    call.respond(HttpStatusCode.NotFound)
+                    call.respond(NotFound)
                 } else {
-                    call.respond(HttpStatusCode.OK, menu.first())
+                    call.respond(OK, menu.first())
                 }
             }
             // modify existing menu
@@ -50,13 +53,13 @@ fun Routing.menus(menusService: MenusService) {
                 val uuid = call.parameters[uuidParam]
                 val updatedMenu = call.receive<UpdatedMenu>()
                 val result = menusService.update(UUID.fromString(uuid), updatedMenu)
-                if (result == 1) call.respond(HttpStatusCode.OK) else call.respond(HttpStatusCode.InternalServerError)
+                if (result == 1) call.respond(OK) else call.respond(InternalServerError)
             }
             // delete a single menu
             delete {
                 val uuid = call.parameters[uuidParam]
                 val result = menusService.delete(UUID.fromString(uuid))
-                if (result == 1) call.respond(HttpStatusCode.OK) else call.respond(HttpStatusCode.InternalServerError)
+                if (result == 1) call.respond(OK) else call.respond(InternalServerError)
             }
         }
     }

@@ -24,9 +24,12 @@ import com.typesafe.config.ConfigFactory
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
+import io.ktor.features.CORS
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.StatusPages
 import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.jackson.jackson
 import io.ktor.response.respondText
@@ -52,16 +55,15 @@ fun Application.module(testing: Boolean = false) {
     val usersService = UsersService(dbConnection)
     val attendancesService = AttendancesService(dbConnection)
 
-    // install(CORS) {
-    //     method(HttpMethod.Options)
-    //     method(HttpMethod.Put)
-    //     method(HttpMethod.Delete)
-    //     method(HttpMethod.Patch)
-    //     header(HttpHeaders.Authorization)
-    //     header("MyCustomHeader")
-    //     allowCredentials = true
-    //     anyHost() // @TODO: Don't do this in production if possible. Try to limit it.
-    // }
+    install(CORS) {
+        method(HttpMethod.Options)
+        method(HttpMethod.Put)
+        method(HttpMethod.Delete)
+        // header(HttpHeaders.Authorization)
+        // header("MyCustomHeader")
+        // allowCredentials = true
+        host("localhost:3000")
+    }
 
     // install(Authentication) {
     // }

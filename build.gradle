@@ -55,10 +55,6 @@ dependencies {
     testImplementation "io.ktor:ktor-server-tests:$ktor_version"
 }
 
-//tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
-//    kotlinOptions.freeCompilerArgs += ["-Xuse-experimental=io.ktor.locations.KtorExperimentalLocationsAPI"]
-//}
-
 autostyle {
     kotlin {
         // optionally takes a version
@@ -82,4 +78,27 @@ autostyle {
             userData(['indent_size': '2', 'continuation_indent_size' : '2'])
         }
     }
+}
+
+task buildAll(type: Exec, dependsOn: ['buildFrontApp']) {
+    group "Build All App"
+    description 'Build All App'
+    executable "./gradlew"
+    args "--no-daemon", "assemble"
+}
+
+//Build React App
+task buildFrontApp(type: Exec, dependsOn: ['installReactApp']) {
+    group "Front App"
+    description 'Build React App'
+    executable "npm"
+    args "run-script", "build", "--prefix", "./frontend/"
+}
+
+//Install package npm for front app (React)
+task installReactApp(type: Exec) {
+    group "Front App"
+    description 'Build React App'
+    executable "npm"
+    args "install", "--prefix", "./frontend/"
 }

@@ -30,9 +30,14 @@ import io.ktor.features.StatusPages
 import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.content.files
+import io.ktor.http.content.static
 import io.ktor.jackson.jackson
+import io.ktor.response.respondFile
 import io.ktor.response.respondText
+import io.ktor.routing.get
 import io.ktor.routing.routing
+import java.io.File
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -99,6 +104,17 @@ fun Application.module(testing: Boolean = false) {
         schedules(schedulesService)
         users(usersService)
         attendances(attendancesService)
+
+        static("static") {
+            files("frontend/build/static")
+        }
+        static("root") {
+            files("frontend/build")
+        }
+        //Route by default
+        get("/{...}") {
+            call.respondFile(File("frontend/build/index.html"))
+        }
 
         // TODO authorization, login, logout
         // TODO filtros no attendances, schedules por data, localizacao

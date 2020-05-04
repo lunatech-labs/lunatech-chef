@@ -28,7 +28,6 @@ import io.ktor.features.CORS
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.StatusPages
 import io.ktor.http.ContentType
-import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.jackson.jackson
@@ -60,7 +59,6 @@ fun Application.module(testing: Boolean = false) {
         method(HttpMethod.Put)
         method(HttpMethod.Delete)
         // header(HttpHeaders.Authorization)
-        // header("MyCustomHeader")
         // allowCredentials = true
         host("localhost:3000")
     }
@@ -71,7 +69,7 @@ fun Application.module(testing: Boolean = false) {
     install(ContentNegotiation) {
         jackson {
             configure(SerializationFeature.INDENT_OUTPUT, true)
-            registerModule(JavaTimeModule())  // support java.time.* types
+            registerModule(JavaTimeModule()) // support java.time.* types
         }
     }
     install(StatusPages) {

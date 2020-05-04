@@ -18,19 +18,19 @@ import io.ktor.routing.route
 import java.util.UUID
 
 data class UpdatedUser(
-    val name: String,
-    val emailAddress: String,
-    val isAdmin: Boolean,
-    val location: UUID,
-    val isVegetarian: Boolean = false,
-    val hasNutsRestriction: Boolean = false,
-    val hasSeafoodRestriction: Boolean = false,
-    val hasPorkRestriction: Boolean = false,
-    val hasBeefRestriction: Boolean = false,
-    val isGlutenIntolerant: Boolean = false,
-    val isLactoseIntolerant: Boolean = false,
-    val isInactive: Boolean = false,
-    val otherRestriction: String = ""
+  val name: String,
+  val emailAddress: String,
+  val isAdmin: Boolean,
+  val location: UUID,
+  val isVegetarian: Boolean = false,
+  val hasNutsRestriction: Boolean = false,
+  val hasSeafoodRestriction: Boolean = false,
+  val hasPorkRestriction: Boolean = false,
+  val hasBeefRestriction: Boolean = false,
+  val isGlutenIntolerant: Boolean = false,
+  val isLactoseIntolerant: Boolean = false,
+  val isInactive: Boolean = false,
+  val otherRestriction: String = ""
 )
 
 fun Routing.users(usersService: UsersService) {

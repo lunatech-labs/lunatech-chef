@@ -3,6 +3,7 @@ package com.lunatech.chef.api.persistence.services
 import com.lunatech.chef.api.domain.Attendance
 import com.lunatech.chef.api.persistence.schemas.Attendances
 import com.lunatech.chef.api.routes.UpdatedAttendance
+import java.util.UUID
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.dsl.from
@@ -10,7 +11,6 @@ import me.liuwj.ktorm.dsl.insert
 import me.liuwj.ktorm.dsl.select
 import me.liuwj.ktorm.dsl.update
 import me.liuwj.ktorm.dsl.where
-import java.util.UUID
 
 class AttendancesService(val database: Database) {
     fun getAll() = database.from(Attendances).select().map { Attendances.createEntity(it) }

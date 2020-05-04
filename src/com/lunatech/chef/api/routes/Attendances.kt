@@ -38,9 +38,9 @@ fun Routing.attendances(attendancesService: AttendancesService) {
         route(uuidRoute) {
             // get single attendance
             get {
-                val uuid =  call.parameters[uuidParam]
+                val uuid = call.parameters[uuidParam]
                 val attendance = attendancesService.getByUuid(UUID.fromString(uuid))
-                if(attendance.isEmpty()) {
+                if (attendance.isEmpty()) {
                     call.respond(NotFound)
                 } else {
                     call.respond(OK, attendance.first())

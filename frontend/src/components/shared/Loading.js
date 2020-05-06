@@ -2,7 +2,7 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
-const Loading = () => {
+export const Loading = () => {
   return (
     <div className="col-12">
       <span className="text-primary">
@@ -12,5 +12,3 @@ const Loading = () => {
     </div>
   );
 };
-
-export default Loading;

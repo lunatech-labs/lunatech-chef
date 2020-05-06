@@ -3,13 +3,15 @@ import { Switch, Route, Redirect, withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { fetchDishes } from "../redux/ActionCreators";
 import "../css/simple-sidebar.css";
-import Header from "./Header";
-import Footer from "./Footer";
-import Dishes from "./Dishes";
-import ErrorBoundary from "./ErrorBoundary";
+import Header from "./shared/Header";
+import Footer from "./shared/Footer";
+import Dishes from "./admin/Dishes";
+import ErrorBoundary from "./shared/ErrorBoundary";
+import Locations from "./admin/Locations";
 
 const mapStateToProps = (state) => {
   return {
+    locations: state.locations,
     dishes: state.dishes,
   };
 };
@@ -26,6 +28,16 @@ class Main extends Component {
   }
 
   render() {
+    const AllLocations = () => {
+      return (
+        <Locations
+          isLoading={this.props.locations.isLoading}
+          error={this.props.locations.error}
+          locations={this.props.locations.locations.data}
+        />
+      );
+    };
+
     const AllDishes = () => {
       return (
         <Dishes
@@ -35,6 +47,7 @@ class Main extends Component {
         />
       );
     };
+
     return (
       <ErrorBoundary>
         <div className="d-flex" id="wrapper">
@@ -49,6 +62,12 @@ class Main extends Component {
               </Link>
               <Link
                 className="list-group-item list-group-item-action bg-light"
+                to="/alllocations"
+              >
+                Locations
+              </Link>
+              <Link
+                className="list-group-item list-group-item-action bg-light"
                 to="/alldishes"
               >
                 Dishes
@@ -57,6 +76,7 @@ class Main extends Component {
           </div>
           <Switch>
             {/* do not use the same routes as the ones available in the BE server */}
+            <Route path="/alllocations" component={AllLocations} />
             <Route path="/alldishes" component={AllDishes} />
             <Redirect to="/" />
           </Switch>

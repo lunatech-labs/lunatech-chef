@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Jumbotron } from "reactstrap";
-import "../css/simple-sidebar.css";
+import "../../css/simple-sidebar.css";
 
 class Header extends Component {
   render() {

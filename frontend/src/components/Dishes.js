@@ -1,8 +1,17 @@
 import React from "react";
+import Loading from "./Loading";
 
 const Dishes = (props) => {
-  function RenderProps({ error, dishes }) {
-    if (error) {
+  function RenderProps({ isLoading, error, dishes }) {
+    if (isLoading) {
+      return (
+        <div className="container">
+          <div className="row">
+            <Loading />
+          </div>
+        </div>
+      );
+    } else if (error) {
       return <h4>An error ocurred: {error}</h4>;
     } else {
       return dishes.map((dish) => (
@@ -19,7 +28,11 @@ const Dishes = (props) => {
         <h3 className="mt-4">Dishes</h3>
       </div>
       <div className="col-12 col-md m-1">
-        <RenderProps error={props.error} dishes={props.dishes} />
+        <RenderProps
+          isLoading={props.isLoading}
+          error={props.error}
+          dishes={props.dishes}
+        />
       </div>
     </div>
   );

@@ -49,14 +49,15 @@ class Main extends Component {
               </Link>
               <Link
                 className="list-group-item list-group-item-action bg-light"
-                to="/dishes"
+                to="/alldishes"
               >
                 Dishes
               </Link>
             </div>
           </div>
           <Switch>
-            <Route path="/dishes" component={AllDishes} />
+            {/* do not use the same routes as the ones available in the BE server */}
+            <Route path="/alldishes" component={AllDishes} />
             <Redirect to="/" />
           </Switch>
         </div>

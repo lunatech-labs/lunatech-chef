@@ -1,6 +1,7 @@
 package com.lunatech.chef.api.persistence.services
 
 import com.lunatech.chef.api.domain.Schedule
+import com.lunatech.chef.api.persistence.schemas.Locations
 import com.lunatech.chef.api.persistence.schemas.Schedules
 import com.lunatech.chef.api.routes.UpdatedSchedule
 import java.util.UUID
@@ -13,7 +14,7 @@ import me.liuwj.ktorm.dsl.update
 import me.liuwj.ktorm.dsl.where
 
 class SchedulesService(val database: Database) {
-    fun getAll() = database.from(Schedules).select().map { Schedules.createEntity(it) }
+    fun getAll() = database.from(Schedules).select().where { Schedules.isDeleted eq false }.map { Schedules.createEntity(it) }
 
     fun getByUuid(uuid: UUID): List<Schedule> =
         database.from(Schedules).select().where { -> Schedules.uuid eq uuid }.map { Schedules.createEntity(it) }

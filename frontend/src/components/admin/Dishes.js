@@ -2,6 +2,20 @@ import React from "react";
 import ListPresentation from "../shared/ListPresentation";
 
 const Dishes = (props) => {
+  let filteredData = props.dishes.map((dish) => {
+    const container = {};
+    container["name"] = dish.name;
+    container["description"] = dish.description;
+    container["description"] = dish.description;
+    container["isVegetarian"] = dish.isVegetarian;
+    container["hasNuts"] = dish.hasNuts;
+    container["hasSeafood"] = dish.hasSeafood;
+    container["hasPork"] = dish.hasPork;
+    container["hasBeef"] = dish.hasBeef;
+    container["isGlutenFree"] = dish.isGlutenFree;
+    container["hasLactose"] = dish.hasLactose;
+    return container;
+  });
   return (
     <div className="container">
       <div>
@@ -11,7 +25,7 @@ const Dishes = (props) => {
         <ListPresentation
           isLoading={props.isLoading}
           error={props.error}
-          data={props.dishes}
+          data={filteredData}
         />
       </div>
     </div>

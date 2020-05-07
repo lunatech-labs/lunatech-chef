@@ -1,5 +1,7 @@
 import React from "react";
 import { Loading } from "./Loading";
+import { ConvertJsonToTable } from "rn-json-to-html-table";
+import ReactHtmlParser from "react-html-parser";
 
 const ListPresentation = (props) => {
   function RenderData({ isLoading, error, data }) {
@@ -14,11 +16,10 @@ const ListPresentation = (props) => {
     } else if (error) {
       return <h4>An error ocurred: {error}</h4>;
     } else {
-      return data.map((item) => (
-        <div className="col-12 col-md-5 m-1" key={item.uuid}>
-          <div>Name: {item.name}</div>
-        </div>
-      ));
+      let htmlTable = ConvertJsonToTable(data, "generatedTable");
+      return (
+        <div className="col-12 col-md-5 m-1">{ReactHtmlParser(htmlTable)}</div>
+      );
     }
   }
 

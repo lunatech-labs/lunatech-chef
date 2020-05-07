@@ -2,6 +2,7 @@ package com.lunatech.chef.api.persistence.services
 
 import com.lunatech.chef.api.domain.Dish
 import com.lunatech.chef.api.persistence.schemas.Dishes
+import com.lunatech.chef.api.persistence.schemas.Locations
 import com.lunatech.chef.api.routes.UpdatedDish
 import java.util.UUID
 import me.liuwj.ktorm.database.Database
@@ -13,7 +14,7 @@ import me.liuwj.ktorm.dsl.update
 import me.liuwj.ktorm.dsl.where
 
 class DishesService(val database: Database) {
-    fun getAll() = database.from(Dishes).select().map { Dishes.createEntity(it) }
+    fun getAll() = database.from(Dishes).select().where { Dishes.isDeleted eq false }.map { Dishes.createEntity(it) }
 
     fun getByUuid(uuid: UUID): List<Dish> =
         database.from(Dishes).select().where { -> Dishes.uuid eq uuid }.map { Dishes.createEntity(it) }

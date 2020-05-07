@@ -1,5 +1,5 @@
-import * as ActionTypes from "./ActionTypes";
-import { baseUrl } from "../shared/baseUrl";
+import * as ActionTypes from "./DishesActionTypes";
+import { baseUrl } from "../../shared/baseUrl";
 
 const axios = require("axios").default;
 

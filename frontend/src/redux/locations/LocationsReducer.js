@@ -1,6 +1,6 @@
-import * as ActionTypes from "./ActionTypes";
+import * as ActionTypes from "./LocationActionTypes";
 
-export const Locations = (
+export const LocationsReducer = (
   state = { isLoading: true, error: null, locations: [] },
   action
 ) => {
@@ -18,6 +18,9 @@ export const Locations = (
 
     case ActionTypes.LOCATIONS_LOADING_FAILED:
       return { ...state, isLoading: false, error: action.payload };
+
+    case ActionTypes.ADD_NEW_LOCATION:
+      return { ...state, isLoading: true, error: null, locations: [] };
 
     default:
       return state;

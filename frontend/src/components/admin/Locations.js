@@ -2,6 +2,13 @@ import React from "react";
 import ListPresentation from "../shared/ListPresentation";
 
 const Locations = (props) => {
+  let filteredData = props.locations.map((loc) => {
+    const container = {};
+    container["city"] = loc.city;
+    container["country"] = loc.country;
+    return container;
+  });
+
   return (
     <div className="container">
       <div>
@@ -11,7 +18,7 @@ const Locations = (props) => {
         <ListPresentation
           isLoading={props.isLoading}
           error={props.error}
-          data={props.locations}
+          data={filteredData}
         />
       </div>
     </div>

@@ -1,6 +1,6 @@
-import * as ActionTypes from "./ActionTypes";
+import * as ActionTypes from "./DishesActionTypes";
 
-export const Dishes = (
+export const DishesReducer = (
   state = { isLoading: true, error: null, dishes: [] },
   action
 ) => {
@@ -18,6 +18,9 @@ export const Dishes = (
 
     case ActionTypes.DISHES_LOADING_FAILED:
       return { ...state, isLoading: false, error: action.payload };
+
+    case ActionTypes.ADD_NEW_DISH:
+      return { ...state, isLoading: true, error: null, dishes: [] };
 
     default:
       return state;

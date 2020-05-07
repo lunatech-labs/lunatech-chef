@@ -1,14 +1,14 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 import logger from "redux-logger";
-import { Dishes } from "./Dishes";
-import { Locations } from "./Locations";
+import { DishesReducer } from "./dishes/DishesReducer";
+import { LocationsReducer } from "./locations/LocationsReducer";
 
 export const ConfigureStore = () => {
   const store = createStore(
     combineReducers({
-      locations: Locations,
-      dishes: Dishes,
+      locations: LocationsReducer,
+      dishes: DishesReducer,
     }),
     applyMiddleware(thunk, logger)
   );

@@ -13,7 +13,7 @@ import me.liuwj.ktorm.dsl.update
 import me.liuwj.ktorm.dsl.where
 
 class UsersService(val database: Database) {
-    fun getAll() = database.from(Users).select().map { Users.createEntity(it) }
+    fun getAll() = database.from(Users).select().where { Users.isDeleted eq false }.map { Users.createEntity(it) }
 
     fun getByUuid(uuid: UUID): List<User> =
         database.from(Users).select().where { -> Users.uuid eq uuid }.map { Users.createEntity(it) }

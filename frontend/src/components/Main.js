@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import { Switch, Route, Redirect, withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { fetchDishes } from "../redux/ActionCreators";
+import { fetchDishes } from "../redux/dishes/DishesActionCreators";
+import { fetchLocations } from "../redux/locations/LocationActionCreators";
 import "../css/simple-sidebar.css";
 import Header from "./shared/Header";
 import Footer from "./shared/Footer";
-import Dishes from "./admin/Dishes";
 import ErrorBoundary from "./shared/ErrorBoundary";
+import Dishes from "./admin/Dishes";
 import Locations from "./admin/Locations";
 
 const mapStateToProps = (state) => {
@@ -20,10 +21,14 @@ const mapDispatchToProps = (dispatch) => ({
   fetchDishes: () => {
     dispatch(fetchDishes());
   },
+  fetchLocations: () => {
+    dispatch(fetchLocations());
+  },
 });
 
 class Main extends Component {
   componentDidMount() {
+    this.props.fetchLocations();
     this.props.fetchDishes();
   }
 

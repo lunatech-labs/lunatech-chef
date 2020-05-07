@@ -2,6 +2,7 @@
 package com.lunatech.chef.api.routes
 
 import com.lunatech.chef.api.domain.Location
+import com.lunatech.chef.api.domain.NewLocation
 import com.lunatech.chef.api.persistence.services.LocationsService
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode.Companion.Created
@@ -33,8 +34,8 @@ fun Routing.locations(locationsService: LocationsService) {
         }
         // create a new single location
         post {
-            val newLocation = call.receive<Location>()
-            val inserted = locationsService.insert(newLocation)
+            val newLocation = call.receive<NewLocation>()
+            val inserted = locationsService.insert(Location.fromNewLocation(newLocation))
             if (inserted == 1) call.respond(Created) else call.respond(InternalServerError)
         }
 

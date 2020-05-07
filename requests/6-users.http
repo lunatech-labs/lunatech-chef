@@ -1,12 +1,10 @@
 POST {{ host }}/users
 Content-Type: application/json
 
-{ "uuid" : "{{ $uuid }}",
-  "name": "Leonor",
+{ "name": "Leonor",
   "emailAddress": "leonor.boga@lunatech.nl",
   "isAdmin": "true",
-  "location": "61edaf14-b018-4ffa-afba-dc5844426176",
-  "isInactive": "false",
+  "location": "82ea2b48-27d8-4b52-994b-9b4fdd377195",
   "isVegetarian": "false",
   "hasNutsRestriction": "false",
   "hasSeafoodRestriction": "false",
@@ -14,30 +12,7 @@ Content-Type: application/json
   "hasBeefRestriction": "false",
   "isGlutenIntolerant": "false",
   "isLactoseIntolerant": "false",
-  "otherRestriction": "",
-  "isDeleted": "false"
-}
-
-###
-
-POST {{ host }}/users
-Content-Type: application/json
-
-{ "uuid" : "f0daa634-8ec7-4fef-88c7-a92d608b6eea",
-  "name": "Leonor",
-  "emailAddress": "leonor.boga@lunatech.nl",
-  "isAdmin": "true",
-  "location": "61edaf14-b018-4ffa-afba-dc5844426176",
-  "isInactive": "false",
-  "isVegetarian": "false",
-  "hasNutsRestriction": "false",
-  "hasSeafoodRestriction": "false",
-  "hasPorkRestriction": "true",
-  "hasBeefRestriction": "false",
-  "isGlutenIntolerant": "false",
-  "isLactoseIntolerant": "false",
-  "otherRestriction": "",
-  "isDeleted": "false"
+  "otherRestriction": ""
 }
 
 ###

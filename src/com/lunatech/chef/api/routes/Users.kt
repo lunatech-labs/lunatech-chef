@@ -1,5 +1,6 @@
 package com.lunatech.chef.api.routes
 
+import com.lunatech.chef.api.domain.NewUser
 import com.lunatech.chef.api.domain.User
 import com.lunatech.chef.api.persistence.services.UsersService
 import io.ktor.application.call
@@ -46,8 +47,8 @@ fun Routing.users(usersService: UsersService) {
         }
         // create a new single users
         post {
-            val newUser = call.receive<User>()
-            val inserted = usersService.insert(newUser)
+            val newUser = call.receive<NewUser>()
+            val inserted = usersService.insert(User.fromNewUser(newUser))
             if (inserted == 1) call.respond(Created) else call.respond(InternalServerError)
         }
 

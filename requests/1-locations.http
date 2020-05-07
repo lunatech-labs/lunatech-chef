@@ -1,18 +1,7 @@
 POST {{ host }}/locations
 Content-Type: application/json
 
-{ "uuid" : "{{ $uuid }}",
-  "city": "Rotterdam",
-  "country": "Netherlands"
-}
-
-###
-
-POST {{ host }}/locations
-Content-Type: application/json
-
-{ "uuid" : "61edaf14-b018-4ffa-afba-dc5844426176",
-  "city": "Rotterdam",
+{ "city": "Rotterdam",
   "country": "Netherlands"
 }
 
@@ -22,7 +11,7 @@ GET {{ host }}/locations
 
 ###
 
-GET {{ host }}/locations/61edaf14-b018-4ffa-afba-dc5844426176
+GET {{ host }}/locations/82ea2b48-27d8-4b52-994b-9b4fdd377195
 
 ###
 

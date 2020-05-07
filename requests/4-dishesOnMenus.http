@@ -1,21 +1,8 @@
 POST {{ host }}/dishesonmenus
 Content-Type: application/json
 
-{ "uuid" : "{{ $uuid }}",
-  "menuUuid": "bc868425-74c4-4c74-9cb0-ec789d8d474d",
-  "dishUuid": "7399b112-59a2-44d7-bd95-c4df1dfd63e9",
-  "isDeleted": "false"
-}
-
-###
-
-POST {{ host }}/dishesonmenus
-Content-Type: application/json
-
-{ "uuid" : "580eb953-8198-4179-8574-ee6009a666ae",
-  "menuUuid": "bc868425-74c4-4c74-9cb0-ec789d8d474d",
-  "dishUuid": "7399b112-59a2-44d7-bd95-c4df1dfd63e9",
-  "isDeleted": "false"
+{ "menuUuid": "4ebdc2ba-57eb-454d-a07a-068bd0c8873a",
+  "dishUuid": "22f2b8de-f066-404c-b465-288adfa02862"
 }
 
 ###

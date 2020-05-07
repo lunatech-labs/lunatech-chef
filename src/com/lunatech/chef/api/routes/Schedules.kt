@@ -1,5 +1,6 @@
 package com.lunatech.chef.api.routes
 
+import com.lunatech.chef.api.domain.NewSchedule
 import com.lunatech.chef.api.domain.Schedule
 import com.lunatech.chef.api.persistence.services.SchedulesService
 import io.ktor.application.call
@@ -33,8 +34,8 @@ fun Routing.schedules(schedulesService: SchedulesService) {
         }
         // create a new single schedule
         post {
-            val newSchedule = call.receive<Schedule>()
-            val inserted = schedulesService.insert(newSchedule)
+            val newSchedule = call.receive<NewSchedule>()
+            val inserted = schedulesService.insert(Schedule.fromNewSchedule(newSchedule))
             if (inserted == 1) call.respond(Created) else call.respond(InternalServerError)
         }
 

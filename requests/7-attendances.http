@@ -1,20 +1,8 @@
 POST {{ host }}/attendances
 Content-Type: application/json
 
-{ "uuid" : "{{ $uuid }}",
-  "scheduleUuid": "4403ce6b-24b5-40b2-8482-211a1da7731f",
-  "userUuid": "f0daa634-8ec7-4fef-88c7-a92d608b6eea",
-  "isAttending": "true"
-}
-
-###
-
-POST {{ host }}/attendances
-Content-Type: application/json
-
-{ "uuid" : "1dcbc463-f6d1-4164-aaa0-deb17f06cf59",
-  "scheduleUuid": "4403ce6b-24b5-40b2-8482-211a1da7731f",
-  "userUuid": "f0daa634-8ec7-4fef-88c7-a92d608b6eea",
+{ "scheduleUuid": "0fdb293c-ca0f-4bc5-83e1-2f7c090d4ac0",
+  "userUuid": "a5518e47-3e07-4777-8280-3c622ed5459a",
   "isAttending": "true"
 }
 

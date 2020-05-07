@@ -1,19 +1,7 @@
 POST {{ host }}/menus
 Content-Type: application/json
 
-{ "uuid" : "{{ $uuid }}",
-  "name": "Menu italiano",
-  "isDeleted": "false"
-}
-
-###
-
-POST {{ host }}/menus
-Content-Type: application/json
-
-{ "uuid" : "bc868425-74c4-4c74-9cb0-ec789d8d474d",
-  "name": "Menu italiano",
-  "isDeleted": "false"
+{ "name": "Menu italiano"
 }
 
 ###

@@ -1,6 +1,7 @@
 package com.lunatech.chef.api.routes
 
 import com.lunatech.chef.api.domain.Attendance
+import com.lunatech.chef.api.domain.NewAttendance
 import com.lunatech.chef.api.persistence.services.AttendancesService
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode.Companion.Created
@@ -31,8 +32,8 @@ fun Routing.attendances(attendancesService: AttendancesService) {
         }
         // create a new single attendance
         post {
-            val newAttendance = call.receive<Attendance>()
-            val inserted = attendancesService.insert(newAttendance)
+            val newAttendance = call.receive<NewAttendance>()
+            val inserted = attendancesService.insert(Attendance.fromNewAttendance(newAttendance))
             if (inserted == 1) call.respond(Created) else call.respond(InternalServerError)
         }
         route(uuidRoute) {

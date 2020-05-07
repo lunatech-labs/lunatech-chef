@@ -1,6 +1,7 @@
 package com.lunatech.chef.api.routes
 
 import com.lunatech.chef.api.domain.Menu
+import com.lunatech.chef.api.domain.NewMenu
 import com.lunatech.chef.api.persistence.services.MenusService
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode.Companion.Created
@@ -32,8 +33,8 @@ fun Routing.menus(menusService: MenusService) {
         }
         // create a new single menu
         post {
-            val newMenu = call.receive<Menu>()
-            val inserted = menusService.insert(newMenu)
+            val newMenu = call.receive<NewMenu>()
+            val inserted = menusService.insert(Menu.fromNewMenu(newMenu))
             if (inserted == 1) call.respond(Created) else call.respond(InternalServerError)
         }
 

@@ -1,6 +1,7 @@
 package com.lunatech.chef.api.routes
 
 import com.lunatech.chef.api.domain.Dish
+import com.lunatech.chef.api.domain.NewDish
 import com.lunatech.chef.api.persistence.services.DishesService
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode.Companion.Created
@@ -42,8 +43,8 @@ fun Routing.dishes(dishesService: DishesService) {
         }
         // create a new single dish
         post {
-            val newDish = call.receive<Dish>()
-            val inserted = dishesService.insert(newDish)
+            val newDish = call.receive<NewDish>()
+            val inserted = dishesService.insert(Dish.fromNewDish(newDish))
             if (inserted == 1) call.respond(Created) else call.respond(InternalServerError)
         }
 

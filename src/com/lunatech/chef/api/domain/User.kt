@@ -34,23 +34,23 @@ data class User(
   val isInactive: Boolean = false,
   val isDeleted: Boolean = false
 ) {
-  companion object {
-    fun fromNewUser(newUser: NewUser): User {
-      return User(
-        uuid = UUID.randomUUID(),
-        name = newUser.name,
-        emailAddress = newUser.emailAddress,
-        isAdmin = newUser.isAdmin,
-        location = newUser.location,
-        isVegetarian = newUser.isVegetarian,
-        hasNutsRestriction = newUser.hasNutsRestriction,
-        hasSeafoodRestriction = newUser.hasSeafoodRestriction,
-        hasPorkRestriction = newUser.hasPorkRestriction,
-        hasBeefRestriction = newUser.hasBeefRestriction,
-        isGlutenIntolerant = newUser.isGlutenIntolerant,
-        isLactoseIntolerant = newUser.isLactoseIntolerant,
-        otherRestriction = newUser.otherRestriction
-      )
+    companion object {
+        fun fromNewUser(newUser: NewUser): User {
+            return User(
+                uuid = UUID.randomUUID(),
+                name = newUser.name,
+                emailAddress = newUser.emailAddress,
+                isAdmin = newUser.isAdmin,
+                location = newUser.location,
+                isVegetarian = newUser.isVegetarian,
+                hasNutsRestriction = newUser.hasNutsRestriction,
+                hasSeafoodRestriction = newUser.hasSeafoodRestriction,
+                hasPorkRestriction = newUser.hasPorkRestriction,
+                hasBeefRestriction = newUser.hasBeefRestriction,
+                isGlutenIntolerant = newUser.isGlutenIntolerant,
+                isLactoseIntolerant = newUser.isLactoseIntolerant,
+                otherRestriction = newUser.otherRestriction
+            )
+        }
     }
-  }
 }

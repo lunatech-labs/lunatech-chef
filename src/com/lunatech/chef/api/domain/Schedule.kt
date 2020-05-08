@@ -16,15 +16,14 @@ data class Schedule(
   val location: UUID,
   val isDeleted: Boolean = false
 ) {
-  companion object {
-    fun fromNewSchedule(newSchedule: NewSchedule): Schedule {
-      return Schedule(
-        uuid = UUID.randomUUID(),
-        menuUuid = newSchedule.menuUuid,
-        date = newSchedule.date,
-        location = newSchedule.location
-      )
+    companion object {
+        fun fromNewSchedule(newSchedule: NewSchedule): Schedule {
+            return Schedule(
+                uuid = UUID.randomUUID(),
+                menuUuid = newSchedule.menuUuid,
+                date = newSchedule.date,
+                location = newSchedule.location
+            )
+        }
     }
-  }
 }
-

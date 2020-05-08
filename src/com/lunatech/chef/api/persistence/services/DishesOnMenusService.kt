@@ -2,7 +2,6 @@ package com.lunatech.chef.api.persistence.services
 
 import com.lunatech.chef.api.domain.DishOnMenu
 import com.lunatech.chef.api.persistence.schemas.DishesOnMenus
-import com.lunatech.chef.api.persistence.schemas.Locations
 import com.lunatech.chef.api.routes.UpdatedDishOnMenu
 import java.util.UUID
 import me.liuwj.ktorm.database.Database

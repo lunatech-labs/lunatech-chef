@@ -27,21 +27,20 @@ data class Dish(
   val hasLactose: Boolean = false,
   val isDeleted: Boolean = false
 ) {
-  companion object {
-    fun fromNewDish(newDish: NewDish): Dish {
-      return Dish(
-        uuid = UUID.randomUUID(),
-        name = newDish.name,
-        description = newDish.description,
-        isVegetarian = newDish.isVegetarian,
-        hasNuts = newDish.hasNuts,
-        hasSeafood = newDish.hasSeafood,
-        hasPork = newDish.hasPork,
-        hasBeef =  newDish.hasBeef,
-        isGlutenFree = newDish.isGlutenFree,
-        hasLactose = newDish.hasLactose
-      )
+    companion object {
+        fun fromNewDish(newDish: NewDish): Dish {
+            return Dish(
+                uuid = UUID.randomUUID(),
+                name = newDish.name,
+                description = newDish.description,
+                isVegetarian = newDish.isVegetarian,
+                hasNuts = newDish.hasNuts,
+                hasSeafood = newDish.hasSeafood,
+                hasPork = newDish.hasPork,
+                hasBeef = newDish.hasBeef,
+                isGlutenFree = newDish.isGlutenFree,
+                hasLactose = newDish.hasLactose
+            )
+        }
     }
-  }
 }
-

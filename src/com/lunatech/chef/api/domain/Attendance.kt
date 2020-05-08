@@ -14,14 +14,14 @@ data class Attendance(
   val userUuid: UUID,
   val isAttending: Boolean
 ) {
-  companion object {
-    fun fromNewAttendance(newAttendance: NewAttendance): Attendance {
-      return Attendance(
-        uuid = UUID.randomUUID(),
-        scheduleUuid = newAttendance.scheduleUuid,
-        userUuid = newAttendance.userUuid,
-        isAttending = newAttendance.isAttending
-      )
-    }
-  }
+        companion object {
+            fun fromNewAttendance(newAttendance: NewAttendance): Attendance {
+                return Attendance(
+                    uuid = UUID.randomUUID(),
+                    scheduleUuid = newAttendance.scheduleUuid,
+                    userUuid = newAttendance.userUuid,
+                    isAttending = newAttendance.isAttending
+                )
+            }
+        }
 }

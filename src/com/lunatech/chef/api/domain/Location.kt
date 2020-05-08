@@ -13,14 +13,13 @@ data class Location(
   val country: String,
   val isDeleted: Boolean = false
 ) {
-  companion object {
-    fun fromNewLocation(newLocation: NewLocation): Location {
-      return Location(
-        uuid = UUID.randomUUID(),
-        city = newLocation.city,
-        country = newLocation.country
-      )
+    companion object {
+        fun fromNewLocation(newLocation: NewLocation): Location {
+            return Location(
+                uuid = UUID.randomUUID(),
+                city = newLocation.city,
+                country = newLocation.country
+            )
+        }
     }
-  }
 }
-

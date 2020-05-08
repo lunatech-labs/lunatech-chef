@@ -1,7 +1,6 @@
 package com.lunatech.chef.api.persistence.services
 
 import com.lunatech.chef.api.domain.Schedule
-import com.lunatech.chef.api.persistence.schemas.Locations
 import com.lunatech.chef.api.persistence.schemas.Schedules
 import com.lunatech.chef.api.routes.UpdatedSchedule
 import java.util.UUID

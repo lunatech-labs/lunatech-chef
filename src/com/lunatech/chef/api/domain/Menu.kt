@@ -11,13 +11,12 @@ data class Menu(
   val name: String,
   val isDeleted: Boolean = false
 ) {
-  companion object {
-    fun fromNewMenu(newMenu: NewMenu): Menu {
-      return Menu(
-        uuid = UUID.randomUUID(),
-        name = newMenu.name
-      )
+    companion object {
+        fun fromNewMenu(newMenu: NewMenu): Menu {
+            return Menu(
+                uuid = UUID.randomUUID(),
+                name = newMenu.name
+            )
+        }
     }
-  }
 }
-

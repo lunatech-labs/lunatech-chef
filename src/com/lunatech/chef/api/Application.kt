@@ -111,7 +111,7 @@ fun Application.module(testing: Boolean = false) {
         static("root") {
             files("frontend/build")
         }
-        //Route by default
+        // Route by default
         get("/{...}") {
             call.respondFile(File("frontend/build/index.html"))
         }

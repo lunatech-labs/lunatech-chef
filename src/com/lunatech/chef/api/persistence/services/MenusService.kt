@@ -1,7 +1,6 @@
 package com.lunatech.chef.api.persistence.services
 
 import com.lunatech.chef.api.domain.Menu
-import com.lunatech.chef.api.persistence.schemas.Locations
 import com.lunatech.chef.api.persistence.schemas.Menus
 import com.lunatech.chef.api.routes.UpdatedMenu
 import java.util.UUID

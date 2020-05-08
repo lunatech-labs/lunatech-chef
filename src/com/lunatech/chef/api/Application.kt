@@ -26,8 +26,10 @@ import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.CORS
 import io.ktor.features.ContentNegotiation
+import io.ktor.features.DefaultHeaders
 import io.ktor.features.StatusPages
 import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.files
@@ -63,6 +65,9 @@ fun Application.module(testing: Boolean = false) {
         method(HttpMethod.Options)
         method(HttpMethod.Put)
         method(HttpMethod.Delete)
+        header(HttpHeaders.AccessControlAllowHeaders)
+        header(HttpHeaders.ContentType)
+        header(HttpHeaders.AccessControlAllowOrigin)
         // header(HttpHeaders.Authorization)
         // allowCredentials = true
         host("localhost:3000")

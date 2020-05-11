@@ -1,14 +1,20 @@
 import React, { Component } from "react";
 import { Switch, Route, Redirect, withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
+import { actions } from "react-redux-form";
 import { fetchDishes } from "../redux/dishes/DishesActionCreators";
-import { fetchLocations } from "../redux/locations/LocationActionCreators";
+import {
+  fetchLocations,
+  addNewlocation,
+  deleteLocation,
+} from "../redux/locations/LocationActionCreators";
 import "../css/simple-sidebar.css";
 import Header from "./shared/Header";
 import Footer from "./shared/Footer";
 import ErrorBoundary from "./shared/ErrorBoundary";
 import Dishes from "./admin/Dishes";
-import Locations from "./admin/Locations";
+import ListLocations from "./admin/locations/ListLocations";
+import AddLocation from "./admin/locations/AddLocation";
 
 const mapStateToProps = (state) => {
   return {
@@ -24,6 +30,15 @@ const mapDispatchToProps = (dispatch) => ({
   fetchLocations: () => {
     dispatch(fetchLocations());
   },
+  addNewlocation: (newLocation) => {
+    dispatch(addNewlocation(newLocation));
+  },
+  resetNewLocationForm: () => {
+    dispatch(actions.reset("newLocation"));
+  },
+  deleteLocation: (locationUuid) => {
+    dispatch(deleteLocation(locationUuid));
+  },
 });
 
 class Main extends Component {
@@ -35,10 +50,20 @@ class Main extends Component {
   render() {
     const AllLocations = () => {
       return (
-        <Locations
+        <ListLocations
           isLoading={this.props.locations.isLoading}
           error={this.props.locations.error}
           locations={this.props.locations.locations.data}
+          deleteLocation={this.props.deleteLocation}
+        />
+      );
+    };
+
+    const AddNewLocation = () => {
+      return (
+        <AddLocation
+          addNewlocation={this.props.addNewlocation}
+          resetNewLocationForm={this.props.resetNewLocationForm}
         />
       );
     };
@@ -82,6 +107,7 @@ class Main extends Component {
           <Switch>
             {/* do not use the same routes as the ones available in the BE server */}
             <Route path="/alllocations" component={AllLocations} />
+            <Route path="/newLocation" component={AddNewLocation} />
             <Route path="/alldishes" component={AllDishes} />
             <Redirect to="/" />
           </Switch>

@@ -14,13 +14,16 @@ export const LocationsReducer = (
       };
 
     case ActionTypes.LOCATIONS_LOADING:
-      return { ...state, isLoading: true, error: null, locations: [] };
+      return { ...state, isLoading: true, error: null };
 
     case ActionTypes.LOCATIONS_LOADING_FAILED:
       return { ...state, isLoading: false, error: action.payload };
 
     case ActionTypes.ADD_NEW_LOCATION:
-      return { ...state, isLoading: true, error: null, locations: [] };
+      return { ...state, isLoading: false, error: null };
+
+    case ActionTypes.REMOVE_LOCATION:
+      return { ...state, isLoading: false, error: null };
 
     default:
       return state;

@@ -1,7 +1,8 @@
 POST {{ host }}/menus
 Content-Type: application/json
 
-{ "name": "Menu italiano"
+{ "name": "Menu lasagna",
+  "dishesUuid": ["51399021-695d-4dee-b7dd-c6f0354da281", "27817e5b-d9cd-4d80-8eae-e1c58a6bb3e2"]
 }
 
 ###
@@ -10,15 +11,16 @@ GET {{ host }}/menus
 
 ###
 
-GET {{ host }}/menus/bc868425-74c4-4c74-9cb0-ec789d8d474d
+GET {{ host }}/menus/999ccf4b-42a4-46bc-8b8e-39e118b6027a
 
 ###
 
-PUT {{ host }}/menus/bc868425-74c4-4c74-9cb0-ec789d8d474d
+PUT {{ host }}/menus/999ccf4b-42a4-46bc-8b8e-39e118b6027a
 Content-Type: application/json
 
 {
-  "name": "Menu lasagna italiana"
+  "name": "Menu lasagna italiana",
+  "dishesUuid": ["cde6509f-902d-4b17-be22-eadd582d8ddf"]
 }
 
 ###

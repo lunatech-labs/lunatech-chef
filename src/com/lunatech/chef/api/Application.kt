@@ -6,7 +6,6 @@ import com.lunatech.chef.api.persistence.DBEvolution
 import com.lunatech.chef.api.persistence.Database
 import com.lunatech.chef.api.persistence.FlywayConfig
 import com.lunatech.chef.api.persistence.services.AttendancesService
-import com.lunatech.chef.api.persistence.services.DishesOnMenusService
 import com.lunatech.chef.api.persistence.services.DishesService
 import com.lunatech.chef.api.persistence.services.LocationsService
 import com.lunatech.chef.api.persistence.services.MenusService
@@ -14,7 +13,6 @@ import com.lunatech.chef.api.persistence.services.SchedulesService
 import com.lunatech.chef.api.persistence.services.UsersService
 import com.lunatech.chef.api.routes.attendances
 import com.lunatech.chef.api.routes.dishes
-import com.lunatech.chef.api.routes.dishesOnMenus
 import com.lunatech.chef.api.routes.healthCheck
 import com.lunatech.chef.api.routes.locations
 import com.lunatech.chef.api.routes.menus
@@ -26,7 +24,6 @@ import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.CORS
 import io.ktor.features.ContentNegotiation
-import io.ktor.features.DefaultHeaders
 import io.ktor.features.StatusPages
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
@@ -56,7 +53,6 @@ fun Application.module(testing: Boolean = false) {
     val locationsService = LocationsService(dbConnection)
     val dishesService = DishesService(dbConnection)
     val menusService = MenusService(dbConnection)
-    val dishesOnMenusService = DishesOnMenusService(dbConnection)
     val schedulesService = SchedulesService(dbConnection)
     val usersService = UsersService(dbConnection)
     val attendancesService = AttendancesService(dbConnection)
@@ -105,7 +101,6 @@ fun Application.module(testing: Boolean = false) {
         locations(locationsService)
         dishes(dishesService)
         menus(menusService)
-        dishesOnMenus(dishesOnMenusService)
         schedules(schedulesService)
         users(usersService)
         attendances(attendancesService)

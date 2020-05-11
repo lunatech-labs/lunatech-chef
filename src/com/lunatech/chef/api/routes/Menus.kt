@@ -18,7 +18,7 @@ import io.ktor.routing.put
 import io.ktor.routing.route
 import java.util.UUID
 
-data class UpdatedMenu(val name: String)
+data class UpdatedMenu(val name: String, val dishesUuid: List<UUID>)
 
 fun Routing.menus(menusService: MenusService) {
     val menusRoute = "/menus"
@@ -35,7 +35,7 @@ fun Routing.menus(menusService: MenusService) {
         post {
             val newMenu = call.receive<NewMenu>()
             val inserted = menusService.insert(Menu.fromNewMenu(newMenu))
-            if (inserted == 1) call.respond(Created) else call.respond(InternalServerError)
+            if (inserted == newMenu.dishesUuid.size) call.respond(Created) else call.respond(InternalServerError)
         }
 
         route(uuidRoute) {
@@ -43,11 +43,11 @@ fun Routing.menus(menusService: MenusService) {
             get {
                 val uuid = call.parameters[uuidParam]
                 val menu = menusService.getByUuid(UUID.fromString(uuid))
-                if (menu.isEmpty()) {
+
+                if (menu == null) {
                     call.respond(NotFound)
-                } else {
-                    call.respond(OK, menu.first())
                 }
+                menu?.let { call.respond(OK, it) }
             }
             // modify existing menu
             put {

@@ -2,17 +2,22 @@ import React, { Component } from "react";
 import { Switch, Route, Redirect, withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { actions } from "react-redux-form";
-import { fetchDishes } from "../redux/dishes/DishesActionCreators";
+import {
+  fetchDishes,
+  addNewDish,
+  deleteDish,
+} from "../redux/dishes/DishesActionCreators";
 import {
   fetchLocations,
-  addNewlocation,
+  addNewLocation,
   deleteLocation,
 } from "../redux/locations/LocationActionCreators";
 import "../css/simple-sidebar.css";
 import Header from "./shared/Header";
 import Footer from "./shared/Footer";
 import ErrorBoundary from "./shared/ErrorBoundary";
-import Dishes from "./admin/Dishes";
+import ListDishes from "./admin/dishes/ListDishes";
+import AddDish from "./admin/dishes/AddDish";
 import ListLocations from "./admin/locations/ListLocations";
 import AddLocation from "./admin/locations/AddLocation";
 
@@ -24,20 +29,33 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchDishes: () => {
-    dispatch(fetchDishes());
-  },
+  //
+  // Locations
   fetchLocations: () => {
     dispatch(fetchLocations());
   },
-  addNewlocation: (newLocation) => {
-    dispatch(addNewlocation(newLocation));
+  addNewLocation: (newLocation) => {
+    dispatch(addNewLocation(newLocation));
   },
   resetNewLocationForm: () => {
     dispatch(actions.reset("newLocation"));
   },
   deleteLocation: (locationUuid) => {
     dispatch(deleteLocation(locationUuid));
+  },
+  //
+  // Dishes
+  fetchDishes: () => {
+    dispatch(fetchDishes());
+  },
+  addNewDish: (newDish) => {
+    dispatch(addNewDish(newDish));
+  },
+  resetNewDishForm: () => {
+    dispatch(actions.reset("newDish"));
+  },
+  deleteDish: (dishUuid) => {
+    dispatch(deleteDish(dishUuid));
   },
 });
 
@@ -48,6 +66,26 @@ class Main extends Component {
   }
 
   render() {
+    const AllDishes = () => {
+      return (
+        <ListDishes
+          isLoading={this.props.dishes.isLoading}
+          error={this.props.dishes.error}
+          dishes={this.props.dishes.dishes.data}
+          deleteDish={this.props.deleteDish}
+        />
+      );
+    };
+
+    const AddNewDish = () => {
+      return (
+        <AddDish
+          addNewDish={this.props.addNewDish}
+          resetNewDishForm={this.props.resetNewDishForm}
+        ></AddDish>
+      );
+    };
+
     const AllLocations = () => {
       return (
         <ListLocations
@@ -62,18 +100,8 @@ class Main extends Component {
     const AddNewLocation = () => {
       return (
         <AddLocation
-          addNewlocation={this.props.addNewlocation}
+          addNewLocation={this.props.addNewLocation}
           resetNewLocationForm={this.props.resetNewLocationForm}
-        />
-      );
-    };
-
-    const AllDishes = () => {
-      return (
-        <Dishes
-          isLoading={this.props.dishes.isLoading}
-          error={this.props.dishes.error}
-          dishes={this.props.dishes.dishes.data}
         />
       );
     };
@@ -109,6 +137,7 @@ class Main extends Component {
             <Route path="/alllocations" component={AllLocations} />
             <Route path="/newLocation" component={AddNewLocation} />
             <Route path="/alldishes" component={AllDishes} />
+            <Route path="/newdish" component={AddNewDish} />
             <Redirect to="/" />
           </Switch>
         </div>

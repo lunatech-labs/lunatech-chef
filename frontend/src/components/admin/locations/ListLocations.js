@@ -70,7 +70,7 @@ class ListLocations extends Component {
         <div>
           <h3 className="mt-4">Locations:</h3>
         </div>
-        <Link to={`/newLocation`}>
+        <Link to={`/newlocation`}>
           <button type="button" className="btn btn-success">
             <i>
               <FontAwesomeIcon icon={faPlus} />

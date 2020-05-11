@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import { Button, FormLabel, FormGroup } from "react-bootstrap";
+import { Button, FormLabel, Row } from "react-bootstrap";
 import { Control, Form, Errors } from "react-redux-form";
 
 const required = (val) => val && val.length;
@@ -12,7 +12,7 @@ class AddLocation extends Component {
   }
 
   handleSubmit(values) {
-    this.props.addNewlocation(values);
+    this.props.addNewLocation(values);
     this.props.resetNewLocationForm();
   }
 
@@ -27,14 +27,14 @@ class AddLocation extends Component {
             model="newLocation"
             onSubmit={(values) => this.handleSubmit(values)}
           >
-            <FormGroup controlId="formCity">
-              <FormLabel md={2}>City</FormLabel>
+            <Row className="form-group row">
+              <FormLabel className="col-sm-4">City</FormLabel>
               <Control.text
+                className="form-control col-sm-8"
                 model=".city"
                 id="city"
                 name="city"
                 placeholder="City"
-                className="form-control"
                 validators={{
                   required,
                 }}
@@ -44,18 +44,18 @@ class AddLocation extends Component {
                 model=".firstname"
                 show="touched"
                 messages={{
-                  required: "Required. ",
+                  required: "Required.",
                 }}
               />
-            </FormGroup>
-            <FormGroup controlId="formCountry">
-              <FormLabel md={2}>Country</FormLabel>
+            </Row>
+            <Row className="form-group row">
+              <FormLabel className="col-sm-4">Country</FormLabel>
               <Control.text
+                className="form-control col-sm-8"
                 model=".country"
                 id="country"
                 name="country"
                 placeholder="Country"
-                className="form-control"
                 validators={{
                   required,
                 }}
@@ -65,10 +65,10 @@ class AddLocation extends Component {
                 model=".firstname"
                 show="touched"
                 messages={{
-                  required: "Required. ",
+                  required: "Required.",
                 }}
               />
-            </FormGroup>
+            </Row>
             <Button type="submit" variant="primary">
               Add Location
             </Button>

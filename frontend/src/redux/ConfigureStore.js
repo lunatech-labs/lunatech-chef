@@ -5,13 +5,14 @@ import logger from "redux-logger";
 import { DishesReducer } from "./dishes/DishesReducer";
 import { LocationsReducer } from "./locations/LocationsReducer";
 import { EmptyLocation } from "./locations/LocationForm";
+import { EmptyDish } from "./dishes/DishForm";
 
 export const ConfigureStore = () => {
   const store = createStore(
     combineReducers({
       locations: LocationsReducer,
       dishes: DishesReducer,
-      ...createForms({ newLocation: EmptyLocation }),
+      ...createForms({ newLocation: EmptyLocation, newDish: EmptyDish }),
     }),
     applyMiddleware(thunk, logger)
   );

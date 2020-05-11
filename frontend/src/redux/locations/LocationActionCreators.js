@@ -3,11 +3,6 @@ import { baseUrl } from "../../shared/baseUrl";
 
 const axios = require("axios").default;
 
-axios.interceptors.request.use((request) => {
-  console.log("Starting Request", request);
-  return request;
-});
-
 export const fetchLocations = () => (dispatch) => {
   dispatch(locationsLoading(true));
 
@@ -17,7 +12,7 @@ export const fetchLocations = () => (dispatch) => {
       dispatch(showAllLocations(response));
     })
     .catch(function (error) {
-      console.log("Failed loading locations: " + error);
+      console.log("Failed loading Locations:" + error);
       dispatch(loadingLocationsFailed(error.message));
     });
 };
@@ -36,7 +31,7 @@ export const showAllLocations = (locations) => ({
   payload: locations,
 });
 
-export const addNewlocation = (newLocation) => (dispatch) => {
+export const addNewLocation = (newLocation) => (dispatch) => {
   const locationToAdd = {
     city: newLocation.city,
     country: newLocation.country,

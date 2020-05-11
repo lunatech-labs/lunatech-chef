@@ -14,13 +14,16 @@ export const DishesReducer = (
       };
 
     case ActionTypes.DISHES_LOADING:
-      return { ...state, isLoading: true, error: null, dishes: [] };
+      return { ...state, isLoading: true, error: null };
 
     case ActionTypes.DISHES_LOADING_FAILED:
       return { ...state, isLoading: false, error: action.payload };
 
     case ActionTypes.ADD_NEW_DISH:
-      return { ...state, isLoading: true, error: null, dishes: [] };
+      return { ...state, isLoading: true, error: null };
+
+    case ActionTypes.REMOVE_DISH:
+      return { ...state, isLoading: false, error: null };
 
     default:
       return state;

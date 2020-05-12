@@ -1,6 +1,8 @@
 package com.lunatech.chef.api.persistence.schemas
 
 import com.lunatech.chef.api.domain.MenuName
+import com.lunatech.chef.api.domain.MenuWithDishes
+import me.liuwj.ktorm.dsl.Query
 import me.liuwj.ktorm.dsl.QueryRowSet
 import me.liuwj.ktorm.schema.BaseTable
 import me.liuwj.ktorm.schema.boolean
@@ -16,5 +18,11 @@ object MenuNames : BaseTable<MenuName>("menus") {
         uuid = row[uuid] ?: DEFAULT_UUID,
         name = row[name] ?: DEFAULT_STRING,
         isDeleted = row[isDeleted] ?: DEFAULT_FALSE
+    )
+
+    fun toMenuWithDishes(menuName: MenuName, dishes: Query) = MenuWithDishes(
+        uuid = menuName.uuid,
+        name = menuName.name,
+        dishesUuid = dishes.map { Dishes.createEntity(it) }
     )
 }

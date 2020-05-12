@@ -9,6 +9,7 @@ import com.lunatech.chef.api.persistence.services.AttendancesService
 import com.lunatech.chef.api.persistence.services.DishesService
 import com.lunatech.chef.api.persistence.services.LocationsService
 import com.lunatech.chef.api.persistence.services.MenusService
+import com.lunatech.chef.api.persistence.services.MenusWithDishesNamesService
 import com.lunatech.chef.api.persistence.services.SchedulesService
 import com.lunatech.chef.api.persistence.services.UsersService
 import com.lunatech.chef.api.routes.attendances
@@ -16,6 +17,7 @@ import com.lunatech.chef.api.routes.dishes
 import com.lunatech.chef.api.routes.healthCheck
 import com.lunatech.chef.api.routes.locations
 import com.lunatech.chef.api.routes.menus
+import com.lunatech.chef.api.routes.menusWithDishesNames
 import com.lunatech.chef.api.routes.schedules
 import com.lunatech.chef.api.routes.users
 import com.typesafe.config.ConfigFactory
@@ -53,6 +55,7 @@ fun Application.module(testing: Boolean = false) {
     val locationsService = LocationsService(dbConnection)
     val dishesService = DishesService(dbConnection)
     val menusService = MenusService(dbConnection)
+    val menusWithDishesService = MenusWithDishesNamesService(dbConnection)
     val schedulesService = SchedulesService(dbConnection)
     val usersService = UsersService(dbConnection)
     val attendancesService = AttendancesService(dbConnection)
@@ -101,6 +104,7 @@ fun Application.module(testing: Boolean = false) {
         locations(locationsService)
         dishes(dishesService)
         menus(menusService)
+        menusWithDishesNames(menusWithDishesService)
         schedules(schedulesService)
         users(usersService)
         attendances(attendancesService)

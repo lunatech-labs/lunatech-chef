@@ -1,4 +1,4 @@
-import * as ActionTypes from "./LocationActionTypes";
+import * as ActionTypes from "./LocationsActionTypes";
 
 export const LocationsReducer = (
   state = { isLoading: true, error: null, locations: [] },

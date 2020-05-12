@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-class Menus extends Component {
+class ListMenus extends Component {
   constructor(props) {
     super(props);
   }
@@ -10,4 +10,4 @@ class Menus extends Component {
   }
 }
 
-export default Menus;
+export default ListMenus;

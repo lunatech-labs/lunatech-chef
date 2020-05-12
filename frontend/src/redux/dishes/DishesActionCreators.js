@@ -51,7 +51,6 @@ export const addNewDish = (newDish) => (dispatch) => {
       dispatch(fetchDishes());
     })
     .catch(function (error) {
-      //TODO mostrar o erro
       console.log("Failed adding dish: " + error);
       dispatch(dishesFailed(error));
     });
@@ -65,7 +64,6 @@ export const deleteDish = (dishUuid) => (dispatch) => {
       dispatch(fetchDishes());
     })
     .catch(function (error) {
-      //TODO mostrar o erro
       console.log("Failed removing dish: " + error);
       dispatch(dishesFailed(error));
     });

@@ -1,4 +1,4 @@
-import * as ActionTypes from "./LocationActionTypes";
+import * as ActionTypes from "./LocationsActionTypes";
 import { baseUrl } from "../../shared/baseUrl";
 
 const axios = require("axios").default;
@@ -40,12 +40,12 @@ export const addNewLocation = (newLocation) => (dispatch) => {
   axios
     .post(baseUrl + "/locations", locationToAdd)
     .then((response) => {
-      console.log("New location added with response " + response);
+      console.log("New Location added with response " + response);
       dispatch(fetchLocations());
     })
     .catch(function (error) {
-      //TODO mostrar o erro
-      console.log("Failed adding location: " + error);
+      console.log("Failed adding Location: " + error);
+      dispatch(loadingLocationsFailed(error.message));
     });
 };
 
@@ -57,7 +57,7 @@ export const deleteLocation = (locationUuid) => (dispatch) => {
       dispatch(fetchLocations());
     })
     .catch(function (error) {
-      //TODO mostrar o erro
-      console.log("Failed removing location: " + error);
+      console.log("Failed removing Location: " + error);
+      dispatch(loadingLocationsFailed(error.message));
     });
 };

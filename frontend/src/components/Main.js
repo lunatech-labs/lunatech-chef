@@ -11,7 +11,8 @@ import {
   fetchLocations,
   addNewLocation,
   deleteLocation,
-} from "../redux/locations/LocationActionCreators";
+} from "../redux/locations/LocationsActionCreators";
+import { fetchMenus } from "../redux/menus/MenusActionCreators";
 import "../css/simple-sidebar.css";
 import Header from "./shared/Header";
 import Footer from "./shared/Footer";
@@ -20,11 +21,13 @@ import ListDishes from "./admin/dishes/ListDishes";
 import AddDish from "./admin/dishes/AddDish";
 import ListLocations from "./admin/locations/ListLocations";
 import AddLocation from "./admin/locations/AddLocation";
+import ListMenus from "./admin/menus/ListMenus";
 
 const mapStateToProps = (state) => {
   return {
     locations: state.locations,
     dishes: state.dishes,
+    menus: state.menus,
   };
 };
 
@@ -57,12 +60,18 @@ const mapDispatchToProps = (dispatch) => ({
   deleteDish: (dishUuid) => {
     dispatch(deleteDish(dishUuid));
   },
+  //
+  // Menus
+  fetchMenus: () => {
+    dispatch(fetchMenus());
+  },
 });
 
 class Main extends Component {
   componentDidMount() {
     this.props.fetchLocations();
     this.props.fetchDishes();
+    this.props.fetchMenus();
   }
 
   render() {
@@ -106,6 +115,16 @@ class Main extends Component {
       );
     };
 
+    const AllMenus = () => {
+      return (
+        <ListMenus
+          isLoading={this.props.menus.isLoading}
+          error={this.props.menus.error}
+          menus={this.props.menus.menus.data}
+        />
+      );
+    };
+
     return (
       <ErrorBoundary>
         <div className="d-flex" id="wrapper">
@@ -130,6 +149,12 @@ class Main extends Component {
               >
                 Dishes
               </Link>
+              <Link
+                className="list-group-item list-group-item-action bg-light"
+                to="/allmenus"
+              >
+                Menus
+              </Link>
             </div>
           </div>
           <Switch>
@@ -138,6 +163,7 @@ class Main extends Component {
             <Route path="/newLocation" component={AddNewLocation} />
             <Route path="/alldishes" component={AllDishes} />
             <Route path="/newdish" component={AddNewDish} />
+            <Route path="/allMenus" component={AllMenus} />
             <Redirect to="/" />
           </Switch>
         </div>

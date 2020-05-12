@@ -1,0 +1,5 @@
+export const MENUS_LOADING = "MENUS_LOADING";
+export const MENUS_LOADING_FAILED = "MENUS_LOADING_FAILED";
+export const SHOW_ALL_MENUS = "SHOW_ALL_MENUS";
+export const ADD_NEW_MENU = "ADD_NEW_MENU";
+export const REMOVE_MENU = "REMOVE_MENU";

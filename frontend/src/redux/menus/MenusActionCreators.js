@@ -7,7 +7,7 @@ export const fetchMenus = () => (dispatch) => {
   dispatch(menusLoading(true));
 
   axios
-    .get(baseUrl + "/menus")
+    .get(baseUrl + "/menusWithDishesNames")
     .then(function (response) {
       dispatch(showAllMenus(response));
     })

@@ -23,6 +23,6 @@ object MenuNames : BaseTable<MenuName>("menus") {
     fun toMenuWithDishes(menuName: MenuName, dishes: Query) = MenuWithDishes(
         uuid = menuName.uuid,
         name = menuName.name,
-        dishesUuid = dishes.map { Dishes.createEntity(it) }
+        dishes = dishes.map { Dishes.createEntity(it) }
     )
 }

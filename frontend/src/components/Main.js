@@ -12,7 +12,11 @@ import {
   addNewLocation,
   deleteLocation,
 } from "../redux/locations/LocationsActionCreators";
-import { fetchMenus } from "../redux/menus/MenusActionCreators";
+import {
+  fetchMenus,
+  addNewMenu,
+  deleteMenu,
+} from "../redux/menus/MenusActionCreators";
 import "../css/simple-sidebar.css";
 import Header from "./shared/Header";
 import Footer from "./shared/Footer";
@@ -64,6 +68,15 @@ const mapDispatchToProps = (dispatch) => ({
   // Menus
   fetchMenus: () => {
     dispatch(fetchMenus());
+  },
+  addNewMenu: (newMenu) => {
+    dispatch(addNewMenu(newMenu));
+  },
+  resetNewMenuForm: () => {
+    dispatch(actions.reset("newMenu"));
+  },
+  deleteMenu: (menuUuid) => {
+    dispatch(deleteMenu(menuUuid));
   },
 });
 
@@ -121,6 +134,7 @@ class Main extends Component {
           isLoading={this.props.menus.isLoading}
           error={this.props.menus.error}
           menus={this.props.menus.menus.data}
+          deleteMenu={this.props.deleteMenu}
         />
       );
     };

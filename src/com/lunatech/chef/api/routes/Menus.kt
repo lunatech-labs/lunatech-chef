@@ -1,9 +1,11 @@
 package com.lunatech.chef.api.routes
 
+import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import com.lunatech.chef.api.domain.MenuWithDishesUuid
 import com.lunatech.chef.api.domain.NewMenuWithDishesUuid
 import com.lunatech.chef.api.persistence.services.MenusService
 import io.ktor.application.call
+import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.InternalServerError
 import io.ktor.http.HttpStatusCode.Companion.NotFound
@@ -17,8 +19,9 @@ import io.ktor.routing.post
 import io.ktor.routing.put
 import io.ktor.routing.route
 import java.util.UUID
+import kotlin.reflect.typeOf
 
-data class UpdatedMenu(val name: String, val dishesUuid: List<UUID>)
+data class UpdatedMenu(val name: String, val dishesUuids: List<UUID>)
 
 fun Routing.menus(menusService: MenusService) {
     val menusRoute = "/menus"
@@ -33,9 +36,16 @@ fun Routing.menus(menusService: MenusService) {
         }
         // create a new single menu
         post {
-            val newMenu = call.receive<NewMenuWithDishesUuid>()
-            val inserted = menusService.insert(MenuWithDishesUuid.fromNewMenuWithDishesUuid(newMenu))
-            if (inserted == newMenu.dishesUuid.size) call.respond(Created) else call.respond(InternalServerError)
+            try {
+                val newMenu = call.receive<NewMenuWithDishesUuid>()
+                val inserted = menusService.insert(MenuWithDishesUuid.fromNewMenuWithDishesUuid(newMenu))
+                if (inserted == newMenu.dishesUuids.size) call.respond(Created) else call.respond(InternalServerError)
+            } catch (e: MissingKotlinParameterException) {
+                call.respond(BadRequest, e)
+            }
+            catch (e: Exception) {
+                call.respond(BadRequest, e.message ?: "")
+            }
         }
 
         route(uuidRoute) {

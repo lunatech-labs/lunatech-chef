@@ -51,7 +51,7 @@ function RenderData({ isLoading, error, dishes, handleRemove }) {
                       )}
                     </td>
                     <td>
-                      {dish.hasNuts.toString ? (
+                      {dish.hasNuts ? (
                         <span>
                           <FontAwesomeIcon icon={faCheck} />
                         </span>

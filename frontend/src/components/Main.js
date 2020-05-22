@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Switch, Route, Redirect, withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { actions } from "react-redux-form";
 import {
   fetchDishes,
   addNewDish,
@@ -22,10 +21,11 @@ import Header from "./shared/Header";
 import Footer from "./shared/Footer";
 import ErrorBoundary from "./shared/ErrorBoundary";
 import ListDishes from "./admin/dishes/ListDishes";
-import AddDish from "./admin/dishes/AddDish";
+import { AddDish } from "./admin/dishes/AddDish";
 import ListLocations from "./admin/locations/ListLocations";
-import AddLocation from "./admin/locations/AddLocation";
+import { AddLocation } from "./admin/locations/AddLocation";
 import ListMenus from "./admin/menus/ListMenus";
+import { AddMenu } from "./admin/menus/AddMenu";
 
 const mapStateToProps = (state) => {
   return {
@@ -44,9 +44,6 @@ const mapDispatchToProps = (dispatch) => ({
   addNewLocation: (newLocation) => {
     dispatch(addNewLocation(newLocation));
   },
-  resetNewLocationForm: () => {
-    dispatch(actions.reset("newLocation"));
-  },
   deleteLocation: (locationUuid) => {
     dispatch(deleteLocation(locationUuid));
   },
@@ -58,9 +55,6 @@ const mapDispatchToProps = (dispatch) => ({
   addNewDish: (newDish) => {
     dispatch(addNewDish(newDish));
   },
-  resetNewDishForm: () => {
-    dispatch(actions.reset("newDish"));
-  },
   deleteDish: (dishUuid) => {
     dispatch(deleteDish(dishUuid));
   },
@@ -71,9 +65,6 @@ const mapDispatchToProps = (dispatch) => ({
   },
   addNewMenu: (newMenu) => {
     dispatch(addNewMenu(newMenu));
-  },
-  resetNewMenuForm: () => {
-    dispatch(actions.reset("newMenu"));
   },
   deleteMenu: (menuUuid) => {
     dispatch(deleteMenu(menuUuid));
@@ -139,6 +130,16 @@ class Main extends Component {
       );
     };
 
+    const AddNewMenu = () => {
+      return (
+        <AddMenu
+          addNewMenu={this.props.addNewMenu}
+          resetNewMenuForm={this.props.resetNewMenuForm}
+          dishes={this.props.dishes.dishes.data}
+        />
+      );
+    };
+
     return (
       <ErrorBoundary>
         <div className="d-flex" id="wrapper">
@@ -178,6 +179,7 @@ class Main extends Component {
             <Route path="/alldishes" component={AllDishes} />
             <Route path="/newdish" component={AddNewDish} />
             <Route path="/allMenus" component={AllMenus} />
+            <Route path="/newMenu" component={AddNewMenu} />
             <Redirect to="/" />
           </Switch>
         </div>

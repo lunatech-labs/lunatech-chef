@@ -63,7 +63,7 @@ class MenusService(val database: Database) {
         }
 
         // second associate the dishes with the new menu
-        return menu.dishesUuid.map {
+        return menu.dishesUuids.map {
             val dishOnMenu = DishOnMenu(menuUuid = menu.uuid, dishUuid = it)
             database.insert(DishesOnMenus) {
                 it.menuUuid to dishOnMenu.menuUuid
@@ -84,7 +84,7 @@ class MenusService(val database: Database) {
             // the update of dishes id done by removing all current dishes association
             // and then adding new one
             database.delete(DishesOnMenus) { it.menuUuid eq uuid }
-            menu.dishesUuid.map { dishUuid ->
+            menu.dishesUuids.map { dishUuid ->
                 database.insert(DishesOnMenus) {
                     it.menuUuid to uuid
                     it.dishUuid to dishUuid

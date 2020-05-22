@@ -34,7 +34,7 @@ export const showAllMenus = (menus) => ({
 export const addNewMenu = (newMenu) => (dispatch) => {
   const menuToAdd = {
     name: newMenu.name,
-    dishes: newMenu.dishes,
+    dishesUuids: newMenu.dishesUuids,
   };
 
   axios

@@ -1,82 +1,56 @@
-import React, { Component } from "react";
+import React from "react";
+import { Form, Field } from "react-final-form";
 
-import { Button, FormLabel, Row } from "react-bootstrap";
-import { Control, Form, Errors } from "react-redux-form";
+export const AddLocation = (props) => {
+  const required = (value) => (value ? undefined : "Required");
+  const onSubmit = (values) => {
+    props.addNewLocation(values);
+  };
 
-const required = (val) => val && val.length;
-
-class AddLocation extends Component {
-  constructor(props) {
-    super(props);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  handleSubmit(values) {
-    this.props.addNewLocation(values);
-    this.props.resetNewLocationForm();
-  }
-
-  render() {
-    return (
-      <div className="container">
-        <div className="row row-content">
-          <div className="col-12">
-            <h3>New Location</h3>
-          </div>
-          <Form
-            model="newLocation"
-            onSubmit={(values) => this.handleSubmit(values)}
-          >
-            <Row className="form-group row">
-              <FormLabel className="col-sm-4">City</FormLabel>
-              <Control.text
-                className="form-control col-sm-8"
-                model=".city"
-                id="city"
-                name="city"
-                placeholder="City"
-                validators={{
-                  required,
-                }}
-              />
-              <Errors
-                className="text-danger"
-                model=".firstname"
-                show="touched"
-                messages={{
-                  required: "Required.",
-                }}
-              />
-            </Row>
-            <Row className="form-group row">
-              <FormLabel className="col-sm-4">Country</FormLabel>
-              <Control.text
-                className="form-control col-sm-8"
-                model=".country"
-                id="country"
-                name="country"
-                placeholder="Country"
-                validators={{
-                  required,
-                }}
-              />
-              <Errors
-                className="text-danger"
-                model=".firstname"
-                show="touched"
-                messages={{
-                  required: "Required.",
-                }}
-              />
-            </Row>
-            <Button type="submit" variant="primary">
-              Add Location
-            </Button>
-          </Form>
-        </div>
+  return (
+    <div className="container">
+      <div>
+        <h3 className="mt-4">New Location</h3>
       </div>
-    );
-  }
-}
-
-export default AddLocation;
+      <Form
+        onSubmit={onSubmit}
+        initialValues={{ city: "", country: "" }}
+        render={({ handleSubmit, submitting, pristine }) => (
+          <form onSubmit={handleSubmit}>
+            <div>
+              <Field validate={required} name="city">
+                {({ input, meta }) => (
+                  <div>
+                    <label>City</label>
+                    <input {...input} type="text" placeholder="City" />
+                    {meta.error && meta.touched && <span>{meta.error}</span>}
+                  </div>
+                )}
+              </Field>
+            </div>
+            <div>
+              <Field validate={required} name="country">
+                {({ input, meta }) => (
+                  <div>
+                    <label>Country</label>
+                    <input {...input} type="text" placeholder="Country" />
+                    {meta.error && meta.touched && <span>{meta.error}</span>}
+                  </div>
+                )}
+              </Field>
+            </div>
+            <div>
+              <button
+                type="submit"
+                color="primary"
+                disabled={submitting || pristine}
+              >
+                Add Location
+              </button>
+            </div>
+          </form>
+        )}
+      ></Form>
+    </div>
+  );
+};

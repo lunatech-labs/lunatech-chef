@@ -38,7 +38,7 @@ function RenderData({ isLoading, error, dishes, handleRemove }) {
             <tbody>
               {dishes.map((dish) => {
                 return (
-                  <tr>
+                  <tr key={dish.uuid}>
                     <td>{dish.name}</td>
                     <td>{dish.description}</td>
                     <td>
@@ -149,7 +149,7 @@ class ListDishes extends Component {
             New Dish
           </button>
         </Link>
-        <div className>
+        <div>
           <RenderData
             isLoading={this.props.isLoading}
             error={this.props.error}

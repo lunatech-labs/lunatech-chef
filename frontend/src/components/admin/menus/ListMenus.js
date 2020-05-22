@@ -31,11 +31,11 @@ function RenderData({ isLoading, error, menus, handleRemove }) {
             <tbody>
               {menus.map((menu) => {
                 return (
-                  <tr>
+                  <tr key={menu.uuid}>
                     <td>{menu.name}</td>
                     <td>
                       {menu.dishes.map((dish) => (
-                        <p>{dish.name}</p>
+                        <p key={dish.uuid}>{dish.name}</p>
                       ))}
                     </td>
                     <td>
@@ -82,7 +82,7 @@ class ListMenus extends Component {
             New Menu
           </button>
         </Link>
-        <div className>
+        <div>
           <RenderData
             isLoading={this.props.isLoading}
             error={this.props.error}

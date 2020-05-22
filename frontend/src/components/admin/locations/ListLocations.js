@@ -31,7 +31,7 @@ function RenderData({ isLoading, error, locations, handleRemove }) {
             <tbody>
               {locations.map((loc) => {
                 return (
-                  <tr>
+                  <tr key={loc.uuid}>
                     <td>{loc.city}</td>
                     <td>{loc.country}</td>
                     <td>
@@ -78,7 +78,7 @@ class ListLocations extends Component {
             New Location
           </button>
         </Link>
-        <div className>
+        <div>
           <RenderData
             isLoading={this.props.isLoading}
             error={this.props.error}

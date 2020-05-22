@@ -19,7 +19,6 @@ import io.ktor.routing.post
 import io.ktor.routing.put
 import io.ktor.routing.route
 import java.util.UUID
-import kotlin.reflect.typeOf
 
 data class UpdatedMenu(val name: String, val dishesUuids: List<UUID>)
 
@@ -42,8 +41,7 @@ fun Routing.menus(menusService: MenusService) {
                 if (inserted == newMenu.dishesUuids.size) call.respond(Created) else call.respond(InternalServerError)
             } catch (e: MissingKotlinParameterException) {
                 call.respond(BadRequest, e)
-            }
-            catch (e: Exception) {
+            } catch (e: Exception) {
                 call.respond(BadRequest, e.message ?: "")
             }
         }

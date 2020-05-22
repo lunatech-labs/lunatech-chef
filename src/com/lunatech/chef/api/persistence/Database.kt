@@ -1,5 +1,6 @@
 package com.lunatech.chef.api.persistence
 
+import com.lunatech.chef.api.config.FlywayConfig
 import me.liuwj.ktorm.database.Database
 
 object Database {

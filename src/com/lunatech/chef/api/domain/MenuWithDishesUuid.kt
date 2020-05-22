@@ -8,10 +8,10 @@ data class NewMenuWithDishesUuid(
 )
 
 data class MenuWithDishesUuid(
-    val uuid: UUID,
-    val name: String,
-    val dishesUuids: List<UUID>,
-    val isDeleted: Boolean = false
+  val uuid: UUID,
+  val name: String,
+  val dishesUuids: List<UUID>,
+  val isDeleted: Boolean = false
 ) {
     companion object {
         fun fromNewMenuWithDishesUuid(newMenu: NewMenuWithDishesUuid): MenuWithDishesUuid {

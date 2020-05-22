@@ -1,4 +1,4 @@
-package com.lunatech.chef.api.persistence
+package com.lunatech.chef.api.config
 
 import com.typesafe.config.Config
 import io.github.config4k.getValue
@@ -13,7 +13,8 @@ data class FlywayConfig(val url: String, val user: String, val password: String)
             return FlywayConfig(
                 url,
                 user,
-                password)
+                password
+            )
         }
     }
 }

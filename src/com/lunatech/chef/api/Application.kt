@@ -2,8 +2,10 @@ package com.lunatech.chef.api
 
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
+import com.google.api.client.http.javanet.NetHttpTransport
+import com.google.api.client.json.jackson2.JacksonFactory
 import com.lunatech.chef.api.config.FlywayConfig
-import com.lunatech.chef.api.config.OauthConfig
 import com.lunatech.chef.api.persistence.DBEvolution
 import com.lunatech.chef.api.persistence.Database
 import com.lunatech.chef.api.persistence.services.AttendancesService
@@ -13,7 +15,6 @@ import com.lunatech.chef.api.persistence.services.MenusService
 import com.lunatech.chef.api.persistence.services.MenusWithDishesNamesService
 import com.lunatech.chef.api.persistence.services.SchedulesService
 import com.lunatech.chef.api.persistence.services.UsersService
-import com.lunatech.chef.api.routes.ChefSession
 import com.lunatech.chef.api.routes.attendances
 import com.lunatech.chef.api.routes.authorization
 import com.lunatech.chef.api.routes.dishes
@@ -29,12 +30,11 @@ import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.auth.Authentication
-import io.ktor.auth.OAuthServerSettings
-import io.ktor.auth.oauth
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.apache.Apache
+import io.ktor.auth.Principal
+import io.ktor.auth.session
 import io.ktor.features.CORS
 import io.ktor.features.ContentNegotiation
+import io.ktor.features.DefaultHeaders
 import io.ktor.features.StatusPages
 import io.ktor.features.origin
 import io.ktor.http.ContentType
@@ -46,32 +46,41 @@ import io.ktor.http.content.static
 import io.ktor.jackson.jackson
 import io.ktor.request.host
 import io.ktor.request.port
+import io.ktor.response.respond
+import io.ktor.response.respondFile
 import io.ktor.response.respondText
 import io.ktor.routing.get
 import io.ktor.routing.routing
+import io.ktor.sessions.SessionTransportTransformerMessageAuthentication
 import io.ktor.sessions.Sessions
-import io.ktor.sessions.cookie
 import io.ktor.sessions.get
+import io.ktor.sessions.header
 import io.ktor.sessions.sessions
+import java.io.File
+import java.util.Collections
+import mu.KotlinLogging
+
+private val logger = KotlinLogging.logger {}
+
+class ChefSession(val userEmail: String, val name: String, val isAdmin: Boolean)
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
 @Suppress("unused") // Referenced in application.conf
 @kotlin.jvm.JvmOverloads
+@ExperimentalStdlibApi
 fun Application.module(testing: Boolean = false) {
+    val CHEF_SESSSION = "CHEF_SESSION"
     val config = ConfigFactory.load()
     val dbConfig = FlywayConfig.fromConfig(config.getConfig("database"))
-    val oauthConfig = OauthConfig.fromConfig(config.getConfig("oauth"))
+    val secretKey = environment.config.property("app.session.secretKey").getString()
+    val clientId = environment.config.property("app.session.clientId").getString()
 
-    val googleOauthProvider = OAuthServerSettings.OAuth2ServerSettings(
-        name = oauthConfig.name,
-        authorizeUrl = oauthConfig.authorizeUrl,
-        accessTokenUrl = oauthConfig.accessTokenUrl,
-        requestMethod = HttpMethod.Post,
-        clientId = oauthConfig.clientId,
-        clientSecret = oauthConfig.clientSecret,
-        defaultScopes = oauthConfig.defaultScopes
-    )
+    val verifier = GoogleIdTokenVerifier.Builder(NetHttpTransport(), JacksonFactory.getDefaultInstance())
+        .setAudience(Collections.singletonList(clientId))
+        .build()
+
+    logger.info("GoogleIdTokenVerifier created: {}", verifier)
 
     runDBEvolutions(dbConfig)
 
@@ -91,17 +100,32 @@ fun Application.module(testing: Boolean = false) {
         header(HttpHeaders.AccessControlAllowHeaders)
         header(HttpHeaders.ContentType)
         header(HttpHeaders.AccessControlAllowOrigin)
+        header(HttpHeaders.Authorization)
+        header(CHEF_SESSSION)
         host("localhost:3000")
     }
 
-    install(Sessions) {
-        cookie<ChefSession>("LOGGED_USER")
+    install(DefaultHeaders) {
+        header(HttpHeaders.AccessControlExposeHeaders, CHEF_SESSSION)
     }
+
+    install(Sessions) {
+        header<ChefSession>(CHEF_SESSSION) {
+            val secretSignKey = secretKey.encodeToByteArray()
+            transform(SessionTransportTransformerMessageAuthentication(secretSignKey))
+        }
+    }
+
     install(Authentication) {
-        oauth("google-oauth") {
-            client = HttpClient(Apache)
-            providerLookup = { googleOauthProvider }
-            urlProvider = { redirectUrl("/login") }
+        session<ChefSession>("session-auth") {
+            data class AccountPrincipal(val email: String) : Principal
+            validate { sessionAccount ->
+                // validar info da cookie
+                AccountPrincipal("leonor.boga@lunatech.com")
+            }
+            challenge {
+                call.respond(HttpStatusCode.Unauthorized)
+            }
         }
     }
 
@@ -113,7 +137,7 @@ fun Application.module(testing: Boolean = false) {
     }
     install(StatusPages) {
         exception<Throwable> { e ->
-            call.respondText(e.localizedMessage, ContentType.Text.Plain, HttpStatusCode.InternalServerError)
+            call.respondText(e.message ?: "", ContentType.Text.Plain, HttpStatusCode.InternalServerError)
         }
     }
 
@@ -121,10 +145,9 @@ fun Application.module(testing: Boolean = false) {
         // Route by default
         get("/") {
             val session = call.sessions.get<ChefSession>()
-            call.respondText("HI ${session?.userId}")
-            // call.respondFile(File("frontend/build/index.html"))
+            call.respondFile(File("frontend/build/index.html"))
         }
-        authorization()
+        authorization(verifier!!)
         healthCheck()
         locations(locationsService)
         dishes(dishesService)
@@ -155,9 +178,9 @@ fun Application.module(testing: Boolean = false) {
 
 private fun runDBEvolutions(flywayConfig: FlywayConfig) = DBEvolution.runDBMigration(flywayConfig)
 
-private fun ApplicationCall.redirectUrl(path: String): String {
+fun ApplicationCall.redirectUrl(path: String): String {
     val defaultPort = if (request.origin.scheme == "http") 80 else 443
-    val hostPort = request.host()!! + request.port().let { port -> if (port == defaultPort) "" else ":$port" }
+    val hostPort = request.host() + request.port().let { port -> if (port == defaultPort) "" else ":$port" }
     val protocol = request.origin.scheme
     return "$protocol://$hostPort$path"
 }

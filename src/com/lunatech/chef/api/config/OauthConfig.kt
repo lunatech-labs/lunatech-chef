@@ -9,7 +9,8 @@ data class OauthConfig(
   val accessTokenUrl: String,
   val clientId: String,
   val clientSecret: String,
-  val defaultScopes: List<String>
+  val defaultScopes: List<String>,
+  val loginUrl: String
 ) {
     companion object {
         fun fromConfig(config: Config): OauthConfig {
@@ -19,6 +20,7 @@ data class OauthConfig(
             val clientId: String by config
             val clientSecret: String by config
             val defaultScopes: List<String> by config
+            val loginUrl: String by config
 
             return OauthConfig(
                 name,
@@ -26,7 +28,8 @@ data class OauthConfig(
                 accessTokenUrl,
                 clientId,
                 clientSecret,
-                defaultScopes
+                defaultScopes,
+                loginUrl
             )
         }
     }

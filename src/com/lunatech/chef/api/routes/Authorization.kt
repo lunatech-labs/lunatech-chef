@@ -1,56 +1,52 @@
 package com.lunatech.chef.api.routes
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
-import com.lunatech.chef.api.config.OauthConfig
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
+import com.lunatech.chef.api.ChefSession
 import io.ktor.application.call
-import io.ktor.auth.OAuthAccessTokenResponse
-import io.ktor.auth.OAuthServerSettings
-import io.ktor.auth.authenticate
-import io.ktor.auth.authentication
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.apache.Apache
-import io.ktor.client.request.get
-import io.ktor.client.request.header
-import io.ktor.http.HttpMethod
-import io.ktor.http.HttpStatusCode
+import io.ktor.http.HttpStatusCode.Companion.OK
+import io.ktor.http.HttpStatusCode.Companion.Unauthorized
 import io.ktor.response.respond
-import io.ktor.response.respondRedirect
 import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.ktor.routing.route
-import io.ktor.sessions.clear
 import io.ktor.sessions.sessions
 import io.ktor.sessions.set
+import java.lang.Exception
+import java.lang.IllegalArgumentException
+import mu.KotlinLogging
 
-class ChefSession(val userId: String)
+private val logger = KotlinLogging.logger {}
 
-fun Routing.authorization() {
-    authenticate("google-oauth") {
-        route("/login") {
-            handle {
-                val principal = call.authentication.principal<OAuthAccessTokenResponse.OAuth2>()
-                    ?: error("No principal")
+fun getUserNameFromEmail(emailAddress: String) =
+    emailAddress.split("@")[0].split(".").joinToString(" ") { name -> name.capitalize() }
 
-                val json = HttpClient(Apache).get<String>("https://www.googleapis.com/userinfo/v2/me") {
-                    header("Authorization", "Bearer ${principal.accessToken}")
+fun Routing.authorization(verifier: GoogleIdTokenVerifier) {
+    val loginRoute = "/login"
+    val tokenRoute = "/{id_token}"
+    val tokenParam = "id_token"
+
+    route("$loginRoute$tokenRoute") {
+        get {
+            val idToken = call.parameters[tokenParam]
+            idToken ?: throw IllegalArgumentException("$tokenParam is not found")
+
+            try {
+                val token = verifier.verify(idToken.toString())
+                if (token != null) {
+
+                    logger.info(token.toString())
+                    val payload = token.payload
+                    val email = payload.email
+
+                    call.sessions.set(ChefSession(userEmail = email, name = getUserNameFromEmail(email), isAdmin = true))
+                    call.respond(OK)
+                } else {
+                    logger.error("User unauthorized!")
+                    call.respond(Unauthorized)
                 }
-
-                val data = ObjectMapper().readValue<Map<String, Any?>>(json)
-                val id = data["id"] as String?
-
-                if (id != null) {
-                    call.sessions.set(ChefSession(id))
-                }
-                call.respondRedirect("/")
+            } catch (e: Exception) {
+                logger.error("Exception while calling GoogleIdTokenVerifier {}", e.toString())
             }
         }
     }
-
-route("/logout") {
-    get {
-        call.sessions.clear<ChefSession>()
-        call.respondRedirect("/login")
-    }
-}
 }

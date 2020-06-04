@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" xmlns:xi="http://www.w3.org/2001/XInclude">
+
+  <xi:include href="appenders.fragment.xml" />
+  <xi:include href="loggers.fragment.xml" />
+
+</Configuration>

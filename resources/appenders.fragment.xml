@@ -1,0 +1,5 @@
+<Appenders>
+  <Console name="Stdout" target="SYSTEM_OUT">
+    <PatternLayout pattern="%d %p [%t] [%c] - %m%n"/>
+  </Console>
+</Appenders>

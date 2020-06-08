@@ -4,6 +4,7 @@ import com.lunatech.chef.api.domain.NewUser
 import com.lunatech.chef.api.domain.User
 import com.lunatech.chef.api.persistence.services.UsersService
 import io.ktor.application.call
+import io.ktor.auth.authenticate
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.InternalServerError
 import io.ktor.http.HttpStatusCode.Companion.NotFound
@@ -40,41 +41,43 @@ fun Routing.users(usersService: UsersService) {
     val uuidParam = "uuid"
 
     route(usersRoute) {
-        // get all users
-        get {
-            val users = usersService.getAll()
-            call.respond(OK, users)
-        }
-        // create a new single users
-        post {
-            val newUser = call.receive<NewUser>()
-            val inserted = usersService.insert(User.fromNewUser(newUser))
-            if (inserted == 1) call.respond(Created) else call.respond(InternalServerError)
-        }
-
-        route(uuidRoute) {
-            // get single user
+        authenticate("session-auth") {
+            // get all users
             get {
-                val uuid = call.parameters[uuidParam]
-                val user = usersService.getByUuid(UUID.fromString(uuid))
-                if (user.isEmpty()) {
-                    call.respond(NotFound)
-                } else {
-                    call.respond(OK, user.first())
+                val users = usersService.getAll()
+                call.respond(OK, users)
+            }
+            // create a new single users
+            post {
+                val newUser = call.receive<NewUser>()
+                val inserted = usersService.insert(User.fromNewUser(newUser))
+                if (inserted == 1) call.respond(Created) else call.respond(InternalServerError)
+            }
+
+            route(uuidRoute) {
+                // get single user
+                get {
+                    val uuid = call.parameters[uuidParam]
+                    val user = usersService.getByUuid(UUID.fromString(uuid))
+                    if (user.isEmpty()) {
+                        call.respond(NotFound)
+                    } else {
+                        call.respond(OK, user.first())
+                    }
                 }
-            }
-            // modify existing user
-            put {
-                val uuid = call.parameters[uuidParam]
-                val updatedUser = call.receive<UpdatedUser>()
-                val result = usersService.update(UUID.fromString(uuid), updatedUser)
-                if (result == 1) call.respond(OK) else call.respond(InternalServerError)
-            }
-            // delete a single user
-            delete {
-                val uuid = call.parameters[uuidParam]
-                val result = usersService.delete(UUID.fromString(uuid))
-                if (result == 1) call.respond(OK) else call.respond(InternalServerError)
+                // modify existing user
+                put {
+                    val uuid = call.parameters[uuidParam]
+                    val updatedUser = call.receive<UpdatedUser>()
+                    val result = usersService.update(UUID.fromString(uuid), updatedUser)
+                    if (result == 1) call.respond(OK) else call.respond(InternalServerError)
+                }
+                // delete a single user
+                delete {
+                    val uuid = call.parameters[uuidParam]
+                    val result = usersService.delete(UUID.fromString(uuid))
+                    if (result == 1) call.respond(OK) else call.respond(InternalServerError)
+                }
             }
         }
     }

@@ -4,6 +4,7 @@ import com.lunatech.chef.api.domain.NewSchedule
 import com.lunatech.chef.api.domain.Schedule
 import com.lunatech.chef.api.persistence.services.SchedulesService
 import io.ktor.application.call
+import io.ktor.auth.authenticate
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.InternalServerError
 import io.ktor.http.HttpStatusCode.Companion.NotFound
@@ -27,41 +28,43 @@ fun Routing.schedules(schedulesService: SchedulesService) {
     val uuidParam = "uuid"
 
     route(schedulesRoute) {
-        // get all schedules
-        get {
-            val schedules = schedulesService.getAll()
-            call.respond(OK, schedules)
-        }
-        // create a new single schedule
-        post {
-            val newSchedule = call.receive<NewSchedule>()
-            val inserted = schedulesService.insert(Schedule.fromNewSchedule(newSchedule))
-            if (inserted == 1) call.respond(Created) else call.respond(InternalServerError)
-        }
-
-        route(uuidRoute) {
-            // get single schedule
+        authenticate("session-auth") {
+            // get all schedules
             get {
-                val uuid = call.parameters[uuidParam]
-                val schedule = schedulesService.getByUuid(UUID.fromString(uuid))
-                if (schedule.isEmpty()) {
-                    call.respond(NotFound)
-                } else {
-                    call.respond(OK, schedule.first())
+                val schedules = schedulesService.getAll()
+                call.respond(OK, schedules)
+            }
+            // create a new single schedule
+            post {
+                val newSchedule = call.receive<NewSchedule>()
+                val inserted = schedulesService.insert(Schedule.fromNewSchedule(newSchedule))
+                if (inserted == 1) call.respond(Created) else call.respond(InternalServerError)
+            }
+
+            route(uuidRoute) {
+                // get single schedule
+                get {
+                    val uuid = call.parameters[uuidParam]
+                    val schedule = schedulesService.getByUuid(UUID.fromString(uuid))
+                    if (schedule.isEmpty()) {
+                        call.respond(NotFound)
+                    } else {
+                        call.respond(OK, schedule.first())
+                    }
                 }
-            }
-            // modify existing schedule
-            put {
-                val uuid = call.parameters[uuidParam]
-                val updatedSchedule = call.receive<UpdatedSchedule>()
-                val result = schedulesService.update(UUID.fromString(uuid), updatedSchedule)
-                if (result == 1) call.respond(OK) else call.respond(InternalServerError)
-            }
-            // delete a single schedule
-            delete {
-                val uuid = call.parameters[uuidParam]
-                val result = schedulesService.delete(UUID.fromString(uuid))
-                if (result == 1) call.respond(OK) else call.respond(InternalServerError)
+                // modify existing schedule
+                put {
+                    val uuid = call.parameters[uuidParam]
+                    val updatedSchedule = call.receive<UpdatedSchedule>()
+                    val result = schedulesService.update(UUID.fromString(uuid), updatedSchedule)
+                    if (result == 1) call.respond(OK) else call.respond(InternalServerError)
+                }
+                // delete a single schedule
+                delete {
+                    val uuid = call.parameters[uuidParam]
+                    val result = schedulesService.delete(UUID.fromString(uuid))
+                    if (result == 1) call.respond(OK) else call.respond(InternalServerError)
+                }
             }
         }
     }

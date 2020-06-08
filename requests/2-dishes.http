@@ -1,5 +1,6 @@
 POST {{ host }}/dishes
 Content-Type: application/json
+CHEF_SESSION: {{ session }}
 
 { "name": "Lasagna",
   "description": "Lasagna de ragu e espinafres",
@@ -15,15 +16,18 @@ Content-Type: application/json
 ###
 
 GET {{ host }}/dishes
+CHEF_SESSION: {{ session }}
 
 ###
 
 GET {{ host }}/dishes/7399b112-59a2-44d7-bd95-c4df1dfd63e9
+CHEF_SESSION: {{ session }}
 
 ###
 
 PUT {{ host }}/dishes/7399b112-59a2-44d7-bd95-c4df1dfd63e9
 Content-Type: application/json
+CHEF_SESSION: {{ session }}
 
 {
   "name": "Lasagna italiana",
@@ -39,6 +43,7 @@ Content-Type: application/json
 ###
 
 DELETE {{ host }}/dishes/7399b112-59a2-44d7-bd95-c4df1dfd63e9
+CHEF_SESSION: {{ session }}
 
 ###
 

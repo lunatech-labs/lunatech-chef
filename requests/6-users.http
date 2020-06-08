@@ -1,5 +1,6 @@
 POST {{ host }}/users
 Content-Type: application/json
+CHEF_SESSION: {{ session }}
 
 { "name": "Leonor",
   "emailAddress": "leonor.boga@lunatech.nl",
@@ -18,15 +19,18 @@ Content-Type: application/json
 ###
 
 GET {{ host }}/users
+CHEF_SESSION: {{ session }}
 
 ###
 
 GET {{ host }}/users/f0daa634-8ec7-4fef-88c7-a92d608b6eea
+CHEF_SESSION: {{ session }}
 
 ###
 
 PUT {{ host }}/users/f0daa634-8ec7-4fef-88c7-a92d608b6eea
 Content-Type: application/json
+CHEF_SESSION: {{ session }}
 
 {
   "name": "Leonor",
@@ -47,6 +51,7 @@ Content-Type: application/json
 ###
 
 DELETE {{ host }}/users/f0daa634-8ec7-4fef-88c7-a92d608b6eea
+CHEF_SESSION: {{ session }}
 
 ###
 

@@ -63,4 +63,7 @@ class UsersService(val database: Database) {
             it.uuid eq uuid
         }
     }
+
+    fun isAdmin(email: String) =
+        database.from(Users).select().where { Users.emailAddress eq email }.map { Users.createEntity(it) }.all { it.isAdmin }
 }

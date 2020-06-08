@@ -1,5 +1,6 @@
 POST {{ host }}/schedules
 Content-Type: application/json
+CHEF_SESSION: {{ session }}
 
 { "menuUuid": "4ebdc2ba-57eb-454d-a07a-068bd0c8873a",
   "date": "2020-04-20",
@@ -9,15 +10,18 @@ Content-Type: application/json
 ###
 
 GET {{ host }}/schedules
+CHEF_SESSION: {{ session }}
 
 ###
 
 GET {{ host }}/schedules/4403ce6b-24b5-40b2-8482-211a1da7731f
+CHEF_SESSION: {{ session }}
 
 ###
 
 PUT {{ host }}/schedules/4403ce6b-24b5-40b2-8482-211a1da7731f
 Content-Type: application/json
+CHEF_SESSION: {{ session }}
 
 { "menuUuid": "bc868425-74c4-4c74-9cb0-ec789d8d474d",
   "date": "2020-04-25",
@@ -27,6 +31,7 @@ Content-Type: application/json
 ###
 
 DELETE {{ host }}/schedules/4403ce6b-24b5-40b2-8482-211a1da7731f
+CHEF_SESSION: {{ session }}
 
 ###
 

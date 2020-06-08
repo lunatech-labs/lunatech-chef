@@ -5,6 +5,7 @@ import com.lunatech.chef.api.domain.MenuWithDishesUuid
 import com.lunatech.chef.api.domain.NewMenuWithDishesUuid
 import com.lunatech.chef.api.persistence.services.MenusService
 import io.ktor.application.call
+import io.ktor.auth.authenticate
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.InternalServerError
@@ -28,47 +29,51 @@ fun Routing.menus(menusService: MenusService) {
     val uuidParam = "uuid"
 
     route(menusRoute) {
-        // get all menus
-        get {
-            val menus = menusService.getAll()
-            call.respond(OK, menus)
-        }
-        // create a new single menu
-        post {
-            try {
-                val newMenu = call.receive<NewMenuWithDishesUuid>()
-                val inserted = menusService.insert(MenuWithDishesUuid.fromNewMenuWithDishesUuid(newMenu))
-                if (inserted == newMenu.dishesUuids.size) call.respond(Created) else call.respond(InternalServerError)
-            } catch (e: MissingKotlinParameterException) {
-                call.respond(BadRequest, e)
-            } catch (e: Exception) {
-                call.respond(BadRequest, e.message ?: "")
-            }
-        }
-
-        route(uuidRoute) {
-            // get single menu
+        authenticate("session-auth") {
+            // get all menus
             get {
-                val uuid = call.parameters[uuidParam]
-                val menu = menusService.getByUuid(UUID.fromString(uuid))
-
-                if (menu == null) {
-                    call.respond(NotFound)
+                val menus = menusService.getAll()
+                call.respond(OK, menus)
+            }
+            // create a new single menu
+            post {
+                try {
+                    val newMenu = call.receive<NewMenuWithDishesUuid>()
+                    val inserted = menusService.insert(MenuWithDishesUuid.fromNewMenuWithDishesUuid(newMenu))
+                    if (inserted == newMenu.dishesUuids.size) call.respond(Created) else call.respond(
+                        InternalServerError
+                    )
+                } catch (e: MissingKotlinParameterException) {
+                    call.respond(BadRequest, e)
+                } catch (e: Exception) {
+                    call.respond(BadRequest, e.message ?: "")
                 }
-                menu?.let { call.respond(OK, it) }
             }
-            // modify existing menu
-            put {
-                val uuid = call.parameters[uuidParam]
-                val updatedMenu = call.receive<UpdatedMenu>()
-                val result = menusService.update(UUID.fromString(uuid), updatedMenu)
-                if (result == 1) call.respond(OK) else call.respond(InternalServerError)
-            }
-            // delete a single menu
-            delete {
-                val uuid = call.parameters[uuidParam]
-                val result = menusService.delete(UUID.fromString(uuid))
-                if (result == 1) call.respond(OK) else call.respond(InternalServerError)
+
+            route(uuidRoute) {
+                // get single menu
+                get {
+                    val uuid = call.parameters[uuidParam]
+                    val menu = menusService.getByUuid(UUID.fromString(uuid))
+
+                    if (menu == null) {
+                        call.respond(NotFound)
+                    }
+                    menu?.let { call.respond(OK, it) }
+                }
+                // modify existing menu
+                put {
+                    val uuid = call.parameters[uuidParam]
+                    val updatedMenu = call.receive<UpdatedMenu>()
+                    val result = menusService.update(UUID.fromString(uuid), updatedMenu)
+                    if (result == 1) call.respond(OK) else call.respond(InternalServerError)
+                }
+                // delete a single menu
+                delete {
+                    val uuid = call.parameters[uuidParam]
+                    val result = menusService.delete(UUID.fromString(uuid))
+                    if (result == 1) call.respond(OK) else call.respond(InternalServerError)
+                }
             }
         }
     }

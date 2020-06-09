@@ -30,7 +30,7 @@ fun Routing.locations(locationsService: LocationsService) {
     val uuidParam = "uuid"
 
     route(locationsRoute) {
-            // authenticate("session-auth") {
+            authenticate("session-auth") {
                 rolesAllowed(Role.ADMIN) {
                 // get all locations
                 get {
@@ -72,4 +72,4 @@ fun Routing.locations(locationsService: LocationsService) {
             }
         }
     }
-// }
+}

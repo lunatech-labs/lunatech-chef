@@ -71,7 +71,6 @@ fun buildChefSession(token: GoogleIdToken, usersService: UsersService): ChefSess
 }
 
 fun validateSession(session: ChefSession, ttlLimit: Int): AccountPrincipal? {
-    // TODO e quando a route é apenas para admins?
     return try {
         val formatDate = SimpleDateFormat("yyMMddHHmmss")
         val ttlClient: Date = formatDate.parse(session.ttl)!!

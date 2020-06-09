@@ -54,9 +54,9 @@ import io.ktor.routing.routing
 import io.ktor.sessions.SessionTransportTransformerMessageAuthentication
 import io.ktor.sessions.Sessions
 import io.ktor.sessions.header
-import mu.KotlinLogging
 import java.io.File
 import java.util.Collections
+import mu.KotlinLogging
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 private val logger = KotlinLogging.logger {}
@@ -125,8 +125,8 @@ fun Application.module(testing: Boolean = false) {
 
     install(Authentication) {
         session<ChefSession>("session-auth") {
-            validate { sessionAccount ->
-                validateSession(sessionAccount, authConfig.ttlLimit)
+            validate { chefSession ->
+                validateSession(chefSession, authConfig.ttlLimit)
             }
             challenge {
                 call.respond(HttpStatusCode.Unauthorized)
@@ -136,8 +136,9 @@ fun Application.module(testing: Boolean = false) {
 
     install(RoleAuthorization) {
         validate { allowedRoles ->
+            // preciso do ChefSession e do allowedRoles
             logger.info("*********** allowedRoles: {}", allowedRoles)
-            false
+            true
         }
     }
 

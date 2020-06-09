@@ -1,5 +1,7 @@
 package com.lunatech.chef.api.routes
 
+import com.lunatech.chef.api.auth.Role
+import com.lunatech.chef.api.auth.rolesAllowed
 import com.lunatech.chef.api.domain.Dish
 import com.lunatech.chef.api.domain.NewDish
 import com.lunatech.chef.api.persistence.services.DishesService
@@ -38,41 +40,43 @@ fun Routing.dishes(dishesService: DishesService) {
 
     route(dishRoute) {
         authenticate("session-auth") {
-            // get all dishes
-            get {
-                val dishes = dishesService.getAll()
-                call.respond(OK, dishes)
-            }
-            // create a new single dish
-            post {
-                val newDish = call.receive<NewDish>()
-                val inserted = dishesService.insert(Dish.fromNewDish(newDish))
-                if (inserted == 1) call.respond(Created) else call.respond(InternalServerError)
-            }
-
-            route(uuidRoute) {
-                // get single dish
+            rolesAllowed(Role.ADMIN) {
+                // get all dishes
                 get {
-                    val uuid = call.parameters[uuidParam]
-                    val dish = dishesService.getByUuid(UUID.fromString(uuid))
-                    if (dish.isEmpty()) {
-                        call.respond(NotFound)
-                    } else {
-                        call.respond(OK, dish.first())
+                    val dishes = dishesService.getAll()
+                    call.respond(OK, dishes)
+                }
+                // create a new single dish
+                post {
+                    val newDish = call.receive<NewDish>()
+                    val inserted = dishesService.insert(Dish.fromNewDish(newDish))
+                    if (inserted == 1) call.respond(Created) else call.respond(InternalServerError)
+                }
+
+                route(uuidRoute) {
+                    // get single dish
+                    get {
+                        val uuid = call.parameters[uuidParam]
+                        val dish = dishesService.getByUuid(UUID.fromString(uuid))
+                        if (dish.isEmpty()) {
+                            call.respond(NotFound)
+                        } else {
+                            call.respond(OK, dish.first())
+                        }
                     }
-                }
-                // modify existing dish
-                put {
-                    val uuid = call.parameters[uuidParam]
-                    val updatedDish = call.receive<UpdatedDish>()
-                    val result = dishesService.update(UUID.fromString(uuid), updatedDish)
-                    if (result == 1) call.respond(OK) else call.respond(InternalServerError)
-                }
-                // delete a single dish
-                delete {
-                    val uuid = call.parameters[uuidParam]
-                    val result = dishesService.delete(UUID.fromString(uuid))
-                    if (result == 1) call.respond(OK) else call.respond(InternalServerError)
+                    // modify existing dish
+                    put {
+                        val uuid = call.parameters[uuidParam]
+                        val updatedDish = call.receive<UpdatedDish>()
+                        val result = dishesService.update(UUID.fromString(uuid), updatedDish)
+                        if (result == 1) call.respond(OK) else call.respond(InternalServerError)
+                    }
+                    // delete a single dish
+                    delete {
+                        val uuid = call.parameters[uuidParam]
+                        val result = dishesService.delete(UUID.fromString(uuid))
+                        if (result == 1) call.respond(OK) else call.respond(InternalServerError)
+                    }
                 }
             }
         }

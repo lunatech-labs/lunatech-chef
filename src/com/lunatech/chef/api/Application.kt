@@ -6,6 +6,7 @@ import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
 import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.jackson2.JacksonFactory
+import com.lunatech.chef.api.auth.RoleAuthorization
 import com.lunatech.chef.api.config.AuthConfig
 import com.lunatech.chef.api.config.FlywayConfig
 import com.lunatech.chef.api.persistence.DBEvolution
@@ -52,15 +53,13 @@ import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.ktor.sessions.SessionTransportTransformerMessageAuthentication
 import io.ktor.sessions.Sessions
-import io.ktor.sessions.get
 import io.ktor.sessions.header
+import mu.KotlinLogging
 import java.io.File
 import java.util.Collections
-import mu.KotlinLogging
-
-private val logger = KotlinLogging.logger {}
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
+private val logger = KotlinLogging.logger {}
 
 @Suppress("unused") // Referenced in application.conf
 @kotlin.jvm.JvmOverloads
@@ -98,6 +97,20 @@ fun Application.module(testing: Boolean = false) {
         host("localhost:3000")
     }
 
+    install(ContentNegotiation) {
+        jackson {
+            configure(SerializationFeature.INDENT_OUTPUT, true)
+            registerModule(JavaTimeModule()) // support java.time.* types
+            registerModule(KotlinModule())
+        }
+    }
+
+    install(StatusPages) {
+        exception<Throwable> { e ->
+            call.respondText(e.message ?: "", ContentType.Text.Plain, HttpStatusCode.InternalServerError)
+        }
+    }
+
     // This will add Date and Server headers to each HTTP response besides CHEF_SESSSION header
     install(DefaultHeaders) {
         header(HttpHeaders.AccessControlExposeHeaders, CHEF_SESSSION)
@@ -121,17 +134,10 @@ fun Application.module(testing: Boolean = false) {
         }
     }
 
-    install(ContentNegotiation) {
-        jackson {
-            configure(SerializationFeature.INDENT_OUTPUT, true)
-            registerModule(JavaTimeModule()) // support java.time.* types
-            registerModule(KotlinModule())
-        }
-    }
-
-    install(StatusPages) {
-        exception<Throwable> { e ->
-            call.respondText(e.message ?: "", ContentType.Text.Plain, HttpStatusCode.InternalServerError)
+    install(RoleAuthorization) {
+        validate { allowedRoles ->
+            logger.info("*********** allowedRoles: {}", allowedRoles)
+            false
         }
     }
 
@@ -157,6 +163,7 @@ fun Application.module(testing: Boolean = false) {
             files("frontend/build")
         }
 
+        // TODO HTTPS
         // TODO filtros no attendances, schedules por data, localizacao
         // TODO swagger
         // TODO pagina principal? filtrar por localizacao, lista cronologica

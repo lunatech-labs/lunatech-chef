@@ -1,9 +1,12 @@
 package com.lunatech.chef.api.routes
 
+import com.lunatech.chef.api.auth.Role
+import com.lunatech.chef.api.auth.rolesAllowed
 import com.lunatech.chef.api.domain.Attendance
 import com.lunatech.chef.api.domain.NewAttendance
 import com.lunatech.chef.api.persistence.services.AttendancesService
 import io.ktor.application.call
+import io.ktor.auth.authenticate
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.InternalServerError
 import io.ktor.http.HttpStatusCode.Companion.NotFound
@@ -25,34 +28,38 @@ fun Routing.attendances(attendancesService: AttendancesService) {
     val uuidParam = "uuid"
 
     route(attendancesRoute) {
-        // get all attendances // TODO filters
-        get {
-            val attendances = attendancesService.getAll()
-            call.respond(OK, attendances)
-        }
-        // create a new single attendance
-        post {
-            val newAttendance = call.receive<NewAttendance>()
-            val inserted = attendancesService.insert(Attendance.fromNewAttendance(newAttendance))
-            if (inserted == 1) call.respond(Created) else call.respond(InternalServerError)
-        }
-        route(uuidRoute) {
-            // get single attendance
-            get {
-                val uuid = call.parameters[uuidParam]
-                val attendance = attendancesService.getByUuid(UUID.fromString(uuid))
-                if (attendance.isEmpty()) {
-                    call.respond(NotFound)
-                } else {
-                    call.respond(OK, attendance.first())
+        authenticate("session-auth") {
+            rolesAllowed(Role.ADMIN, Role.USER) {
+                // get all attendances // TODO filters
+                get {
+                    val attendances = attendancesService.getAll()
+                    call.respond(OK, attendances)
                 }
-            }
-            // modify existing schedule
-            put {
-                val uuid = call.parameters[uuidParam]
-                val updatedAttendance = call.receive<UpdatedAttendance>()
-                val result = attendancesService.update(UUID.fromString(uuid), updatedAttendance)
-                if (result == 1) call.respond(OK) else call.respond(InternalServerError)
+                // create a new single attendance
+                post {
+                    val newAttendance = call.receive<NewAttendance>()
+                    val inserted = attendancesService.insert(Attendance.fromNewAttendance(newAttendance))
+                    if (inserted == 1) call.respond(Created) else call.respond(InternalServerError)
+                }
+                route(uuidRoute) {
+                    // get single attendance
+                    get {
+                        val uuid = call.parameters[uuidParam]
+                        val attendance = attendancesService.getByUuid(UUID.fromString(uuid))
+                        if (attendance.isEmpty()) {
+                            call.respond(NotFound)
+                        } else {
+                            call.respond(OK, attendance.first())
+                        }
+                    }
+                    // modify existing schedule
+                    put {
+                        val uuid = call.parameters[uuidParam]
+                        val updatedAttendance = call.receive<UpdatedAttendance>()
+                        val result = attendancesService.update(UUID.fromString(uuid), updatedAttendance)
+                        if (result == 1) call.respond(OK) else call.respond(InternalServerError)
+                    }
+                }
             }
         }
     }

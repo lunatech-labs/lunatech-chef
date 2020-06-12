@@ -1,12 +1,11 @@
 import * as ActionTypes from "./DishesActionTypes";
-
-const axios = require("axios").default;
+import { axiosInstance } from "../Axios";
 
 export const fetchDishes = () => (dispatch) => {
   dispatch(dishesLoading(true));
 
-  axios
-    .get(process.env.REACT_APP_BASE_URL + "/dishes")
+  axiosInstance
+    .get("/dishes")
     .then(function (response) {
       console.log(JSON.stringify(response));
       dispatch(showAllDishes(response));
@@ -44,8 +43,8 @@ export const addNewDish = (newDish) => (dispatch) => {
     hasLactose: newDish.hasLactose,
   };
 
-  axios
-    .post(process.env.REACT_APP_BASE_URL + "/dishes", dishToAdd)
+  axiosInstance
+    .post("/dishes", dishToAdd)
     .then((response) => {
       console.log("New dish added with response " + response);
       dispatch(fetchDishes());
@@ -57,8 +56,8 @@ export const addNewDish = (newDish) => (dispatch) => {
 };
 
 export const deleteDish = (dishUuid) => (dispatch) => {
-  axios
-    .delete(process.env.REACT_APP_BASE_URL + "/dishes/" + dishUuid)
+  axiosInstance
+    .delete("/dishes/" + dishUuid)
     .then((response) => {
       console.log("Dish deleted with response" + response);
       dispatch(fetchDishes());

@@ -1,12 +1,11 @@
 import * as ActionTypes from "./LocationsActionTypes";
-
-const axios = require("axios").default;
+import { axiosInstance } from "../Axios";
 
 export const fetchLocations = () => (dispatch) => {
   dispatch(locationsLoading(true));
 
-  axios
-    .get(process.env.REACT_APP_BASE_URL + "/locations")
+  axiosInstance
+    .get("/locations")
     .then(function (response) {
       dispatch(showAllLocations(response));
     })
@@ -31,17 +30,13 @@ export const showAllLocations = (locations) => ({
 });
 
 export const addNewLocation = (newLocation) => (dispatch) => {
-  // console.log("i have a token " + userToken);
-
-  // axios.defaults.headers.common = { Authorization: `Bearer ${userToken}` };
-
   const locationToAdd = {
     city: newLocation.city,
     country: newLocation.country,
   };
 
-  axios
-    .post(process.env.REACT_APP_BASE_URL + "/locations", locationToAdd)
+  axiosInstance
+    .post("/locations", locationToAdd)
     .then((response) => {
       console.log("New Location added with response " + response);
       dispatch(fetchLocations());
@@ -53,8 +48,8 @@ export const addNewLocation = (newLocation) => (dispatch) => {
 };
 
 export const deleteLocation = (locationUuid) => (dispatch) => {
-  axios
-    .delete(process.env.REACT_APP_BASE_URL + "/locations/" + locationUuid)
+  axiosInstance
+    .delete("/locations/" + locationUuid)
     .then((response) => {
       console.log("Location deleted with response" + response);
       dispatch(fetchLocations());

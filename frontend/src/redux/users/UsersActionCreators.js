@@ -1,13 +1,16 @@
 import * as ActionTypes from "./UsersActionTypes";
-
-const axios = require("axios").default;
+import { axiosInstance } from "../Axios";
+import { fetchDishes } from "../dishes/DishesActionCreators";
+import { fetchLocations } from "../locations/LocationsActionCreators";
+import { fetchMenus } from "../menus/MenusActionCreators";
 
 export const login = (token) => (dispatch) => {
-  axios
-    .get(process.env.REACT_APP_BASE_URL + "/login/" + token)
+  axiosInstance
+    .get("/login/" + token)
     .then((response) => {
-      console.log(JSON.stringify(response));
+      configureAxios(response);
       dispatch(userLoggedIn(response.data, response.headers));
+      getInitalData(dispatch);
     })
     .catch(function (error) {
       console.log("Failed logging in user " + error);
@@ -15,15 +18,35 @@ export const login = (token) => (dispatch) => {
     });
 };
 
+const configureAxios = (response) => {
+  axiosInstance.interceptors.request.use(
+    function (config) {
+      config.headers = {
+        ...config.headers,
+        CHEF_SESSION: response.headers.chef_session,
+      };
+      return config;
+    },
+    function (error) {
+      return Promise.reject(error);
+    }
+  );
+};
+
+const getInitalData = (dispatch) => {
+  dispatch(fetchLocations());
+  dispatch(fetchDishes());
+  dispatch(fetchMenus());
+};
+
 export const logout = () => (dispatch) => {
-  console.log("Logging out user");
+  console.log("Logging out");
   dispatch(userLoggedOut());
 };
 
 export const userLoggedIn = (data, headers) => ({
   type: ActionTypes.USER_LOGIN,
   payload: data,
-  sessionCookie: headers.chef_session,
 });
 
 export const userLoginError = (errmess) => ({

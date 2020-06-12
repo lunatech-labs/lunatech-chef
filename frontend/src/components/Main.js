@@ -84,12 +84,6 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 class Main extends Component {
-  componentDidMount() {
-    this.props.fetchLocations();
-    this.props.fetchDishes();
-    this.props.fetchMenus();
-  }
-
   render() {
     const AllDishes = () => {
       return (
@@ -227,7 +221,4 @@ class Main extends Component {
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));
 
-// mostrar o nome do utilizador na barra lateral
-// passar a cookie ao axios para cada request
 // adicionar private routes
-// separar a pagina de login do resto da pp

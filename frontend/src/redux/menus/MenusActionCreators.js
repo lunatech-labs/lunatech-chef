@@ -1,12 +1,11 @@
 import * as ActionTypes from "./MenusActionTypes";
-
-const axios = require("axios").default;
+import { axiosInstance } from "../Axios";
 
 export const fetchMenus = () => (dispatch) => {
   dispatch(menusLoading(true));
 
-  axios
-    .get(process.env.REACT_APP_BASE_URL + "/menusWithDishesNames")
+  axiosInstance
+    .get("/menusWithDishesNames")
     .then(function (response) {
       dispatch(showAllMenus(response));
     })
@@ -36,8 +35,8 @@ export const addNewMenu = (newMenu) => (dispatch) => {
     dishesUuids: newMenu.dishesUuids,
   };
 
-  axios
-    .post(process.env.REACT_APP_BASE_URL + "/menus", menuToAdd)
+  axiosInstance
+    .post("/menus", menuToAdd)
     .then((response) => {
       console.log("New Menu added with response " + response);
       dispatch(fetchMenus());
@@ -49,8 +48,8 @@ export const addNewMenu = (newMenu) => (dispatch) => {
 };
 
 export const deleteMenu = (menuUuid) => (dispatch) => {
-  axios
-    .delete(process.env.REACT_APP_BASE_URL + "/menus/" + menuUuid)
+  axiosInstance
+    .delete("/menus/" + menuUuid)
     .then((response) => {
       console.log("Menu deleted with response" + response);
       dispatch(fetchMenus());

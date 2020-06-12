@@ -5,7 +5,6 @@ const initState = {
   name: null,
   email: null,
   isAdmin: false,
-  sessionCookie: null,
   error: null,
 };
 
@@ -18,7 +17,6 @@ export const UsersReducer = (state = initState, action) => {
         name: action.payload.name,
         email: action.payload.email,
         isAdmin: action.payload.isAdmin,
-        sessionCookie: action.sessionCookie,
         error: null,
       };
 

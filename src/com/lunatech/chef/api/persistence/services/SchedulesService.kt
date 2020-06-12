@@ -23,7 +23,7 @@ class SchedulesService(val database: Database) {
             it.uuid to schedule.uuid
             it.menuUuid to schedule.menuUuid
             it.date to schedule.date
-            it.location to schedule.location
+            it.location to schedule.locationUuid
             it.isDeleted to schedule.isDeleted
         }
 

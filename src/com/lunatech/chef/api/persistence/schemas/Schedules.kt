@@ -19,7 +19,7 @@ object Schedules : BaseTable<Schedule>("schedules") {
         uuid = row[uuid] ?: DEFAULT_UUID,
         menuUuid = row[menuUuid] ?: DEFAULT_UUID,
         date = row[date] ?: LocalDate.now(),
-        location = row[location] ?: DEFAULT_UUID,
+        locationUuid = row[location] ?: DEFAULT_UUID,
         isDeleted = row[isDeleted] ?: DEFAULT_FALSE
     )
 }

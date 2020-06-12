@@ -1,0 +1,37 @@
+POST {{ host }}/schedules
+Content-Type: application/json
+CHEF_SESSION: {{ session }}
+
+{ "menuUuid": "b14e63e3-7ce1-4fa9-9ecf-1d5486e5c8e2",
+  "date": "2020-06-20",
+  "locationUuid": "911075c9-3508-4312-b895-873d732ce00c"
+}
+
+###
+
+GET {{ host }}/schedules
+CHEF_SESSION: {{ session }}
+
+###
+
+GET {{ host }}/schedules/4403ce6b-24b5-40b2-8482-211a1da7731f
+CHEF_SESSION: {{ session }}
+
+###
+
+PUT {{ host }}/schedules/4403ce6b-24b5-40b2-8482-211a1da7731f
+Content-Type: application/json
+CHEF_SESSION: {{ session }}
+
+{ "menuUuid": "bc868425-74c4-4c74-9cb0-ec789d8d474d",
+  "date": "2020-04-25",
+  "locationUuid": "61edaf14-b018-4ffa-afba-dc5844426176"
+}
+
+###
+
+DELETE {{ host }}/schedules/4403ce6b-24b5-40b2-8482-211a1da7731f
+CHEF_SESSION: {{ session }}
+
+###
+

@@ -1,0 +1,36 @@
+POST {{ host }}/menus
+Content-Type: application/json
+CHEF_SESSION: {{ session }}
+
+{ "name": "Menu lasagna",
+  "dishesUuids": ["85686b66-fbeb-4103-8bad-5e39844ae0b7"]
+}
+
+###
+
+GET {{ host }}/menus
+CHEF_SESSION: {{ session }}
+
+###
+
+GET {{ host }}/menus/662a7696-2dd0-420e-9cf1-dd9675d72890
+CHEF_SESSION: {{ session }}
+
+###
+
+PUT {{ host }}/menus/662a7696-2dd0-420e-9cf1-dd9675d72890
+Content-Type: application/json
+CHEF_SESSION: {{ session }}
+
+{
+  "name": "Menu lasagna italiana",
+  "dishesUuids": ["cde6509f-902d-4b17-be22-eadd582d8ddf"]
+}
+
+###
+
+DELETE {{ host }}/menus/662a7696-2dd0-420e-9cf1-dd9675d72890
+CHEF_SESSION: {{ session }}
+
+###
+

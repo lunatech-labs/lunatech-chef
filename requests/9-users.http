@@ -1,0 +1,57 @@
+POST {{ host }}/users
+Content-Type: application/json
+CHEF_SESSION: {{ session }}
+
+{ "name": "Leonor",
+  "emailAddress": "leonor.boga@lunatech.nl",
+  "isAdmin": "true",
+  "location": "82ea2b48-27d8-4b52-994b-9b4fdd377195",
+  "isVegetarian": "false",
+  "hasNutsRestriction": "false",
+  "hasSeafoodRestriction": "false",
+  "hasPorkRestriction": "true",
+  "hasBeefRestriction": "false",
+  "isGlutenIntolerant": "false",
+  "isLactoseIntolerant": "false",
+  "otherRestriction": ""
+}
+
+###
+
+GET {{ host }}/users
+CHEF_SESSION: {{ session }}
+
+###
+
+GET {{ host }}/users/f0daa634-8ec7-4fef-88c7-a92d608b6eea
+CHEF_SESSION: {{ session }}
+
+###
+
+PUT {{ host }}/users/f0daa634-8ec7-4fef-88c7-a92d608b6eea
+Content-Type: application/json
+CHEF_SESSION: {{ session }}
+
+{
+  "name": "Leonor",
+  "emailAddress": "leonor.boga@lunatech.nl",
+  "isAdmin": "true",
+  "location": "61edaf14-b018-4ffa-afba-dc5844426176",
+  "isInactive": "false",
+  "isVegetarian": "false",
+  "hasNutsRestriction": "false",
+  "hasSeafoodRestriction": "false",
+  "hasPorkRestriction": "true",
+  "hasBeefRestriction": "false",
+  "isGlutenIntolerant": "false",
+  "isLactoseIntolerant": "true",
+  "otherRestriction": "I like vegetarian food a lot"
+}
+
+###
+
+DELETE {{ host }}/users/f0daa634-8ec7-4fef-88c7-a92d608b6eea
+CHEF_SESSION: {{ session }}
+
+###
+

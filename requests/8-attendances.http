@@ -1,0 +1,24 @@
+POST {{ host }}/attendances
+Content-Type: application/json
+
+{ "scheduleUuid": "0fdb293c-ca0f-4bc5-83e1-2f7c090d4ac0",
+  "userUuid": "a5518e47-3e07-4777-8280-3c622ed5459a",
+  "isAttending": "true"
+}
+
+###
+
+GET {{ host }}/attendances
+
+###
+
+GET {{ host }}/attendances/1dcbc463-f6d1-4164-aaa0-deb17f06cf59
+
+###
+
+PUT {{ host }}/attendances/1dcbc463-f6d1-4164-aaa0-deb17f06cf59
+Content-Type: application/json
+
+{ "isAttending": "false" }
+
+###

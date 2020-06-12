@@ -1,9 +1,12 @@
 import * as ActionTypes from "./MenusActionTypes";
 
-export const MenusReducer = (
-  state = { isLoading: true, error: null, menus: [] },
-  action
-) => {
+const initState = {
+  isLoading: true,
+  error: null,
+  menus: [],
+};
+
+export const MenusReducer = (state = initState, action) => {
   switch (action.type) {
     case ActionTypes.SHOW_ALL_MENUS:
       return { ...state, isLoading: false, error: null, menus: action.payload };

@@ -1,9 +1,12 @@
 import * as ActionTypes from "./DishesActionTypes";
 
-export const DishesReducer = (
-  state = { isLoading: true, error: null, dishes: [] },
-  action
-) => {
+const initState = {
+  isLoading: true,
+  error: null,
+  dishes: [],
+};
+
+export const DishesReducer = (state = initState, action) => {
   switch (action.type) {
     case ActionTypes.SHOW_ALL_DISHES:
       return {

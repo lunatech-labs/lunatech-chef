@@ -1,5 +1,4 @@
 import * as ActionTypes from "./DishesActionTypes";
-import { baseUrl } from "../../shared/baseUrl";
 
 const axios = require("axios").default;
 
@@ -7,8 +6,9 @@ export const fetchDishes = () => (dispatch) => {
   dispatch(dishesLoading(true));
 
   axios
-    .get(baseUrl + "/dishes")
+    .get(process.env.REACT_APP_BASE_URL + "/dishes")
     .then(function (response) {
+      console.log(JSON.stringify(response));
       dispatch(showAllDishes(response));
     })
     .catch(function (error) {
@@ -45,7 +45,7 @@ export const addNewDish = (newDish) => (dispatch) => {
   };
 
   axios
-    .post(baseUrl + "/dishes", dishToAdd)
+    .post(process.env.REACT_APP_BASE_URL + "/dishes", dishToAdd)
     .then((response) => {
       console.log("New dish added with response " + response);
       dispatch(fetchDishes());
@@ -58,7 +58,7 @@ export const addNewDish = (newDish) => (dispatch) => {
 
 export const deleteDish = (dishUuid) => (dispatch) => {
   axios
-    .delete(baseUrl + "/dishes/" + dishUuid)
+    .delete(process.env.REACT_APP_BASE_URL + "/dishes/" + dishUuid)
     .then((response) => {
       console.log("Dish deleted with response" + response);
       dispatch(fetchDishes());

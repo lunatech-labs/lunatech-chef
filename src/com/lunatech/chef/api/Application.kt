@@ -164,6 +164,7 @@ fun Application.module(testing: Boolean = false) {
             files("frontend/build")
         }
 
+        // TODO adicionar novos utilizadores automaticamente quando fazem login
         // TODO HTTPS
         // TODO filtros no attendances, schedules por data, localizacao
         // TODO swagger

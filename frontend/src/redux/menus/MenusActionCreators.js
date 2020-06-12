@@ -1,5 +1,4 @@
 import * as ActionTypes from "./MenusActionTypes";
-import { baseUrl } from "../../shared/baseUrl";
 
 const axios = require("axios").default;
 
@@ -7,7 +6,7 @@ export const fetchMenus = () => (dispatch) => {
   dispatch(menusLoading(true));
 
   axios
-    .get(baseUrl + "/menusWithDishesNames")
+    .get(process.env.REACT_APP_BASE_URL + "/menusWithDishesNames")
     .then(function (response) {
       dispatch(showAllMenus(response));
     })
@@ -38,7 +37,7 @@ export const addNewMenu = (newMenu) => (dispatch) => {
   };
 
   axios
-    .post(baseUrl + "/menus", menuToAdd)
+    .post(process.env.REACT_APP_BASE_URL + "/menus", menuToAdd)
     .then((response) => {
       console.log("New Menu added with response " + response);
       dispatch(fetchMenus());
@@ -51,7 +50,7 @@ export const addNewMenu = (newMenu) => (dispatch) => {
 
 export const deleteMenu = (menuUuid) => (dispatch) => {
   axios
-    .delete(baseUrl + "/menus/" + menuUuid)
+    .delete(process.env.REACT_APP_BASE_URL + "/menus/" + menuUuid)
     .then((response) => {
       console.log("Menu deleted with response" + response);
       dispatch(fetchMenus());

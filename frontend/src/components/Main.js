@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import { Switch, Route, Redirect, withRouter, Link } from "react-router-dom";
+import { Button } from "react-bootstrap";
+import Header from "./shared/Header";
+import Footer from "./shared/Footer";
 import { connect } from "react-redux";
 import {
   fetchDishes,
@@ -16,9 +19,8 @@ import {
   addNewMenu,
   deleteMenu,
 } from "../redux/menus/MenusActionCreators";
+import { login, logout } from "../redux/users/UsersActionCreators";
 import "../css/simple-sidebar.css";
-import Header from "./shared/Header";
-import Footer from "./shared/Footer";
 import ErrorBoundary from "./shared/ErrorBoundary";
 import ListDishes from "./admin/dishes/ListDishes";
 import { AddDish } from "./admin/dishes/AddDish";
@@ -26,12 +28,14 @@ import ListLocations from "./admin/locations/ListLocations";
 import { AddLocation } from "./admin/locations/AddLocation";
 import ListMenus from "./admin/menus/ListMenus";
 import { AddMenu } from "./admin/menus/AddMenu";
+import Login from "./auth/Login";
 
 const mapStateToProps = (state) => {
   return {
     locations: state.locations,
     dishes: state.dishes,
     menus: state.menus,
+    userData: state.userData,
   };
 };
 
@@ -68,6 +72,14 @@ const mapDispatchToProps = (dispatch) => ({
   },
   deleteMenu: (menuUuid) => {
     dispatch(deleteMenu(menuUuid));
+  },
+  //
+  // Users
+  login: (token) => {
+    dispatch(login(token));
+  },
+  logout: () => {
+    dispatch(logout());
   },
 });
 
@@ -140,53 +152,82 @@ class Main extends Component {
       );
     };
 
+    const LoginUser = () => {
+      return <Login login={this.props.login} />;
+    };
+
     return (
       <ErrorBoundary>
-        <div className="d-flex" id="wrapper">
-          <div className="bg-light border-right" id="sidebar-wrapper">
-            <Header />
-            <div className="list-group list-group-flush">
-              <Link
-                className="list-group-item list-group-item-action bg-light"
-                to="/"
-              >
-                Home
-              </Link>
-              <Link
-                className="list-group-item list-group-item-action bg-light"
-                to="/alllocations"
-              >
-                Locations
-              </Link>
-              <Link
-                className="list-group-item list-group-item-action bg-light"
-                to="/alldishes"
-              >
-                Dishes
-              </Link>
-              <Link
-                className="list-group-item list-group-item-action bg-light"
-                to="/allmenus"
-              >
-                Menus
-              </Link>
+        {this.props.userData.isAuthenticated ? (
+          <div className="d-flex" id="wrapper">
+            <div className="bg-light border-right" id="sidebar-wrapper">
+              <Header />
+              <div className="list-group list-group-flush">
+                <Link
+                  className="list-group-item list-group-item-action bg-light"
+                  to="/"
+                >
+                  Meal schedule
+                </Link>
+                <Link
+                  className="list-group-item list-group-item-action bg-light"
+                  to="/alllocations"
+                >
+                  Locations
+                </Link>
+                <Link
+                  className="list-group-item list-group-item-action bg-light"
+                  to="/alldishes"
+                >
+                  Dishes
+                </Link>
+                <Link
+                  className="list-group-item list-group-item-action bg-light"
+                  to="/allmenus"
+                >
+                  Menus
+                </Link>
+                <div className="list-group-item list-group-item-action bg-light">
+                  {this.props.userData.name}
+                </div>
+                <Link to="/">
+                  <Button
+                    className="list-group-item list-group-item-action bg-light"
+                    onClick={this.props.logout}
+                  >
+                    <span>Logout</span>
+                  </Button>
+                </Link>
+              </div>
+            </div>
+            <Switch>
+              {/* do not use the same routes as the ones available in the BE server */}
+              <Route path="/alllocations" component={AllLocations} />
+              <Route path="/newLocation" component={AddNewLocation} />
+              <Route path="/alldishes" component={AllDishes} />
+              <Route path="/newdish" component={AddNewDish} />
+              <Route path="/allMenus" component={AllMenus} />
+              <Route path="/newMenu" component={AddNewMenu} />
+              <Route path="/loginUser" component={LoginUser} />
+              <Redirect to="/" />
+            </Switch>
+            <div className="d-flex">
+              <Footer />
             </div>
           </div>
-          <Switch>
-            {/* do not use the same routes as the ones available in the BE server */}
-            <Route path="/alllocations" component={AllLocations} />
-            <Route path="/newLocation" component={AddNewLocation} />
-            <Route path="/alldishes" component={AllDishes} />
-            <Route path="/newdish" component={AddNewDish} />
-            <Route path="/allMenus" component={AllMenus} />
-            <Route path="/newMenu" component={AddNewMenu} />
-            <Redirect to="/" />
-          </Switch>
-        </div>
-        <Footer />
+        ) : (
+          <div className="d-flex" id="wrapper">
+            <LoginUser />
+          </div>
+        )}
       </ErrorBoundary>
     );
   }
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));
+
+// mostrar o nome do utilizador na barra lateral
+// passar a cookie ao axios para cada request
+// adicionar private routes
+// separar a pagina de login do resto da pp

@@ -7,7 +7,7 @@ class Header extends Component {
     return (
       <React.Fragment>
         <Jumbotron>
-          <div className="sidebar-heading text-dark">
+          <div className="sidebar-heading text-dark fluid">
             <h3>Lunatech Chef</h3>
             <p>Planned meals for upcoming Fridays!</p>
           </div>

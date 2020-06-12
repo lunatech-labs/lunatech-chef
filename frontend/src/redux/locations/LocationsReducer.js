@@ -1,9 +1,12 @@
 import * as ActionTypes from "./LocationsActionTypes";
 
-export const LocationsReducer = (
-  state = { isLoading: true, error: null, locations: [] },
-  action
-) => {
+const initState = {
+  isLoading: true,
+  error: null,
+  locations: [],
+};
+
+export const LocationsReducer = (state = initState, action) => {
   switch (action.type) {
     case ActionTypes.SHOW_ALL_LOCATIONS:
       return {

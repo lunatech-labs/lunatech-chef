@@ -24,7 +24,7 @@ import mu.KotlinLogging
 private val logger = KotlinLogging.logger {}
 val formatDate = SimpleDateFormat("yyMMddHHmmss")
 
-data class ChefSession(val userEmail: String, val name: String, val isAdmin: Boolean, val ttl: String)
+data class ChefSession(val email: String, val name: String, val isAdmin: Boolean, val ttl: String)
 data class AccountPrincipal(val email: String) : Principal
 
 fun Routing.authorization(verifier: GoogleIdTokenVerifier, usersService: UsersService) {
@@ -67,7 +67,7 @@ fun buildChefSession(token: GoogleIdToken, usersService: UsersService): ChefSess
 
     val ttl = formatDate.format(Date()) ?: throw InternalError("Error adding ttl to ChefSession header.")
 
-    return ChefSession(userEmail = email, name = getUserNameFromEmail(email), isAdmin = isAdmin, ttl = ttl)
+    return ChefSession(email = email, name = getUserNameFromEmail(email), isAdmin = isAdmin, ttl = ttl)
 }
 
 fun validateSession(session: ChefSession, ttlLimit: Int): AccountPrincipal? {
@@ -79,7 +79,7 @@ fun validateSession(session: ChefSession, ttlLimit: Int): AccountPrincipal? {
         if (duration < 0 || duration > ttlLimit) {
             null
         } else {
-            AccountPrincipal(session.userEmail)
+            AccountPrincipal(session.email)
         }
     } catch (ex: Exception) {
         logger.error("Exception during session validation {}", ex.toString())

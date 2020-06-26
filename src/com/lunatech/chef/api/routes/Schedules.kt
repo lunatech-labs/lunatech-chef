@@ -7,6 +7,7 @@ import com.lunatech.chef.api.domain.Schedule
 import com.lunatech.chef.api.persistence.services.SchedulesService
 import io.ktor.application.call
 import io.ktor.auth.authenticate
+import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.InternalServerError
 import io.ktor.http.HttpStatusCode.Companion.NotFound
@@ -19,8 +20,11 @@ import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.put
 import io.ktor.routing.route
+import mu.KotlinLogging
 import java.time.LocalDate
 import java.util.UUID
+
+private val logger = KotlinLogging.logger {}
 
 data class UpdatedSchedule(val menuUuid: UUID, val date: LocalDate, val location: UUID)
 
@@ -39,9 +43,17 @@ fun Routing.schedules(schedulesService: SchedulesService) {
                 }
                 // create a new single schedule
                 post {
-                    val newSchedule = call.receive<NewSchedule>()
-                    val inserted = schedulesService.insert(Schedule.fromNewSchedule(newSchedule))
-                    if (inserted == 1) call.respond(Created) else call.respond(InternalServerError)
+                    try {
+                        val newSchedule = call.receive<NewSchedule>()
+                        val inserted = schedulesService.insert(Schedule.fromNewSchedule(newSchedule))
+                        if (inserted == 1) call.respond(Created) else call.respond(InternalServerError)
+                    }
+                    catch (exception: Exception) {
+                       logger.error("Error adding new schedule :( ", exception)
+                    }
+                    finally {
+                        call.respond(BadRequest)
+                    }
                 }
 
                 route(uuidRoute) {

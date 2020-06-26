@@ -7,11 +7,10 @@ export const fetchDishes = () => (dispatch) => {
   axiosInstance
     .get("/dishes")
     .then(function (response) {
-      console.log(JSON.stringify(response));
       dispatch(showAllDishes(response));
     })
     .catch(function (error) {
-      console.log("Failed loading dishes:" + error);
+      console.log("Failed loading dishes: " + error);
       dispatch(dishesFailed(error.message));
     });
 };
@@ -27,7 +26,7 @@ export const dishesFailed = (errmess) => ({
 
 export const showAllDishes = (dishes) => ({
   type: ActionTypes.SHOW_ALL_DISHES,
-  payload: dishes,
+  payload: dishes.data,
 });
 
 export const addNewDish = (newDish) => (dispatch) => {
@@ -59,7 +58,7 @@ export const deleteDish = (dishUuid) => (dispatch) => {
   axiosInstance
     .delete("/dishes/" + dishUuid)
     .then((response) => {
-      console.log("Dish deleted with response" + response);
+      console.log("Dish deleted with response " + response);
       dispatch(fetchDishes());
     })
     .catch(function (error) {

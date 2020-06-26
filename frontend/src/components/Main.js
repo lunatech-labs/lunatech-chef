@@ -19,6 +19,11 @@ import {
   addNewMenu,
   deleteMenu,
 } from "../redux/menus/MenusActionCreators";
+import {
+  fetchSchedules,
+  addNewSchedule,
+  deleteSchedule,
+} from "../redux/schedules/SchedulesActionCreators";
 import { login, logout } from "../redux/users/UsersActionCreators";
 import "../css/simple-sidebar.css";
 import ErrorBoundary from "./shared/ErrorBoundary";
@@ -29,13 +34,16 @@ import { AddLocation } from "./admin/locations/AddLocation";
 import ListMenus from "./admin/menus/ListMenus";
 import { AddMenu } from "./admin/menus/AddMenu";
 import Login from "./auth/Login";
+import ListSchedules from "./admin/schedules/ListSchedules";
+import AddSchedule from "./admin/schedules/AddSchedule";
 
 const mapStateToProps = (state) => {
   return {
+    userData: state.userData,
     locations: state.locations,
     dishes: state.dishes,
     menus: state.menus,
-    userData: state.userData,
+    schedules: state.schedules,
   };
 };
 
@@ -74,6 +82,17 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(deleteMenu(menuUuid));
   },
   //
+  // Schedules
+  fetchSchedules: () => {
+    dispatch(fetchSchedules());
+  },
+  addNewSchedule: (newSchedules) => {
+    dispatch(addNewSchedule(newSchedules));
+  },
+  deleteSchedule: (scheduleUuid) => {
+    dispatch(deleteSchedule(scheduleUuid));
+  },
+  //
   // Users
   login: (token) => {
     dispatch(login(token));
@@ -90,7 +109,7 @@ class Main extends Component {
         <ListDishes
           isLoading={this.props.dishes.isLoading}
           error={this.props.dishes.error}
-          dishes={this.props.dishes.dishes.data}
+          dishes={this.props.dishes.dishes}
           deleteDish={this.props.deleteDish}
         />
       );
@@ -110,7 +129,7 @@ class Main extends Component {
         <ListLocations
           isLoading={this.props.locations.isLoading}
           error={this.props.locations.error}
-          locations={this.props.locations.locations.data}
+          locations={this.props.locations.locations}
           deleteLocation={this.props.deleteLocation}
         />
       );
@@ -130,7 +149,7 @@ class Main extends Component {
         <ListMenus
           isLoading={this.props.menus.isLoading}
           error={this.props.menus.error}
-          menus={this.props.menus.menus.data}
+          menus={this.props.menus.menus}
           deleteMenu={this.props.deleteMenu}
         />
       );
@@ -141,7 +160,28 @@ class Main extends Component {
         <AddMenu
           addNewMenu={this.props.addNewMenu}
           resetNewMenuForm={this.props.resetNewMenuForm}
-          dishes={this.props.dishes.dishes.data}
+          dishes={this.props.dishes.dishes}
+        />
+      );
+    };
+
+    const AllSchedules = () => {
+      return (
+        <ListSchedules
+          isLoading={this.props.schedules.isLoading}
+          error={this.props.schedules.error}
+          schedules={this.props.schedules.schedules}
+          deleteSchedule={this.props.deleteSchedule}
+        />
+      );
+    };
+
+    const AddNewSchedule = () => {
+      return (
+        <AddSchedule
+          addNewSchedule={this.props.addNewSchedule}
+          menus={this.props.menus.menus}
+          locations={this.props.locations.locations}
         />
       );
     };
@@ -181,6 +221,12 @@ class Main extends Component {
                 >
                   Menus
                 </Link>
+                <Link
+                  className="list-group-item list-group-item-action bg-light"
+                  to="/allschedules"
+                >
+                  Schedules
+                </Link>
                 <div className="list-group-item list-group-item-action bg-light">
                   {this.props.userData.name}
                 </div>
@@ -200,8 +246,10 @@ class Main extends Component {
               <Route path="/newLocation" component={AddNewLocation} />
               <Route path="/alldishes" component={AllDishes} />
               <Route path="/newdish" component={AddNewDish} />
-              <Route path="/allMenus" component={AllMenus} />
-              <Route path="/newMenu" component={AddNewMenu} />
+              <Route path="/allmenus" component={AllMenus} />
+              <Route path="/newmenu" component={AddNewMenu} />
+              <Route path="/allschedules" component={AllSchedules} />
+              <Route path="/newschedule" component={AddNewSchedule} />
               <Route path="/loginUser" component={LoginUser} />
               <Redirect to="/" />
             </Switch>

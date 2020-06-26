@@ -10,7 +10,7 @@ export const fetchMenus = () => (dispatch) => {
       dispatch(showAllMenus(response));
     })
     .catch(function (error) {
-      console.log("Failed loading Menus:" + error);
+      console.log("Failed loading Menus: " + error);
       dispatch(loadingMenusFailed(error.message));
     });
 };
@@ -26,7 +26,7 @@ export const loadingMenusFailed = (errmess) => ({
 
 export const showAllMenus = (menus) => ({
   type: ActionTypes.SHOW_ALL_MENUS,
-  payload: menus,
+  payload: menus.data,
 });
 
 export const addNewMenu = (newMenu) => (dispatch) => {
@@ -51,7 +51,7 @@ export const deleteMenu = (menuUuid) => (dispatch) => {
   axiosInstance
     .delete("/menus/" + menuUuid)
     .then((response) => {
-      console.log("Menu deleted with response" + response);
+      console.log("Menu deleted with response: " + response);
       dispatch(fetchMenus());
     })
     .catch(function (error) {

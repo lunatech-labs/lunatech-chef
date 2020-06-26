@@ -3,6 +3,7 @@ import { axiosInstance } from "../Axios";
 import { fetchDishes } from "../dishes/DishesActionCreators";
 import { fetchLocations } from "../locations/LocationsActionCreators";
 import { fetchMenus } from "../menus/MenusActionCreators";
+import { fetchSchedules } from "../schedules/SchedulesActionCreators";
 
 export const login = (token) => (dispatch) => {
   axiosInstance
@@ -37,6 +38,7 @@ const getInitalData = (dispatch) => {
   dispatch(fetchLocations());
   dispatch(fetchDishes());
   dispatch(fetchMenus());
+  dispatch(fetchSchedules());
 };
 
 export const logout = () => (dispatch) => {

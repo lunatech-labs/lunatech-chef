@@ -4,8 +4,6 @@ import { Form, Field } from "react-final-form";
 export const AddMenu = (props) => {
   const required = (value) => (value ? undefined : "Required");
   const onSubmit = (values) => {
-    console.log("Adding menu");
-    console.log(values);
     props.addNewMenu(values);
   };
 

@@ -2,9 +2,9 @@ POST {{ host }}/schedules
 Content-Type: application/json
 CHEF_SESSION: {{ session }}
 
-{ "menuUuid": "b14e63e3-7ce1-4fa9-9ecf-1d5486e5c8e2",
-  "date": "2020-06-20",
-  "locationUuid": "911075c9-3508-4312-b895-873d732ce00c"
+{ "menuUuid":"68aea2e6-ab35-4971-8e37-08570a6e3d7a",
+  "locationUuid":"992e1a4d-9e70-4454-afd7-b33e961ddaf1",
+  "date":"2020-06-30"
 }
 
 ###
@@ -31,6 +31,11 @@ CHEF_SESSION: {{ session }}
 ###
 
 DELETE {{ host }}/schedules/4403ce6b-24b5-40b2-8482-211a1da7731f
+CHEF_SESSION: {{ session }}
+
+###
+
+DELETE {{ host }}/schedules/undefined
 CHEF_SESSION: {{ session }}
 
 ###

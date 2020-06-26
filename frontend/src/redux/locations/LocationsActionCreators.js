@@ -10,7 +10,7 @@ export const fetchLocations = () => (dispatch) => {
       dispatch(showAllLocations(response));
     })
     .catch(function (error) {
-      console.log("Failed loading Locations:" + error);
+      console.log("Failed loading Locations: " + error);
       dispatch(loadingLocationsFailed(error.message));
     });
 };
@@ -26,7 +26,7 @@ export const loadingLocationsFailed = (errmess) => ({
 
 export const showAllLocations = (locations) => ({
   type: ActionTypes.SHOW_ALL_LOCATIONS,
-  payload: locations,
+  payload: locations.data,
 });
 
 export const addNewLocation = (newLocation) => (dispatch) => {
@@ -51,7 +51,7 @@ export const deleteLocation = (locationUuid) => (dispatch) => {
   axiosInstance
     .delete("/locations/" + locationUuid)
     .then((response) => {
-      console.log("Location deleted with response" + response);
+      console.log("Location deleted with response: " + response);
       dispatch(fetchLocations());
     })
     .catch(function (error) {

@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit
 import mu.KotlinLogging
 
 private val logger = KotlinLogging.logger {}
-val formatDate = SimpleDateFormat("yyMMddHHmmss")
+private val formatDate = SimpleDateFormat("yyMMddHHmmss")
 
 data class ChefSession(val email: String, val name: String, val isAdmin: Boolean, val ttl: String)
 data class AccountPrincipal(val email: String) : Principal
@@ -46,9 +46,9 @@ fun Routing.authorization(verifier: GoogleIdTokenVerifier, usersService: UsersSe
                     logger.error("User unauthorized!")
                     call.respond(Unauthorized)
                 }
-            } catch (e: Exception) {
-                logger.error("Exception during user login {}", e.toString())
-                call.respond(InternalServerError)
+            } catch (exception: Exception) {
+                logger.error("Exception occurred during user login {}", exception.toString())
+                call.respond(InternalServerError, exception.message ?: "")
             }
         }
     }
@@ -81,8 +81,8 @@ fun validateSession(session: ChefSession, ttlLimit: Int): AccountPrincipal? {
         } else {
             AccountPrincipal(session.email)
         }
-    } catch (ex: Exception) {
-        logger.error("Exception during session validation {}", ex.toString())
+    } catch (exception: Exception) {
+        logger.error("Exception during session validation {}", exception)
         null
     }
 }

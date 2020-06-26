@@ -20,9 +20,9 @@ import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.put
 import io.ktor.routing.route
-import mu.KotlinLogging
 import java.time.LocalDate
 import java.util.UUID
+import mu.KotlinLogging
 
 private val logger = KotlinLogging.logger {}
 
@@ -47,12 +47,9 @@ fun Routing.schedules(schedulesService: SchedulesService) {
                         val newSchedule = call.receive<NewSchedule>()
                         val inserted = schedulesService.insert(Schedule.fromNewSchedule(newSchedule))
                         if (inserted == 1) call.respond(Created) else call.respond(InternalServerError)
-                    }
-                    catch (exception: Exception) {
-                       logger.error("Error adding new schedule :( ", exception)
-                    }
-                    finally {
-                        call.respond(BadRequest)
+                    } catch (exception: Exception) {
+                        logger.error("Error adding new Schedule :( ", exception)
+                        call.respond(BadRequest, exception.message ?: "")
                     }
                 }
 
@@ -69,10 +66,15 @@ fun Routing.schedules(schedulesService: SchedulesService) {
                     }
                     // modify existing schedule
                     put {
-                        val uuid = call.parameters[uuidParam]
-                        val updatedSchedule = call.receive<UpdatedSchedule>()
-                        val result = schedulesService.update(UUID.fromString(uuid), updatedSchedule)
-                        if (result == 1) call.respond(OK) else call.respond(InternalServerError)
+                        try {
+                            val uuid = call.parameters[uuidParam]
+                            val updatedSchedule = call.receive<UpdatedSchedule>()
+                            val result = schedulesService.update(UUID.fromString(uuid), updatedSchedule)
+                            if (result == 1) call.respond(OK) else call.respond(InternalServerError)
+                        } catch (exception: Exception) {
+                            logger.error("Error updating a Schedule :( ", exception)
+                            call.respond(BadRequest, exception.message ?: "")
+                        }
                     }
                     // delete a single schedule
                     delete {

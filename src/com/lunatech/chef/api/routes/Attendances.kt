@@ -7,6 +7,7 @@ import com.lunatech.chef.api.domain.NewAttendance
 import com.lunatech.chef.api.persistence.services.AttendancesService
 import io.ktor.application.call
 import io.ktor.auth.authenticate
+import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.InternalServerError
 import io.ktor.http.HttpStatusCode.Companion.NotFound
@@ -19,6 +20,9 @@ import io.ktor.routing.post
 import io.ktor.routing.put
 import io.ktor.routing.route
 import java.util.UUID
+import mu.KotlinLogging
+
+private val logger = KotlinLogging.logger {}
 
 data class UpdatedAttendance(val isAttending: Boolean)
 
@@ -37,9 +41,14 @@ fun Routing.attendances(attendancesService: AttendancesService) {
                 }
                 // create a new single attendance
                 post {
-                    val newAttendance = call.receive<NewAttendance>()
-                    val inserted = attendancesService.insert(Attendance.fromNewAttendance(newAttendance))
-                    if (inserted == 1) call.respond(Created) else call.respond(InternalServerError)
+                    try {
+                        val newAttendance = call.receive<NewAttendance>()
+                        val inserted = attendancesService.insert(Attendance.fromNewAttendance(newAttendance))
+                        if (inserted == 1) call.respond(Created) else call.respond(InternalServerError)
+                    } catch (exception: Exception) {
+                        logger.error("Error creating a new Attendance :( ", exception)
+                        call.respond(BadRequest, exception.message ?: "")
+                    }
                 }
                 route(uuidRoute) {
                     // get single attendance
@@ -54,10 +63,15 @@ fun Routing.attendances(attendancesService: AttendancesService) {
                     }
                     // modify existing schedule
                     put {
-                        val uuid = call.parameters[uuidParam]
-                        val updatedAttendance = call.receive<UpdatedAttendance>()
-                        val result = attendancesService.update(UUID.fromString(uuid), updatedAttendance)
-                        if (result == 1) call.respond(OK) else call.respond(InternalServerError)
+                        try {
+                            val uuid = call.parameters[uuidParam]
+                            val updatedAttendance = call.receive<UpdatedAttendance>()
+                            val result = attendancesService.update(UUID.fromString(uuid), updatedAttendance)
+                            if (result == 1) call.respond(OK) else call.respond(InternalServerError)
+                        } catch (exception: Exception) {
+                            logger.error("Error updating an attendance :( ", exception)
+                            call.respond(BadRequest, exception.message ?: "")
+                        }
                     }
                 }
             }

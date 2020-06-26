@@ -7,6 +7,7 @@ import com.lunatech.chef.api.domain.NewDish
 import com.lunatech.chef.api.persistence.services.DishesService
 import io.ktor.application.call
 import io.ktor.auth.authenticate
+import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.InternalServerError
 import io.ktor.http.HttpStatusCode.Companion.NotFound
@@ -20,6 +21,9 @@ import io.ktor.routing.post
 import io.ktor.routing.put
 import io.ktor.routing.route
 import java.util.UUID
+import mu.KotlinLogging
+
+private val logger = KotlinLogging.logger {}
 
 data class UpdatedDish(
   val name: String,
@@ -48,9 +52,14 @@ fun Routing.dishes(dishesService: DishesService) {
                 }
                 // create a new single dish
                 post {
-                    val newDish = call.receive<NewDish>()
-                    val inserted = dishesService.insert(Dish.fromNewDish(newDish))
-                    if (inserted == 1) call.respond(Created) else call.respond(InternalServerError)
+                    try {
+                        val newDish = call.receive<NewDish>()
+                        val inserted = dishesService.insert(Dish.fromNewDish(newDish))
+                        if (inserted == 1) call.respond(Created) else call.respond(InternalServerError)
+                    } catch (exception: Exception) {
+                        logger.error("Error creating a new Dish :( ", exception)
+                        call.respond(BadRequest, exception.message ?: "")
+                    }
                 }
 
                 route(uuidRoute) {
@@ -66,10 +75,15 @@ fun Routing.dishes(dishesService: DishesService) {
                     }
                     // modify existing dish
                     put {
-                        val uuid = call.parameters[uuidParam]
-                        val updatedDish = call.receive<UpdatedDish>()
-                        val result = dishesService.update(UUID.fromString(uuid), updatedDish)
-                        if (result == 1) call.respond(OK) else call.respond(InternalServerError)
+                        try {
+                            val uuid = call.parameters[uuidParam]
+                            val updatedDish = call.receive<UpdatedDish>()
+                            val result = dishesService.update(UUID.fromString(uuid), updatedDish)
+                            if (result == 1) call.respond(OK) else call.respond(InternalServerError)
+                        } catch (exception: Exception) {
+                            logger.error("Error updating a Dish :( ", exception)
+                            call.respond(BadRequest, exception.message ?: "")
+                        }
                     }
                     // delete a single dish
                     delete {

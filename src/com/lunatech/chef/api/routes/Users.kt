@@ -7,6 +7,7 @@ import com.lunatech.chef.api.domain.User
 import com.lunatech.chef.api.persistence.services.UsersService
 import io.ktor.application.call
 import io.ktor.auth.authenticate
+import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.InternalServerError
 import io.ktor.http.HttpStatusCode.Companion.NotFound
@@ -20,6 +21,9 @@ import io.ktor.routing.post
 import io.ktor.routing.put
 import io.ktor.routing.route
 import java.util.UUID
+import mu.KotlinLogging
+
+private val logger = KotlinLogging.logger {}
 
 data class UpdatedUser(
   val name: String,
@@ -52,9 +56,14 @@ fun Routing.users(usersService: UsersService) {
                 }
                 // create a new single users
                 post {
-                    val newUser = call.receive<NewUser>()
-                    val inserted = usersService.insert(User.fromNewUser(newUser))
-                    if (inserted == 1) call.respond(Created) else call.respond(InternalServerError)
+                    try {
+                        val newUser = call.receive<NewUser>()
+                        val inserted = usersService.insert(User.fromNewUser(newUser))
+                        if (inserted == 1) call.respond(Created) else call.respond(InternalServerError)
+                    } catch (exception: Exception) {
+                        logger.error("Error creating a new User :( ", exception)
+                        call.respond(BadRequest, exception.message ?: "")
+                    }
                 }
 
                 route(uuidRoute) {
@@ -70,10 +79,15 @@ fun Routing.users(usersService: UsersService) {
                     }
                     // modify existing user
                     put {
-                        val uuid = call.parameters[uuidParam]
-                        val updatedUser = call.receive<UpdatedUser>()
-                        val result = usersService.update(UUID.fromString(uuid), updatedUser)
-                        if (result == 1) call.respond(OK) else call.respond(InternalServerError)
+                        try {
+                            val uuid = call.parameters[uuidParam]
+                            val updatedUser = call.receive<UpdatedUser>()
+                            val result = usersService.update(UUID.fromString(uuid), updatedUser)
+                            if (result == 1) call.respond(OK) else call.respond(InternalServerError)
+                        } catch (exception: Exception) {
+                            logger.error("Error updating a User :( ", exception)
+                            call.respond(BadRequest, exception.message ?: "")
+                        }
                     }
                     // delete a single user
                     delete {

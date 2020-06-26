@@ -33,7 +33,7 @@ export const addNewSchedule = (newSchedule) => (dispatch) => {
   console.log("newSchedule: " + JSON.stringify(newSchedule));
   const scheduleToAdd = {
     menuUuid: newSchedule.menuUuid,
-    locationUuid: newSchedule.locationUuid,
+    location: newSchedule.locationUuid,
     date: newSchedule.date,
   };
 

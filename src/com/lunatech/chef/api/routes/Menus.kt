@@ -1,6 +1,5 @@
 package com.lunatech.chef.api.routes
 
-import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import com.lunatech.chef.api.auth.Role
 import com.lunatech.chef.api.auth.rolesAllowed
 import com.lunatech.chef.api.domain.MenuWithDishesUuid
@@ -22,6 +21,9 @@ import io.ktor.routing.post
 import io.ktor.routing.put
 import io.ktor.routing.route
 import java.util.UUID
+import mu.KotlinLogging
+
+private val logger = KotlinLogging.logger {}
 
 data class UpdatedMenu(val name: String, val dishesUuids: List<UUID>)
 
@@ -46,10 +48,9 @@ fun Routing.menus(menusService: MenusService) {
                         if (inserted == newMenu.dishesUuids.size) call.respond(Created) else call.respond(
                             InternalServerError
                         )
-                    } catch (e: MissingKotlinParameterException) {
-                        call.respond(BadRequest, e)
-                    } catch (e: Exception) {
-                        call.respond(BadRequest, e.message ?: "")
+                    } catch (exception: Exception) {
+                        logger.error("Error creating a Menu :( ", exception)
+                        call.respond(BadRequest, exception.message ?: "")
                     }
                 }
 
@@ -66,10 +67,15 @@ fun Routing.menus(menusService: MenusService) {
                     }
                     // modify existing menu
                     put {
-                        val uuid = call.parameters[uuidParam]
-                        val updatedMenu = call.receive<UpdatedMenu>()
-                        val result = menusService.update(UUID.fromString(uuid), updatedMenu)
-                        if (result == 1) call.respond(OK) else call.respond(InternalServerError)
+                        try {
+                            val uuid = call.parameters[uuidParam]
+                            val updatedMenu = call.receive<UpdatedMenu>()
+                            val result = menusService.update(UUID.fromString(uuid), updatedMenu)
+                            if (result == 1) call.respond(OK) else call.respond(InternalServerError)
+                        } catch (exception: Exception) {
+                            logger.error("Error updating a Menu :( ", exception)
+                            call.respond(BadRequest, exception.message ?: "")
+                        }
                     }
                     // delete a single menu
                     delete {

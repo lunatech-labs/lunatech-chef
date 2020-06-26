@@ -268,5 +268,3 @@ class Main extends Component {
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));
-
-// adicionar private routes

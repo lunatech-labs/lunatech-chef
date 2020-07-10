@@ -11,23 +11,9 @@ export const fetchMenus = () => (dispatch) => {
     })
     .catch(function (error) {
       console.log("Failed loading Menus: " + error);
-      dispatch(loadingMenusFailed(error.message));
+      dispatch(menusLoadingFailed(error.message));
     });
 };
-
-export const menusLoading = () => ({
-  type: ActionTypes.MENUS_LOADING,
-});
-
-export const loadingMenusFailed = (errmess) => ({
-  type: ActionTypes.MENUS_LOADING_FAILED,
-  payload: errmess,
-});
-
-export const showAllMenus = (menus) => ({
-  type: ActionTypes.SHOW_ALL_MENUS,
-  payload: menus.data,
-});
 
 export const addNewMenu = (newMenu) => (dispatch) => {
   const menuToAdd = {
@@ -43,7 +29,7 @@ export const addNewMenu = (newMenu) => (dispatch) => {
     })
     .catch(function (error) {
       console.log("Failed adding Menu: " + error);
-      dispatch(loadingMenusFailed(error.message));
+      dispatch(menuAddingFailed(error.message));
     });
 };
 
@@ -56,6 +42,30 @@ export const deleteMenu = (menuUuid) => (dispatch) => {
     })
     .catch(function (error) {
       console.log("Failed removing Menu: " + error);
-      dispatch(loadingMenusFailed(error.message));
+      dispatch(menuDeletingFailed(error.message));
     });
 };
+
+export const menusLoading = () => ({
+  type: ActionTypes.MENUS_LOADING,
+});
+
+export const showAllMenus = (menus) => ({
+  type: ActionTypes.SHOW_ALL_MENUS,
+  payload: menus.data,
+});
+
+export const menusLoadingFailed = (errmess) => ({
+  type: ActionTypes.MENUS_LOADING_FAILED,
+  payload: errmess,
+});
+
+export const menuAddingFailed = (errmess) => ({
+  type: ActionTypes.ADD_NEW_MENU_FAILED,
+  payload: errmess,
+});
+
+export const menuDeletingFailed = (errmess) => ({
+  type: ActionTypes.DELETE_MENU_FAILED,
+  payload: errmess,
+});

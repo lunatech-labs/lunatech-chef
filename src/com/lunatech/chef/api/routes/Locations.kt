@@ -21,6 +21,7 @@ import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.put
 import io.ktor.routing.route
+import io.ktor.util.rootCause
 import java.util.UUID
 import mu.KotlinLogging
 
@@ -49,7 +50,7 @@ fun Routing.locations(locationsService: LocationsService) {
                         if (inserted == 1) call.respond(Created) else call.respond(InternalServerError)
                     } catch (exception: Exception) {
                         logger.error("Error creating a new Location :( ", exception)
-                        call.respond(HttpStatusCode.BadRequest, exception.message ?: "")
+                        call.respond(HttpStatusCode.BadRequest, exception)
                     }
                 }
 

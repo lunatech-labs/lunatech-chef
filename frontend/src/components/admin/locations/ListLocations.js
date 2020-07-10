@@ -5,6 +5,18 @@ import { Loading } from "../../shared/Loading";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 
+function ShowDeletionError({ error }) {
+  if (error) {
+    return (
+      <div>
+        <h4>An error ocurred when deleting Location {error}</h4>
+      </div>
+    );
+  } else {
+    return <div></div>;
+  }
+}
+
 function RenderData({ isLoading, error, locations, handleRemove }) {
   if (isLoading) {
     return (
@@ -15,7 +27,11 @@ function RenderData({ isLoading, error, locations, handleRemove }) {
       </div>
     );
   } else if (error) {
-    return <h4>An error ocurred: {error}</h4>;
+    return (
+      <div>
+        <h4>An error ocurred when feching Locations from server: {error}</h4>
+      </div>
+    );
   } else {
     return (
       <div className="container">
@@ -68,7 +84,7 @@ class ListLocations extends Component {
     return (
       <div className="container">
         <div>
-          <h3 className="mt-4">Locations:</h3>
+          <h3 className="mt-4">Management of Locations</h3>
         </div>
         <Link to={`/newlocation`}>
           <button type="button" className="btn btn-success">
@@ -81,10 +97,11 @@ class ListLocations extends Component {
         <div>
           <RenderData
             isLoading={this.props.isLoading}
-            error={this.props.error}
+            error={this.props.errorListing}
             locations={this.props.locations}
             handleRemove={this.handleRemove}
           />
+          <ShowDeletionError error={this.props.errorDeleting} />
         </div>
       </div>
     );

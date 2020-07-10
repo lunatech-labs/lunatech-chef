@@ -5,6 +5,18 @@ import { Table, Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus, faCheck } from "@fortawesome/free-solid-svg-icons";
 
+function ShowDeletionError({ error }) {
+  if (error) {
+    return (
+      <div>
+        <h4>An error ocurred when deleting Location {error}</h4>
+      </div>
+    );
+  } else {
+    return <div></div>;
+  }
+}
+
 function RenderData({ isLoading, error, dishes, handleRemove }) {
   if (isLoading) {
     return (
@@ -15,7 +27,11 @@ function RenderData({ isLoading, error, dishes, handleRemove }) {
       </div>
     );
   } else if (error) {
-    return <h4>An error ocurred: {error}</h4>;
+    return (
+      <div>
+        <h4>An error ocurred when feching Dishes from server: {error}</h4>
+      </div>
+    );
   } else {
     return (
       <div className="container">
@@ -139,7 +155,7 @@ class ListDishes extends Component {
     return (
       <div className="container">
         <div>
-          <h3 className="mt-4">Dishes:</h3>
+          <h3 className="mt-4">Management of Dishes</h3>
         </div>
         <Link to={`/newdish`}>
           <button type="button" className="btn btn-success">
@@ -156,6 +172,7 @@ class ListDishes extends Component {
             dishes={this.props.dishes}
             handleRemove={this.handleRemove}
           />
+          <ShowDeletionError error={this.props.errorDeleting} />
         </div>
       </div>
     );

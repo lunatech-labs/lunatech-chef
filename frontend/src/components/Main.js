@@ -108,9 +108,10 @@ class Main extends Component {
       return (
         <ListDishes
           isLoading={this.props.dishes.isLoading}
-          error={this.props.dishes.error}
           dishes={this.props.dishes.dishes}
           deleteDish={this.props.deleteDish}
+          errorListing={this.props.locations.errorListing}
+          errorDeleting={this.props.locations.errorDeleting}
         />
       );
     };
@@ -120,6 +121,7 @@ class Main extends Component {
         <AddDish
           addNewDish={this.props.addNewDish}
           resetNewDishForm={this.props.resetNewDishForm}
+          error={this.props.dishes.errorAdding}
         ></AddDish>
       );
     };
@@ -128,9 +130,10 @@ class Main extends Component {
       return (
         <ListLocations
           isLoading={this.props.locations.isLoading}
-          error={this.props.locations.error}
           locations={this.props.locations.locations}
           deleteLocation={this.props.deleteLocation}
+          errorListing={this.props.locations.errorListing}
+          errorDeleting={this.props.locations.errorDeleting}
         />
       );
     };
@@ -140,6 +143,7 @@ class Main extends Component {
         <AddLocation
           addNewLocation={this.props.addNewLocation}
           resetNewLocationForm={this.props.resetNewLocationForm}
+          error={this.props.locations.errorAdding}
         />
       );
     };
@@ -148,9 +152,10 @@ class Main extends Component {
       return (
         <ListMenus
           isLoading={this.props.menus.isLoading}
-          error={this.props.menus.error}
           menus={this.props.menus.menus}
           deleteMenu={this.props.deleteMenu}
+          errorListing={this.props.menus.errorListing}
+          errorDeleting={this.props.menus.errorDeleting}
         />
       );
     };
@@ -161,6 +166,7 @@ class Main extends Component {
           addNewMenu={this.props.addNewMenu}
           resetNewMenuForm={this.props.resetNewMenuForm}
           dishes={this.props.dishes.dishes}
+          error={this.props.menus.errorAdding}
         />
       );
     };
@@ -169,9 +175,10 @@ class Main extends Component {
       return (
         <ListSchedules
           isLoading={this.props.schedules.isLoading}
-          error={this.props.schedules.error}
           schedules={this.props.schedules.schedules}
           deleteSchedule={this.props.deleteSchedule}
+          errorListing={this.props.schedules.errorListing}
+          errorDeleting={this.props.schedules.errorDeleting}
         />
       );
     };
@@ -182,6 +189,7 @@ class Main extends Component {
           addNewSchedule={this.props.addNewSchedule}
           menus={this.props.menus.menus}
           locations={this.props.locations.locations}
+          error={this.props.schedules.errorAdding}
         />
       );
     };

@@ -11,23 +11,9 @@ export const fetchLocations = () => (dispatch) => {
     })
     .catch(function (error) {
       console.log("Failed loading Locations: " + error);
-      dispatch(loadingLocationsFailed(error.message));
+      dispatch(locationsLoadingFailed(error.message));
     });
 };
-
-export const locationsLoading = () => ({
-  type: ActionTypes.LOCATIONS_LOADING,
-});
-
-export const loadingLocationsFailed = (errmess) => ({
-  type: ActionTypes.LOCATIONS_LOADING_FAILED,
-  payload: errmess,
-});
-
-export const showAllLocations = (locations) => ({
-  type: ActionTypes.SHOW_ALL_LOCATIONS,
-  payload: locations.data,
-});
 
 export const addNewLocation = (newLocation) => (dispatch) => {
   const locationToAdd = {
@@ -43,7 +29,7 @@ export const addNewLocation = (newLocation) => (dispatch) => {
     })
     .catch(function (error) {
       console.log("Failed adding Location: " + error);
-      dispatch(loadingLocationsFailed(error.message));
+      dispatch(locationAddingFailed(error.message));
     });
 };
 
@@ -56,6 +42,30 @@ export const deleteLocation = (locationUuid) => (dispatch) => {
     })
     .catch(function (error) {
       console.log("Failed removing Location: " + error);
-      dispatch(loadingLocationsFailed(error.message));
+      dispatch(locationDeletingFailed(error.message));
     });
 };
+
+export const locationsLoading = () => ({
+  type: ActionTypes.LOCATIONS_LOADING,
+});
+
+export const showAllLocations = (locations) => ({
+  type: ActionTypes.SHOW_ALL_LOCATIONS,
+  payload: locations.data,
+});
+
+export const locationsLoadingFailed = (errmess) => ({
+  type: ActionTypes.LOCATIONS_LOADING_FAILED,
+  payload: errmess,
+});
+
+export const locationAddingFailed = (errmess) => ({
+  type: ActionTypes.ADD_NEW_LOCATION_FAILED,
+  payload: errmess,
+});
+
+export const locationDeletingFailed = (errmess) => ({
+  type: ActionTypes.DELETE_LOCATION_FAILED,
+  payload: errmess,
+});

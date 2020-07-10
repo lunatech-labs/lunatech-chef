@@ -5,6 +5,18 @@ import { Loading } from "../../shared/Loading";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 
+function ShowDeletionError({ error }) {
+  if (error) {
+    return (
+      <div>
+        <h4>An error ocurred when deleting Menu {error}</h4>
+      </div>
+    );
+  } else {
+    return <div></div>;
+  }
+}
+
 function RenderData({ isLoading, error, menus, handleRemove }) {
   if (isLoading) {
     return (
@@ -15,7 +27,11 @@ function RenderData({ isLoading, error, menus, handleRemove }) {
       </div>
     );
   } else if (error) {
-    return <h4>An error ocurred: {error}</h4>;
+    return (
+      <div>
+        <h4>An error ocurred when feching Menus from server: {error}</h4>
+      </div>
+    );
   } else {
     return (
       <div className="container">
@@ -72,7 +88,7 @@ class ListMenus extends Component {
     return (
       <div className="container">
         <div>
-          <h3 className="mt-4">Menus:</h3>
+          <h3 className="mt-4">Management of Menus</h3>
         </div>
         <Link to={`/newMenu`}>
           <button type="button" className="btn btn-success">
@@ -89,6 +105,7 @@ class ListMenus extends Component {
             menus={this.props.menus}
             handleRemove={this.handleRemove}
           />
+          <ShowDeletionError error={this.props.errorDeleting} />
         </div>
       </div>
     );

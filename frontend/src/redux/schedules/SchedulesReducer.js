@@ -1,32 +1,40 @@
 import * as ActionTypes from "./SchedulesActionTypes";
 
 const initState = {
-  isLoading: true,
-  error: null,
+  isLoading: false,
   schedules: [],
+  errorListing: null,
+  errorAdding: null,
+  errorDeleting: null,
 };
 
 export const SchedulesReducer = (state = initState, action) => {
   switch (action.type) {
     case ActionTypes.SHOW_ALL_SCHEDULES:
-      return {
-        ...state,
-        isLoading: false,
-        error: null,
-        schedules: action.payload,
-      };
+      return { ...initState, schedules: action.payload };
 
     case ActionTypes.SCHEDULES_LOADING:
-      return { ...state, isLoading: true, error: null };
+      return { ...initState, isLoading: true };
 
     case ActionTypes.SCHEDULES_LOADING_FAILED:
-      return { ...state, isLoading: false, error: action.payload };
+      return { ...initState, errorListing: action.payload };
 
     case ActionTypes.ADD_NEW_SCHEDULE:
-      return { ...state, isLoading: false, error: null };
+      return { ...initState };
 
-    case ActionTypes.REMOVE_SCHEDULE:
-      return { ...state, isLoading: false, error: null };
+    case ActionTypes.ADD_NEW_SCHEDULE_FAILED:
+      return { ...state, errorAdding: action.payload };
+
+    case ActionTypes.DELETE_SCHEDULE:
+      return { ...initState };
+
+    case ActionTypes.DELETE_SCHEDULE_FAILED:
+      return {
+        ...state,
+        errorDeleting: action.payload,
+        errorListing: null,
+        errorAdding: null,
+      };
 
     default:
       return state;

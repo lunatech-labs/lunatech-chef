@@ -5,6 +5,18 @@ import { Loading } from "../../shared/Loading";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 
+function ShowDeletionError({ error }) {
+  if (error) {
+    return (
+      <div>
+        <h4>An error ocurred when deleting Schedule {error}</h4>
+      </div>
+    );
+  } else {
+    return <div></div>;
+  }
+}
+
 function RenderData({ isLoading, error, schedules, handleRemove }) {
   if (isLoading) {
     return (
@@ -15,7 +27,11 @@ function RenderData({ isLoading, error, schedules, handleRemove }) {
       </div>
     );
   } else if (error) {
-    return <h4>An error ocurred: {error}</h4>;
+    return (
+      <div>
+        <h4>An error ocurred when feching Schedules from server: {error}</h4>
+      </div>
+    );
   } else {
     return (
       <div className="container">
@@ -78,7 +94,7 @@ class ListSchedules extends Component {
     return (
       <div className="container">
         <div>
-          <h3 className="mt-4">Schedules:</h3>
+          <h3 className="mt-4">Management of Schedules</h3>
         </div>
         <Link to={`/newSchedule`}>
           <button type="button" className="btn btn-success">
@@ -95,6 +111,7 @@ class ListSchedules extends Component {
             schedules={this.props.schedules}
             handleRemove={this.handleRemove}
           />
+          <ShowDeletionError error={this.props.errorDeleting} />
         </div>
       </div>
     );

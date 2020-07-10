@@ -7,11 +7,20 @@ export const AddMenu = (props) => {
     props.addNewMenu(values);
   };
 
-  return (
-    <div className="container">
-      <div>
-        <h3 className="mt-4">New Menu</h3>
-      </div>
+  function ShowError({ error }) {
+    if (error) {
+      return (
+        <div>
+          <h4>An error ocurred when adding new Menu: {error}</h4>
+        </div>
+      );
+    } else {
+      return <div></div>;
+    }
+  }
+
+  function RenderData() {
+    return (
       <Form
         onSubmit={onSubmit}
         initialValues={{
@@ -57,6 +66,16 @@ export const AddMenu = (props) => {
           </form>
         )}
       ></Form>
+    );
+  }
+
+  return (
+    <div className="container">
+      <div>
+        <h3 className="mt-4">New Menu</h3>
+      </div>
+      <RenderData />
+      <ShowError error={props.error} />
     </div>
   );
 };

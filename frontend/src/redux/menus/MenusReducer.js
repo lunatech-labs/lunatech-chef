@@ -1,27 +1,40 @@
 import * as ActionTypes from "./MenusActionTypes";
 
 const initState = {
-  isLoading: true,
-  error: null,
+  isLoading: false,
   menus: [],
+  errorListing: null,
+  errorAdding: null,
+  errorDeleting: null,
 };
 
 export const MenusReducer = (state = initState, action) => {
   switch (action.type) {
     case ActionTypes.SHOW_ALL_MENUS:
-      return { ...state, isLoading: false, error: null, menus: action.payload };
+      return { ...initState, menus: action.payload };
 
     case ActionTypes.MENUS_LOADING:
-      return { ...state, isLoading: true, error: null };
+      return { ...initState, isLoading: true };
 
     case ActionTypes.MENUS_LOADING_FAILED:
-      return { ...state, isLoading: false, error: action.payload };
+      return { ...initState, errorListing: action.payload };
 
     case ActionTypes.ADD_NEW_MENU:
-      return { ...state, isLoading: false, error: null };
+      return { ...initState };
 
-    case ActionTypes.REMOVE_MENU:
-      return { ...state, isLoading: false, error: null };
+    case ActionTypes.ADD_NEW_MENU_FAILED:
+      return { ...state, errorAdding: action.payload };
+
+    case ActionTypes.DELETE_MENU:
+      return { ...initState };
+
+    case ActionTypes.DELETE_MENU_FAILED:
+      return {
+        ...state,
+        errorDeleting: action.payload,
+        errorListing: null,
+        errorAdding: null,
+      };
 
     default:
       return state;

@@ -11,29 +11,14 @@ export const fetchSchedules = () => (dispatch) => {
     })
     .catch(function (error) {
       console.log("Failed loading Schedules: " + error);
-      dispatch(loadingSchedulesFailed(error.message));
+      dispatch(schedulesLoadingFailed(error.message));
     });
 };
 
-export const schedulesLoading = () => ({
-  type: ActionTypes.SCHEDULES_LOADING,
-});
-
-export const loadingSchedulesFailed = (errmess) => ({
-  type: ActionTypes.SCHEDULES_LOADING_FAILED,
-  payload: errmess,
-});
-
-export const showAllSchedules = (schedules) => ({
-  type: ActionTypes.SHOW_ALL_SCHEDULES,
-  payload: schedules.data,
-});
-
 export const addNewSchedule = (newSchedule) => (dispatch) => {
-  console.log("newSchedule: " + JSON.stringify(newSchedule));
   const scheduleToAdd = {
     menuUuid: newSchedule.menuUuid,
-    location: newSchedule.locationUuid,
+    locationUuid: newSchedule.locationUuid,
     date: newSchedule.date,
   };
 
@@ -45,7 +30,7 @@ export const addNewSchedule = (newSchedule) => (dispatch) => {
     })
     .catch(function (error) {
       console.log("Failed adding Schedule: " + error);
-      dispatch(loadingSchedulesFailed(error.message));
+      dispatch(scheduleAddingFailed(error.message));
     });
 };
 
@@ -59,6 +44,30 @@ export const deleteSchedule = (scheduleUuid) => (dispatch) => {
     })
     .catch(function (error) {
       console.log("Failed removing Schedule: " + error);
-      dispatch(loadingSchedulesFailed(error.message));
+      dispatch(scheduleDeletingFailed(error.message));
     });
 };
+
+export const schedulesLoading = () => ({
+  type: ActionTypes.SCHEDULES_LOADING,
+});
+
+export const showAllSchedules = (schedules) => ({
+  type: ActionTypes.SHOW_ALL_SCHEDULES,
+  payload: schedules.data,
+});
+
+export const schedulesLoadingFailed = (errmess) => ({
+  type: ActionTypes.SCHEDULES_LOADING_FAILED,
+  payload: errmess,
+});
+
+export const scheduleAddingFailed = (errmess) => ({
+  type: ActionTypes.ADD_NEW_SCHEDULE_FAILED,
+  payload: errmess,
+});
+
+export const scheduleDeletingFailed = (errmess) => ({
+  type: ActionTypes.DELETE_SCHEDULE_FAILED,
+  payload: errmess,
+});

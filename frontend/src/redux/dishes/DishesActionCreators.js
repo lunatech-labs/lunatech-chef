@@ -11,23 +11,9 @@ export const fetchDishes = () => (dispatch) => {
     })
     .catch(function (error) {
       console.log("Failed loading dishes: " + error);
-      dispatch(dishesFailed(error.message));
+      dispatch(dishesLoadingFailed(error.message));
     });
 };
-
-export const dishesLoading = () => ({
-  type: ActionTypes.DISHES_LOADING,
-});
-
-export const dishesFailed = (errmess) => ({
-  type: ActionTypes.DISHES_LOADING_FAILED,
-  payload: errmess,
-});
-
-export const showAllDishes = (dishes) => ({
-  type: ActionTypes.SHOW_ALL_DISHES,
-  payload: dishes.data,
-});
 
 export const addNewDish = (newDish) => (dispatch) => {
   let dishToAdd = {
@@ -50,7 +36,7 @@ export const addNewDish = (newDish) => (dispatch) => {
     })
     .catch(function (error) {
       console.log("Failed adding dish: " + error);
-      dispatch(dishesFailed(error));
+      dispatch(dishAddingFailed(error.message));
     });
 };
 
@@ -63,6 +49,30 @@ export const deleteDish = (dishUuid) => (dispatch) => {
     })
     .catch(function (error) {
       console.log("Failed removing dish: " + error);
-      dispatch(dishesFailed(error));
+      dispatch(dishDeletingFailed(error.message));
     });
 };
+
+export const dishesLoading = () => ({
+  type: ActionTypes.DISHES_LOADING,
+});
+
+export const showAllDishes = (dishes) => ({
+  type: ActionTypes.SHOW_ALL_DISHES,
+  payload: dishes.data,
+});
+
+export const dishesLoadingFailed = (errmess) => ({
+  type: ActionTypes.DISHES_LOADING_FAILED,
+  payload: errmess,
+});
+
+export const dishAddingFailed = (errmess) => ({
+  type: ActionTypes.ADD_NEW_DISH_FAILED,
+  payload: errmess,
+});
+
+export const dishDeletingFailed = (errmess) => ({
+  type: ActionTypes.DELETE_DISH_FAILED,
+  payload: errmess,
+});

@@ -7,11 +7,20 @@ export const AddDish = (props) => {
     props.addNewDish(values);
   };
 
-  return (
-    <div className="container">
-      <div>
-        <h3 className="mt-4">New Dish</h3>
-      </div>
+  function ShowError({ error }) {
+    if (error) {
+      return (
+        <div>
+          <h4>An error ocurred when adding new Dish: {error}</h4>
+        </div>
+      );
+    } else {
+      return <div></div>;
+    }
+  }
+
+  function RenderData() {
+    return (
       <Form
         onSubmit={onSubmit}
         initialValues={{
@@ -99,6 +108,16 @@ export const AddDish = (props) => {
           </form>
         )}
       ></Form>
+    );
+  }
+
+  return (
+    <div className="container">
+      <div>
+        <h3 className="mt-4">New Dish</h3>
+      </div>
+      <RenderData />
+      <ShowError error={props.error} />
     </div>
   );
 };

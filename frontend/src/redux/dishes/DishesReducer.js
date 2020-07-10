@@ -1,32 +1,40 @@
 import * as ActionTypes from "./DishesActionTypes";
 
 const initState = {
-  isLoading: true,
-  error: null,
+  isLoading: false,
   dishes: [],
+  errorListing: null,
+  errorAdding: null,
+  errorDeleting: null,
 };
 
 export const DishesReducer = (state = initState, action) => {
   switch (action.type) {
     case ActionTypes.SHOW_ALL_DISHES:
-      return {
-        ...state,
-        isLoading: false,
-        error: null,
-        dishes: action.payload,
-      };
+      return { ...initState, dishes: action.payload };
 
     case ActionTypes.DISHES_LOADING:
-      return { ...state, isLoading: true, error: null };
+      return { ...initState, isLoading: true };
 
     case ActionTypes.DISHES_LOADING_FAILED:
-      return { ...state, isLoading: false, error: action.payload };
+      return { ...initState, errorListing: action.payload };
 
     case ActionTypes.ADD_NEW_DISH:
-      return { ...state, isLoading: true, error: null };
+      return { ...initState };
 
-    case ActionTypes.REMOVE_DISH:
-      return { ...state, isLoading: false, error: null };
+    case ActionTypes.ADD_NEW_DISH_FAILED:
+      return { ...state, errorAdding: action.payload };
+
+    case ActionTypes.DELETE_DISH:
+      return { ...initState };
+
+    case ActionTypes.DELETE_DISH_FAILED:
+      return {
+        ...state,
+        errorDeleting: action.payload,
+        errorListing: null,
+        errorAdding: null,
+      };
 
     default:
       return state;

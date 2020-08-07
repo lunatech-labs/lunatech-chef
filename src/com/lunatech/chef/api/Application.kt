@@ -150,7 +150,7 @@ fun Application.module(testing: Boolean = false) {
         get("/") {
             call.respondFile(File("frontend/build/index.html"))
         }
-        authorization(verifier!!, usersService)
+        authorization(verifier!!, authConfig.admins)
         healthCheck()
         locations(locationsService)
         dishes(dishesService)
@@ -169,7 +169,7 @@ fun Application.module(testing: Boolean = false) {
         }
 
         // TODO adicionar novos utilizadores automaticamente quando fazem login
-        // TODO HTTPS
+         // TODO HTTPS
         // TODO filtros no attendances, schedules por data, localizacao
         // TODO swagger
         // TODO pagina principal? filtrar por localizacao, lista cronologica

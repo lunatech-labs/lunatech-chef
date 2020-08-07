@@ -34,6 +34,7 @@ import { AddLocation } from "./admin/locations/AddLocation";
 import ListMenus from "./admin/menus/ListMenus";
 import { AddMenu } from "./admin/menus/AddMenu";
 import Login from "./auth/Login";
+import ProtectedRoute from "./auth/ProtectedRoute";
 import ListSchedules from "./admin/schedules/ListSchedules";
 import AddSchedule from "./admin/schedules/AddSchedule";
 
@@ -211,30 +212,36 @@ class Main extends Component {
                 >
                   Meal schedule
                 </Link>
-                <Link
-                  className="list-group-item list-group-item-action bg-light"
-                  to="/alllocations"
-                >
-                  Locations
-                </Link>
-                <Link
-                  className="list-group-item list-group-item-action bg-light"
-                  to="/alldishes"
-                >
-                  Dishes
-                </Link>
-                <Link
-                  className="list-group-item list-group-item-action bg-light"
-                  to="/allmenus"
-                >
-                  Menus
-                </Link>
-                <Link
-                  className="list-group-item list-group-item-action bg-light"
-                  to="/allschedules"
-                >
-                  Schedules
-                </Link>
+                {this.props.userData.isAdmin ? (
+                  <div>
+                    <Link
+                      className="list-group-item list-group-item-action bg-light"
+                      to="/alllocations"
+                    >
+                      Locations
+                    </Link>
+                    <Link
+                      className="list-group-item list-group-item-action bg-light"
+                      to="/alldishes"
+                    >
+                      Dishes
+                    </Link>
+                    <Link
+                      className="list-group-item list-group-item-action bg-light"
+                      to="/allmenus"
+                    >
+                      Menus
+                    </Link>
+                    <Link
+                      className="list-group-item list-group-item-action bg-light"
+                      to="/allschedules"
+                    >
+                      Schedules
+                    </Link>
+                  </div>
+                ) : (
+                  <div></div>
+                )}
                 <div className="list-group-item list-group-item-action bg-light">
                   {this.props.userData.name}
                 </div>
@@ -250,14 +257,46 @@ class Main extends Component {
             </div>
             <Switch>
               {/* do not use the same routes as the ones available in the BE server */}
-              <Route path="/alllocations" component={AllLocations} />
-              <Route path="/newLocation" component={AddNewLocation} />
-              <Route path="/alldishes" component={AllDishes} />
-              <Route path="/newdish" component={AddNewDish} />
-              <Route path="/allmenus" component={AllMenus} />
-              <Route path="/newmenu" component={AddNewMenu} />
-              <Route path="/allschedules" component={AllSchedules} />
-              <Route path="/newschedule" component={AddNewSchedule} />
+              <ProtectedRoute
+                path="/alllocations"
+                component={AllLocations}
+                isAdmin={this.props.userData.isAdmin}
+              />
+              <ProtectedRoute
+                path="/newLocation"
+                component={AddNewLocation}
+                isAdmin={this.props.userData.isAdmin}
+              />
+              <ProtectedRoute
+                path="/alldishes"
+                component={AllDishes}
+                isAdmin={this.props.userData.isAdmin}
+              />
+              <ProtectedRoute
+                path="/newdish"
+                component={AddNewDish}
+                isAdmin={this.props.userData.isAdmin}
+              />
+              <ProtectedRoute
+                path="/allmenus"
+                component={AllMenus}
+                isAdmin={this.props.userData.isAdmin}
+              />
+              <ProtectedRoute
+                path="/newmenu"
+                component={AddNewMenu}
+                isAdmin={this.props.userData.isAdmin}
+              />
+              <ProtectedRoute
+                path="/allschedules"
+                component={AllSchedules}
+                isAdmin={this.props.userData.isAdmin}
+              />
+              <ProtectedRoute
+                path="/newschedule"
+                component={AddNewSchedule}
+                isAdmin={this.props.userData.isAdmin}
+              />
               <Route path="/loginUser" component={LoginUser} />
               <Redirect to="/" />
             </Switch>

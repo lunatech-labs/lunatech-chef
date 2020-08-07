@@ -27,7 +27,7 @@ private val formatDate = SimpleDateFormat("yyMMddHHmmss")
 data class ChefSession(val email: String, val name: String, val isAdmin: Boolean, val ttl: String)
 data class AccountPrincipal(val email: String) : Principal
 
-fun Routing.authorization(verifier: GoogleIdTokenVerifier, usersService: UsersService) {
+fun Routing.authorization(verifier: GoogleIdTokenVerifier, admins: List<String>) {
     val loginRoute = "/login"
     val tokenRoute = "/{id_token}"
     val tokenParam = "id_token"
@@ -39,7 +39,7 @@ fun Routing.authorization(verifier: GoogleIdTokenVerifier, usersService: UsersSe
             try {
                 val token = verifier.verify(idToken)
                 if (token != null) {
-                    val session = buildChefSession(token, usersService)
+                    val session = buildChefSession(token, admins)
                     call.sessions.set(session)
                     call.respond(OK, session)
                 } else {
@@ -60,15 +60,18 @@ fun getUserNameFromEmail(emailAddress: String): String =
         .split(".")
         .joinToString(" ") { name -> name.capitalize() }
 
-fun buildChefSession(token: GoogleIdToken, usersService: UsersService): ChefSession {
+fun buildChefSession(token: GoogleIdToken, admins: List<String>): ChefSession {
     val payload = token.payload
     val email = payload.email
-    val isAdmin = usersService.isAdmin(email)
+    val isAdmin = isAdmin(admins, email)
 
     val ttl = formatDate.format(Date()) ?: throw InternalError("Error adding ttl to ChefSession header.")
 
+    logger.info("user is Admin: {}", isAdmin)
     return ChefSession(email = email, name = getUserNameFromEmail(email), isAdmin = isAdmin, ttl = ttl)
 }
+
+fun isAdmin(admins: List<String>, email: String): Boolean = admins.contains(email)
 
 fun validateSession(session: ChefSession, ttlLimit: Int): AccountPrincipal? {
     return try {

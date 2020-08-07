@@ -2,7 +2,6 @@
   uuid UUID NOT NULL,
   name VARCHAR(100) NOT NULL,
   email_address VARCHAR(100) NOT NULL,
-  is_admin BOOLEAN NOT NULL DEFAULT FALSE,
   location UUID NOT NULL,
   is_vegetarian BOOLEAN NOT NULL DEFAULT FALSE,
   has_nuts_restriction BOOLEAN NOT NULL DEFAULT FALSE,

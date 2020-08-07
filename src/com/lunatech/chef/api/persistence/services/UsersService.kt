@@ -23,7 +23,6 @@ class UsersService(val database: Database) {
             it.uuid to user.uuid
             it.name to user.name
             it.emailAddress to user.emailAddress
-            it.isAdmin to user.isAdmin
             it.location to user.location
             it.isVegetarian to user.isVegetarian
             it.hasNutsRestriction to user.hasNutsRestriction
@@ -41,7 +40,6 @@ class UsersService(val database: Database) {
         database.update(Users) {
             it.name to user.name
             it.emailAddress to user.emailAddress
-            it.isAdmin to user.isAdmin
             it.location to user.location
             it.isVegetarian to user.isVegetarian
             it.hasNutsRestriction to user.hasNutsRestriction
@@ -63,7 +61,4 @@ class UsersService(val database: Database) {
             it.uuid eq uuid
         }
     }
-
-    fun isAdmin(email: String) =
-        database.from(Users).select().where { Users.emailAddress eq email }.map { Users.createEntity(it) }.all { it.isAdmin }
 }

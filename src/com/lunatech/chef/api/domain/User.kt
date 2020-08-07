@@ -5,7 +5,6 @@ import java.util.UUID
 data class NewUser(
   val name: String,
   val emailAddress: String,
-  val isAdmin: Boolean,
   val location: UUID,
   val isVegetarian: Boolean = false,
   val hasNutsRestriction: Boolean = false,
@@ -21,7 +20,6 @@ data class User(
   val uuid: UUID,
   val name: String,
   val emailAddress: String,
-  val isAdmin: Boolean,
   val location: UUID,
   val isVegetarian: Boolean = false,
   val hasNutsRestriction: Boolean = false,
@@ -40,7 +38,6 @@ data class User(
                 uuid = UUID.randomUUID(),
                 name = newUser.name,
                 emailAddress = newUser.emailAddress,
-                isAdmin = newUser.isAdmin,
                 location = newUser.location,
                 isVegetarian = newUser.isVegetarian,
                 hasNutsRestriction = newUser.hasNutsRestriction,

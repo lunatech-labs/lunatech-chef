@@ -11,7 +11,6 @@ object Users : BaseTable<User>("users") {
     val uuid by uuid("uuid").primaryKey()
     val name by varchar("name")
     val emailAddress by varchar("email_address")
-    val isAdmin by boolean("is_admin")
     val location by uuid("location")
     val isVegetarian by boolean("is_vegetarian")
     val hasNutsRestriction by boolean("has_nuts_restriction")
@@ -28,7 +27,6 @@ object Users : BaseTable<User>("users") {
         uuid = row[uuid] ?: DEFAULT_UUID,
         name = row[name] ?: DEFAULT_STRING,
         emailAddress = row[emailAddress] ?: DEFAULT_STRING,
-        isAdmin = row[isAdmin] ?: DEFAULT_FALSE,
         location = row[location] ?: DEFAULT_UUID,
         isVegetarian = row[isVegetarian] ?: DEFAULT_FALSE,
         hasNutsRestriction = row[hasNutsRestriction] ?: DEFAULT_FALSE,

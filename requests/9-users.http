@@ -4,7 +4,6 @@ CHEF_SESSION: {{ session }}
 
 { "name": "Leonor",
   "emailAddress": "leonor.boga@lunatech.nl",
-  "isAdmin": "true",
   "location": "82ea2b48-27d8-4b52-994b-9b4fdd377195",
   "isVegetarian": "false",
   "hasNutsRestriction": "false",
@@ -35,7 +34,6 @@ CHEF_SESSION: {{ session }}
 {
   "name": "Leonor",
   "emailAddress": "leonor.boga@lunatech.nl",
-  "isAdmin": "true",
   "location": "61edaf14-b018-4ffa-afba-dc5844426176",
   "isInactive": "false",
   "isVegetarian": "false",

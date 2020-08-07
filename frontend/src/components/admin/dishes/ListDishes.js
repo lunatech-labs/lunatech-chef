@@ -167,7 +167,7 @@ class ListDishes extends Component {
         <div>
           <RenderData
             isLoading={this.props.isLoading}
-            error={this.props.error}
+            error={this.props.errorListing}
             dishes={this.props.dishes}
             handleRemove={this.handleRemove}
           />

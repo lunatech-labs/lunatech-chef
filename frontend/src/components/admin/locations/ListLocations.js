@@ -1,15 +1,17 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { Table, Button } from "react-bootstrap";
 import { Loading } from "../../shared/Loading";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faMinus, faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
 
-function ShowDeletionError({ error }) {
+function ShowError({ error, reason }) {
   if (error) {
     return (
       <div>
-        <h4>An error ocurred when deleting Location {error}</h4>
+        <h4>
+          An error ocurred when {reason} a location: {error}
+        </h4>
       </div>
     );
   } else {
@@ -17,7 +19,7 @@ function ShowDeletionError({ error }) {
   }
 }
 
-function RenderData({ isLoading, error, locations, handleRemove }) {
+function RenderData({ isLoading, error, locations, handleEdit, handleRemove }) {
   if (isLoading) {
     return (
       <div className="container">
@@ -42,6 +44,7 @@ function RenderData({ isLoading, error, locations, handleRemove }) {
                 <th>City</th>
                 <th>Country</th>
                 <th></th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -50,6 +53,15 @@ function RenderData({ isLoading, error, locations, handleRemove }) {
                   <tr key={loc.uuid}>
                     <td>{loc.city}</td>
                     <td>{loc.country}</td>
+                    <td>
+                      <Button
+                        variant="primary"
+                        value={loc.uuid}
+                        onClick={() => handleEdit(loc)}
+                      >
+                        <FontAwesomeIcon icon={faEdit} />
+                      </Button>
+                    </td>
                     <td>
                       <Button
                         variant="danger"
@@ -74,10 +86,15 @@ class ListLocations extends Component {
   constructor(props) {
     super(props);
     this.handleRemove = this.handleRemove.bind(this);
+    this.handleEdit = this.handleEdit.bind(this);
   }
 
   handleRemove(uuid) {
     this.props.deleteLocation(uuid);
+  }
+
+  handleEdit(location) {
+    this.props.history.push("/editLocation", location);
   }
 
   render() {
@@ -99,13 +116,16 @@ class ListLocations extends Component {
             isLoading={this.props.isLoading}
             error={this.props.errorListing}
             locations={this.props.locations}
+            handleEdit={this.handleEdit}
             handleRemove={this.handleRemove}
           />
-          <ShowDeletionError error={this.props.errorDeleting} />
+          <ShowError error={this.props.errorAdding} reason="adding" />
+          <ShowError error={this.props.errorDeleting} reason="deleting" />
+          <ShowError error={this.props.errorEditing} reason="saving" />
         </div>
       </div>
     );
   }
 }
 
-export default ListLocations;
+export default withRouter(ListLocations);

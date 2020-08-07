@@ -19,14 +19,8 @@ export const MenusReducer = (state = initState, action) => {
     case ActionTypes.MENUS_LOADING_FAILED:
       return { ...initState, errorListing: action.payload };
 
-    case ActionTypes.ADD_NEW_MENU:
-      return { ...initState };
-
     case ActionTypes.ADD_NEW_MENU_FAILED:
       return { ...state, errorAdding: action.payload };
-
-    case ActionTypes.DELETE_MENU:
-      return { ...initState };
 
     case ActionTypes.DELETE_MENU_FAILED:
       return {

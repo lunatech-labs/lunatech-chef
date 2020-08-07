@@ -19,14 +19,8 @@ export const SchedulesReducer = (state = initState, action) => {
     case ActionTypes.SCHEDULES_LOADING_FAILED:
       return { ...initState, errorListing: action.payload };
 
-    case ActionTypes.ADD_NEW_SCHEDULE:
-      return { ...initState };
-
     case ActionTypes.ADD_NEW_SCHEDULE_FAILED:
       return { ...state, errorAdding: action.payload };
-
-    case ActionTypes.DELETE_SCHEDULE:
-      return { ...initState };
 
     case ActionTypes.DELETE_SCHEDULE_FAILED:
       return {

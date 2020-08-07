@@ -168,8 +168,13 @@ fun Application.module(testing: Boolean = false) {
             files("frontend/build")
         }
 
+        // TODO editar localizacoes
+        // TODO editar dishes
+        // TODO editar menus
+        // TODO editar schedules
+        // TODO Meal schedule
         // TODO adicionar novos utilizadores automaticamente quando fazem login
-         // TODO HTTPS
+        // TODO HTTPS
         // TODO filtros no attendances, schedules por data, localizacao
         // TODO swagger
         // TODO pagina principal? filtrar por localizacao, lista cronologica

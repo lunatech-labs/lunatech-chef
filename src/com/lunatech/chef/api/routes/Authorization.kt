@@ -67,7 +67,6 @@ fun buildChefSession(token: GoogleIdToken, admins: List<String>): ChefSession {
 
     val ttl = formatDate.format(Date()) ?: throw InternalError("Error adding ttl to ChefSession header.")
 
-    logger.info("user is Admin: {}", isAdmin)
     return ChefSession(email = email, name = getUserNameFromEmail(email), isAdmin = isAdmin, ttl = ttl)
 }
 

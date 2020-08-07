@@ -108,7 +108,7 @@ class ListSchedules extends Component {
         <div>
           <RenderData
             isLoading={this.props.isLoading}
-            error={this.props.error}
+            error={this.props.errorListing}
             schedules={this.props.schedules}
             handleRemove={this.handleRemove}
           />

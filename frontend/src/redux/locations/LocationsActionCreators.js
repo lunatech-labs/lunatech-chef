@@ -33,6 +33,24 @@ export const addNewLocation = (newLocation) => (dispatch) => {
     });
 };
 
+export const editLocation = (editedLocation) => (dispatch) => {
+  const locationToEdit = {
+    city: editedLocation.city,
+    country: editedLocation.country,
+  };
+
+  axiosInstance
+    .put("/locations/" + editedLocation.uuid, locationToEdit)
+    .then((response) => {
+      console.log("Location edited with response " + response);
+      dispatch(fetchLocations());
+    })
+    .catch(function (error) {
+      console.log("Failed editing Location: " + error);
+      dispatch(locationEditingFailed(error.message));
+    });
+};
+
 export const deleteLocation = (locationUuid) => (dispatch) => {
   axiosInstance
     .delete("/locations/" + locationUuid)
@@ -62,6 +80,11 @@ export const locationsLoadingFailed = (errmess) => ({
 
 export const locationAddingFailed = (errmess) => ({
   type: ActionTypes.ADD_NEW_LOCATION_FAILED,
+  payload: errmess,
+});
+
+export const locationEditingFailed = (errmess) => ({
+  type: ActionTypes.EDIT_LOCATION_FAILED,
   payload: errmess,
 });
 

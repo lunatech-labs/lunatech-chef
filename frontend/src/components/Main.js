@@ -12,6 +12,7 @@ import {
 import {
   fetchLocations,
   addNewLocation,
+  editLocation,
   deleteLocation,
 } from "../redux/locations/LocationsActionCreators";
 import {
@@ -31,6 +32,7 @@ import ListDishes from "./admin/dishes/ListDishes";
 import { AddDish } from "./admin/dishes/AddDish";
 import ListLocations from "./admin/locations/ListLocations";
 import { AddLocation } from "./admin/locations/AddLocation";
+import { EditLocation } from "./admin/locations/EditLocation";
 import ListMenus from "./admin/menus/ListMenus";
 import { AddMenu } from "./admin/menus/AddMenu";
 import Login from "./auth/Login";
@@ -56,6 +58,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   addNewLocation: (newLocation) => {
     dispatch(addNewLocation(newLocation));
+  },
+  editLocation: (editedLocation) => {
+    dispatch(editLocation(editedLocation));
   },
   deleteLocation: (locationUuid) => {
     dispatch(deleteLocation(locationUuid));
@@ -121,7 +126,6 @@ class Main extends Component {
       return (
         <AddDish
           addNewDish={this.props.addNewDish}
-          resetNewDishForm={this.props.resetNewDishForm}
           error={this.props.dishes.errorAdding}
         ></AddDish>
       );
@@ -133,18 +137,24 @@ class Main extends Component {
           isLoading={this.props.locations.isLoading}
           locations={this.props.locations.locations}
           deleteLocation={this.props.deleteLocation}
-          errorListing={this.props.locations.errorListing}
+          editLocation={this.props.editLocation}
+          // errorListing={this.props.locations.errorListing}
           errorDeleting={this.props.locations.errorDeleting}
+          // errorEditing={this.props.locations.errorEditing}
+          // errorAdding={this.props.locations.errorAdding}
         />
       );
     };
 
     const AddNewLocation = () => {
+      return <AddLocation addNewLocation={this.props.addNewLocation} />;
+    };
+
+    const EditExistingLocation = () => {
       return (
-        <AddLocation
-          addNewLocation={this.props.addNewLocation}
-          resetNewLocationForm={this.props.resetNewLocationForm}
-          error={this.props.locations.errorAdding}
+        <EditLocation
+          editLocation={this.props.editLocation}
+          location={this.props.location.state}
         />
       );
     };
@@ -165,7 +175,6 @@ class Main extends Component {
       return (
         <AddMenu
           addNewMenu={this.props.addNewMenu}
-          resetNewMenuForm={this.props.resetNewMenuForm}
           dishes={this.props.dishes.dishes}
           error={this.props.menus.errorAdding}
         />
@@ -265,6 +274,11 @@ class Main extends Component {
               <ProtectedRoute
                 path="/newLocation"
                 component={AddNewLocation}
+                isAdmin={this.props.userData.isAdmin}
+              />
+              <ProtectedRoute
+                path="/editLocation"
+                component={EditExistingLocation}
                 isAdmin={this.props.userData.isAdmin}
               />
               <ProtectedRoute

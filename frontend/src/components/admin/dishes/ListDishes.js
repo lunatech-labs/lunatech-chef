@@ -120,7 +120,6 @@ function RenderData({ isLoading, error, dishes, handleRemove }) {
                         ""
                       )}
                     </td>
-                    <td></td>
                     <td>
                       <Button
                         variant="danger"

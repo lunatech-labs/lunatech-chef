@@ -42,6 +42,7 @@ function RenderData({ isLoading, error, schedules, handleRemove }) {
                 <th>Menu</th>
                 <th>Location</th>
                 <th>Date</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>

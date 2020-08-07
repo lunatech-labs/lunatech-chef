@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
 import { Form, Field } from "react-final-form";
 import DatePicker from "react-datepicker";
 
@@ -38,6 +39,7 @@ class AddSchedule extends Component {
         ...values,
         date: shortDate,
       });
+      this.props.history.push("/allschedules");
     };
 
     return (
@@ -117,4 +119,4 @@ class AddSchedule extends Component {
   }
 }
 
-export default AddSchedule;
+export default withRouter(AddSchedule);

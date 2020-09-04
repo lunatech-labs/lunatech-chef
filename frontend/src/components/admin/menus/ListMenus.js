@@ -1,23 +1,23 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { Table, Button } from "react-bootstrap";
 import { Loading } from "../../shared/Loading";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faMinus, faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
 
-function ShowDeletionError({ error }) {
+function ShowError({ error, reason }) {
   if (error) {
     return (
-      <div>
-        <h4>An error ocurred when deleting Menu {error}</h4>
-      </div>
+      <h4>
+        An error ocurred when {reason} a menu: {error}
+      </h4>
     );
   } else {
     return <div></div>;
   }
 }
 
-function RenderData({ isLoading, error, menus, handleRemove }) {
+function RenderData({ isLoading, error, menus, handleEdit, handleRemove }) {
   if (isLoading) {
     return (
       <div className="container">
@@ -42,6 +42,7 @@ function RenderData({ isLoading, error, menus, handleRemove }) {
                 <th>Name</th>
                 <th>Dishes</th>
                 <th></th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -53,6 +54,15 @@ function RenderData({ isLoading, error, menus, handleRemove }) {
                       {menu.dishes.map((dish) => (
                         <p key={dish.uuid}>{dish.name}</p>
                       ))}
+                    </td>
+                    <td>
+                      <Button
+                        variant="primary"
+                        value={menu.uuid}
+                        onClick={() => handleEdit(menu)}
+                      >
+                        <FontAwesomeIcon icon={faEdit} />
+                      </Button>
                     </td>
                     <td>
                       <Button
@@ -78,6 +88,11 @@ class ListMenus extends Component {
   constructor(props) {
     super(props);
     this.handleRemove = this.handleRemove.bind(this);
+    this.handleEdit = this.handleEdit.bind(this);
+  }
+
+  handleEdit(menu) {
+    this.props.history.push("/editmenu", menu);
   }
 
   handleRemove(uuid) {
@@ -103,13 +118,16 @@ class ListMenus extends Component {
             isLoading={this.props.isLoading}
             error={this.props.errorListing}
             menus={this.props.menus}
+            handleEdit={this.handleEdit}
             handleRemove={this.handleRemove}
           />
-          <ShowDeletionError error={this.props.errorDeleting} />
+          <ShowError error={this.props.errorAdding} reason="adding" />
+          <ShowError error={this.props.errorDeleting} reason="deleting" />
+          <ShowError error={this.props.errorEditing} reason="saving" />
         </div>
       </div>
     );
   }
 }
 
-export default ListMenus;
+export default withRouter(ListMenus);

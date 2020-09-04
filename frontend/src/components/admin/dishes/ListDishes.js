@@ -167,8 +167,7 @@ class ListDishes extends Component {
   }
 
   handleEdit(dish) {
-    console.log("Adding dish to history " + JSON.stringify(dish));
-    this.props.history.push("/editDish", dish);
+    this.props.history.push("/editdish", dish);
   }
 
   render() {

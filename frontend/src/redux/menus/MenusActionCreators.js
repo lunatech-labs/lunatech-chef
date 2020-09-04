@@ -33,6 +33,24 @@ export const addNewMenu = (newMenu) => (dispatch) => {
     });
 };
 
+export const editMenu = (editedMenu) => (dispatch) => {
+  const MenuToEdit = {
+    name: editedMenu.name,
+    dishesUuids: editedMenu.dishesUuids,
+  };
+
+  axiosInstance
+    .put("/menus/" + editedMenu.uuid, MenuToEdit)
+    .then((response) => {
+      console.log("Menu edited with response " + response);
+      dispatch(fetchMenus());
+    })
+    .catch(function (error) {
+      console.log("Failed editing Menu: " + error);
+      dispatch(menuEditingFailed(error.message));
+    });
+};
+
 export const deleteMenu = (menuUuid) => (dispatch) => {
   axiosInstance
     .delete("/menus/" + menuUuid)
@@ -62,6 +80,11 @@ export const menusLoadingFailed = (errmess) => ({
 
 export const menuAddingFailed = (errmess) => ({
   type: ActionTypes.ADD_NEW_MENU_FAILED,
+  payload: errmess,
+});
+
+export const menuEditingFailed = (errmess) => ({
+  type: ActionTypes.EDIT_MENU_FAILED,
   payload: errmess,
 });
 

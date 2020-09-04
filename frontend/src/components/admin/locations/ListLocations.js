@@ -94,7 +94,7 @@ class ListLocations extends Component {
   }
 
   handleEdit(location) {
-    this.props.history.push("/editLocation", location);
+    this.props.history.push("/editlocation", location);
   }
 
   render() {

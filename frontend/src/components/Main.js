@@ -19,6 +19,7 @@ import {
 import {
   fetchMenus,
   addNewMenu,
+  editMenu,
   deleteMenu,
 } from "../redux/menus/MenusActionCreators";
 import {
@@ -37,6 +38,7 @@ import { AddLocation } from "./admin/locations/AddLocation";
 import { EditLocation } from "./admin/locations/EditLocation";
 import ListMenus from "./admin/menus/ListMenus";
 import { AddMenu } from "./admin/menus/AddMenu";
+import { EditMenu } from "./admin/menus/EditMenu";
 import Login from "./auth/Login";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import ListSchedules from "./admin/schedules/ListSchedules";
@@ -88,6 +90,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   addNewMenu: (newMenu) => {
     dispatch(addNewMenu(newMenu));
+  },
+  editMenu: (editedMenu) => {
+    dispatch(editMenu(editedMenu));
   },
   deleteMenu: (menuUuid) => {
     dispatch(deleteMenu(menuUuid));
@@ -190,6 +195,8 @@ class Main extends Component {
           menus={this.props.menus.menus}
           deleteMenu={this.props.deleteMenu}
           errorListing={this.props.menus.errorListing}
+          errorAdding={this.props.menus.errorAdding}
+          errorEditing={this.props.menus.errorEditing}
           errorDeleting={this.props.menus.errorDeleting}
         />
       );
@@ -201,6 +208,17 @@ class Main extends Component {
           addNewMenu={this.props.addNewMenu}
           dishes={this.props.dishes.dishes}
           error={this.props.menus.errorAdding}
+        />
+      );
+    };
+
+    const EditExistingMenu = () => {
+      return (
+        <EditMenu
+          editMenu={this.props.editMenu}
+          menu={this.props.location.state}
+          dishes={this.props.dishes.dishes}
+          error={this.props.menus.errorEditing}
         />
       );
     };
@@ -296,12 +314,12 @@ class Main extends Component {
                 isAdmin={this.props.userData.isAdmin}
               />
               <ProtectedRoute
-                path="/newLocation"
+                path="/newlocation"
                 component={AddNewLocation}
                 isAdmin={this.props.userData.isAdmin}
               />
               <ProtectedRoute
-                path="/editLocation"
+                path="/editlocation"
                 component={EditExistingLocation}
                 isAdmin={this.props.userData.isAdmin}
               />
@@ -316,7 +334,7 @@ class Main extends Component {
                 isAdmin={this.props.userData.isAdmin}
               />
               <ProtectedRoute
-                path="/editDish"
+                path="/editdish"
                 component={EditExistingDish}
                 isAdmin={this.props.userData.isAdmin}
               />
@@ -328,6 +346,11 @@ class Main extends Component {
               <ProtectedRoute
                 path="/newmenu"
                 component={AddNewMenu}
+                isAdmin={this.props.userData.isAdmin}
+              />
+              <ProtectedRoute
+                path="/editmenu"
+                component={EditExistingMenu}
                 isAdmin={this.props.userData.isAdmin}
               />
               <ProtectedRoute

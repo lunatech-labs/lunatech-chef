@@ -168,9 +168,6 @@ fun Application.module(testing: Boolean = false) {
             files("frontend/build")
         }
 
-        // TODO editar localizacoes
-        // TODO editar dishes
-        // TODO editar menus
         // TODO editar schedules
         // TODO Meal schedule
         // TODO adicionar novos utilizadores automaticamente quando fazem login

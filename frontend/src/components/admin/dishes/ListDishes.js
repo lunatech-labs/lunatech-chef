@@ -1,23 +1,28 @@
 import React, { Component } from "react";
 import { Loading } from "../../shared/Loading";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { Table, Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMinus, faPlus, faCheck } from "@fortawesome/free-solid-svg-icons";
+import {
+  faMinus,
+  faPlus,
+  faEdit,
+  faCheck,
+} from "@fortawesome/free-solid-svg-icons";
 
-function ShowDeletionError({ error }) {
+function ShowError({ error, reason }) {
   if (error) {
     return (
-      <div>
-        <h4>An error ocurred when deleting Location {error}</h4>
-      </div>
+      <h4>
+        An error ocurred when {reason} a dish: {error}
+      </h4>
     );
   } else {
     return <div></div>;
   }
 }
 
-function RenderData({ isLoading, error, dishes, handleRemove }) {
+function RenderData({ isLoading, error, dishes, handleEdit, handleRemove }) {
   if (isLoading) {
     return (
       <div className="container">
@@ -48,6 +53,7 @@ function RenderData({ isLoading, error, dishes, handleRemove }) {
                 <th>Beef</th>
                 <th>GlutenFree</th>
                 <th>Lactose</th>
+                <th></th>
                 <th></th>
               </tr>
             </thead>
@@ -122,6 +128,15 @@ function RenderData({ isLoading, error, dishes, handleRemove }) {
                     </td>
                     <td>
                       <Button
+                        variant="primary"
+                        value={dish.uuid}
+                        onClick={() => handleEdit(dish)}
+                      >
+                        <FontAwesomeIcon icon={faEdit} />
+                      </Button>
+                    </td>
+                    <td>
+                      <Button
                         variant="danger"
                         value={dish.uuid}
                         onClick={() => handleRemove(dish.uuid)}
@@ -144,10 +159,16 @@ class ListDishes extends Component {
   constructor(props) {
     super(props);
     this.handleRemove = this.handleRemove.bind(this);
+    this.handleEdit = this.handleEdit.bind(this);
   }
 
   handleRemove(uuid) {
     this.props.deleteDish(uuid);
+  }
+
+  handleEdit(dish) {
+    console.log("Adding dish to history " + JSON.stringify(dish));
+    this.props.history.push("/editDish", dish);
   }
 
   render() {
@@ -169,13 +190,16 @@ class ListDishes extends Component {
             isLoading={this.props.isLoading}
             error={this.props.errorListing}
             dishes={this.props.dishes}
+            handleEdit={this.handleEdit}
             handleRemove={this.handleRemove}
           />
-          <ShowDeletionError error={this.props.errorDeleting} />
+          <ShowError error={this.props.errorAdding} reason="adding" />
+          <ShowError error={this.props.errorDeleting} reason="deleting" />
+          <ShowError error={this.props.errorEditing} reason="saving" />
         </div>
       </div>
     );
   }
 }
 
-export default ListDishes;
+export default withRouter(ListDishes);

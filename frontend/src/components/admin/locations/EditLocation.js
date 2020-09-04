@@ -18,7 +18,7 @@ export const EditLocation = (props) => {
     if (error) {
       return (
         <div>
-          <h4>An error ocurred when editing Location: {error}</h4>
+          <h4>An error ocurred when editing a Location: {error}</h4>
         </div>
       );
     } else {

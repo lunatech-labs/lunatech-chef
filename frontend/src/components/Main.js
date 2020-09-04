@@ -7,6 +7,7 @@ import { connect } from "react-redux";
 import {
   fetchDishes,
   addNewDish,
+  editDish,
   deleteDish,
 } from "../redux/dishes/DishesActionCreators";
 import {
@@ -30,6 +31,7 @@ import "../css/simple-sidebar.css";
 import ErrorBoundary from "./shared/ErrorBoundary";
 import ListDishes from "./admin/dishes/ListDishes";
 import { AddDish } from "./admin/dishes/AddDish";
+import { EditDish } from "./admin/dishes/EditDish";
 import ListLocations from "./admin/locations/ListLocations";
 import { AddLocation } from "./admin/locations/AddLocation";
 import { EditLocation } from "./admin/locations/EditLocation";
@@ -73,6 +75,9 @@ const mapDispatchToProps = (dispatch) => ({
   addNewDish: (newDish) => {
     dispatch(addNewDish(newDish));
   },
+  editDish: (editedDish) => {
+    dispatch(editDish(editedDish));
+  },
   deleteDish: (dishUuid) => {
     dispatch(deleteDish(dishUuid));
   },
@@ -115,9 +120,12 @@ class Main extends Component {
         <ListDishes
           isLoading={this.props.dishes.isLoading}
           dishes={this.props.dishes.dishes}
+          editDish={this.props.editDish}
           deleteDish={this.props.deleteDish}
-          errorListing={this.props.locations.errorListing}
-          errorDeleting={this.props.locations.errorDeleting}
+          errorListing={this.props.dishes.errorListing}
+          errorAdding={this.props.dishes.errorAdding}
+          errorEditing={this.props.dishes.errorEditing}
+          errorDeleting={this.props.dishes.errorDeleting}
         />
       );
     };
@@ -127,7 +135,17 @@ class Main extends Component {
         <AddDish
           addNewDish={this.props.addNewDish}
           error={this.props.dishes.errorAdding}
-        ></AddDish>
+        />
+      );
+    };
+
+    const EditExistingDish = () => {
+      return (
+        <EditDish
+          editDish={this.props.editDish}
+          dish={this.props.location.state}
+          error={this.props.dishes.errorEditing}
+        />
       );
     };
 
@@ -136,18 +154,23 @@ class Main extends Component {
         <ListLocations
           isLoading={this.props.locations.isLoading}
           locations={this.props.locations.locations}
-          deleteLocation={this.props.deleteLocation}
           editLocation={this.props.editLocation}
-          // errorListing={this.props.locations.errorListing}
+          deleteLocation={this.props.deleteLocation}
+          errorListing={this.props.locations.errorListing}
+          errorAdding={this.props.locations.errorAdding}
+          errorEditing={this.props.locations.errorEditing}
           errorDeleting={this.props.locations.errorDeleting}
-          // errorEditing={this.props.locations.errorEditing}
-          // errorAdding={this.props.locations.errorAdding}
         />
       );
     };
 
     const AddNewLocation = () => {
-      return <AddLocation addNewLocation={this.props.addNewLocation} />;
+      return (
+        <AddLocation
+          addNewLocation={this.props.addNewLocation}
+          error={this.props.dishes.errorAdding}
+        />
+      );
     };
 
     const EditExistingLocation = () => {
@@ -155,6 +178,7 @@ class Main extends Component {
         <EditLocation
           editLocation={this.props.editLocation}
           location={this.props.location.state}
+          error={this.props.locations.errorEditing}
         />
       );
     };
@@ -289,6 +313,11 @@ class Main extends Component {
               <ProtectedRoute
                 path="/newdish"
                 component={AddNewDish}
+                isAdmin={this.props.userData.isAdmin}
+              />
+              <ProtectedRoute
+                path="/editDish"
+                component={EditExistingDish}
                 isAdmin={this.props.userData.isAdmin}
               />
               <ProtectedRoute

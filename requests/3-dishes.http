@@ -33,6 +33,7 @@ CHEF_SESSION: {{ session }}
   "name": "Lasagna italiana",
   "description": "Lasagna de ragu e espinafres",
   "isVegetarian": "false",
+  "hasNuts": "false",
   "hasSeafood": "false",
   "hasPork": "true",
   "hasBeef": "false",

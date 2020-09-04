@@ -40,6 +40,31 @@ export const addNewDish = (newDish) => (dispatch) => {
     });
 };
 
+export const editDish = (editedDish) => (dispatch) => {
+  const DishToEdit = {
+    name: editedDish.name,
+    description: editedDish.description,
+    isVegetarian: editedDish.isVegetarian,
+    hasNuts: editedDish.hasNuts,
+    hasSeafood: editedDish.hasSeafood,
+    hasPork: editedDish.hasPork,
+    hasBeef: editedDish.hasBeef,
+    isGlutenFree: editedDish.isGlutenFree,
+    hasLactose: editedDish.hasLactose,
+  };
+
+  axiosInstance
+    .put("/dishes/" + editedDish.uuid, DishToEdit)
+    .then((response) => {
+      console.log("Dish edited with response " + response);
+      dispatch(fetchDishes());
+    })
+    .catch(function (error) {
+      console.log("Failed editing Dish: " + error);
+      dispatch(dishEditingFailed(error.message));
+    });
+};
+
 export const deleteDish = (dishUuid) => (dispatch) => {
   axiosInstance
     .delete("/dishes/" + dishUuid)
@@ -69,6 +94,11 @@ export const dishesLoadingFailed = (errmess) => ({
 
 export const dishAddingFailed = (errmess) => ({
   type: ActionTypes.ADD_NEW_DISH_FAILED,
+  payload: errmess,
+});
+
+export const dishEditingFailed = (errmess) => ({
+  type: ActionTypes.EDIT_DISH_FAILED,
   payload: errmess,
 });
 

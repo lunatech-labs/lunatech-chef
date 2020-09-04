@@ -2,7 +2,6 @@ package com.lunatech.chef.api.routes
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
-import com.lunatech.chef.api.persistence.services.UsersService
 import io.ktor.application.call
 import io.ktor.auth.Principal
 import io.ktor.http.HttpStatusCode.Companion.InternalServerError

@@ -25,6 +25,7 @@ import {
 import {
   fetchSchedules,
   addNewSchedule,
+  editSchedule,
   deleteSchedule,
 } from "../redux/schedules/SchedulesActionCreators";
 import { login, logout } from "../redux/users/UsersActionCreators";
@@ -43,6 +44,7 @@ import Login from "./auth/Login";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import ListSchedules from "./admin/schedules/ListSchedules";
 import AddSchedule from "./admin/schedules/AddSchedule";
+import EditSchedule from "./admin/schedules/EditSchedule";
 
 const mapStateToProps = (state) => {
   return {
@@ -104,6 +106,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   addNewSchedule: (newSchedules) => {
     dispatch(addNewSchedule(newSchedules));
+  },
+  editSchedule: (editedSchedule) => {
+    dispatch(editSchedule(editedSchedule));
   },
   deleteSchedule: (scheduleUuid) => {
     dispatch(deleteSchedule(scheduleUuid));
@@ -230,6 +235,7 @@ class Main extends Component {
           schedules={this.props.schedules.schedules}
           deleteSchedule={this.props.deleteSchedule}
           errorListing={this.props.schedules.errorListing}
+          errorEditing={this.props.schedules.errorEditing}
           errorDeleting={this.props.schedules.errorDeleting}
         />
       );
@@ -242,6 +248,18 @@ class Main extends Component {
           menus={this.props.menus.menus}
           locations={this.props.locations.locations}
           error={this.props.schedules.errorAdding}
+        />
+      );
+    };
+
+    const EditExistingSchedule = () => {
+      return (
+        <EditSchedule
+          editSchedule={this.props.editSchedule}
+          schedule={this.props.location.state}
+          menus={this.props.menus.menus}
+          locations={this.props.locations.locations}
+          error={this.props.menus.errorEditing}
         />
       );
     };
@@ -361,6 +379,11 @@ class Main extends Component {
               <ProtectedRoute
                 path="/newschedule"
                 component={AddNewSchedule}
+                isAdmin={this.props.userData.isAdmin}
+              />
+              <ProtectedRoute
+                path="/editschedule"
+                component={EditExistingSchedule}
                 isAdmin={this.props.userData.isAdmin}
               />
               <Route path="/loginUser" component={LoginUser} />

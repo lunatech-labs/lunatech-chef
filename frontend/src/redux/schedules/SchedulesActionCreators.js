@@ -34,8 +34,26 @@ export const addNewSchedule = (newSchedule) => (dispatch) => {
     });
 };
 
+export const editSchedule = (editedSchedule) => (dispatch) => {
+  const sheduleToEdit = {
+    menuUuid: editedSchedule.menuUuid,
+    locationUuid: editedSchedule.locationUuid,
+    date: editedSchedule.date,
+  };
+
+  axiosInstance
+    .put("/schedules/" + editedSchedule.uuid, sheduleToEdit)
+    .then((response) => {
+      console.log("Schedule edited with response " + response);
+      dispatch(fetchSchedules());
+    })
+    .catch(function (error) {
+      console.log("Failed editing Schedule: " + error);
+      dispatch(scheduleEditingFailed(error.message));
+    });
+};
+
 export const deleteSchedule = (scheduleUuid) => (dispatch) => {
-  console.log("DELETING SCHEDULE " + scheduleUuid);
   axiosInstance
     .delete("/schedules/" + scheduleUuid)
     .then((response) => {
@@ -64,6 +82,11 @@ export const schedulesLoadingFailed = (errmess) => ({
 
 export const scheduleAddingFailed = (errmess) => ({
   type: ActionTypes.ADD_NEW_SCHEDULE_FAILED,
+  payload: errmess,
+});
+
+export const scheduleEditingFailed = (errmess) => ({
+  type: ActionTypes.EDIT_SCHEDULE_FAILED,
   payload: errmess,
 });
 

@@ -34,13 +34,13 @@ export const addNewMenu = (newMenu) => (dispatch) => {
 };
 
 export const editMenu = (editedMenu) => (dispatch) => {
-  const MenuToEdit = {
+  const menuToEdit = {
     name: editedMenu.name,
     dishesUuids: editedMenu.dishesUuids,
   };
 
   axiosInstance
-    .put("/menus/" + editedMenu.uuid, MenuToEdit)
+    .put("/menus/" + editedMenu.uuid, menuToEdit)
     .then((response) => {
       console.log("Menu edited with response " + response);
       dispatch(fetchMenus());

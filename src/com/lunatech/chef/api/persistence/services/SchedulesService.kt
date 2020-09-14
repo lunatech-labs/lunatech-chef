@@ -31,7 +31,7 @@ class SchedulesService(val database: Database) {
         database.update(Schedules) {
             it.menuUuid to schedule.menuUuid
             it.date to schedule.date
-            it.location to schedule.location
+            it.location to schedule.locationUuid
             where {
                 it.uuid eq uuid
             }

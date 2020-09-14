@@ -41,7 +41,7 @@ export const addNewDish = (newDish) => (dispatch) => {
 };
 
 export const editDish = (editedDish) => (dispatch) => {
-  const DishToEdit = {
+  const sishToEdit = {
     name: editedDish.name,
     description: editedDish.description,
     isVegetarian: editedDish.isVegetarian,
@@ -54,7 +54,7 @@ export const editDish = (editedDish) => (dispatch) => {
   };
 
   axiosInstance
-    .put("/dishes/" + editedDish.uuid, DishToEdit)
+    .put("/dishes/" + editedDish.uuid, sishToEdit)
     .then((response) => {
       console.log("Dish edited with response " + response);
       dispatch(fetchDishes());

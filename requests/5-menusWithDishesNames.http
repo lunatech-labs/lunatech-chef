@@ -1,10 +1,10 @@
 
-GET {{ host }}/menusWithDishesNames
+GET {{ host }}/menusWithDishesInfo
 CHEF_SESSION: {{ session }}
 
 ###
 
-GET {{ host }}/menusWithDishesNames/2de2603b-56fa-4883-95d7-3ba28508117a
+GET {{ host }}/menusWithDishesInfo/2de2603b-56fa-4883-95d7-3ba28508117a
 CHEF_SESSION: {{ session }}
 
 ###

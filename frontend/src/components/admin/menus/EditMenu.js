@@ -63,7 +63,7 @@ export const EditMenu = (props) => {
 
             <div>
               <button type="submit" color="primary" disabled={submitting}>
-                Add Menu
+                Save Menu
               </button>
             </div>
           </form>

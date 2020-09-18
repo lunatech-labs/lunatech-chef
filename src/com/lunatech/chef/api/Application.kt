@@ -26,9 +26,9 @@ import com.lunatech.chef.api.routes.dishes
 import com.lunatech.chef.api.routes.healthCheck
 import com.lunatech.chef.api.routes.locations
 import com.lunatech.chef.api.routes.menus
-import com.lunatech.chef.api.routes.menusWithDishesNames
+import com.lunatech.chef.api.routes.menusWithDishesInfo
 import com.lunatech.chef.api.routes.schedules
-import com.lunatech.chef.api.routes.schedulesWithMenusNames
+import com.lunatech.chef.api.routes.schedulesWithMenusInfo
 import com.lunatech.chef.api.routes.users
 import com.lunatech.chef.api.routes.validateSession
 import com.typesafe.config.ConfigFactory
@@ -155,9 +155,9 @@ fun Application.module(testing: Boolean = false) {
         locations(locationsService)
         dishes(dishesService)
         menus(menusService)
-        menusWithDishesNames(menusWithDishesService)
+        menusWithDishesInfo(menusWithDishesService)
         schedules(schedulesService)
-        schedulesWithMenusNames(schedulesWithNamesService)
+        schedulesWithMenusInfo(schedulesWithNamesService)
         users(usersService)
         attendances(attendancesService)
 

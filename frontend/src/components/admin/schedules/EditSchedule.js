@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { Form, Field } from "react-final-form";
 import DatePicker from "react-datepicker";
+import { isPlainObject } from "jquery";
 
 function ShowError({ error }) {
   if (error) {
@@ -77,7 +78,7 @@ function RenderData({
           </div>
           <div>
             <button type="submit" color="primary" disabled={submitting}>
-              Add Schedule
+              Save Schedule
             </button>
           </div>
         </form>
@@ -93,10 +94,12 @@ class EditSchedule extends Component {
   }
 
   state = {
-    startDate: new Date().setFullYear(
-      this.props.schedule.date[0],
-      this.props.schedule.date[1] - 1,
-      this.props.schedule.date[2]
+    startDate: new Date(
+      new Date().setFullYear(
+        this.props.schedule.date[0],
+        this.props.schedule.date[1] - 1,
+        this.props.schedule.date[2]
+      )
     ),
   };
 

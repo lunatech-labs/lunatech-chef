@@ -114,7 +114,7 @@ export const EditDish = (props) => {
             </div>
             <div>
               <button type="submit" color="primary" disabled={submitting}>
-                Add Dish
+                Save Dish
               </button>
             </div>
           </form>

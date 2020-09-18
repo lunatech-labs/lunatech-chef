@@ -5,7 +5,7 @@ export const fetchSchedules = () => (dispatch) => {
   dispatch(schedulesLoading(true));
 
   axiosInstance
-    .get("/schedulesWithMenusNames")
+    .get("/schedulesWithMenusInfo")
     .then(function (response) {
       dispatch(showAllSchedules(response));
     })

@@ -17,7 +17,7 @@ import com.lunatech.chef.api.persistence.services.LocationsService
 import com.lunatech.chef.api.persistence.services.MenusService
 import com.lunatech.chef.api.persistence.services.MenusWithDishesNamesService
 import com.lunatech.chef.api.persistence.services.SchedulesService
-import com.lunatech.chef.api.persistence.services.SchedulesWithNamesService
+import com.lunatech.chef.api.persistence.services.SchedulesWithInfoService
 import com.lunatech.chef.api.persistence.services.UsersService
 import com.lunatech.chef.api.routes.ChefSession
 import com.lunatech.chef.api.routes.attendances
@@ -85,7 +85,7 @@ fun Application.module(testing: Boolean = false) {
     val schedulesService = SchedulesService(dbConnection)
     val usersService = UsersService(dbConnection)
     val attendancesService = AttendancesService(dbConnection)
-    val schedulesWithNamesService = SchedulesWithNamesService(dbConnection, menusWithDishesService)
+    val schedulesWithNamesService = SchedulesWithInfoService(dbConnection, menusWithDishesService)
 
     val CHEF_SESSSION = "CHEF_SESSION"
     install(CORS) {

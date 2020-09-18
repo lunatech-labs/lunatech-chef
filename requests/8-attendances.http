@@ -1,23 +1,25 @@
 POST {{ host }}/attendances
 Content-Type: application/json
+CHEF_SESSION: {{ session }}
 
-{ "scheduleUuid": "0fdb293c-ca0f-4bc5-83e1-2f7c090d4ac0",
-  "userUuid": "a5518e47-3e07-4777-8280-3c622ed5459a",
+{ "scheduleUuid": "a2842866-a89d-43e9-b653-3d856af01b23",
+  "userUuid": "b31f0cc1-981d-4819-a245-2bb8a3a003ca",
   "isAttending": "true"
 }
 
 ###
 
 GET {{ host }}/attendances
-
+CHEF_SESSION: {{ session }}
 ###
 
 GET {{ host }}/attendances/1dcbc463-f6d1-4164-aaa0-deb17f06cf59
-
+CHEF_SESSION: {{ session }}
 ###
 
 PUT {{ host }}/attendances/1dcbc463-f6d1-4164-aaa0-deb17f06cf59
 Content-Type: application/json
+CHEF_SESSION: {{ session }}
 
 { "isAttending": "false" }
 

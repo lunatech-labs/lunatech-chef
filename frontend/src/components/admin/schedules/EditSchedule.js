@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { Form, Field } from "react-final-form";
 import DatePicker from "react-datepicker";
-import { isPlainObject } from "jquery";
 
 function ShowError({ error }) {
   if (error) {

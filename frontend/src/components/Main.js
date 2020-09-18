@@ -25,6 +25,7 @@ import {
 import {
   fetchSchedules,
   addNewSchedule,
+  saveScheduleAttendance,
   editSchedule,
   deleteSchedule,
 } from "../redux/schedules/SchedulesActionCreators";
@@ -45,6 +46,7 @@ import ProtectedRoute from "./auth/ProtectedRoute";
 import ListSchedules from "./admin/schedules/ListSchedules";
 import AddSchedule from "./admin/schedules/AddSchedule";
 import EditSchedule from "./admin/schedules/EditSchedule";
+import { MealsSchedule } from "./MealsSchedule";
 
 const mapStateToProps = (state) => {
   return {
@@ -104,8 +106,11 @@ const mapDispatchToProps = (dispatch) => ({
   fetchSchedules: () => {
     dispatch(fetchSchedules());
   },
-  addNewSchedule: (newSchedules) => {
-    dispatch(addNewSchedule(newSchedules));
+  addNewSchedule: (newSchedule) => {
+    dispatch(addNewSchedule(newSchedule));
+  },
+  saveScheduleAttendance: (scheduleAttendance) => {
+    dispatch(saveScheduleAttendance(scheduleAttendance));
   },
   editSchedule: (editedSchedule) => {
     dispatch(editSchedule(editedSchedule));
@@ -252,6 +257,17 @@ class Main extends Component {
       );
     };
 
+    const ShowMealsSchedule = () => {
+      return (
+        <MealsSchedule
+          isLoading={this.props.schedules.isLoading}
+          schedules={this.props.schedules.schedules}
+          saveScheduleAttendance={this.props.saveScheduleAttendance}
+          errorListing={this.props.schedules.errorListing}
+        />
+      );
+    };
+
     const EditExistingSchedule = () => {
       return (
         <EditSchedule
@@ -387,6 +403,7 @@ class Main extends Component {
                 isAdmin={this.props.userData.isAdmin}
               />
               <Route path="/loginUser" component={LoginUser} />
+              <Route path="/" component={ShowMealsSchedule} />
               <Redirect to="/" />
             </Switch>
             <div className="d-flex">

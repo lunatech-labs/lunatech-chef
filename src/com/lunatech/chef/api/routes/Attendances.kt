@@ -34,9 +34,9 @@ fun Routing.attendances(attendancesService: AttendancesService) {
     route(attendancesRoute) {
         authenticate("session-auth") {
             rolesAllowed(Role.ADMIN, Role.USER) {
-                // get all attendances // TODO filters
+                // get all attendances
                 get {
-                    val attendances = attendancesService.getAll()
+                    val attendances = attendancesService.getAllAttending()
                     call.respond(OK, attendances)
                 }
                 // create a new single attendance

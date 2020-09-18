@@ -4,6 +4,7 @@ import { Table, Button } from "react-bootstrap";
 import { Loading } from "../../shared/Loading";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { ToMonth } from "../../shared/Functions";
 
 function ShowError({ error, reason }) {
   if (error) {
@@ -50,17 +51,13 @@ function RenderData({ isLoading, error, schedules, handleEdit, handleRemove }) {
               {schedules.map((schedule) => {
                 return (
                   <tr key={schedule.uuid}>
-                    <td>
-                      {schedule.menu.name}
-                      {/* {schedule.menu.dishes.map((dish) => (
-                        <p key={dish.uuid}>{dish.name}</p>
-                      ))} */}
-                    </td>
+                    <td>{schedule.menu.name}</td>
                     <td>
                       {schedule.location.city}, {schedule.location.country}
                     </td>
                     <td>
-                      {schedule.date[2]}-{schedule.date[1]}-{schedule.date[0]}
+                      {schedule.date[2]} {ToMonth(schedule.date[1])}{" "}
+                      {schedule.date[0]}
                     </td>
                     <td>
                       <Button

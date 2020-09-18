@@ -39,6 +39,7 @@ export const EditDish = (props) => {
           hasPork: props.dish.hasPork,
           hasBeef: props.dish.hasBeef,
           isGlutenFree: props.dish.isGlutenFree,
+          hasLactose: props.dish.hasLactose,
         }}
         render={({ handleSubmit, submitting }) => (
           <form onSubmit={handleSubmit}>
@@ -102,6 +103,14 @@ export const EditDish = (props) => {
                 type="checkbox"
               ></Field>
               <label>Is gluten free</label>
+            </div>
+            <div>
+              <Field
+                name="hasLactose"
+                component="input"
+                type="checkbox"
+              ></Field>
+              <label>Contains lactose</label>
             </div>
             <div>
               <button type="submit" color="primary" disabled={submitting}>

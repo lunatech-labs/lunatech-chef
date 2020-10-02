@@ -48,18 +48,21 @@ export const MealsSchedule = (props) => {
                           onSubmit={onSubmit}
                           initialValues={{
                             scheduleUuid: schedule.uuid,
-                            userUuid: "",
+                            userUuid: "e106ce93-89e5-4164-9698-8df9dbe354bd",
                             isAttending: false,
                           }}
                           render={({ handleSubmit }) => (
                             <form>
-                              <Field name="isAttending" component="input">
+                              <Field name="isAttending" type="checkbox">
                                 {({ input }) => (
                                   <div>
                                     <input
                                       {...input}
                                       type="checkbox"
-                                      onChange={handleSubmit}
+                                      onChange={(e) => {
+                                        input.onChange(e);
+                                        handleSubmit();
+                                      }}
                                     />
                                   </div>
                                 )}
@@ -68,9 +71,7 @@ export const MealsSchedule = (props) => {
                           )}
                         ></Form>
                       </td>
-                      <td>
-                        {schedule.location.city}, {schedule.location.country}
-                      </td>
+                      <td>{schedule.location.city}</td>
                       <td>
                         {schedule.date[2]} {ToMonth(schedule.date[1])}{" "}
                         {schedule.date[0]}
@@ -78,7 +79,7 @@ export const MealsSchedule = (props) => {
                       <td>
                         {schedule.menu.dishes.map((dish) => {
                           return (
-                            <p>
+                            <p key={dish.uuid}>
                               {dish.name}{" "}
                               {dish.description ? "- " + dish.description : ""}{" "}
                             </p>

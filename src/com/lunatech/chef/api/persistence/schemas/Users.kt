@@ -11,7 +11,7 @@ object Users : BaseTable<User>("users") {
     val uuid by uuid("uuid").primaryKey()
     val name by varchar("name")
     val emailAddress by varchar("email_address")
-    val location by uuid("location")
+    val locationUuid by uuid("locationUuid")
     val isVegetarian by boolean("is_vegetarian")
     val hasNutsRestriction by boolean("has_nuts_restriction")
     val hasSeafoodRestriction by boolean("has_seafood_restriction")
@@ -19,7 +19,7 @@ object Users : BaseTable<User>("users") {
     val hasBeefRestriction by boolean("has_beef_restriction")
     val isGlutenIntolerant by boolean("is_gluten_intolerant")
     val isLactoseIntolerant by boolean("is_lactose_intolerant")
-    val otherRestriction by varchar("other_restriction")
+    val otherRestrictions by varchar("other_restrictions")
     val isInactive by boolean("is_inactive")
     val isDeleted by boolean("is_deleted")
 
@@ -27,7 +27,7 @@ object Users : BaseTable<User>("users") {
         uuid = row[uuid] ?: DEFAULT_UUID,
         name = row[name] ?: DEFAULT_STRING,
         emailAddress = row[emailAddress] ?: DEFAULT_STRING,
-        location = row[location] ?: DEFAULT_UUID,
+        locationUuid = row[locationUuid] ?: DEFAULT_UUID,
         isVegetarian = row[isVegetarian] ?: DEFAULT_FALSE,
         hasNutsRestriction = row[hasNutsRestriction] ?: DEFAULT_FALSE,
         hasSeafoodRestriction = row[hasSeafoodRestriction] ?: DEFAULT_FALSE,
@@ -35,7 +35,7 @@ object Users : BaseTable<User>("users") {
         hasBeefRestriction = row[hasBeefRestriction] ?: DEFAULT_FALSE,
         isGlutenIntolerant = row[isGlutenIntolerant] ?: DEFAULT_FALSE,
         isLactoseIntolerant = row[isLactoseIntolerant] ?: DEFAULT_FALSE,
-        otherRestriction = row[otherRestriction] ?: DEFAULT_STRING,
+        otherRestrictions = row[otherRestrictions] ?: DEFAULT_STRING,
         isInactive = row[isInactive] ?: DEFAULT_FALSE,
         isDeleted = row[isDeleted] ?: DEFAULT_FALSE
     )

@@ -13,9 +13,9 @@ import me.liuwj.ktorm.dsl.update
 import me.liuwj.ktorm.dsl.where
 
 class AttendancesService(val database: Database) {
-    fun getAll(): List<Attendance>  = database.from(Attendances).select().map { Attendances.createEntity(it) }
+    fun getAll(): List<Attendance> = database.from(Attendances).select().map { Attendances.createEntity(it) }
 
-    fun getAllAttending(): List<Attendance>  =
+    fun getAllAttending(): List<Attendance> =
         database.from(Attendances).select().where { Attendances.isAttending }.map { Attendances.createEntity(it) }
 
     fun getByUuid(uuid: UUID): List<Attendance> =

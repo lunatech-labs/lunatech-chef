@@ -21,7 +21,6 @@ import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.put
 import io.ktor.routing.route
-import io.ktor.util.rootCause
 import java.util.UUID
 import mu.KotlinLogging
 

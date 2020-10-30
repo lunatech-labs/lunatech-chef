@@ -5,7 +5,7 @@ import java.util.UUID
 data class NewUser(
   val name: String,
   val emailAddress: String,
-  val location: UUID,
+  val locationUuid: UUID?,
   val isVegetarian: Boolean = false,
   val hasNutsRestriction: Boolean = false,
   val hasSeafoodRestriction: Boolean = false,
@@ -13,14 +13,14 @@ data class NewUser(
   val hasBeefRestriction: Boolean = false,
   val isGlutenIntolerant: Boolean = false,
   val isLactoseIntolerant: Boolean = false,
-  val otherRestriction: String = ""
+  val otherRestrictions: String = ""
 )
 
 data class User(
   val uuid: UUID,
   val name: String,
   val emailAddress: String,
-  val location: UUID,
+  val locationUuid: UUID?,
   val isVegetarian: Boolean = false,
   val hasNutsRestriction: Boolean = false,
   val hasSeafoodRestriction: Boolean = false,
@@ -28,7 +28,7 @@ data class User(
   val hasBeefRestriction: Boolean = false,
   val isGlutenIntolerant: Boolean = false,
   val isLactoseIntolerant: Boolean = false,
-  val otherRestriction: String = "",
+  val otherRestrictions: String = "",
   val isInactive: Boolean = false,
   val isDeleted: Boolean = false
 ) {
@@ -38,7 +38,7 @@ data class User(
                 uuid = UUID.randomUUID(),
                 name = newUser.name,
                 emailAddress = newUser.emailAddress,
-                location = newUser.location,
+                locationUuid = newUser.locationUuid,
                 isVegetarian = newUser.isVegetarian,
                 hasNutsRestriction = newUser.hasNutsRestriction,
                 hasSeafoodRestriction = newUser.hasSeafoodRestriction,
@@ -46,7 +46,7 @@ data class User(
                 hasBeefRestriction = newUser.hasBeefRestriction,
                 isGlutenIntolerant = newUser.isGlutenIntolerant,
                 isLactoseIntolerant = newUser.isLactoseIntolerant,
-                otherRestriction = newUser.otherRestriction
+                otherRestrictions = newUser.otherRestrictions
             )
         }
     }

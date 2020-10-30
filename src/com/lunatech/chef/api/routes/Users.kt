@@ -26,19 +26,15 @@ import mu.KotlinLogging
 private val logger = KotlinLogging.logger {}
 
 data class UpdatedUser(
-  val name: String,
-  val emailAddress: String,
-  val isAdmin: Boolean,
-  val location: UUID,
-  val isVegetarian: Boolean = false,
-  val hasNutsRestriction: Boolean = false,
-  val hasSeafoodRestriction: Boolean = false,
-  val hasPorkRestriction: Boolean = false,
-  val hasBeefRestriction: Boolean = false,
-  val isGlutenIntolerant: Boolean = false,
-  val isLactoseIntolerant: Boolean = false,
-  val isInactive: Boolean = false,
-  val otherRestriction: String = ""
+    val locationUuid: UUID,
+    val isVegetarian: Boolean = false,
+    val hasNutsRestriction: Boolean = false,
+    val hasSeafoodRestriction: Boolean = false,
+    val hasPorkRestriction: Boolean = false,
+    val hasBeefRestriction: Boolean = false,
+    val isGlutenIntolerant: Boolean = false,
+    val isLactoseIntolerant: Boolean = false,
+    val otherRestrictions: String = ""
 )
 
 fun Routing.users(usersService: UsersService) {
@@ -85,7 +81,7 @@ fun Routing.users(usersService: UsersService) {
                             val result = usersService.update(UUID.fromString(uuid), updatedUser)
                             if (result == 1) call.respond(OK) else call.respond(InternalServerError)
                         } catch (exception: Exception) {
-                            logger.error("Error updating a User :( ", exception)
+                            logger.error("Error updating an User :( ", exception)
                             call.respond(BadRequest, exception.message ?: "")
                         }
                     }

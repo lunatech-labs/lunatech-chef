@@ -14,7 +14,7 @@ export const ConfigureStore = () => {
       dishes: DishesReducer,
       menus: MenusReducer,
       schedules: SchedulesReducer,
-      userData: UsersReducer,
+      user: UsersReducer,
     }),
     applyMiddleware(thunk, logger)
   );

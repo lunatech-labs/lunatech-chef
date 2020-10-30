@@ -4,7 +4,7 @@ CHEF_SESSION: {{ session }}
 
 { "name": "Leonor",
   "emailAddress": "leonor.boga@lunatech.nl",
-  "location": "82ea2b48-27d8-4b52-994b-9b4fdd377195",
+  "locationUuid": "5a7865b3-ed05-4569-aae5-d38d8a02c490",
   "isVegetarian": "false",
   "hasNutsRestriction": "false",
   "hasSeafoodRestriction": "false",
@@ -12,7 +12,7 @@ CHEF_SESSION: {{ session }}
   "hasBeefRestriction": "false",
   "isGlutenIntolerant": "false",
   "isLactoseIntolerant": "false",
-  "otherRestriction": ""
+  "otherRestrictions": ""
 }
 
 ###
@@ -34,7 +34,7 @@ CHEF_SESSION: {{ session }}
 {
   "name": "Leonor",
   "emailAddress": "leonor.boga@lunatech.nl",
-  "location": "61edaf14-b018-4ffa-afba-dc5844426176",
+  "locationUuid": "61edaf14-b018-4ffa-afba-dc5844426176",
   "isInactive": "false",
   "isVegetarian": "false",
   "hasNutsRestriction": "false",
@@ -43,12 +43,12 @@ CHEF_SESSION: {{ session }}
   "hasBeefRestriction": "false",
   "isGlutenIntolerant": "false",
   "isLactoseIntolerant": "true",
-  "otherRestriction": "I like vegetarian food a lot"
+  "otherRestrictions": "I like vegetarian food a lot"
 }
 
 ###
 
-DELETE {{ host }}/users/f0daa634-8ec7-4fef-88c7-a92d608b6eea
+DELETE {{ host }}/users/e106ce93-89e5-4164-9698-8df9dbe354bd
 CHEF_SESSION: {{ session }}
 
 ###

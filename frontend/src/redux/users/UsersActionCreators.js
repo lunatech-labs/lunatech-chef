@@ -34,6 +34,31 @@ const configureAxios = (response) => {
   );
 };
 
+export const saveUserProfile = (userUuid, userProfile) => (dispatch) => {
+  const userProfileToSave = {
+    locationUuid: userProfile.locationUuid,
+    isVegetarian: userProfile.isVegetarian,
+    hasNutsRestriction: userProfile.hasNutsRestriction,
+    hasSeafoodRestriction: userProfile.hasSeafoodRestriction,
+    hasPorkRestriction: userProfile.hasPorkRestriction,
+    hasBeefRestriction: userProfile.hasBeefRestriction,
+    isGlutenIntolerant: userProfile.isGlutenIntolerant,
+    isLactoseIntolerant: userProfile.isLactoseIntolerant,
+    otherRestrictions: userProfile.otherRestrictions,
+  };
+
+  axiosInstance
+    .put("/users/" + userUuid, userProfileToSave)
+    .then((response) => {
+      console.log("User profile saved with response " + response);
+      dispatch(userDataUpdayed(userProfileToSave));
+    })
+    .catch(function (error) {
+      console.log("Failed saving user profile: " + error);
+      dispatch(userProfileSaveError(error.message));
+    });
+};
+
 const getInitalData = (dispatch) => {
   dispatch(fetchLocations());
   dispatch(fetchDishes());
@@ -42,12 +67,16 @@ const getInitalData = (dispatch) => {
 };
 
 export const logout = () => (dispatch) => {
-  console.log("Logging out");
   dispatch(userLoggedOut());
 };
 
-export const userLoggedIn = (data, headers) => ({
+export const userLoggedIn = (data) => ({
   type: ActionTypes.USER_LOGIN,
+  payload: data,
+});
+
+export const userDataUpdayed = (data) => ({
+  type: ActionTypes.UPDATE_USER_PROFILE,
   payload: data,
 });
 
@@ -58,4 +87,9 @@ export const userLoginError = (errmess) => ({
 
 export const userLoggedOut = () => ({
   type: ActionTypes.USER_LOGOUT,
+});
+
+export const userProfileSaveError = (errmess) => ({
+  type: ActionTypes.USER_PROFILE_SAVE_ERROR,
+  payload: errmess,
 });

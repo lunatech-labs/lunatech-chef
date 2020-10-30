@@ -150,7 +150,7 @@ fun Application.module(testing: Boolean = false) {
         get("/") {
             call.respondFile(File("frontend/build/index.html"))
         }
-        authorization(verifier!!, authConfig.admins)
+        authorization(usersService, verifier!!, authConfig.admins)
         healthCheck()
         locations(locationsService)
         dishes(dishesService)
@@ -168,10 +168,11 @@ fun Application.module(testing: Boolean = false) {
             files("frontend/build")
         }
 
-        // TODO Meal schedule
-        // TODO adicionar novos utilizadores automaticamente quando fazem login
-        // TODO HTTPS
+        // TODO FE mostrar erros quando um profile de um user for actualizado
+
         // TODO filtros no attendances, schedules por data, localizacao
+
+        // TODO HTTPS
         // TODO swagger
         // TODO pagina principal? filtrar por localizacao, lista cronologica
         // TODO reports

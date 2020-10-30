@@ -29,7 +29,11 @@ import {
   editSchedule,
   deleteSchedule,
 } from "../redux/schedules/SchedulesActionCreators";
-import { login, logout } from "../redux/users/UsersActionCreators";
+import {
+  login,
+  logout,
+  saveUserProfile,
+} from "../redux/users/UsersActionCreators";
 import "../css/simple-sidebar.css";
 import ErrorBoundary from "./shared/ErrorBoundary";
 import ListDishes from "./admin/dishes/ListDishes";
@@ -47,10 +51,11 @@ import ListSchedules from "./admin/schedules/ListSchedules";
 import AddSchedule from "./admin/schedules/AddSchedule";
 import EditSchedule from "./admin/schedules/EditSchedule";
 import { MealsSchedule } from "./MealsSchedule";
+import { UserProfile } from "./UserProfile";
 
 const mapStateToProps = (state) => {
   return {
-    userData: state.userData,
+    user: state.user,
     locations: state.locations,
     dishes: state.dishes,
     menus: state.menus,
@@ -125,6 +130,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   logout: () => {
     dispatch(logout());
+  },
+  saveUserProfile: (uuid, profile) => {
+    dispatch(saveUserProfile(uuid, profile));
   },
 });
 
@@ -284,9 +292,19 @@ class Main extends Component {
       return <Login login={this.props.login} />;
     };
 
+    const Profile = () => {
+      return (
+        <UserProfile
+          user={this.props.user}
+          locations={this.props.locations.locations}
+          saveUserProfile={this.props.saveUserProfile}
+        />
+      );
+    };
+
     return (
       <ErrorBoundary>
-        {this.props.userData.isAuthenticated ? (
+        {this.props.user.isAuthenticated ? (
           <div className="d-flex" id="wrapper">
             <div className="bg-light border-right" id="sidebar-wrapper">
               <Header />
@@ -297,7 +315,7 @@ class Main extends Component {
                 >
                   Meal schedule
                 </Link>
-                {this.props.userData.isAdmin ? (
+                {this.props.user.isAdmin ? (
                   <div>
                     <Link
                       className="list-group-item list-group-item-action bg-light"
@@ -328,8 +346,14 @@ class Main extends Component {
                   <div></div>
                 )}
                 <div className="list-group-item list-group-item-action bg-light">
-                  {this.props.userData.name}
+                  {this.props.user.name}
                 </div>
+                <Link
+                  className="list-group-item list-group-item-action bg-light"
+                  to="/userProfile"
+                >
+                  Profile
+                </Link>
                 <Link to="/">
                   <Button
                     className="list-group-item list-group-item-action bg-light"
@@ -345,64 +369,65 @@ class Main extends Component {
               <ProtectedRoute
                 path="/alllocations"
                 component={AllLocations}
-                isAdmin={this.props.userData.isAdmin}
+                isAdmin={this.props.user.isAdmin}
               />
               <ProtectedRoute
                 path="/newlocation"
                 component={AddNewLocation}
-                isAdmin={this.props.userData.isAdmin}
+                isAdmin={this.props.user.isAdmin}
               />
               <ProtectedRoute
                 path="/editlocation"
                 component={EditExistingLocation}
-                isAdmin={this.props.userData.isAdmin}
+                isAdmin={this.props.user.isAdmin}
               />
               <ProtectedRoute
                 path="/alldishes"
                 component={AllDishes}
-                isAdmin={this.props.userData.isAdmin}
+                isAdmin={this.props.user.isAdmin}
               />
               <ProtectedRoute
                 path="/newdish"
                 component={AddNewDish}
-                isAdmin={this.props.userData.isAdmin}
+                isAdmin={this.props.user.isAdmin}
               />
               <ProtectedRoute
                 path="/editdish"
                 component={EditExistingDish}
-                isAdmin={this.props.userData.isAdmin}
+                isAdmin={this.props.user.isAdmin}
               />
               <ProtectedRoute
                 path="/allmenus"
                 component={AllMenus}
-                isAdmin={this.props.userData.isAdmin}
+                isAdmin={this.props.user.isAdmin}
               />
               <ProtectedRoute
                 path="/newmenu"
                 component={AddNewMenu}
-                isAdmin={this.props.userData.isAdmin}
+                isAdmin={this.props.user.isAdmin}
               />
               <ProtectedRoute
                 path="/editmenu"
                 component={EditExistingMenu}
-                isAdmin={this.props.userData.isAdmin}
+                isAdmin={this.props.user.isAdmin}
               />
               <ProtectedRoute
                 path="/allschedules"
                 component={AllSchedules}
-                isAdmin={this.props.userData.isAdmin}
+                isAdmin={this.props.user.isAdmin}
               />
               <ProtectedRoute
                 path="/newschedule"
                 component={AddNewSchedule}
-                isAdmin={this.props.userData.isAdmin}
+                isAdmin={this.props.user.isAdmin}
               />
               <ProtectedRoute
                 path="/editschedule"
                 component={EditExistingSchedule}
-                isAdmin={this.props.userData.isAdmin}
+                isAdmin={this.props.user.isAdmin}
               />
               <Route path="/loginUser" component={LoginUser} />
+              <Route path="/userProfile" component={Profile} />
               <Route path="/" component={ShowMealsSchedule} />
               <Redirect to="/" />
             </Switch>

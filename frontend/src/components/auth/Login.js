@@ -10,8 +10,8 @@ class Login extends Component {
   }
 
   handleLogin(response) {
-    console.log("id_token: " + response.wc.id_token);
-    this.props.login(response.wc.id_token);
+    console.log("tokenId: " + response.tokenId);
+    this.props.login(response.tokenId);
   }
 
   handleLoginFailure(response) {

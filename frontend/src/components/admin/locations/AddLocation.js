@@ -10,18 +10,6 @@ export const AddLocation = (props) => {
     history.push("/alllocations");
   };
 
-  function ShowError({ error }) {
-    if (error) {
-      return (
-        <div>
-          <h4>An error ocurred when adding new Location: {error}</h4>
-        </div>
-      );
-    } else {
-      return <div></div>;
-    }
-  }
-
   function RenderData() {
     return (
       <Form
@@ -72,7 +60,6 @@ export const AddLocation = (props) => {
         <h3 className="mt-4">New Location</h3>
       </div>
       <RenderData />
-      <ShowError error={props.error} />
     </div>
   );
 };

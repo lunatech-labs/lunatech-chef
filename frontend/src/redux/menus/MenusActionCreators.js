@@ -24,7 +24,6 @@ export const addNewMenu = (newMenu) => (dispatch) => {
   axiosInstance
     .post("/menus", menuToAdd)
     .then((response) => {
-      console.log("New Menu added with response " + response);
       dispatch(fetchMenus());
     })
     .catch(function (error) {
@@ -42,7 +41,6 @@ export const editMenu = (editedMenu) => (dispatch) => {
   axiosInstance
     .put("/menus/" + editedMenu.uuid, menuToEdit)
     .then((response) => {
-      console.log("Menu edited with response " + response);
       dispatch(fetchMenus());
     })
     .catch(function (error) {
@@ -55,7 +53,6 @@ export const deleteMenu = (menuUuid) => (dispatch) => {
   axiosInstance
     .delete("/menus/" + menuUuid)
     .then((response) => {
-      console.log("Menu deleted with response: " + response);
       dispatch(fetchMenus());
     })
     .catch(function (error) {

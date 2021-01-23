@@ -15,29 +15,6 @@ export const fetchSchedules = () => (dispatch) => {
     });
 };
 
-export const saveScheduleAttendance = (attendance) => (dispatch) => {
-  console.log(
-    " saveScheduleAttendance saveScheduleAttendance saveScheduleAttendance"
-  );
-
-  // const attendanceToAdd = {
-  //   scheduleUuid: attendance.scheduleUuid,
-  //   userUuid: attendance.userUuid,
-  //   isAttending: attendance.isAttending,
-  // };
-
-  // axiosInstance
-  //   .post("/attendances", attendanceToAdd)
-  //   .then((response) => {
-  //     console.log("New Schedule attendance added with response " + response);
-  //     dispatch(fetchSchedules());
-  //   })
-  //   .catch(function (error) {
-  //     console.log("Failed adding Schedule attendance: " + error);
-  //     dispatch(scheduleAttendanceAddingFailed(error.message));
-  //   });
-};
-
 export const addNewSchedule = (newSchedule) => (dispatch) => {
   const scheduleToAdd = {
     menuUuid: newSchedule.menuUuid,
@@ -48,7 +25,6 @@ export const addNewSchedule = (newSchedule) => (dispatch) => {
   axiosInstance
     .post("/schedules", scheduleToAdd)
     .then((response) => {
-      console.log("New Schedule added with response " + response);
       dispatch(fetchSchedules());
     })
     .catch(function (error) {
@@ -67,7 +43,6 @@ export const editSchedule = (editedSchedule) => (dispatch) => {
   axiosInstance
     .put("/schedules/" + editedSchedule.uuid, sheduleToEdit)
     .then((response) => {
-      console.log("Schedule edited with response " + response);
       dispatch(fetchSchedules());
     })
     .catch(function (error) {
@@ -80,7 +55,6 @@ export const deleteSchedule = (scheduleUuid) => (dispatch) => {
   axiosInstance
     .delete("/schedules/" + scheduleUuid)
     .then((response) => {
-      console.log("Schedule deleted with response: " + response);
       dispatch(fetchSchedules());
     })
     .catch(function (error) {
@@ -105,11 +79,6 @@ export const schedulesLoadingFailed = (errmess) => ({
 
 export const scheduleAddingFailed = (errmess) => ({
   type: ActionTypes.ADD_NEW_SCHEDULE_FAILED,
-  payload: errmess,
-});
-
-export const scheduleAttendanceAddingFailed = (errmess) => ({
-  type: ActionTypes.ADD_NEW_SCHEDULE_ATTENDANCE_FAILED,
   payload: errmess,
 });
 

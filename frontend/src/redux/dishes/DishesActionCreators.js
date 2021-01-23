@@ -31,7 +31,6 @@ export const addNewDish = (newDish) => (dispatch) => {
   axiosInstance
     .post("/dishes", dishToAdd)
     .then((response) => {
-      console.log("New dish added with response " + response);
       dispatch(fetchDishes());
     })
     .catch(function (error) {
@@ -56,7 +55,6 @@ export const editDish = (editedDish) => (dispatch) => {
   axiosInstance
     .put("/dishes/" + editedDish.uuid, sishToEdit)
     .then((response) => {
-      console.log("Dish edited with response " + response);
       dispatch(fetchDishes());
     })
     .catch(function (error) {
@@ -69,7 +67,6 @@ export const deleteDish = (dishUuid) => (dispatch) => {
   axiosInstance
     .delete("/dishes/" + dishUuid)
     .then((response) => {
-      console.log("Dish deleted with response " + response);
       dispatch(fetchDishes());
     })
     .catch(function (error) {

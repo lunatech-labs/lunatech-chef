@@ -24,7 +24,6 @@ export const addNewLocation = (newLocation) => (dispatch) => {
   axiosInstance
     .post("/locations", locationToAdd)
     .then((response) => {
-      console.log("New Location added with response " + response);
       dispatch(fetchLocations());
     })
     .catch(function (error) {
@@ -42,7 +41,6 @@ export const editLocation = (editedLocation) => (dispatch) => {
   axiosInstance
     .put("/locations/" + editedLocation.uuid, locationToEdit)
     .then((response) => {
-      console.log("Location edited with response " + response);
       dispatch(fetchLocations());
     })
     .catch(function (error) {
@@ -55,7 +53,6 @@ export const deleteLocation = (locationUuid) => (dispatch) => {
   axiosInstance
     .delete("/locations/" + locationUuid)
     .then((response) => {
-      console.log("Location deleted with response: " + response);
       dispatch(fetchLocations());
     })
     .catch(function (error) {

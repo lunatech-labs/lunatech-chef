@@ -5,7 +5,6 @@ const initState = {
   schedules: [],
   errorListing: null,
   errorAdding: null,
-  errorAddingAttendance: null,
   errorEditing: null,
   errorDeleting: null,
 };
@@ -23,7 +22,6 @@ export const SchedulesReducer = (state = initState, action) => {
         ...initState,
         errorListing: action.payload,
         errorAdding: null,
-        errorAddingAttedance: null,
         errorEditing: null,
         errorDeleting: null,
       };
@@ -33,7 +31,6 @@ export const SchedulesReducer = (state = initState, action) => {
         ...state,
         errorListing: null,
         errorAdding: action.payload,
-        errorAddingAttedance: null,
         errorEditing: null,
         errorDeleting: null,
       };
@@ -43,7 +40,6 @@ export const SchedulesReducer = (state = initState, action) => {
         ...state,
         errorListing: null,
         errorAdding: null,
-        errorAddingAttedance: null,
         errorEditing: action.payload,
         errorDeleting: null,
       };
@@ -56,16 +52,6 @@ export const SchedulesReducer = (state = initState, action) => {
         errorAddingAttedance: null,
         errorEditing: null,
         errorDeleting: action.payload,
-      };
-
-    case ActionTypes.ADD_NEW_SCHEDULE_ATTENDANCE_FAILED:
-      return {
-        ...state,
-        errorListing: null,
-        errorAdding: null,
-        errorAddingAttedance: action.payload,
-        errorEditing: null,
-        errorDeleting: null,
       };
 
     default:

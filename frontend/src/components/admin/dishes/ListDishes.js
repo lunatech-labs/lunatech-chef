@@ -157,7 +157,7 @@ function RenderData({ isLoading, error, dishes, handleEdit, handleRemove }) {
 
 class ListDishes extends Component {
   constructor(props) {
-    super(props);
+    super();
     this.handleRemove = this.handleRemove.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
   }

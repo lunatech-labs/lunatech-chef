@@ -26,15 +26,15 @@ import mu.KotlinLogging
 private val logger = KotlinLogging.logger {}
 
 data class UpdatedUser(
-    val locationUuid: UUID,
-    val isVegetarian: Boolean = false,
-    val hasNutsRestriction: Boolean = false,
-    val hasSeafoodRestriction: Boolean = false,
-    val hasPorkRestriction: Boolean = false,
-    val hasBeefRestriction: Boolean = false,
-    val isGlutenIntolerant: Boolean = false,
-    val isLactoseIntolerant: Boolean = false,
-    val otherRestrictions: String = ""
+  val locationUuid: UUID,
+  val isVegetarian: Boolean = false,
+  val hasNutsRestriction: Boolean = false,
+  val hasSeafoodRestriction: Boolean = false,
+  val hasPorkRestriction: Boolean = false,
+  val hasBeefRestriction: Boolean = false,
+  val isGlutenIntolerant: Boolean = false,
+  val isLactoseIntolerant: Boolean = false,
+  val otherRestrictions: String = ""
 )
 
 fun Routing.users(usersService: UsersService) {

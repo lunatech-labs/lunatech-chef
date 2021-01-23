@@ -16,7 +16,7 @@ class SchedulesService(val database: Database) {
     fun getAll() = database.from(Schedules).select().where { Schedules.isDeleted eq false }.map { Schedules.createEntity(it) }
 
     fun getByUuid(uuid: UUID): List<Schedule> =
-        database.from(Schedules).select().where { -> Schedules.uuid eq uuid }.map { Schedules.createEntity(it) }
+        database.from(Schedules).select().where { Schedules.uuid eq uuid }.map { Schedules.createEntity(it) }
 
     fun insert(schedule: Schedule): Int =
         database.insert(Schedules) {

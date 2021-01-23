@@ -16,7 +16,7 @@ class LocationsService(val database: Database) {
     fun getAll() = database.from(Locations).select().where { Locations.isDeleted eq false }.map { Locations.createEntity(it) }
 
     fun getByUuid(uuid: UUID): List<Location> =
-        database.from(Locations).select().where { -> Locations.uuid eq uuid }.map { Locations.createEntity(it) }
+        database.from(Locations).select().where { Locations.uuid eq uuid }.map { Locations.createEntity(it) }
 
     fun insert(location: Location): Int =
         database.insert(Locations) {

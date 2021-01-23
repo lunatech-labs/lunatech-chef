@@ -4,6 +4,7 @@ import com.lunatech.chef.api.auth.Role
 import com.lunatech.chef.api.auth.rolesAllowed
 import com.lunatech.chef.api.domain.NewSchedule
 import com.lunatech.chef.api.domain.Schedule
+import com.lunatech.chef.api.persistence.services.AttendancesService
 import com.lunatech.chef.api.persistence.services.SchedulesService
 import io.ktor.application.call
 import io.ktor.auth.authenticate
@@ -28,10 +29,11 @@ private val logger = KotlinLogging.logger {}
 
 data class UpdatedSchedule(val menuUuid: UUID, val date: LocalDate, val locationUuid: UUID)
 
-fun Routing.schedules(schedulesService: SchedulesService) {
+fun Routing.schedules(schedulesService: SchedulesService, attendancesService: AttendancesService) {
     val schedulesRoute = "/schedules"
     val uuidRoute = "/{uuid}"
     val uuidParam = "uuid"
+    val error = -1
 
     route(schedulesRoute) {
         authenticate("session-auth") {
@@ -45,8 +47,14 @@ fun Routing.schedules(schedulesService: SchedulesService) {
                 post {
                     try {
                         val newSchedule = call.receive<NewSchedule>()
-                        val inserted = schedulesService.insert(Schedule.fromNewSchedule(newSchedule))
-                        if (inserted == 1) call.respond(Created) else call.respond(InternalServerError)
+                        val scheduleToInsert = Schedule.fromNewSchedule(newSchedule)
+                        val insertedSchedule = schedulesService.insert(scheduleToInsert)
+
+                        val insertedAttendance = if (insertedSchedule == 1) attendancesService.insertAttendanceAllUsers(
+                            scheduleToInsert.uuid,
+                            isAttending = false
+                        ) else error
+                        if (insertedAttendance > 0) call.respond(Created) else call.respond(InternalServerError)
                     } catch (exception: Exception) {
                         logger.error("Error adding new Schedule :( ", exception)
                         call.respond(BadRequest, exception.message ?: "")
@@ -80,6 +88,9 @@ fun Routing.schedules(schedulesService: SchedulesService) {
                     delete {
                         val uuid = call.parameters[uuidParam]
                         val result = schedulesService.delete(UUID.fromString(uuid))
+
+                        // TODO delete all related attendance
+
                         if (result == 1) call.respond(OK) else call.respond(InternalServerError)
                     }
                 }

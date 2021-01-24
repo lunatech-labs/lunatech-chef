@@ -12,6 +12,7 @@ import com.lunatech.chef.api.config.FlywayConfig
 import com.lunatech.chef.api.persistence.DBEvolution
 import com.lunatech.chef.api.persistence.Database
 import com.lunatech.chef.api.persistence.services.AttendancesService
+import com.lunatech.chef.api.persistence.services.AttendancesWithInfoService
 import com.lunatech.chef.api.persistence.services.DishesService
 import com.lunatech.chef.api.persistence.services.LocationsService
 import com.lunatech.chef.api.persistence.services.MenusService
@@ -21,6 +22,7 @@ import com.lunatech.chef.api.persistence.services.SchedulesWithInfoService
 import com.lunatech.chef.api.persistence.services.UsersService
 import com.lunatech.chef.api.routes.ChefSession
 import com.lunatech.chef.api.routes.attendances
+import com.lunatech.chef.api.routes.attendancesFullInfo
 import com.lunatech.chef.api.routes.authorization
 import com.lunatech.chef.api.routes.dishes
 import com.lunatech.chef.api.routes.healthCheck
@@ -83,9 +85,10 @@ fun Application.module(testing: Boolean = false) {
     val menusService = MenusService(dbConnection)
     val menusWithDishesService = MenusWithDishesNamesService(dbConnection)
     val schedulesService = SchedulesService(dbConnection)
-    val usersService = UsersService(dbConnection)
-    val attendancesService = AttendancesService(dbConnection)
     val schedulesWithNamesService = SchedulesWithInfoService(dbConnection, menusWithDishesService)
+    val usersService = UsersService(dbConnection)
+    val attendancesService = AttendancesService(dbConnection, usersService)
+    val attendancesWithInfoService = AttendancesWithInfoService(dbConnection, schedulesService, menusWithDishesService)
 
     val CHEF_SESSSION = "CHEF_SESSION"
     install(CORS) {
@@ -156,8 +159,9 @@ fun Application.module(testing: Boolean = false) {
         dishes(dishesService)
         menus(menusService)
         menusWithDishesInfo(menusWithDishesService)
-        schedules(schedulesService)
+        schedules(schedulesService, attendancesService)
         schedulesWithMenusInfo(schedulesWithNamesService)
+        attendancesFullInfo(attendancesWithInfoService)
         users(usersService)
         attendances(attendancesService)
 
@@ -173,7 +177,7 @@ fun Application.module(testing: Boolean = false) {
         // TODO filtros no attendances, schedules por data, localizacao
 
         // TODO HTTPS
-        // TODO swagger
+        // TODO swagger e limpar routes nao necessarias
         // TODO pagina principal? filtrar por localizacao, lista cronologica
         // TODO reports
         // TODO integration com a people API

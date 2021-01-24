@@ -10,12 +10,10 @@ import io.ktor.auth.authenticate
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.InternalServerError
-import io.ktor.http.HttpStatusCode.Companion.NotFound
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.Routing
-import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.put
 import io.ktor.routing.route
@@ -34,11 +32,6 @@ fun Routing.attendances(attendancesService: AttendancesService) {
     route(attendancesRoute) {
         authenticate("session-auth") {
             rolesAllowed(Role.ADMIN, Role.USER) {
-                // get all attendances
-                get {
-                    val attendances = attendancesService.getAllAttending()
-                    call.respond(OK, attendances)
-                }
                 // create a new single attendance
                 post {
                     try {
@@ -51,16 +44,6 @@ fun Routing.attendances(attendancesService: AttendancesService) {
                     }
                 }
                 route(uuidRoute) {
-                    // get single attendance
-                    get {
-                        val uuid = call.parameters[uuidParam]
-                        val attendance = attendancesService.getByUuid(UUID.fromString(uuid))
-                        if (attendance.isEmpty()) {
-                            call.respond(NotFound)
-                        } else {
-                            call.respond(OK, attendance.first())
-                        }
-                    }
                     // modify existing schedule
                     put {
                         try {

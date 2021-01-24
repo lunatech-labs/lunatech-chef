@@ -3,21 +3,9 @@ import { withRouter } from "react-router-dom";
 import { Form, Field } from "react-final-form";
 import DatePicker from "react-datepicker";
 
-function ShowError({ error }) {
-  if (error) {
-    return (
-      <div>
-        <h4>An error ocurred when adding new Schedule: {error}</h4>
-      </div>
-    );
-  } else {
-    return <div></div>;
-  }
-}
-
 class AddSchedule extends Component {
   constructor(props) {
-    super(props);
+    super();
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -113,7 +101,6 @@ class AddSchedule extends Component {
             </form>
           )}
         ></Form>
-        <ShowError error={this.props.error} />
       </div>
     );
   }

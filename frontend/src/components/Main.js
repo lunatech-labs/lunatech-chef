@@ -25,10 +25,14 @@ import {
 import {
   fetchSchedules,
   addNewSchedule,
-  saveScheduleAttendance,
   editSchedule,
   deleteSchedule,
 } from "../redux/schedules/SchedulesActionCreators";
+import {
+  fetchAttendance,
+  editAttendance,
+  showNewAttendance,
+} from "../redux/attendance/AttendanceActionCreators";
 import {
   login,
   logout,
@@ -50,7 +54,7 @@ import ProtectedRoute from "./auth/ProtectedRoute";
 import ListSchedules from "./admin/schedules/ListSchedules";
 import AddSchedule from "./admin/schedules/AddSchedule";
 import EditSchedule from "./admin/schedules/EditSchedule";
-import { MealsSchedule } from "./MealsSchedule";
+import { MealsAttendance } from "./MealsSchedule";
 import { UserProfile } from "./UserProfile";
 
 const mapStateToProps = (state) => {
@@ -60,6 +64,7 @@ const mapStateToProps = (state) => {
     dishes: state.dishes,
     menus: state.menus,
     schedules: state.schedules,
+    attendance: state.attendance,
   };
 };
 
@@ -114,14 +119,22 @@ const mapDispatchToProps = (dispatch) => ({
   addNewSchedule: (newSchedule) => {
     dispatch(addNewSchedule(newSchedule));
   },
-  saveScheduleAttendance: (scheduleAttendance) => {
-    dispatch(saveScheduleAttendance(scheduleAttendance));
-  },
   editSchedule: (editedSchedule) => {
     dispatch(editSchedule(editedSchedule));
   },
   deleteSchedule: (scheduleUuid) => {
     dispatch(deleteSchedule(scheduleUuid));
+  },
+  //
+  // Attendance
+  fetchAttendance: (userUuid) => {
+    dispatch(fetchAttendance(userUuid));
+  },
+  editAttendance: (attendance) => {
+    dispatch(editAttendance(attendance));
+  },
+  showNewAttendance: (attendance) => {
+    dispatch(showNewAttendance(attendance));
   },
   //
   // Users
@@ -154,12 +167,7 @@ class Main extends Component {
     };
 
     const AddNewDish = () => {
-      return (
-        <AddDish
-          addNewDish={this.props.addNewDish}
-          error={this.props.dishes.errorAdding}
-        />
-      );
+      return <AddDish addNewDish={this.props.addNewDish} />;
     };
 
     const EditExistingDish = () => {
@@ -188,12 +196,7 @@ class Main extends Component {
     };
 
     const AddNewLocation = () => {
-      return (
-        <AddLocation
-          addNewLocation={this.props.addNewLocation}
-          error={this.props.dishes.errorAdding}
-        />
-      );
+      return <AddLocation addNewLocation={this.props.addNewLocation} />;
     };
 
     const EditExistingLocation = () => {
@@ -248,6 +251,7 @@ class Main extends Component {
           schedules={this.props.schedules.schedules}
           deleteSchedule={this.props.deleteSchedule}
           errorListing={this.props.schedules.errorListing}
+          errorAdding={this.props.schedules.errorAdding}
           errorEditing={this.props.schedules.errorEditing}
           errorDeleting={this.props.schedules.errorDeleting}
         />
@@ -265,17 +269,6 @@ class Main extends Component {
       );
     };
 
-    const ShowMealsSchedule = () => {
-      return (
-        <MealsSchedule
-          isLoading={this.props.schedules.isLoading}
-          schedules={this.props.schedules.schedules}
-          saveScheduleAttendance={this.props.saveScheduleAttendance}
-          errorListing={this.props.schedules.errorListing}
-        />
-      );
-    };
-
     const EditExistingSchedule = () => {
       return (
         <EditSchedule
@@ -284,6 +277,18 @@ class Main extends Component {
           menus={this.props.menus.menus}
           locations={this.props.locations.locations}
           error={this.props.menus.errorEditing}
+        />
+      );
+    };
+
+    const ShowAttendance = () => {
+      return (
+        <MealsAttendance
+          isLoading={this.props.attendance.isLoading}
+          attendance={this.props.attendance.attendance}
+          editAttendance={this.props.editAttendance}
+          showNewAttendance={this.props.showNewAttendance}
+          errorListing={this.props.attendance.errorListing}
         />
       );
     };
@@ -428,7 +433,7 @@ class Main extends Component {
               />
               <Route path="/loginUser" component={LoginUser} />
               <Route path="/userProfile" component={Profile} />
-              <Route path="/" component={ShowMealsSchedule} />
+              <Route path="/" component={ShowAttendance} />
               <Redirect to="/" />
             </Switch>
             <div className="d-flex">

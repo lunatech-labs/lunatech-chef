@@ -17,7 +17,7 @@ class UsersService(val database: Database) {
         .map { Users.createEntity(it) }
 
     fun getByUuid(uuid: UUID): List<User> =
-        database.from(Users).select().where { -> Users.uuid eq uuid }.map { Users.createEntity(it) }
+        database.from(Users).select().where { Users.uuid eq uuid }.map { Users.createEntity(it) }
 
     fun getByEmailAddress(emailAddress: String): User? =
         database.from(Users).select()

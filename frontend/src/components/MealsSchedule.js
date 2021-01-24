@@ -4,12 +4,27 @@ import { Loading } from "./shared/Loading";
 import { Form, Field } from "react-final-form";
 import { ToMonth } from "./shared/Functions";
 
-export const MealsSchedule = (props) => {
+export const MealsAttendance = (props) => {
+  const [attendance, setAttendance] = React.useState(props.attendance);
+
   const onSubmit = (values) => {
-    props.saveScheduleAttendance(values);
+    const newAttendance = attendance.map((item) => {
+      if (item.uuid === values.uuid) {
+        const updatedItem = {
+          ...item,
+          isAttending: values.isAttending,
+        };
+        return updatedItem;
+      }
+      return item;
+    });
+
+    setAttendance(newAttendance);
+    props.editAttendance(values);
+    props.showNewAttendance(newAttendance);
   };
 
-  function RenderData({ isLoading, error, schedules }) {
+  function RenderData({ isLoading, error, attendance }) {
     if (isLoading) {
       return (
         <div className="container">
@@ -22,7 +37,7 @@ export const MealsSchedule = (props) => {
       return (
         <div>
           <h4>
-            An error ocurred when feching meal schedules from server: {error}
+            An error ocurred when fetching meal schedules from server: {error}
           </h4>
         </div>
       );
@@ -40,16 +55,15 @@ export const MealsSchedule = (props) => {
                 </tr>
               </thead>
               <tbody>
-                {schedules.map((schedule) => {
+                {attendance.map((attendance) => {
                   return (
-                    <tr key={schedule.uuid}>
+                    <tr key={attendance.uuid}>
                       <td>
                         <Form
                           onSubmit={onSubmit}
                           initialValues={{
-                            scheduleUuid: schedule.uuid,
-                            userUuid: "e106ce93-89e5-4164-9698-8df9dbe354bd",
-                            isAttending: false,
+                            uuid: attendance.uuid,
+                            isAttending: attendance.isAttending,
                           }}
                           render={({ handleSubmit }) => (
                             <form>
@@ -71,13 +85,13 @@ export const MealsSchedule = (props) => {
                           )}
                         ></Form>
                       </td>
-                      <td>{schedule.location.city}</td>
+                      <td>{attendance.location.city}</td>
                       <td>
-                        {schedule.date[2]} {ToMonth(schedule.date[1])}{" "}
-                        {schedule.date[0]}
+                        {attendance.date[2]} {ToMonth(attendance.date[1])}{" "}
+                        {attendance.date[0]}
                       </td>
                       <td>
-                        {schedule.menu.dishes.map((dish) => {
+                        {attendance.menu.dishes.map((dish) => {
                           return (
                             <p key={dish.uuid}>
                               {dish.name}{" "}
@@ -105,8 +119,8 @@ export const MealsSchedule = (props) => {
       <div>
         <RenderData
           isLoading={props.isLoading}
-          error={props.errorListing}
-          schedules={props.schedules}
+          errorListing={props.errorListing}
+          attendance={attendance}
         />
       </div>
     </div>

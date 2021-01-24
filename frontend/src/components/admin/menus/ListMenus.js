@@ -86,7 +86,7 @@ function RenderData({ isLoading, error, menus, handleEdit, handleRemove }) {
 
 class ListMenus extends Component {
   constructor(props) {
-    super(props);
+    super();
     this.handleRemove = this.handleRemove.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
   }

@@ -3,14 +3,13 @@ import { GoogleLogin } from "react-google-login";
 
 class Login extends Component {
   constructor(props) {
-    super(props);
+    super();
 
     this.handleLogin = this.handleLogin.bind(this);
     this.handleLoginFailure = this.handleLoginFailure.bind(this);
   }
 
   handleLogin(response) {
-    console.log("tokenId: " + response.tokenId);
     this.props.login(response.tokenId);
   }
 

@@ -16,7 +16,7 @@ class DishesService(val database: Database) {
     fun getAll() = database.from(Dishes).select().where { Dishes.isDeleted eq false }.map { Dishes.createEntity(it) }
 
     fun getByUuid(uuid: UUID): List<Dish> =
-        database.from(Dishes).select().where { -> Dishes.uuid eq uuid }.map { Dishes.createEntity(it) }
+        database.from(Dishes).select().where { Dishes.uuid eq uuid }.map { Dishes.createEntity(it) }
 
     fun insert(dish: Dish): Int =
         database.insert(Dishes) {

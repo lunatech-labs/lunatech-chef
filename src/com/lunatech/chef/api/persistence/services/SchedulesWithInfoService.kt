@@ -12,7 +12,7 @@ import me.liuwj.ktorm.dsl.from
 import me.liuwj.ktorm.dsl.select
 import me.liuwj.ktorm.dsl.where
 
-class SchedulesWithInfoService(val database: Database, val menusWithDishes: MenusWithDishesNamesService) {
+class SchedulesWithInfoService(val database: Database, private val menusWithDishes: MenusWithDishesNamesService) {
     fun getAll(): List<ScheduleWithInfo> =
         database.from(Schedules).select()
             .where { Schedules.isDeleted eq false }
@@ -32,7 +32,7 @@ class SchedulesWithInfoService(val database: Database, val menusWithDishes: Menu
                 ScheduleWithInfo(schedule.uuid, menu!!, schedule.date, location!!)
             }
 
-    fun getScheduleWithInfo(schedule: Schedule): ScheduleWithInfo {
+    private fun getScheduleWithInfo(schedule: Schedule): ScheduleWithInfo {
         val menu = menusWithDishes.getByUuid(schedule.menuUuid)
         val location = database.from(Locations).select()
             .where { Locations.uuid eq schedule.locationUuid }

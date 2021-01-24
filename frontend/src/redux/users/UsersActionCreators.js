@@ -4,14 +4,17 @@ import { fetchDishes } from "../dishes/DishesActionCreators";
 import { fetchLocations } from "../locations/LocationsActionCreators";
 import { fetchMenus } from "../menus/MenusActionCreators";
 import { fetchSchedules } from "../schedules/SchedulesActionCreators";
+import { fetchAttendance } from "../attendance/AttendanceActionCreators";
 
 export const login = (token) => (dispatch) => {
   axiosInstance
     .get("/login/" + token)
     .then((response) => {
       configureAxios(response);
-      dispatch(userLoggedIn(response.data, response.headers));
-      getInitalData(dispatch);
+      dispatch(userLoggedIn(response.data));
+
+      const userUuid = response.data.uuid;
+      getInitalData(dispatch, userUuid);
     })
     .catch(function (error) {
       console.log("Failed logging in user " + error);
@@ -59,11 +62,12 @@ export const saveUserProfile = (userUuid, userProfile) => (dispatch) => {
     });
 };
 
-const getInitalData = (dispatch) => {
+const getInitalData = (dispatch, userUuid) => {
   dispatch(fetchLocations());
   dispatch(fetchDishes());
   dispatch(fetchMenus());
   dispatch(fetchSchedules());
+  dispatch(fetchAttendance(userUuid));
 };
 
 export const logout = () => (dispatch) => {

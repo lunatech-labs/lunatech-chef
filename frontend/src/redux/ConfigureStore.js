@@ -6,6 +6,7 @@ import { LocationsReducer } from "./locations/LocationsReducer";
 import { MenusReducer } from "./menus/MenusReducer";
 import { SchedulesReducer } from "./schedules/SchedulesReducer";
 import { UsersReducer } from "./users/UsersReducer";
+import { AttendanceReducer } from "./attendance/AttendanceReducer";
 
 export const ConfigureStore = () => {
   const store = createStore(
@@ -15,6 +16,7 @@ export const ConfigureStore = () => {
       menus: MenusReducer,
       schedules: SchedulesReducer,
       user: UsersReducer,
+      attendance: AttendanceReducer,
     }),
     applyMiddleware(thunk, logger)
   );

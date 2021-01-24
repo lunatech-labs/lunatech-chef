@@ -90,7 +90,7 @@ function RenderData({ isLoading, error, schedules, handleEdit, handleRemove }) {
 
 class ListSchedules extends Component {
   constructor(props) {
-    super(props);
+    super();
     this.handleRemove = this.handleRemove.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
   }

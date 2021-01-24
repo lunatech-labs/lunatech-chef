@@ -10,18 +10,6 @@ export const AddDish = (props) => {
     history.push("/alldishes");
   };
 
-  function ShowError({ error }) {
-    if (error) {
-      return (
-        <div>
-          <h4>An error ocurred when adding new Dish: {error}</h4>
-        </div>
-      );
-    } else {
-      return <div></div>;
-    }
-  }
-
   function RenderData() {
     return (
       <Form
@@ -129,7 +117,6 @@ export const AddDish = (props) => {
         <h3 className="mt-4">New Dish</h3>
       </div>
       <RenderData />
-      <ShowError error={props.error} />
     </div>
   );
 };

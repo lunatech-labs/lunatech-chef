@@ -31,6 +31,7 @@
     "redux": "^4.0.5",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
+    "sockjs": "0.3.20",
     "ssri": "6.0.2",
     "typescript": "^4.1.3"
   },

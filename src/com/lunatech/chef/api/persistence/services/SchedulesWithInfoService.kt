@@ -1,43 +1,75 @@
 package com.lunatech.chef.api.persistence.services
 
 import com.lunatech.chef.api.domain.Schedule
-import com.lunatech.chef.api.domain.ScheduleWithInfo
+import com.lunatech.chef.api.domain.ScheduleWithAttendanceInfo
+import com.lunatech.chef.api.domain.ScheduleWithMenuInfo
+import com.lunatech.chef.api.persistence.schemas.Attendances
+import com.lunatech.chef.api.persistence.schemas.DEFAULT_STRING
 import com.lunatech.chef.api.persistence.schemas.Locations
 import com.lunatech.chef.api.persistence.schemas.Schedules
+import com.lunatech.chef.api.persistence.schemas.Users
 import java.util.UUID
-import me.liuwj.ktorm.database.Database
-import me.liuwj.ktorm.dsl.and
-import me.liuwj.ktorm.dsl.eq
-import me.liuwj.ktorm.dsl.from
-import me.liuwj.ktorm.dsl.select
-import me.liuwj.ktorm.dsl.where
+import org.ktorm.database.Database
+import org.ktorm.dsl.and
+import org.ktorm.dsl.eq
+import org.ktorm.dsl.from
+import org.ktorm.dsl.leftJoin
+import org.ktorm.dsl.map
+import org.ktorm.dsl.select
+import org.ktorm.dsl.selectDistinct
+import org.ktorm.dsl.where
 
-class SchedulesWithInfoService(val database: Database, private val menusWithDishes: MenusWithDishesNamesService) {
-    fun getAll(): List<ScheduleWithInfo> =
+class SchedulesWithInfoService(
+  val database: Database,
+  private val menusWithDishesService: MenusWithDishesNamesService,
+  private val menusService: MenusService
+) {
+    fun getAll(): List<ScheduleWithMenuInfo> =
         database.from(Schedules).select()
             .where { Schedules.isDeleted eq false }
             .map { Schedules.createEntity(it) }
-            .map { getScheduleWithInfo(it) }
+            .map { getScheduleWithMenuInfo(it) }
 
-    fun getByUuid(uuid: UUID): List<ScheduleWithInfo> =
+    fun getByUuid(uuid: UUID): List<ScheduleWithMenuInfo> =
         database.from(Schedules).select()
             .where { (Schedules.uuid eq uuid) and (Schedules.isDeleted eq false) }
             .map { Schedules.createEntity(it) }
             .map { schedule ->
-                val menu = menusWithDishes.getByUuid(schedule.menuUuid)
+                val menu = menusWithDishesService.getByUuid(schedule.menuUuid)
                 val location = database.from(Locations).select()
                     .where { Locations.uuid eq schedule.locationUuid }
                     .map { Locations.createEntity(it) }.firstOrNull()
 
-                ScheduleWithInfo(schedule.uuid, menu!!, schedule.date, location!!)
+                ScheduleWithMenuInfo(schedule.uuid, menu!!, schedule.date, location!!)
             }
 
-    private fun getScheduleWithInfo(schedule: Schedule): ScheduleWithInfo {
-        val menu = menusWithDishes.getByUuid(schedule.menuUuid)
+    private fun getScheduleWithMenuInfo(schedule: Schedule): ScheduleWithMenuInfo {
+        val menu = menusWithDishesService.getByUuid(schedule.menuUuid)
         val location = database.from(Locations).select()
             .where { Locations.uuid eq schedule.locationUuid }
             .map { Locations.createEntity(it) }.firstOrNull()
 
-        return ScheduleWithInfo(schedule.uuid, menu!!, schedule.date, location!!)
+        return ScheduleWithMenuInfo(schedule.uuid, menu!!, schedule.date, location!!)
+    }
+
+    fun getAllSchedulesWithAttendanceInfo(): List<ScheduleWithAttendanceInfo> =
+        database.from(Schedules).select()
+            .where { Schedules.isDeleted eq false }
+            .map { Schedules.createEntity(it) }
+            .map { getScheduleWithAttendanceInfo(it) }
+
+    private fun getScheduleWithAttendanceInfo(schedule: Schedule): ScheduleWithAttendanceInfo {
+        val menu = menusService.getByUuid(schedule.menuUuid)
+        val location = database.from(Locations).select()
+            .where { Locations.uuid eq schedule.locationUuid }
+            .map { Locations.createEntity(it) }.firstOrNull()
+        val attendants =
+            database.from(Users)
+                .leftJoin(Attendances, on = Attendances.userUuid eq Users.uuid)
+                .selectDistinct(Users.name)
+                .where { (Attendances.scheduleUuid eq schedule.uuid) and (Attendances.isAttending eq true) and (Attendances.isDeleted eq false) }
+                .map { row -> row[Users.name] ?: DEFAULT_STRING }
+
+        return ScheduleWithAttendanceInfo(schedule.uuid, menu!!.name, attendants, schedule.date, location!!)
     }
 }

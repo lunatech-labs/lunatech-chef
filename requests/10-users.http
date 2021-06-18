@@ -32,8 +32,8 @@ Content-Type: application/json
 CHEF_SESSION: {{ session }}
 
 {
-  "name": "Leonor",
-  "emailAddress": "leonor.boga@lunatech.nl",
+  "name": "Maria Albertina",
+  "emailAddress": "maria.albertina@lunatech.nl",
   "locationUuid": "61edaf14-b018-4ffa-afba-dc5844426176",
   "isInactive": "false",
   "isVegetarian": "false",

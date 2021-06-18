@@ -4,14 +4,15 @@ import com.lunatech.chef.api.domain.Attendance
 import com.lunatech.chef.api.persistence.schemas.Attendances
 import com.lunatech.chef.api.routes.UpdatedAttendance
 import java.util.UUID
-import me.liuwj.ktorm.database.Database
-import me.liuwj.ktorm.dsl.and
-import me.liuwj.ktorm.dsl.eq
-import me.liuwj.ktorm.dsl.from
-import me.liuwj.ktorm.dsl.insert
-import me.liuwj.ktorm.dsl.select
-import me.liuwj.ktorm.dsl.update
-import me.liuwj.ktorm.dsl.where
+import org.ktorm.database.Database
+import org.ktorm.dsl.and
+import org.ktorm.dsl.eq
+import org.ktorm.dsl.from
+import org.ktorm.dsl.insert
+import org.ktorm.dsl.map
+import org.ktorm.dsl.select
+import org.ktorm.dsl.update
+import org.ktorm.dsl.where
 
 class AttendancesService(val database: Database, val usersService: UsersService) {
     fun getAll(): List<Attendance> =
@@ -29,24 +30,29 @@ class AttendancesService(val database: Database, val usersService: UsersService)
             .where { Attendances.userUuid eq userUuid and Attendances.isDeleted eq false }
             .map { Attendances.createEntity(it) }
 
+    fun getByScheduleId(scheduleUuid: UUID): List<Attendance> =
+        database.from(Attendances).select()
+        .where { Attendances.scheduleUuid eq scheduleUuid and Attendances.isDeleted eq false }
+        .map { Attendances.createEntity(it) }
+
     fun insert(attendance: Attendance): Int =
         database.insert(Attendances) {
-            it.uuid to attendance.uuid
-            it.scheduleUuid to attendance.scheduleUuid
-            it.userUuid to attendance.userUuid
-            it.isAttending to attendance.isAttending
+            set(it.uuid, attendance.uuid)
+            set(it.scheduleUuid, attendance.scheduleUuid)
+            set(it.userUuid, attendance.userUuid)
+            set(it.isAttending, attendance.isAttending)
         }
 
     fun update(uuid: UUID, attendance: UpdatedAttendance): Int =
         database.update(Attendances) {
-            it.isAttending to attendance.isAttending
+            set(it.isAttending, attendance.isAttending)
             where {
                 it.uuid eq uuid
             }
         }
 
     fun delete(uuid: UUID): Int = database.update(Attendances) {
-        it.isDeleted to true
+        set(it.isDeleted, true)
         where {
             it.uuid eq uuid
         }
@@ -54,11 +60,11 @@ class AttendancesService(val database: Database, val usersService: UsersService)
 
     fun insertAttendanceAllUsers(scheduleUuid: UUID, isAttending: Boolean): Int = usersService.getAll().map { user ->
         database.insert(Attendances) {
-            it.uuid to UUID.randomUUID()
-            it.scheduleUuid to scheduleUuid
-            it.userUuid to user.uuid
-            it.isAttending to isAttending
-            it.isDeleted to false
+            set(it.uuid, UUID.randomUUID())
+            set(it.scheduleUuid, scheduleUuid)
+            set(it.userUuid, user.uuid)
+            set(it.isAttending, isAttending)
+            set(it.isDeleted, false)
         }
     }.sum()
 }

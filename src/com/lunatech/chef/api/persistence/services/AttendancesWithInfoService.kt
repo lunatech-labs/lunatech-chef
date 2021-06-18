@@ -5,17 +5,18 @@ import com.lunatech.chef.api.domain.AttendanceWithInfo
 import com.lunatech.chef.api.persistence.schemas.Attendances
 import com.lunatech.chef.api.persistence.schemas.Locations
 import java.util.UUID
-import me.liuwj.ktorm.database.Database
-import me.liuwj.ktorm.dsl.and
-import me.liuwj.ktorm.dsl.eq
-import me.liuwj.ktorm.dsl.from
-import me.liuwj.ktorm.dsl.select
-import me.liuwj.ktorm.dsl.where
+import org.ktorm.database.Database
+import org.ktorm.dsl.and
+import org.ktorm.dsl.eq
+import org.ktorm.dsl.from
+import org.ktorm.dsl.map
+import org.ktorm.dsl.select
+import org.ktorm.dsl.where
 
 class AttendancesWithInfoService(
-    val database: Database,
-    private val schedulesService: SchedulesService,
-    private val menusWithDishesService: MenusWithDishesNamesService
+  val database: Database,
+  private val schedulesService: SchedulesService,
+  private val menusWithDishesService: MenusWithDishesNamesService
 ) {
     fun getByUserUuid(userUuid: UUID): List<AttendanceWithInfo> =
         database.from(Attendances).select()

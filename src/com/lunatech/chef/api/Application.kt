@@ -30,6 +30,7 @@ import com.lunatech.chef.api.routes.locations
 import com.lunatech.chef.api.routes.menus
 import com.lunatech.chef.api.routes.menusWithDishesInfo
 import com.lunatech.chef.api.routes.schedules
+import com.lunatech.chef.api.routes.schedulesWithAttendanceInfo
 import com.lunatech.chef.api.routes.schedulesWithMenusInfo
 import com.lunatech.chef.api.routes.users
 import com.lunatech.chef.api.routes.validateSession
@@ -85,7 +86,7 @@ fun Application.module(testing: Boolean = false) {
     val menusService = MenusService(dbConnection)
     val menusWithDishesService = MenusWithDishesNamesService(dbConnection)
     val schedulesService = SchedulesService(dbConnection)
-    val schedulesWithNamesService = SchedulesWithInfoService(dbConnection, menusWithDishesService)
+    val schedulesWithInfoService = SchedulesWithInfoService(dbConnection, menusWithDishesService, menusService)
     val usersService = UsersService(dbConnection)
     val attendancesService = AttendancesService(dbConnection, usersService)
     val attendancesWithInfoService = AttendancesWithInfoService(dbConnection, schedulesService, menusWithDishesService)
@@ -160,10 +161,11 @@ fun Application.module(testing: Boolean = false) {
         menus(menusService)
         menusWithDishesInfo(menusWithDishesService)
         schedules(schedulesService, attendancesService)
-        schedulesWithMenusInfo(schedulesWithNamesService)
+        schedulesWithMenusInfo(schedulesWithInfoService)
         attendancesFullInfo(attendancesWithInfoService)
         users(usersService)
         attendances(attendancesService)
+        schedulesWithAttendanceInfo(schedulesWithInfoService)
 
         static("static") {
             files("frontend/build/static")
@@ -172,10 +174,10 @@ fun Application.module(testing: Boolean = false) {
             files("frontend/build")
         }
 
-        // TODO FE mostrar erros quando um profile de um user for actualizado
-
+        // TODO FE Mostrar lista de pessoas que se increveram para uma refeicao
         // TODO filtros no attendances, schedules por data, localizacao
 
+        // TODO FE mostrar erros quando um profile de um user for actualizado
         // TODO HTTPS
         // TODO swagger e limpar routes nao necessarias
         // TODO pagina principal? filtrar por localizacao, lista cronologica

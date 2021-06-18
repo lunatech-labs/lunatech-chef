@@ -4,13 +4,14 @@ import com.lunatech.chef.api.domain.Dish
 import com.lunatech.chef.api.persistence.schemas.Dishes
 import com.lunatech.chef.api.routes.UpdatedDish
 import java.util.UUID
-import me.liuwj.ktorm.database.Database
-import me.liuwj.ktorm.dsl.eq
-import me.liuwj.ktorm.dsl.from
-import me.liuwj.ktorm.dsl.insert
-import me.liuwj.ktorm.dsl.select
-import me.liuwj.ktorm.dsl.update
-import me.liuwj.ktorm.dsl.where
+import org.ktorm.database.Database
+import org.ktorm.dsl.eq
+import org.ktorm.dsl.from
+import org.ktorm.dsl.insert
+import org.ktorm.dsl.map
+import org.ktorm.dsl.select
+import org.ktorm.dsl.update
+import org.ktorm.dsl.where
 
 class DishesService(val database: Database) {
     fun getAll() = database.from(Dishes).select().where { Dishes.isDeleted eq false }.map { Dishes.createEntity(it) }
@@ -20,37 +21,37 @@ class DishesService(val database: Database) {
 
     fun insert(dish: Dish): Int =
         database.insert(Dishes) {
-            it.uuid to dish.uuid
-            it.name to dish.name
-            it.description to dish.description
-            it.isVegetarian to dish.isVegetarian
-            it.hasNuts to dish.hasNuts
-            it.hasSeafood to dish.hasSeafood
-            it.hasPork to dish.hasPork
-            it.hasBeef to dish.hasBeef
-            it.isGlutenFree to dish.isGlutenFree
-            it.hasLactose to dish.hasLactose
-            it.isDeleted to dish.isDeleted
+            set(it.uuid, dish.uuid)
+            set(it.name, dish.name)
+            set(it.description, dish.description)
+            set(it.isVegetarian, dish.isVegetarian)
+            set(it.hasNuts, dish.hasNuts)
+            set(it.hasSeafood, dish.hasSeafood)
+            set(it.hasPork, dish.hasPork)
+            set(it.hasBeef, dish.hasBeef)
+            set(it.isGlutenFree, dish.isGlutenFree)
+            set(it.hasLactose, dish.hasLactose)
+            set(it.isDeleted, dish.isDeleted)
         }
 
     fun update(uuid: UUID, dish: UpdatedDish): Int =
         database.update(Dishes) {
-            it.name to dish.name
-            it.description to dish.description
-            it.isVegetarian to dish.isVegetarian
-            it.hasNuts to dish.hasNuts
-            it.hasSeafood to dish.hasSeafood
-            it.hasPork to dish.hasPork
-            it.hasBeef to dish.hasBeef
-            it.isGlutenFree to dish.isGlutenFree
-            it.hasLactose to dish.hasLactose
+            set(it.name, dish.name)
+            set(it.description, dish.description)
+            set(it.isVegetarian, dish.isVegetarian)
+            set(it.hasNuts, dish.hasNuts)
+            set(it.hasSeafood, dish.hasSeafood)
+            set(it.hasPork, dish.hasPork)
+            set(it.hasBeef, dish.hasBeef)
+            set(it.isGlutenFree, dish.isGlutenFree)
+            set(it.hasLactose, dish.hasLactose)
             where {
                 it.uuid eq uuid
             }
         }
 
     fun delete(uuid: UUID): Int = database.update(Dishes) {
-        it.isDeleted to true
+        set(it.isDeleted, true)
         where {
             it.uuid eq uuid
         }

@@ -6,15 +6,16 @@ import com.lunatech.chef.api.persistence.schemas.DishesOnMenus
 import com.lunatech.chef.api.persistence.schemas.MenuNames
 import com.lunatech.chef.api.routes.UpdatedMenu
 import java.util.UUID
-import me.liuwj.ktorm.database.Database
-import me.liuwj.ktorm.dsl.and
-import me.liuwj.ktorm.dsl.delete
-import me.liuwj.ktorm.dsl.eq
-import me.liuwj.ktorm.dsl.from
-import me.liuwj.ktorm.dsl.insert
-import me.liuwj.ktorm.dsl.select
-import me.liuwj.ktorm.dsl.update
-import me.liuwj.ktorm.dsl.where
+import org.ktorm.database.Database
+import org.ktorm.dsl.and
+import org.ktorm.dsl.delete
+import org.ktorm.dsl.eq
+import org.ktorm.dsl.from
+import org.ktorm.dsl.insert
+import org.ktorm.dsl.map
+import org.ktorm.dsl.select
+import org.ktorm.dsl.update
+import org.ktorm.dsl.where
 
 class MenusService(val database: Database) {
     fun getAll(): List<MenuWithDishesUuid> =
@@ -57,24 +58,24 @@ class MenusService(val database: Database) {
     fun insert(menu: MenuWithDishesUuid): Int {
         // first create a new menu with a name
         database.insert(MenuNames) {
-            it.uuid to menu.uuid
-            it.name to menu.name
-            it.isDeleted to menu.isDeleted
+            set(it.uuid, menu.uuid)
+            set(it.name, menu.name)
+            set(it.isDeleted, menu.isDeleted)
         }
 
         // second associate the dishes with the new menu
         return menu.dishesUuids.map {
             val dishOnMenu = DishOnMenu(menuUuid = menu.uuid, dishUuid = it)
             database.insert(DishesOnMenus) {
-                it.menuUuid to dishOnMenu.menuUuid
-                it.dishUuid to dishOnMenu.dishUuid
+                set(it.menuUuid, dishOnMenu.menuUuid)
+                set(it.dishUuid, dishOnMenu.dishUuid)
             }
         }.size
     }
 
     fun update(uuid: UUID, menu: UpdatedMenu): Int {
         val updatedName = database.update(MenuNames) {
-            it.name to menu.name
+            set(it.name, menu.name)
             where {
                 it.uuid eq uuid
             }
@@ -86,8 +87,8 @@ class MenusService(val database: Database) {
             database.delete(DishesOnMenus) { it.menuUuid eq uuid }
             menu.dishesUuids.map { dishUuid ->
                 database.insert(DishesOnMenus) {
-                    it.menuUuid to uuid
-                    it.dishUuid to dishUuid
+                    set(it.menuUuid, uuid)
+                    set(it.dishUuid, dishUuid)
                 }
             }
         }
@@ -96,7 +97,7 @@ class MenusService(val database: Database) {
 
     fun delete(uuid: UUID): Int {
         return database.update(MenuNames) {
-            it.isDeleted to true
+            set(it.isDeleted, true)
             where {
                 it.uuid eq uuid
             }

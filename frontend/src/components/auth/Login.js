@@ -10,6 +10,7 @@ class Login extends Component {
   }
 
   handleLogin(response) {
+    console.log("tokenId: " + response.tokenId);
     this.props.login(response.tokenId);
   }
 

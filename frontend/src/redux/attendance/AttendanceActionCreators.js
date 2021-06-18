@@ -1,11 +1,11 @@
 import * as ActionTypes from "./AttendanceActionTypes";
 import { axiosInstance } from "../Axios";
 
-export const fetchAttendance = (userUuid) => (dispatch) => {
+export const fetchAttendanceUser = (userUuid) => (dispatch) => {
   dispatch(attendanceLoading(true));
 
   axiosInstance
-    .get("/attendancesFullInfo/" + userUuid)
+    .get("/attendancesWithScheduleInfo/" + userUuid)
     .then(function (response) {
       dispatch(showAllAttendance(response));
     })

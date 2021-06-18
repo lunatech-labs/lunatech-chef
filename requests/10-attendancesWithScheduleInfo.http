@@ -1,0 +1,5 @@
+GET {{ host }}/attendancesWithScheduleInfo/9629c3e0-3531-45fa-9fea-ea097f8e3b46
+CHEF_SESSION: {{ session }}
+
+###
+

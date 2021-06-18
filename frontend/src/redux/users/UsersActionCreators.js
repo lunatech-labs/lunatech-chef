@@ -3,8 +3,11 @@ import { axiosInstance } from "../Axios";
 import { fetchDishes } from "../dishes/DishesActionCreators";
 import { fetchLocations } from "../locations/LocationsActionCreators";
 import { fetchMenus } from "../menus/MenusActionCreators";
-import { fetchSchedules } from "../schedules/SchedulesActionCreators";
-import { fetchAttendance } from "../attendance/AttendanceActionCreators";
+import {
+  fetchSchedules,
+  fetchSchedulesAttendance,
+} from "../schedules/SchedulesActionCreators";
+import { fetchAttendanceUser } from "../attendance/AttendanceActionCreators";
 
 export const login = (token) => (dispatch) => {
   axiosInstance
@@ -67,7 +70,8 @@ const getInitalData = (dispatch, userUuid) => {
   dispatch(fetchDishes());
   dispatch(fetchMenus());
   dispatch(fetchSchedules());
-  dispatch(fetchAttendance(userUuid));
+  dispatch(fetchAttendanceUser(userUuid));
+  dispatch(fetchSchedulesAttendance());
 };
 
 export const logout = () => (dispatch) => {

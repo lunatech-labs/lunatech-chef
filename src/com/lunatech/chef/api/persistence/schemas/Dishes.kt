@@ -1,24 +1,24 @@
 package com.lunatech.chef.api.persistence.schemas
 
 import com.lunatech.chef.api.domain.Dish
-import me.liuwj.ktorm.dsl.QueryRowSet
-import me.liuwj.ktorm.schema.BaseTable
-import me.liuwj.ktorm.schema.boolean
-import me.liuwj.ktorm.schema.uuid
-import me.liuwj.ktorm.schema.varchar
+import org.ktorm.dsl.QueryRowSet
+import org.ktorm.schema.BaseTable
+import org.ktorm.schema.boolean
+import org.ktorm.schema.uuid
+import org.ktorm.schema.varchar
 
 object Dishes : BaseTable<Dish>("dishes") {
-    val uuid by uuid("uuid").primaryKey()
-    val name by varchar("name")
-    val description by varchar("description")
-    val isVegetarian by boolean("is_vegetarian")
-    val hasNuts by boolean("has_nuts")
-    val hasSeafood by boolean("has_seafood")
-    val hasPork by boolean("has_pork")
-    val hasBeef by boolean("has_beef")
-    val isGlutenFree by boolean("is_gluten_free")
-    val hasLactose by boolean("has_lactose")
-    val isDeleted by boolean("is_deleted")
+    val uuid = uuid("uuid").primaryKey()
+    val name = varchar("name")
+    val description = varchar("description")
+    val isVegetarian = boolean("is_vegetarian")
+    val hasNuts = boolean("has_nuts")
+    val hasSeafood = boolean("has_seafood")
+    val hasPork = boolean("has_pork")
+    val hasBeef = boolean("has_beef")
+    val isGlutenFree = boolean("is_gluten_free")
+    val hasLactose = boolean("has_lactose")
+    val isDeleted = boolean("is_deleted")
 
     override fun doCreateEntity(row: QueryRowSet, withReferences: Boolean) = Dish(
         uuid = row[uuid] ?: DEFAULT_UUID,

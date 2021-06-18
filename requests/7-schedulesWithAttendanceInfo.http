@@ -1,0 +1,6 @@
+
+GET {{ host }}/schedulesWithAttendanceInfo
+CHEF_SESSION: {{ session }}
+
+###
+

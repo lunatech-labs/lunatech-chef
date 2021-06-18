@@ -4,13 +4,14 @@ import com.lunatech.chef.api.domain.Schedule
 import com.lunatech.chef.api.persistence.schemas.Schedules
 import com.lunatech.chef.api.routes.UpdatedSchedule
 import java.util.UUID
-import me.liuwj.ktorm.database.Database
-import me.liuwj.ktorm.dsl.eq
-import me.liuwj.ktorm.dsl.from
-import me.liuwj.ktorm.dsl.insert
-import me.liuwj.ktorm.dsl.select
-import me.liuwj.ktorm.dsl.update
-import me.liuwj.ktorm.dsl.where
+import org.ktorm.database.Database
+import org.ktorm.dsl.eq
+import org.ktorm.dsl.from
+import org.ktorm.dsl.insert
+import org.ktorm.dsl.map
+import org.ktorm.dsl.select
+import org.ktorm.dsl.update
+import org.ktorm.dsl.where
 
 class SchedulesService(val database: Database) {
     fun getAll() = database.from(Schedules).select().where { Schedules.isDeleted eq false }.map { Schedules.createEntity(it) }
@@ -20,25 +21,25 @@ class SchedulesService(val database: Database) {
 
     fun insert(schedule: Schedule): Int =
         database.insert(Schedules) {
-            it.uuid to schedule.uuid
-            it.menuUuid to schedule.menuUuid
-            it.date to schedule.date
-            it.location to schedule.locationUuid
-            it.isDeleted to schedule.isDeleted
+            set(it.uuid, schedule.uuid)
+            set(it.menuUuid, schedule.menuUuid)
+            set(it.date, schedule.date)
+            set(it.location, schedule.locationUuid)
+            set(it.isDeleted, schedule.isDeleted)
         }
 
     fun update(uuid: UUID, schedule: UpdatedSchedule): Int =
         database.update(Schedules) {
-            it.menuUuid to schedule.menuUuid
-            it.date to schedule.date
-            it.location to schedule.locationUuid
+            set(it.menuUuid, schedule.menuUuid)
+            set(it.date, schedule.date)
+            set(it.location, schedule.locationUuid)
             where {
                 it.uuid eq uuid
             }
         }
 
     fun delete(uuid: UUID): Int = database.update(Schedules) {
-        it.isDeleted to true
+        set(it.isDeleted, true)
         where {
             it.uuid eq uuid
         }

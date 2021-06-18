@@ -28,9 +28,17 @@ data class Schedule(
     }
 }
 
-data class ScheduleWithInfo(
+data class ScheduleWithMenuInfo(
   val uuid: UUID,
   val menu: MenuWithDishes,
+  val date: LocalDate,
+  val location: Location
+)
+
+data class ScheduleWithAttendanceInfo(
+  val uuid: UUID,
+  val menuName: String,
+  val attendants: List<String>,
   val date: LocalDate,
   val location: Location
 )

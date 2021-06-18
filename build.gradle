@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
@@ -29,7 +29,7 @@ sourceSets {
 
 repositories {
     mavenLocal()
-    jcenter()
+    mavenCentral()
     maven { url 'https://kotlin.bintray.com/ktor' }
 }
 
@@ -57,7 +57,7 @@ dependencies {
     implementation "org.flywaydb:flyway-core:$flyway_version"
     implementation "io.github.config4k:config4k:$config4k_version"
     implementation "org.postgresql:postgresql:$postgresql_version"
-    implementation "me.liuwj.ktorm:ktorm-core:$ktorm_version"
+    implementation "org.ktorm:ktorm-core:$ktorm_version"
     implementation "uy.kohesive.injekt:injekt-core:$injekt_version"
     testImplementation "io.ktor:ktor-server-tests:$ktor_version"
 }

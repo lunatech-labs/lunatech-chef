@@ -2,7 +2,7 @@
   uuid UUID NOT NULL,
   name VARCHAR(100) NOT NULL,
   email_address VARCHAR(100) NOT NULL,
-  locationUuid UUID,
+  location_uuid UUID,
   is_vegetarian BOOLEAN NOT NULL DEFAULT FALSE,
   has_nuts_restriction BOOLEAN NOT NULL DEFAULT FALSE,
   has_seafood_restriction BOOLEAN NOT NULL DEFAULT FALSE,
@@ -14,6 +14,6 @@
   is_inactive BOOLEAN NOT NULL DEFAULT FALSE,
   is_deleted BOOLEAN NOT NULL,
   CONSTRAINT users_pkey PRIMARY KEY (uuid),
-  CONSTRAINT users_locations FOREIGN KEY (locationUuid) REFERENCES locations (uuid) MATCH FULL
+  CONSTRAINT users_locations FOREIGN KEY (location_uuid) REFERENCES locations (uuid) MATCH FULL
 );
 

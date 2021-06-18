@@ -1,27 +1,27 @@
 package com.lunatech.chef.api.persistence.schemas
 
 import com.lunatech.chef.api.domain.User
-import me.liuwj.ktorm.dsl.QueryRowSet
-import me.liuwj.ktorm.schema.BaseTable
-import me.liuwj.ktorm.schema.boolean
-import me.liuwj.ktorm.schema.uuid
-import me.liuwj.ktorm.schema.varchar
+import org.ktorm.dsl.QueryRowSet
+import org.ktorm.schema.BaseTable
+import org.ktorm.schema.boolean
+import org.ktorm.schema.uuid
+import org.ktorm.schema.varchar
 
 object Users : BaseTable<User>("users") {
-    val uuid by uuid("uuid").primaryKey()
-    val name by varchar("name")
-    val emailAddress by varchar("email_address")
-    val locationUuid by uuid("locationUuid")
-    val isVegetarian by boolean("is_vegetarian")
-    val hasNutsRestriction by boolean("has_nuts_restriction")
-    val hasSeafoodRestriction by boolean("has_seafood_restriction")
-    val hasPorkRestriction by boolean("has_pork_restriction")
-    val hasBeefRestriction by boolean("has_beef_restriction")
-    val isGlutenIntolerant by boolean("is_gluten_intolerant")
-    val isLactoseIntolerant by boolean("is_lactose_intolerant")
-    val otherRestrictions by varchar("other_restrictions")
-    val isInactive by boolean("is_inactive")
-    val isDeleted by boolean("is_deleted")
+    val uuid = uuid("uuid").primaryKey()
+    val name = varchar("name")
+    val emailAddress = varchar("email_address")
+    val locationUuid = uuid("location_uuid")
+    val isVegetarian = boolean("is_vegetarian")
+    val hasNutsRestriction = boolean("has_nuts_restriction")
+    val hasSeafoodRestriction = boolean("has_seafood_restriction")
+    val hasPorkRestriction = boolean("has_pork_restriction")
+    val hasBeefRestriction = boolean("has_beef_restriction")
+    val isGlutenIntolerant = boolean("is_gluten_intolerant")
+    val isLactoseIntolerant = boolean("is_lactose_intolerant")
+    val otherRestrictions = varchar("other_restrictions")
+    val isInactive = boolean("is_inactive")
+    val isDeleted = boolean("is_deleted")
 
     override fun doCreateEntity(row: QueryRowSet, withReferences: Boolean) = User(
         uuid = row[uuid] ?: DEFAULT_UUID,

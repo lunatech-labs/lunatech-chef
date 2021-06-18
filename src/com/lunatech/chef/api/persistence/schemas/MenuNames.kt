@@ -2,17 +2,18 @@ package com.lunatech.chef.api.persistence.schemas
 
 import com.lunatech.chef.api.domain.MenuName
 import com.lunatech.chef.api.domain.MenuWithDishes
-import me.liuwj.ktorm.dsl.Query
-import me.liuwj.ktorm.dsl.QueryRowSet
-import me.liuwj.ktorm.schema.BaseTable
-import me.liuwj.ktorm.schema.boolean
-import me.liuwj.ktorm.schema.uuid
-import me.liuwj.ktorm.schema.varchar
+import org.ktorm.dsl.Query
+import org.ktorm.dsl.QueryRowSet
+import org.ktorm.dsl.map
+import org.ktorm.schema.BaseTable
+import org.ktorm.schema.boolean
+import org.ktorm.schema.uuid
+import org.ktorm.schema.varchar
 
 object MenuNames : BaseTable<MenuName>("menus") {
-    val uuid by uuid("uuid").primaryKey()
-    val name by varchar("name")
-    val isDeleted by boolean("is_deleted")
+    val uuid = uuid("uuid").primaryKey()
+    val name = varchar("name")
+    val isDeleted = boolean("is_deleted")
 
     override fun doCreateEntity(row: QueryRowSet, withReferences: Boolean) = MenuName(
         uuid = row[uuid] ?: DEFAULT_UUID,

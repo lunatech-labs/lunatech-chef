@@ -2,18 +2,18 @@ package com.lunatech.chef.api.persistence.schemas
 
 import com.lunatech.chef.api.domain.Schedule
 import java.time.LocalDate
-import me.liuwj.ktorm.dsl.QueryRowSet
-import me.liuwj.ktorm.schema.BaseTable
-import me.liuwj.ktorm.schema.boolean
-import me.liuwj.ktorm.schema.date
-import me.liuwj.ktorm.schema.uuid
+import org.ktorm.dsl.QueryRowSet
+import org.ktorm.schema.BaseTable
+import org.ktorm.schema.boolean
+import org.ktorm.schema.date
+import org.ktorm.schema.uuid
 
 object Schedules : BaseTable<Schedule>("schedules") {
-    val uuid by uuid("uuid").primaryKey()
-    val menuUuid by uuid("menu_uuid")
-    val date by date("date")
-    val location by uuid("location")
-    val isDeleted by boolean("is_deleted")
+    val uuid = uuid("uuid").primaryKey()
+    val menuUuid = uuid("menu_uuid")
+    val date = date("date")
+    val location = uuid("location")
+    val isDeleted = boolean("is_deleted")
 
     override fun doCreateEntity(row: QueryRowSet, withReferences: Boolean) = Schedule(
         uuid = row[uuid] ?: DEFAULT_UUID,

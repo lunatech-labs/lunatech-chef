@@ -1,17 +1,17 @@
 package com.lunatech.chef.api.persistence.schemas
 
 import com.lunatech.chef.api.domain.Attendance
-import me.liuwj.ktorm.dsl.QueryRowSet
-import me.liuwj.ktorm.schema.BaseTable
-import me.liuwj.ktorm.schema.boolean
-import me.liuwj.ktorm.schema.uuid
+import org.ktorm.dsl.QueryRowSet
+import org.ktorm.schema.BaseTable
+import org.ktorm.schema.boolean
+import org.ktorm.schema.uuid
 
 object Attendances : BaseTable<Attendance>("attendances") {
-    val uuid by uuid("uuid").primaryKey()
-    val scheduleUuid by uuid("schedule_uuid")
-    val userUuid by uuid("user_uuid")
-    val isAttending by boolean("is_attending")
-    val isDeleted by boolean("is_deleted")
+    val uuid = uuid("uuid").primaryKey()
+    val scheduleUuid = uuid("schedule_uuid")
+    val userUuid = uuid("user_uuid")
+    val isAttending = boolean("is_attending")
+    val isDeleted = boolean("is_deleted")
 
     override fun doCreateEntity(row: QueryRowSet, withReferences: Boolean) = Attendance(
         uuid = row[uuid] ?: DEFAULT_UUID,

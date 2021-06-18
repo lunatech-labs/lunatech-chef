@@ -2,8 +2,11 @@ import * as ActionTypes from "./SchedulesActionTypes";
 
 const initState = {
   isLoading: false,
+  isLoadingAttendance: false,
   schedules: [],
+  attendance: [],
   errorListing: null,
+  errorListingAttendance: null,
   errorAdding: null,
   errorEditing: null,
   errorDeleting: null,
@@ -12,10 +15,29 @@ const initState = {
 export const SchedulesReducer = (state = initState, action) => {
   switch (action.type) {
     case ActionTypes.SHOW_ALL_SCHEDULES:
-      return { ...initState, schedules: action.payload };
+      return {
+        ...state,
+        schedules: action.payload,
+        isLoading: false,
+        errorListing: null,
+        errorAdding: null,
+        errorEditing: null,
+        errorDeleting: null,
+      };
+
+    case ActionTypes.SHOW_ALL_SCHEDULES_ATTENDANCE:
+      return {
+        ...state,
+        attendance: action.payload,
+        isLoadingAttendance: false,
+        errorListingAttendance: false,
+      };
 
     case ActionTypes.SCHEDULES_LOADING:
       return { ...initState, isLoading: true };
+
+    case ActionTypes.SCHEDULES_ATTENDANCE_LOADING:
+      return { ...initState, isLoadingAttendance: true };
 
     case ActionTypes.SCHEDULES_LOADING_FAILED:
       return {
@@ -25,6 +47,9 @@ export const SchedulesReducer = (state = initState, action) => {
         errorEditing: null,
         errorDeleting: null,
       };
+
+    case ActionTypes.SCHEDULES_ATTENDANCE_LOADING_FAILED:
+      return { ...initState, errorListingAttendance: action.payload };
 
     case ActionTypes.ADD_NEW_SCHEDULE_FAILED:
       return {

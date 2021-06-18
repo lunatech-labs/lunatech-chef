@@ -24,12 +24,13 @@ import {
 } from "../redux/menus/MenusActionCreators";
 import {
   fetchSchedules,
+  fetchSchedulesAttendance,
   addNewSchedule,
   editSchedule,
   deleteSchedule,
 } from "../redux/schedules/SchedulesActionCreators";
 import {
-  fetchAttendance,
+  fetchAttendanceUser,
   editAttendance,
   showNewAttendance,
 } from "../redux/attendance/AttendanceActionCreators";
@@ -55,6 +56,8 @@ import ListSchedules from "./admin/schedules/ListSchedules";
 import AddSchedule from "./admin/schedules/AddSchedule";
 import EditSchedule from "./admin/schedules/EditSchedule";
 import { MealsAttendance } from "./MealsSchedule";
+import WhoIsJoining from "./WhoIsJoining";
+import { WhoIsJoiningListing } from "./WhoIsJoiningListing";
 import { UserProfile } from "./UserProfile";
 
 const mapStateToProps = (state) => {
@@ -127,8 +130,11 @@ const mapDispatchToProps = (dispatch) => ({
   },
   //
   // Attendance
-  fetchAttendance: (userUuid) => {
-    dispatch(fetchAttendance(userUuid));
+  fetchAttendanceUser: (userUuid) => {
+    dispatch(fetchAttendanceUser(userUuid));
+  },
+  fetchSchedulesAttendance: () => {
+    dispatch(fetchSchedulesAttendance());
   },
   editAttendance: (attendance) => {
     dispatch(editAttendance(attendance));
@@ -151,6 +157,20 @@ const mapDispatchToProps = (dispatch) => ({
 
 class Main extends Component {
   render() {
+    const WhoIsJoiningSchedule = () => {
+      return (
+        <WhoIsJoining
+          isLoading={this.props.schedules.isLoadingAttendance}
+          attendance={this.props.schedules.attendance}
+          errorListing={this.props.schedules.errorListingAttendance}
+        />
+      );
+    };
+
+    const WhoIsJoiningScheduleList = () => {
+      return <WhoIsJoiningListing listAttendants={this.props.location.state} />;
+    };
+
     const AllDishes = () => {
       return (
         <ListDishes
@@ -318,7 +338,13 @@ class Main extends Component {
                   className="list-group-item list-group-item-action bg-light"
                   to="/"
                 >
-                  Meal schedule
+                  Meals schedule
+                </Link>
+                <Link
+                  className="list-group-item list-group-item-action bg-light"
+                  to="/whoisjoining"
+                >
+                  Who is joining?
                 </Link>
                 {this.props.user.isAdmin ? (
                   <div>
@@ -371,6 +397,16 @@ class Main extends Component {
             </div>
             <Switch>
               {/* do not use the same routes as the ones available in the BE server */}
+              <ProtectedRoute
+                path="/whoisjoining"
+                component={WhoIsJoiningSchedule}
+                isAdmin={this.props.user.isAdmin}
+              />
+              <ProtectedRoute
+                path="/whoisjoininglisting"
+                component={WhoIsJoiningScheduleList}
+                isAdmin={this.props.user.isAdmin}
+              />
               <ProtectedRoute
                 path="/alllocations"
                 component={AllLocations}

@@ -15,6 +15,20 @@ export const fetchSchedules = () => (dispatch) => {
     });
 };
 
+export const fetchSchedulesAttendance = () => (dispatch) => {
+  dispatch(schedulesAttendanceLoading(true));
+
+  axiosInstance
+    .get("/schedulesWithAttendanceInfo")
+    .then(function (response) {
+      dispatch(showAllSchedulesAttendance(response));
+    })
+    .catch(function (error) {
+      console.log("Failed loading Schedules: " + error);
+      dispatch(schedulesLoadingAttendanceFailed(error.message));
+    });
+};
+
 export const addNewSchedule = (newSchedule) => (dispatch) => {
   const scheduleToAdd = {
     menuUuid: newSchedule.menuUuid,
@@ -67,13 +81,27 @@ export const schedulesLoading = () => ({
   type: ActionTypes.SCHEDULES_LOADING,
 });
 
+export const schedulesAttendanceLoading = () => ({
+  type: ActionTypes.SCHEDULES_ATTENDANCE_LOADING,
+});
+
 export const showAllSchedules = (schedules) => ({
   type: ActionTypes.SHOW_ALL_SCHEDULES,
   payload: schedules.data,
 });
 
+export const showAllSchedulesAttendance = (schedulesAttendance) => ({
+  type: ActionTypes.SHOW_ALL_SCHEDULES_ATTENDANCE,
+  payload: schedulesAttendance.data,
+});
+
 export const schedulesLoadingFailed = (errmess) => ({
   type: ActionTypes.SCHEDULES_LOADING_FAILED,
+  payload: errmess,
+});
+
+export const schedulesLoadingAttendanceFailed = (errmess) => ({
+  type: ActionTypes.SCHEDULES_ATTENDANCE_LOADING_FAILED,
   payload: errmess,
 });
 

@@ -12,17 +12,17 @@ import com.lunatech.chef.api.config.FlywayConfig
 import com.lunatech.chef.api.persistence.DBEvolution
 import com.lunatech.chef.api.persistence.Database
 import com.lunatech.chef.api.persistence.services.AttendancesService
-import com.lunatech.chef.api.persistence.services.AttendancesWithInfoService
+import com.lunatech.chef.api.persistence.services.AttendancesWithScheduleInfoService
 import com.lunatech.chef.api.persistence.services.DishesService
 import com.lunatech.chef.api.persistence.services.LocationsService
 import com.lunatech.chef.api.persistence.services.MenusService
 import com.lunatech.chef.api.persistence.services.MenusWithDishesNamesService
 import com.lunatech.chef.api.persistence.services.SchedulesService
-import com.lunatech.chef.api.persistence.services.SchedulesWithInfoService
+import com.lunatech.chef.api.persistence.services.SchedulesWithDishesInfoService
 import com.lunatech.chef.api.persistence.services.UsersService
 import com.lunatech.chef.api.routes.ChefSession
 import com.lunatech.chef.api.routes.attendances
-import com.lunatech.chef.api.routes.attendancesFullInfo
+import com.lunatech.chef.api.routes.attendancesWithScheduleInfo
 import com.lunatech.chef.api.routes.authorization
 import com.lunatech.chef.api.routes.dishes
 import com.lunatech.chef.api.routes.healthCheck
@@ -86,10 +86,10 @@ fun Application.module(testing: Boolean = false) {
     val menusService = MenusService(dbConnection)
     val menusWithDishesService = MenusWithDishesNamesService(dbConnection)
     val schedulesService = SchedulesService(dbConnection)
-    val schedulesWithInfoService = SchedulesWithInfoService(dbConnection, menusWithDishesService, menusService)
+    val schedulesWithInfoService = SchedulesWithDishesInfoService(dbConnection, menusWithDishesService, menusService)
     val usersService = UsersService(dbConnection)
     val attendancesService = AttendancesService(dbConnection, usersService)
-    val attendancesWithInfoService = AttendancesWithInfoService(dbConnection, schedulesService, menusWithDishesService)
+    val attendancesWithInfoService = AttendancesWithScheduleInfoService(dbConnection, schedulesService, menusWithDishesService)
 
     val CHEF_SESSSION = "CHEF_SESSION"
     install(CORS) {
@@ -162,7 +162,7 @@ fun Application.module(testing: Boolean = false) {
         menusWithDishesInfo(menusWithDishesService)
         schedules(schedulesService, attendancesService)
         schedulesWithMenusInfo(schedulesWithInfoService)
-        attendancesFullInfo(attendancesWithInfoService)
+        attendancesWithScheduleInfo(attendancesWithInfoService)
         users(usersService)
         attendances(attendancesService)
         schedulesWithAttendanceInfo(schedulesWithInfoService)
@@ -174,7 +174,11 @@ fun Application.module(testing: Boolean = false) {
             files("frontend/build")
         }
 
-        // TODO FE Mostrar lista de pessoas que se increveram para uma refeicao
+        // TODO FE mostrar lista de pessoas que se increveram para uma refeicao
+        // TODO add missing test requests
+
+        // TODO FE meal schedule does not refresh when a new schedule is added
+
         // TODO filtros no attendances, schedules por data, localizacao
 
         // TODO FE mostrar erros quando um profile de um user for actualizado

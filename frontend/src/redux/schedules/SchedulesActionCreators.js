@@ -1,5 +1,6 @@
 import * as ActionTypes from "./SchedulesActionTypes";
 import { axiosInstance } from "../Axios";
+import { fetchAttendanceUser } from "../attendance/AttendanceActionCreators";
 
 export const fetchSchedules = () => (dispatch) => {
   dispatch(schedulesLoading(true));
@@ -29,7 +30,7 @@ export const fetchSchedulesAttendance = () => (dispatch) => {
     });
 };
 
-export const addNewSchedule = (newSchedule) => (dispatch) => {
+export const addNewSchedule = (newSchedule, userUuid) => (dispatch) => {
   const scheduleToAdd = {
     menuUuid: newSchedule.menuUuid,
     locationUuid: newSchedule.locationUuid,
@@ -40,6 +41,8 @@ export const addNewSchedule = (newSchedule) => (dispatch) => {
     .post("/schedules", scheduleToAdd)
     .then((response) => {
       dispatch(fetchSchedules());
+      dispatch(fetchSchedulesAttendance());
+      dispatch(fetchAttendanceUser(userUuid));
     })
     .catch(function (error) {
       console.log("Failed adding Schedule: " + error);

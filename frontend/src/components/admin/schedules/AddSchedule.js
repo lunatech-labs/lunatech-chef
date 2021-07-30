@@ -23,10 +23,13 @@ class AddSchedule extends Component {
     const required = (value) => (value ? undefined : "Required");
     const onSubmit = (values) => {
       let shortDate = this.state.startDate.toISOString().substring(0, 10);
-      this.props.addNewSchedule({
-        ...values,
-        date: shortDate,
-      });
+      this.props.addNewSchedule(
+        {
+          ...values,
+          date: shortDate,
+        },
+        this.props.userUuid
+      );
       this.props.history.push("/allschedules");
     };
 

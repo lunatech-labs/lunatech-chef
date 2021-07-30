@@ -34,10 +34,10 @@ export const SchedulesReducer = (state = initState, action) => {
       };
 
     case ActionTypes.SCHEDULES_LOADING:
-      return { ...initState, isLoading: true };
+      return { ...state, isLoading: true };
 
     case ActionTypes.SCHEDULES_ATTENDANCE_LOADING:
-      return { ...initState, isLoadingAttendance: true };
+      return { ...state, isLoadingAttendance: true };
 
     case ActionTypes.SCHEDULES_LOADING_FAILED:
       return {

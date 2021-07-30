@@ -162,10 +162,10 @@ fun Application.module(testing: Boolean = false) {
         menusWithDishesInfo(menusWithDishesService)
         schedules(schedulesService, attendancesService)
         schedulesWithMenusInfo(schedulesWithInfoService)
+        schedulesWithAttendanceInfo(schedulesWithInfoService)
         attendancesWithScheduleInfo(attendancesWithInfoService)
         users(usersService)
         attendances(attendancesService)
-        schedulesWithAttendanceInfo(schedulesWithInfoService)
 
         static("static") {
             files("frontend/build/static")
@@ -174,13 +174,8 @@ fun Application.module(testing: Boolean = false) {
             files("frontend/build")
         }
 
-        // TODO FE mostrar lista de pessoas que se increveram para uma refeicao
-        // TODO add missing test requests
-
-        // TODO FE meal schedule does not refresh when a new schedule is added
-
+        // TODO schedulesWithAttendanceInfo - add missing test requests
         // TODO filtros no attendances, schedules por data, localizacao
-
         // TODO FE mostrar erros quando um profile de um user for actualizado
         // TODO HTTPS
         // TODO swagger e limpar routes nao necessarias

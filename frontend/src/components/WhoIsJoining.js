@@ -48,13 +48,15 @@ function RenderData({ isLoading, error, attendances, handleDetails }) {
                       {attendance.date[0]}
                     </td>
                     <td>{attendance.attendants.length}</td>
-                    <Button
-                      variant="primary"
-                      value={attendance.uuid}
-                      onClick={() => handleDetails(attendance.attendants)}
-                    >
-                      <FontAwesomeIcon icon={faList} />
-                    </Button>
+                    <td>
+                      <Button
+                        variant="primary"
+                        value={attendance.uuid}
+                        onClick={() => handleDetails(attendance.attendants)}
+                      >
+                        <FontAwesomeIcon icon={faList} />
+                      </Button>
+                    </td>
                   </tr>
                 );
               })}

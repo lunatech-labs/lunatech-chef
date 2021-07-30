@@ -1,6 +1,7 @@
 package com.lunatech.chef.api.persistence.services
 
 import com.lunatech.chef.api.domain.Schedule
+import com.lunatech.chef.api.persistence.schemas.Attendances
 import com.lunatech.chef.api.persistence.schemas.Schedules
 import com.lunatech.chef.api.routes.UpdatedSchedule
 import java.util.UUID
@@ -38,10 +39,19 @@ class SchedulesService(val database: Database) {
             }
         }
 
-    fun delete(uuid: UUID): Int = database.update(Schedules) {
-        set(it.isDeleted, true)
-        where {
-            it.uuid eq uuid
+    fun delete(uuid: UUID): Int {
+        val result = database.update(Schedules) {
+            set(it.isDeleted, true)
+            where {
+                it.uuid eq uuid
+            }
         }
+        database.update(Attendances) {
+            set(it.isDeleted, true)
+            where {
+                it.scheduleUuid eq uuid
+            }
+        }
+        return result
     }
 }

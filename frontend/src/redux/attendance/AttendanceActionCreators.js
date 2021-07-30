@@ -1,5 +1,6 @@
 import * as ActionTypes from "./AttendanceActionTypes";
 import { axiosInstance } from "../Axios";
+import { fetchSchedulesAttendance } from "../schedules/SchedulesActionCreators";
 
 export const fetchAttendanceUser = (userUuid) => (dispatch) => {
   dispatch(attendanceLoading(true));
@@ -22,6 +23,9 @@ export const editAttendance = (attendance) => (dispatch) => {
 
   axiosInstance
     .put("/attendances/" + attendance.uuid, attendanceToEdit)
+    .then(function (response) {
+      dispatch(fetchSchedulesAttendance());
+    })
     .catch(function (error) {
       console.log("Failed adding Schedule attendance: " + error);
       dispatch(attendanceEditingFailed(error.message));

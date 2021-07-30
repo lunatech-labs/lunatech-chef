@@ -119,8 +119,8 @@ const mapDispatchToProps = (dispatch) => ({
   fetchSchedules: () => {
     dispatch(fetchSchedules());
   },
-  addNewSchedule: (newSchedule) => {
-    dispatch(addNewSchedule(newSchedule));
+  addNewSchedule: (newSchedule, userUuid) => {
+    dispatch(addNewSchedule(newSchedule, userUuid));
   },
   editSchedule: (editedSchedule) => {
     dispatch(editSchedule(editedSchedule));
@@ -285,6 +285,7 @@ class Main extends Component {
           menus={this.props.menus.menus}
           locations={this.props.locations.locations}
           error={this.props.schedules.errorAdding}
+          userUuid={this.props.user.uuid}
         />
       );
     };
@@ -407,6 +408,7 @@ class Main extends Component {
                 component={WhoIsJoiningScheduleList}
                 isAdmin={this.props.user.isAdmin}
               />
+
               <ProtectedRoute
                 path="/alllocations"
                 component={AllLocations}

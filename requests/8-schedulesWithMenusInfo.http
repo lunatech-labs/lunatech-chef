@@ -4,6 +4,17 @@ CHEF_SESSION: {{ session }}
 
 ###
 
+
+GET {{ host }}/schedulesWithMenusInfo?fromdate=2021-08-01
+CHEF_SESSION: {{ session }}
+
+###
+
+GET {{ host }}/schedulesWithMenusInfo?fromdate=2021-08-01&untilDate=2021-08-20
+CHEF_SESSION: {{ session }}
+
+###
+
 GET {{ host }}/schedulesWithMenusInfo/21e816ae-279f-4733-a2d2-48ad732065c5
 CHEF_SESSION: {{ session }}
 

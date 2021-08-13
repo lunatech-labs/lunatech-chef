@@ -18,7 +18,7 @@ import com.lunatech.chef.api.persistence.services.LocationsService
 import com.lunatech.chef.api.persistence.services.MenusService
 import com.lunatech.chef.api.persistence.services.MenusWithDishesNamesService
 import com.lunatech.chef.api.persistence.services.SchedulesService
-import com.lunatech.chef.api.persistence.services.SchedulesWithDishesInfoService
+import com.lunatech.chef.api.persistence.services.SchedulesWithInfoService
 import com.lunatech.chef.api.persistence.services.UsersService
 import com.lunatech.chef.api.routes.ChefSession
 import com.lunatech.chef.api.routes.attendances
@@ -86,7 +86,7 @@ fun Application.module(testing: Boolean = false) {
     val menusService = MenusService(dbConnection)
     val menusWithDishesService = MenusWithDishesNamesService(dbConnection)
     val schedulesService = SchedulesService(dbConnection)
-    val schedulesWithInfoService = SchedulesWithDishesInfoService(dbConnection, menusWithDishesService, menusService)
+    val schedulesWithInfoService = SchedulesWithInfoService(dbConnection, menusWithDishesService, menusService)
     val usersService = UsersService(dbConnection)
     val attendancesService = AttendancesService(dbConnection, usersService)
     val attendancesWithInfoService = AttendancesWithScheduleInfoService(dbConnection, schedulesService, menusWithDishesService)
@@ -149,6 +149,7 @@ fun Application.module(testing: Boolean = false) {
         }
     }
 
+    logger.info { "Booting up!!" }
     routing {
         // Route by default
         get("/") {
@@ -174,17 +175,22 @@ fun Application.module(testing: Boolean = false) {
             files("frontend/build")
         }
 
-        // TODO schedulesWithAttendanceInfo - add missing test requests
-        // TODO filtros no attendances, schedules por data, localizacao
+        // TODO see only future schedules
+        // TODO filter schedules by location
+        // TODO filter schedules by date
+        // TODO see only future attendances
+        // TODO filter attendances ?
+        // TODO permitir adicionar schedules recorrentes
         // TODO FE mostrar erros quando um profile de um user for actualizado
+        // TODO proper error when calling endpoint that does not exist
         // TODO HTTPS
+        // TODO fix RoleAuthorization
         // TODO swagger e limpar routes nao necessarias
-        // TODO pagina principal? filtrar por localizacao, lista cronologica
-        // TODO reports
         // TODO integration com a people API
         // TODO integration com a vacation app
         // TODO adicionar pessoas a um schedule automaticamente
-        // TODO ver notas sobre outras features, como os schedules recorrentes
+        // TODO reports - perguntei à Shelley mas ela nao soube dizer como quer os reports
+        // TODO replace google sign-in by google identity, check for a new react-google-login
     }
 }
 

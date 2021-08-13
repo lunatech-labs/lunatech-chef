@@ -23,6 +23,7 @@ import java.util.Date
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 import mu.KotlinLogging
+import java.util.Locale
 
 private val logger = KotlinLogging.logger {}
 private val formatDate = SimpleDateFormat("yyMMddHHmmss")
@@ -98,7 +99,7 @@ fun getUserNameFromEmail(emailAddress: String): String =
     emailAddress
         .split("@")[0]
         .split(".")
-        .joinToString(" ") { name -> name.capitalize() }
+        .joinToString(" ") { name -> name.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() } }
 
 fun buildChefSession(user: User, admins: List<String>): ChefSession {
     val isAdmin = isAdmin(admins, user.emailAddress)

@@ -8,18 +8,21 @@ import com.lunatech.chef.api.persistence.schemas.DEFAULT_STRING
 import com.lunatech.chef.api.persistence.schemas.Locations
 import com.lunatech.chef.api.persistence.schemas.Schedules
 import com.lunatech.chef.api.persistence.schemas.Users
+import java.time.LocalDate
 import java.util.UUID
 import org.ktorm.database.Database
 import org.ktorm.dsl.and
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.from
+import org.ktorm.dsl.greaterEq
 import org.ktorm.dsl.leftJoin
+import org.ktorm.dsl.lessEq
 import org.ktorm.dsl.map
 import org.ktorm.dsl.select
 import org.ktorm.dsl.selectDistinct
 import org.ktorm.dsl.where
 
-class SchedulesWithDishesInfoService(
+class SchedulesWithInfoService(
   val database: Database,
   private val menusWithDishesService: MenusWithDishesNamesService,
   private val menusService: MenusService
@@ -27,6 +30,18 @@ class SchedulesWithDishesInfoService(
     fun getAll(): List<ScheduleWithMenuInfo> =
         database.from(Schedules).select()
             .where { Schedules.isDeleted eq false }
+            .map { Schedules.createEntity(it) }
+            .map { getScheduleWithMenuInfo(it) }
+
+    fun getFilterFromDate(fromDate: LocalDate): List<ScheduleWithMenuInfo> =
+        database.from(Schedules).select()
+            .where { (Schedules.isDeleted eq false) and (Schedules.date greaterEq fromDate) }
+            .map { Schedules.createEntity(it) }
+            .map { getScheduleWithMenuInfo(it) }
+
+    fun getFilterFromDateUntilDate(fromDate: LocalDate, untilDate: LocalDate): List<ScheduleWithMenuInfo> =
+        database.from(Schedules).select()
+            .where { (Schedules.isDeleted eq false) and (Schedules.date greaterEq fromDate) and (Schedules.date lessEq untilDate) }
             .map { Schedules.createEntity(it) }
             .map { getScheduleWithMenuInfo(it) }
 

@@ -29,20 +29,19 @@ class RoleAuthorization internal constructor(config: Configuration) {
         }
     }
 
-    fun interceptPipeline(pipeline: ApplicationCallPipeline, roles: Set<Role>) {
-        pipeline.insertPhaseAfter(ApplicationCallPipeline.Features, authorizationPhase)
-        pipeline.intercept(authorizationPhase) {
-            val call = call
-            config.provider.authorizationFunction(call, roles)
-        }
-    }
+    // fun interceptPipeline(pipeline: ApplicationCallPipeline, roles: Set<Role>) {
+    //     pipeline.insertPhaseAfter(ApplicationCallPipeline.Features, authorizationPhase)
+    //     pipeline.intercept(authorizationPhase) {
+    //         val call = call
+    //         config.provider.authorizationFunction(call, roles)
+    //     }
+    // }
 
     companion object Feature : ApplicationFeature<ApplicationCallPipeline, RoleBasedAuthorizer, RoleAuthorization> {
         private val authorizationPhase = PipelinePhase("authorization")
 
         override val key: AttributeKey<RoleAuthorization> = AttributeKey("RoleAuthorization")
 
-        @io.ktor.util.KtorExperimentalAPI
         override fun install(
           pipeline: ApplicationCallPipeline,
           configure: RoleBasedAuthorizer.() -> Unit

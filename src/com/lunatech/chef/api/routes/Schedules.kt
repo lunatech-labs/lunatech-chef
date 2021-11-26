@@ -1,7 +1,7 @@
 package com.lunatech.chef.api.routes
 
 import com.lunatech.chef.api.auth.Role
-import com.lunatech.chef.api.auth.rolesAllowed
+// import com.lunatech.chef.api.auth.rolesAllowed
 import com.lunatech.chef.api.domain.NewSchedule
 import com.lunatech.chef.api.domain.Schedule
 import com.lunatech.chef.api.persistence.services.AttendancesService
@@ -37,7 +37,7 @@ fun Routing.schedules(schedulesService: SchedulesService, attendancesService: At
 
     route(schedulesRoute) {
         authenticate("session-auth") {
-            rolesAllowed(Role.ADMIN) {
+            // rolesAllowed(Role.ADMIN) {
                 // get all schedules
                 get {
                     val schedules = schedulesService.getAll()
@@ -94,7 +94,7 @@ fun Routing.schedules(schedulesService: SchedulesService, attendancesService: At
                         if (result == 1) call.respond(OK) else call.respond(InternalServerError)
                     }
                 }
-            }
+            // }
         }
     }
 }

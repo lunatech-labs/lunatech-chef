@@ -69,7 +69,7 @@ private val logger = KotlinLogging.logger {}
 @Suppress("unused") // Referenced in application.conf
 @kotlin.jvm.JvmOverloads
 @ExperimentalStdlibApi
-fun Application.module(testing: Boolean = false) {
+fun Application.module() {
     val config = ConfigFactory.load()
     val dbConfig = FlywayConfig.fromConfig(config.getConfig("database"))
     val authConfig = AuthConfig.fromConfig(config.getConfig("auth"))
@@ -114,7 +114,7 @@ fun Application.module(testing: Boolean = false) {
 
     install(StatusPages) {
         exception<Throwable> { e ->
-            call.respondText(e.message ?: "", ContentType.Text.Plain, HttpStatusCode.InternalServerError)
+            call.respondText(e.stackTraceToString(), ContentType.Text.Plain, HttpStatusCode.BadRequest)
         }
     }
 

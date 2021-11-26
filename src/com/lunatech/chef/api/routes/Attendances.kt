@@ -1,7 +1,7 @@
 package com.lunatech.chef.api.routes
 
 import com.lunatech.chef.api.auth.Role
-import com.lunatech.chef.api.auth.rolesAllowed
+// import com.lunatech.chef.api.auth.rolesAllowed
 import com.lunatech.chef.api.domain.Attendance
 import com.lunatech.chef.api.domain.NewAttendance
 import com.lunatech.chef.api.persistence.services.AttendancesService
@@ -31,7 +31,7 @@ fun Routing.attendances(attendancesService: AttendancesService) {
 
     route(attendancesRoute) {
         authenticate("session-auth") {
-            rolesAllowed(Role.ADMIN, Role.USER) {
+            // rolesAllowed(Role.ADMIN, Role.USER) {
                 // create a new single attendance
                 post {
                     try {
@@ -57,7 +57,7 @@ fun Routing.attendances(attendancesService: AttendancesService) {
                         }
                     }
                 }
-            }
+            // }
         }
     }
 }

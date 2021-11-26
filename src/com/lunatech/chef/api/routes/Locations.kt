@@ -2,7 +2,7 @@
 package com.lunatech.chef.api.routes
 
 import com.lunatech.chef.api.auth.Role
-import com.lunatech.chef.api.auth.rolesAllowed
+// import com.lunatech.chef.api.auth.rolesAllowed
 import com.lunatech.chef.api.domain.Location
 import com.lunatech.chef.api.domain.NewLocation
 import com.lunatech.chef.api.persistence.services.LocationsService
@@ -35,7 +35,7 @@ fun Routing.locations(locationsService: LocationsService) {
 
     route(locationsRoute) {
             authenticate("session-auth") {
-                rolesAllowed(Role.ADMIN) {
+                // rolesAllowed(Role.ADMIN) {
                 // get all locations
                 get {
                     val locations = locationsService.getAll()
@@ -83,7 +83,7 @@ fun Routing.locations(locationsService: LocationsService) {
                         if (result == 1) call.respond(OK) else call.respond(InternalServerError)
                     }
                 }
-            }
+            // }
         }
     }
 }

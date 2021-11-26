@@ -1,7 +1,7 @@
 package com.lunatech.chef.api.routes
 
 import com.lunatech.chef.api.auth.Role
-import com.lunatech.chef.api.auth.rolesAllowed
+// import com.lunatech.chef.api.auth.rolesAllowed
 import com.lunatech.chef.api.persistence.services.SchedulesWithInfoService
 import io.ktor.application.call
 import io.ktor.auth.authenticate
@@ -17,7 +17,7 @@ fun Routing.schedulesWithAttendanceInfo(schedulesWithDishesInfoService: Schedule
 
     route(menusRoute) {
         authenticate("session-auth") {
-            rolesAllowed(Role.ADMIN) {
+            // rolesAllowed(Role.ADMIN) {
                 // get all menus with the complete data about the dishes
                 get {
                     val schedules = schedulesWithDishesInfoService.getAllSchedulesWithAttendanceInfo()
@@ -28,7 +28,7 @@ fun Routing.schedulesWithAttendanceInfo(schedulesWithDishesInfoService: Schedule
                         call.respond(OK, schedules)
                     }
                 }
-            }
+            // }
         }
     }
 }

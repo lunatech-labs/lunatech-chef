@@ -1,7 +1,6 @@
 
 package com.lunatech.chef.api.routes
 
-import com.lunatech.chef.api.auth.Role
 // import com.lunatech.chef.api.auth.rolesAllowed
 import com.lunatech.chef.api.domain.Location
 import com.lunatech.chef.api.domain.NewLocation

@@ -1,6 +1,5 @@
 package com.lunatech.chef.api.routes
 
-import com.lunatech.chef.api.auth.Role
 // import com.lunatech.chef.api.auth.rolesAllowed
 import com.lunatech.chef.api.persistence.services.SchedulesWithInfoService
 import io.ktor.application.call

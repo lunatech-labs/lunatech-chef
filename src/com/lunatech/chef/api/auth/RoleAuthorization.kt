@@ -3,7 +3,6 @@ package com.lunatech.chef.api.auth
 import io.ktor.application.ApplicationCall
 import io.ktor.application.ApplicationCallPipeline
 import io.ktor.application.ApplicationFeature
-import io.ktor.application.call
 import io.ktor.util.AttributeKey
 import io.ktor.util.pipeline.PipelinePhase
 

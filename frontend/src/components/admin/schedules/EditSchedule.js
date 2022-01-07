@@ -117,7 +117,8 @@ class EditSchedule extends Component {
         uuid: this.props.schedule.uuid,
         date: shortDate,
       };
-      this.props.editSchedule(editedSchedule);
+      // this.props.fromDate to refresh fetchSchedules
+      this.props.editSchedule(editedSchedule, this.props.fromDate);
       this.props.history.push("/allschedules");
     };
 

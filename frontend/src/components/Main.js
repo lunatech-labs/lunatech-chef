@@ -25,6 +25,7 @@ import {
 import {
   fetchSchedules,
   fetchSchedulesAttendance,
+  fetchSchedulesWithCustomDateFilter,
   addNewSchedule,
   editSchedule,
   deleteSchedule,
@@ -119,14 +120,17 @@ const mapDispatchToProps = (dispatch) => ({
   fetchSchedules: () => {
     dispatch(fetchSchedules());
   },
-  addNewSchedule: (newSchedule, userUuid) => {
-    dispatch(addNewSchedule(newSchedule, userUuid));
+  fetchSchedulesWithCustomDateFilter: (fromDate, untilDate) => {
+    dispatch(fetchSchedulesWithCustomDateFilter(fromDate, untilDate));
   },
-  editSchedule: (editedSchedule) => {
-    dispatch(editSchedule(editedSchedule));
+  addNewSchedule: (newSchedule, userUuid, fromDate) => {
+    dispatch(addNewSchedule(newSchedule, userUuid, fromDate));
   },
-  deleteSchedule: (scheduleUuid) => {
-    dispatch(deleteSchedule(scheduleUuid));
+  editSchedule: (editedSchedule, fromDate) => {
+    dispatch(editSchedule(editedSchedule, fromDate));
+  },
+  deleteSchedule: (scheduleUuid, fromDate) => {
+    dispatch(deleteSchedule(scheduleUuid, fromDate));
   },
   //
   // Attendance
@@ -274,6 +278,8 @@ class Main extends Component {
           errorAdding={this.props.schedules.errorAdding}
           errorEditing={this.props.schedules.errorEditing}
           errorDeleting={this.props.schedules.errorDeleting}
+          fromDate={this.props.schedules.fromDate} // date used in the filter
+          filterDates={this.props.fetchSchedulesWithCustomDateFilter}
         />
       );
     };
@@ -286,6 +292,7 @@ class Main extends Component {
           locations={this.props.locations.locations}
           error={this.props.schedules.errorAdding}
           userUuid={this.props.user.uuid}
+          fromDate={this.props.schedules.fromDate} // date used in the filter
         />
       );
     };
@@ -298,6 +305,7 @@ class Main extends Component {
           menus={this.props.menus.menus}
           locations={this.props.locations.locations}
           error={this.props.menus.errorEditing}
+          fromDate={this.props.schedules.fromDate} // date used in the filter
         />
       );
     };

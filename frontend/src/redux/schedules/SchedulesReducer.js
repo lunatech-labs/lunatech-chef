@@ -4,6 +4,7 @@ const initState = {
   isLoading: false,
   isLoadingAttendance: false,
   schedules: [],
+  fromDate: null,
   attendance: [],
   errorListing: null,
   errorListingAttendance: null,
@@ -18,6 +19,7 @@ export const SchedulesReducer = (state = initState, action) => {
       return {
         ...state,
         schedules: action.payload,
+        fromDate: action.fromDate,
         isLoading: false,
         errorListing: null,
         errorAdding: null,

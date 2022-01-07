@@ -33,7 +33,7 @@ export const AddMenu = (props) => {
             </div>
             {props.dishes.map((dish, index, arr) => {
               return (
-                <div>
+                <div key={dish.uuid}>
                   <Field
                     name="dishesUuids"
                     component="input"

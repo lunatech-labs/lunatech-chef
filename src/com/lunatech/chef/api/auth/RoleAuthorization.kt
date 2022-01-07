@@ -3,7 +3,6 @@ package com.lunatech.chef.api.auth
 import io.ktor.application.ApplicationCall
 import io.ktor.application.ApplicationCallPipeline
 import io.ktor.application.ApplicationFeature
-import io.ktor.application.call
 import io.ktor.util.AttributeKey
 import io.ktor.util.pipeline.PipelinePhase
 
@@ -29,20 +28,19 @@ class RoleAuthorization internal constructor(config: Configuration) {
         }
     }
 
-    fun interceptPipeline(pipeline: ApplicationCallPipeline, roles: Set<Role>) {
-        pipeline.insertPhaseAfter(ApplicationCallPipeline.Features, authorizationPhase)
-        pipeline.intercept(authorizationPhase) {
-            val call = call
-            config.provider.authorizationFunction(call, roles)
-        }
-    }
+    // fun interceptPipeline(pipeline: ApplicationCallPipeline, roles: Set<Role>) {
+    //     pipeline.insertPhaseAfter(ApplicationCallPipeline.Features, authorizationPhase)
+    //     pipeline.intercept(authorizationPhase) {
+    //         val call = call
+    //         config.provider.authorizationFunction(call, roles)
+    //     }
+    // }
 
     companion object Feature : ApplicationFeature<ApplicationCallPipeline, RoleBasedAuthorizer, RoleAuthorization> {
         private val authorizationPhase = PipelinePhase("authorization")
 
         override val key: AttributeKey<RoleAuthorization> = AttributeKey("RoleAuthorization")
 
-        @io.ktor.util.KtorExperimentalAPI
         override fun install(
           pipeline: ApplicationCallPipeline,
           configure: RoleBasedAuthorizer.() -> Unit

@@ -41,9 +41,11 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:debug": "nodemon --exec src/index.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "dev-debug": "node src/index.js"
   },
   "eslintConfig": {
     "extends": "react-app"

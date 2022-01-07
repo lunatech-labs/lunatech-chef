@@ -2,19 +2,39 @@ import * as ActionTypes from "./SchedulesActionTypes";
 import { axiosInstance } from "../Axios";
 import { fetchAttendanceUser } from "../attendance/AttendanceActionCreators";
 
-export const fetchSchedules = () => (dispatch) => {
+export const fetchSchedules = (fromDate) => (dispatch) => {
   dispatch(schedulesLoading(true));
 
   axiosInstance
-    .get("/schedulesWithMenusInfo")
+    .get("/schedulesWithMenusInfo?fromdate=" + fromDate)
     .then(function (response) {
-      dispatch(showAllSchedules(response));
+      dispatch(showAllSchedules(response, fromDate));
     })
     .catch(function (error) {
       console.log("Failed loading Schedules: " + error);
       dispatch(schedulesLoadingFailed(error.message));
     });
 };
+
+export const fetchSchedulesWithCustomDateFilter =
+  (fromDate, untilDate) => (dispatch) => {
+    dispatch(schedulesLoading(true));
+
+    var filter =
+      untilDate == null
+        ? "?fromdate=" + fromDate
+        : "?fromdate=" + fromDate + "&untilDate=" + untilDate;
+
+    axiosInstance
+      .get("/schedulesWithMenusInfo" + filter)
+      .then(function (response) {
+        dispatch(showAllSchedules(response, fromDate));
+      })
+      .catch(function (error) {
+        console.log("Failed loading Schedules: " + error);
+        dispatch(schedulesLoadingFailed(error.message));
+      });
+  };
 
 export const fetchSchedulesAttendance = () => (dispatch) => {
   dispatch(schedulesAttendanceLoading(true));
@@ -30,27 +50,30 @@ export const fetchSchedulesAttendance = () => (dispatch) => {
     });
 };
 
-export const addNewSchedule = (newSchedule, userUuid) => (dispatch) => {
-  const scheduleToAdd = {
-    menuUuid: newSchedule.menuUuid,
-    locationUuid: newSchedule.locationUuid,
-    date: newSchedule.date,
+export const addNewSchedule =
+  (newSchedule, userUuid, fromDate) => (dispatch) => {
+    console.log("addNewSchedule fromDate " + fromDate);
+
+    const scheduleToAdd = {
+      menuUuid: newSchedule.menuUuid,
+      locationUuid: newSchedule.locationUuid,
+      date: newSchedule.date,
+    };
+
+    axiosInstance
+      .post("/schedules", scheduleToAdd)
+      .then((response) => {
+        dispatch(fetchSchedules(fromDate));
+        dispatch(fetchSchedulesAttendance());
+        dispatch(fetchAttendanceUser(userUuid));
+      })
+      .catch(function (error) {
+        console.log("Failed adding Schedule: " + error);
+        dispatch(scheduleAddingFailed(error.message));
+      });
   };
 
-  axiosInstance
-    .post("/schedules", scheduleToAdd)
-    .then((response) => {
-      dispatch(fetchSchedules());
-      dispatch(fetchSchedulesAttendance());
-      dispatch(fetchAttendanceUser(userUuid));
-    })
-    .catch(function (error) {
-      console.log("Failed adding Schedule: " + error);
-      dispatch(scheduleAddingFailed(error.message));
-    });
-};
-
-export const editSchedule = (editedSchedule) => (dispatch) => {
+export const editSchedule = (editedSchedule, fromDate) => (dispatch) => {
   const sheduleToEdit = {
     menuUuid: editedSchedule.menuUuid,
     locationUuid: editedSchedule.locationUuid,
@@ -60,7 +83,7 @@ export const editSchedule = (editedSchedule) => (dispatch) => {
   axiosInstance
     .put("/schedules/" + editedSchedule.uuid, sheduleToEdit)
     .then((response) => {
-      dispatch(fetchSchedules());
+      dispatch(fetchSchedules(fromDate));
     })
     .catch(function (error) {
       console.log("Failed editing Schedule: " + error);
@@ -68,11 +91,11 @@ export const editSchedule = (editedSchedule) => (dispatch) => {
     });
 };
 
-export const deleteSchedule = (scheduleUuid) => (dispatch) => {
+export const deleteSchedule = (scheduleUuid, fromDate) => (dispatch) => {
   axiosInstance
     .delete("/schedules/" + scheduleUuid)
     .then((response) => {
-      dispatch(fetchSchedules());
+      dispatch(fetchSchedules(fromDate));
     })
     .catch(function (error) {
       console.log("Failed removing Schedule: " + error);
@@ -88,9 +111,10 @@ export const schedulesAttendanceLoading = () => ({
   type: ActionTypes.SCHEDULES_ATTENDANCE_LOADING,
 });
 
-export const showAllSchedules = (schedules) => ({
+export const showAllSchedules = (schedules, fromDate) => ({
   type: ActionTypes.SHOW_ALL_SCHEDULES,
   payload: schedules.data,
+  fromDate: fromDate,
 });
 
 export const showAllSchedulesAttendance = (schedulesAttendance) => ({

@@ -20,6 +20,7 @@ import java.lang.Exception
 import java.lang.IllegalArgumentException
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 import mu.KotlinLogging
@@ -98,7 +99,7 @@ fun getUserNameFromEmail(emailAddress: String): String =
     emailAddress
         .split("@")[0]
         .split(".")
-        .joinToString(" ") { name -> name.capitalize() }
+        .joinToString(" ") { name -> name.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() } }
 
 fun buildChefSession(user: User, admins: List<String>): ChefSession {
     val isAdmin = isAdmin(admins, user.emailAddress)

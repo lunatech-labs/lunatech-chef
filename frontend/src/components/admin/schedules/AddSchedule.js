@@ -28,7 +28,8 @@ class AddSchedule extends Component {
           ...values,
           date: shortDate,
         },
-        this.props.userUuid
+        this.props.userUuid, // to refresh fetchAttendanceUser
+        this.props.fromDate // to refresh fetchSchedules
       );
       this.props.history.push("/allschedules");
     };

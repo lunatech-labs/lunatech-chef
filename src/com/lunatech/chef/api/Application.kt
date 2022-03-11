@@ -175,21 +175,26 @@ fun Application.module() {
             files("frontend/build")
         }
 
-        // TODO see only future schedules
-        // TODO filter schedules by location
-        // TODO filter schedules by date
-        // TODO see only future attendances
-        // TODO filter attendances ?
-        // TODO permitir adicionar schedules recorrentes
-        // TODO FE mostrar erros quando um profile de um user for actualizado
+
+        // TODO places to add filter:
+        // - Schedules
+        // - Who is joining?
+        // - Meals scheduled
+
+        // TODO filters to add
+        // - date
+        // - location
+
+        // TODO Add recurrent schedules
+        // TODO FE user profile updates is now showing possible errors
         // TODO proper error when calling endpoint that does not exist
         // TODO HTTPS
         // TODO fix RoleAuthorization
-        // TODO swagger e limpar routes nao necessarias
-        // TODO integration com a people API
-        // TODO integration com a vacation app
-        // TODO adicionar pessoas a um schedule automaticamente
-        // TODO reports - perguntei à Shelley mas ela nao soube dizer como quer os reports
+        // TODO swagger and clean routes that are not needed
+        // TODO integration with people API ?
+        // TODO integration with vacation app ?
+        // TODO Automatically add people to a schedule
+        // TODO reports -> asked Shelley how they should look like, but she couldnt say
         // TODO replace google sign-in by google identity, check for a new react-google-login
     }
 }

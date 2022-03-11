@@ -21,6 +21,7 @@ import org.ktorm.dsl.map
 import org.ktorm.dsl.select
 import org.ktorm.dsl.selectDistinct
 import org.ktorm.dsl.where
+import org.ktorm.schema.ColumnDeclaring
 
 class SchedulesWithInfoService(
   val database: Database,
@@ -33,15 +34,23 @@ class SchedulesWithInfoService(
             .map { Schedules.createEntity(it) }
             .map { getScheduleWithMenuInfo(it) }
 
-    fun getFilterFromDate(fromDate: LocalDate): List<ScheduleWithMenuInfo> =
+    fun getFiltered(fromDate: LocalDate?, untilDate: LocalDate?, location: UUID?): List<ScheduleWithMenuInfo> =
         database.from(Schedules).select()
-            .where { (Schedules.isDeleted eq false) and (Schedules.date greaterEq fromDate) }
-            .map { Schedules.createEntity(it) }
-            .map { getScheduleWithMenuInfo(it) }
+            .where {
+                val conditions = ArrayList<ColumnDeclaring<Boolean>>()
 
-    fun getFilterFromDateUntilDate(fromDate: LocalDate, untilDate: LocalDate): List<ScheduleWithMenuInfo> =
-        database.from(Schedules).select()
-            .where { (Schedules.isDeleted eq false) and (Schedules.date greaterEq fromDate) and (Schedules.date lessEq untilDate) }
+                if (fromDate != null) {
+                    conditions += Schedules.date greaterEq fromDate
+                }
+                if (untilDate != null) {
+                    conditions += Schedules.date lessEq untilDate
+                }
+                if (location != null) {
+                    conditions += Schedules.location eq location
+                }
+
+                conditions.reduce { a, b -> a and b }
+            }
             .map { Schedules.createEntity(it) }
             .map { getScheduleWithMenuInfo(it) }
 

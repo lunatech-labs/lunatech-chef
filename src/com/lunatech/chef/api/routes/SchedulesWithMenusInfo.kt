@@ -20,7 +20,6 @@ fun Routing.schedulesWithMenusInfo(schedulesWithInfoService: SchedulesWithInfoSe
     val uuidRoute = "/{uuid}"
     val uuidParam = "uuid"
     val fromDateParam = "fromdate"
-    val untilDateParam = "untildate"
     val locationParam = "location"
 
     route(menusRoute) {
@@ -30,14 +29,12 @@ fun Routing.schedulesWithMenusInfo(schedulesWithInfoService: SchedulesWithInfoSe
                 get {
                     // check for filter parameters
                     val maybeDateFrom = call.parameters[fromDateParam]
-                    val maybeDateUntil = call.parameters[untilDateParam]
                     val maybeLocation = call.parameters[locationParam]
 
                     val dateFrom = if(maybeDateFrom != null) LocalDate.parse(maybeDateFrom) else null
-                    val dateUntil = if(maybeDateUntil != null) LocalDate.parse(maybeDateUntil) else null
                     val locationName = if (maybeLocation != null ) UUID.fromString(maybeLocation) else null
 
-                    val schedules = schedulesWithInfoService.getFiltered(dateFrom, dateUntil, locationName)
+                    val schedules = schedulesWithInfoService.getFiltered(dateFrom, locationName)
 
                     call.respond(OK, schedules)
                 }

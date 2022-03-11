@@ -34,16 +34,13 @@ class SchedulesWithInfoService(
             .map { Schedules.createEntity(it) }
             .map { getScheduleWithMenuInfo(it) }
 
-    fun getFiltered(fromDate: LocalDate?, untilDate: LocalDate?, location: UUID?): List<ScheduleWithMenuInfo> =
+    fun getFiltered(fromDate: LocalDate?, location: UUID?): List<ScheduleWithMenuInfo> =
         database.from(Schedules).select()
             .where {
                 val conditions = ArrayList<ColumnDeclaring<Boolean>>()
 
                 if (fromDate != null) {
                     conditions += Schedules.date greaterEq fromDate
-                }
-                if (untilDate != null) {
-                    conditions += Schedules.date lessEq untilDate
                 }
                 if (location != null) {
                     conditions += Schedules.location eq location

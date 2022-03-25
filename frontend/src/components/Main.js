@@ -25,7 +25,7 @@ import {
 import {
   fetchSchedules,
   fetchSchedulesAttendance,
-  fetchSchedulesWithCustomDateFilter,
+  fetchSchedulesWithFilter,
   addNewSchedule,
   editSchedule,
   deleteSchedule,
@@ -120,8 +120,8 @@ const mapDispatchToProps = (dispatch) => ({
   fetchSchedules: () => {
     dispatch(fetchSchedules());
   },
-  fetchSchedulesWithCustomDateFilter: (fromDate, untilDate) => {
-    dispatch(fetchSchedulesWithCustomDateFilter(fromDate, untilDate));
+  fetchSchedulesWithFilter: (fromDate, location) => {
+    dispatch(fetchSchedulesWithFilter(fromDate, location));
   },
   addNewSchedule: (newSchedule, userUuid, fromDate) => {
     dispatch(addNewSchedule(newSchedule, userUuid, fromDate));
@@ -273,13 +273,14 @@ class Main extends Component {
         <ListSchedules
           isLoading={this.props.schedules.isLoading}
           schedules={this.props.schedules.schedules}
+          locations={this.props.locations.locations}
           deleteSchedule={this.props.deleteSchedule}
           errorListing={this.props.schedules.errorListing}
           errorAdding={this.props.schedules.errorAdding}
           errorEditing={this.props.schedules.errorEditing}
           errorDeleting={this.props.schedules.errorDeleting}
           fromDate={this.props.schedules.fromDate} // date used in the filter
-          filterDates={this.props.fetchSchedulesWithCustomDateFilter}
+          filter={this.props.fetchSchedulesWithFilter}
         />
       );
     };

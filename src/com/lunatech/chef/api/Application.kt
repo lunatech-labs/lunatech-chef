@@ -175,7 +175,6 @@ fun Application.module() {
             files("frontend/build")
         }
 
-
         // TODO places to add filter:
         // - Schedules
         // - Who is joining?

@@ -16,7 +16,6 @@ import org.ktorm.dsl.eq
 import org.ktorm.dsl.from
 import org.ktorm.dsl.greaterEq
 import org.ktorm.dsl.leftJoin
-import org.ktorm.dsl.lessEq
 import org.ktorm.dsl.map
 import org.ktorm.dsl.select
 import org.ktorm.dsl.selectDistinct

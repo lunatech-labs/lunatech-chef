@@ -31,8 +31,8 @@ fun Routing.schedulesWithMenusInfo(schedulesWithInfoService: SchedulesWithInfoSe
                     val maybeDateFrom = call.parameters[fromDateParam]
                     val maybeLocation = call.parameters[locationParam]
 
-                    val dateFrom = if(maybeDateFrom != null) LocalDate.parse(maybeDateFrom) else null
-                    val locationName = if (maybeLocation != null ) UUID.fromString(maybeLocation) else null
+                    val dateFrom = if (maybeDateFrom != null) LocalDate.parse(maybeDateFrom) else null
+                    val locationName = if (maybeLocation != null) UUID.fromString(maybeLocation) else null
 
                     val schedules = schedulesWithInfoService.getFiltered(dateFrom, locationName)
 

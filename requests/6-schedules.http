@@ -2,8 +2,8 @@ POST {{ host }}/schedules
 Content-Type: application/json
 CHEF_SESSION: {{ session }}
 
-{ "menuUuid":"68aea2e6-ab35-4971-8e37-08570a6e3d7a",
-  "locationUuid":"992e1a4d-9e70-4454-afd7-b33e961ddaf1",
+{ "menuUuid":"3d396a7d-3628-43b6-bfbe-c5c69355d560",
+  "locationUuid":"425f62da-56c7-4167-9653-cccb8b4c2f17",
   "date":"2020-06-30"
 }
 

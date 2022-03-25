@@ -16,25 +16,24 @@ export const fetchSchedules = (fromDate) => (dispatch) => {
     });
 };
 
-export const fetchSchedulesWithCustomDateFilter =
-  (fromDate, untilDate) => (dispatch) => {
-    dispatch(schedulesLoading(true));
+export const fetchSchedulesWithFilter = (fromDate, location) => (dispatch) => {
+  dispatch(schedulesLoading(true));
 
-    var filter =
-      untilDate == null
-        ? "?fromdate=" + fromDate
-        : "?fromdate=" + fromDate + "&untilDate=" + untilDate;
+  var filter =
+    location === ""
+      ? "?fromdate=" + fromDate
+      : "?fromdate=" + fromDate + "&location=" + location;
 
-    axiosInstance
-      .get("/schedulesWithMenusInfo" + filter)
-      .then(function (response) {
-        dispatch(showAllSchedules(response, fromDate));
-      })
-      .catch(function (error) {
-        console.log("Failed loading Schedules: " + error);
-        dispatch(schedulesLoadingFailed(error.message));
-      });
-  };
+  axiosInstance
+    .get("/schedulesWithMenusInfo" + filter)
+    .then(function (response) {
+      dispatch(showAllSchedules(response, fromDate));
+    })
+    .catch(function (error) {
+      console.log("Failed loading Schedules: " + error);
+      dispatch(schedulesLoadingFailed(error.message));
+    });
+};
 
 export const fetchSchedulesAttendance = () => (dispatch) => {
   dispatch(schedulesAttendanceLoading(true));

@@ -44,7 +44,7 @@ class AddSchedule extends Component {
           initialValues={{
             menuUuid: "",
             locationUuid: "",
-            date: "",
+            date: "", // not used. this.state.startDate used instead
           }}
           render={({ handleSubmit, submitting, pristine }) => (
             <form onSubmit={handleSubmit}>
@@ -52,7 +52,7 @@ class AddSchedule extends Component {
                 <label>Choose the menu:</label>
                 <Field validate={required} name="menuUuid" component="select">
                   <option value="" />
-                  {this.props.menus.map((menu, index, arr) => {
+                  {this.props.menus.map((menu) => {
                     return (
                       <option value={menu.uuid} key={menu.uuid}>
                         {menu.name}
@@ -69,7 +69,7 @@ class AddSchedule extends Component {
                   component="select"
                 >
                   <option value="" />
-                  {this.props.locations.map((location, index, arr) => {
+                  {this.props.locations.map((location) => {
                     return (
                       <option value={location.uuid} key={location.uuid}>
                         {location.city}, {location.country}

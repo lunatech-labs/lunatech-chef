@@ -4,7 +4,7 @@ const initState = {
   isLoading: false,
   isLoadingAttendance: false,
   schedules: [],
-  fromDate: null,
+  fromDate: new Date(),
   attendance: [],
   errorListing: null,
   errorListingAttendance: null,

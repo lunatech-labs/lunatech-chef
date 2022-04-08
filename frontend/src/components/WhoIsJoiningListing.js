@@ -8,9 +8,6 @@ export const WhoIsJoiningListing = (props) => {
         <div className="row">
           <Table striped bordered hover>
             <tbody>
-              {console.log(
-                "attendances attendances " + JSON.stringify(attendances)
-              )}
               {attendances.map((name) => {
                 return (
                   <tr key={name}>

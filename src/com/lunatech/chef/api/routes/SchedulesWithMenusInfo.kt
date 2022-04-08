@@ -1,7 +1,7 @@
 package com.lunatech.chef.api.routes
 
 // import com.lunatech.chef.api.auth.rolesAllowed
-import com.lunatech.chef.api.persistence.services.SchedulesWithInfoService
+import com.lunatech.chef.api.persistence.services.SchedulesWithMenuInfo
 import io.ktor.application.call
 import io.ktor.auth.authenticate
 import io.ktor.http.HttpStatusCode.Companion.NotFound
@@ -14,8 +14,7 @@ import java.time.LocalDate
 import java.util.UUID
 import mu.KotlinLogging
 
-private val logger = KotlinLogging.logger {}
-fun Routing.schedulesWithMenusInfo(schedulesWithInfoService: SchedulesWithInfoService) {
+fun Routing.schedulesWithMenusInfo(schedulesWithInfoService: SchedulesWithMenuInfo) {
     val menusRoute = "/schedulesWithMenusInfo"
     val uuidRoute = "/{uuid}"
     val uuidParam = "uuid"

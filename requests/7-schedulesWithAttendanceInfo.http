@@ -4,3 +4,12 @@ CHEF_SESSION: {{ session }}
 
 ###
 
+GET {{ host }}/schedulesWithAttendanceInfo?fromdate=2022-04-16
+CHEF_SESSION: {{ session }}
+
+###
+
+GET {{ host }}/schedulesWithAttendanceInfo?fromdate=2021-08-01&location=44279b13-2308-4bc5-93fc-f0addee353f5
+CHEF_SESSION: {{ session }}
+
+###

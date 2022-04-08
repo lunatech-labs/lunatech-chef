@@ -162,7 +162,9 @@ class Main extends Component {
         <WhoIsJoining
           isLoading={this.props.schedules.isLoadingAttendance}
           attendance={this.props.schedules.attendance}
+          locations={this.props.locations.locations}
           errorListing={this.props.schedules.errorListingAttendance}
+          filter={this.props.fetchSchedulesAttendance}
         />
       );
     };

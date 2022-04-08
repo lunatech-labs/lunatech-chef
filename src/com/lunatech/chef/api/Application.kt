@@ -18,7 +18,8 @@ import com.lunatech.chef.api.persistence.services.LocationsService
 import com.lunatech.chef.api.persistence.services.MenusService
 import com.lunatech.chef.api.persistence.services.MenusWithDishesNamesService
 import com.lunatech.chef.api.persistence.services.SchedulesService
-import com.lunatech.chef.api.persistence.services.SchedulesWithInfoService
+import com.lunatech.chef.api.persistence.services.SchedulesWithAttendanceInfo
+import com.lunatech.chef.api.persistence.services.SchedulesWithMenuInfo
 import com.lunatech.chef.api.persistence.services.UsersService
 import com.lunatech.chef.api.routes.ChefSession
 import com.lunatech.chef.api.routes.attendances
@@ -85,7 +86,8 @@ fun Application.module() {
     val menusService = MenusService(dbConnection)
     val menusWithDishesService = MenusWithDishesNamesService(dbConnection)
     val schedulesService = SchedulesService(dbConnection)
-    val schedulesWithInfoService = SchedulesWithInfoService(dbConnection, menusWithDishesService, menusService)
+    val schedulesWithInfoService = SchedulesWithMenuInfo(dbConnection, menusWithDishesService)
+    val schedulesWithAttendanceInfoService = SchedulesWithAttendanceInfo(dbConnection, menusService)
     val usersService = UsersService(dbConnection)
     val attendancesService = AttendancesService(dbConnection, usersService)
     val attendancesWithInfoService = AttendancesWithScheduleInfoService(dbConnection, schedulesService, menusWithDishesService)
@@ -162,7 +164,7 @@ fun Application.module() {
         menusWithDishesInfo(menusWithDishesService)
         schedules(schedulesService, attendancesService)
         schedulesWithMenusInfo(schedulesWithInfoService)
-        schedulesWithAttendanceInfo(schedulesWithInfoService)
+        schedulesWithAttendanceInfo(schedulesWithAttendanceInfoService)
         attendancesWithScheduleInfo(attendancesWithInfoService)
         users(usersService)
         attendances(attendancesService)
@@ -175,7 +177,6 @@ fun Application.module() {
         }
 
         // TODO places to add filter:
-        // - Schedules
         // - Who is joining?
         // - Meals scheduled
 
@@ -184,8 +185,9 @@ fun Application.module() {
         // - location
 
         // TODO delete schedule not working
+        // TODO How to choose a specific dish instead of a whole menu?
         // TODO Add recurrent schedules
-        // TODO FE user profile updates is now showing possible errors
+        // TODO FE user profile updates is not showing possible errors
         // TODO proper error when calling endpoint that does not exist
         // TODO HTTPS
         // TODO fix RoleAuthorization

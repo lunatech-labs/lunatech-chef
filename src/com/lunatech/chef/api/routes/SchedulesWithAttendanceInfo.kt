@@ -21,11 +21,7 @@ fun Routing.schedulesWithAttendanceInfo(schedulesWithDishesInfoService: Schedule
                 get {
                     val schedules = schedulesWithDishesInfoService.getAllSchedulesWithAttendanceInfo()
 
-                    if (schedules.isEmpty()) {
-                        call.respond(NotFound)
-                    } else {
-                        call.respond(OK, schedules)
-                    }
+                    call.respond(OK, schedules)
                 }
             // }
         }

@@ -25,7 +25,6 @@ import {
 import {
   fetchSchedules,
   fetchSchedulesAttendance,
-  fetchSchedulesWithFilter,
   addNewSchedule,
   editSchedule,
   deleteSchedule,
@@ -120,22 +119,19 @@ const mapDispatchToProps = (dispatch) => ({
   fetchSchedules: () => {
     dispatch(fetchSchedules());
   },
-  fetchSchedulesWithFilter: (fromDate, location) => {
-    dispatch(fetchSchedulesWithFilter(fromDate, location));
+  addNewSchedule: (newSchedule) => {
+    dispatch(addNewSchedule(newSchedule));
   },
-  addNewSchedule: (newSchedule, userUuid, fromDate) => {
-    dispatch(addNewSchedule(newSchedule, userUuid, fromDate));
+  editSchedule: (editedSchedule) => {
+    dispatch(editSchedule(editedSchedule));
   },
-  editSchedule: (editedSchedule, fromDate) => {
-    dispatch(editSchedule(editedSchedule, fromDate));
-  },
-  deleteSchedule: (scheduleUuid, fromDate) => {
-    dispatch(deleteSchedule(scheduleUuid, fromDate));
+  deleteSchedule: (scheduleUuid) => {
+    dispatch(deleteSchedule(scheduleUuid));
   },
   //
   // Attendance
-  fetchAttendanceUser: (userUuid) => {
-    dispatch(fetchAttendanceUser(userUuid));
+  fetchAttendanceUser: () => {
+    dispatch(fetchAttendanceUser());
   },
   fetchSchedulesAttendance: () => {
     dispatch(fetchSchedulesAttendance());
@@ -279,8 +275,7 @@ class Main extends Component {
           errorAdding={this.props.schedules.errorAdding}
           errorEditing={this.props.schedules.errorEditing}
           errorDeleting={this.props.schedules.errorDeleting}
-          fromDate={this.props.schedules.fromDate} // date used in the filter
-          filter={this.props.fetchSchedulesWithFilter}
+          filter={this.props.fetchSchedules}
         />
       );
     };
@@ -292,8 +287,6 @@ class Main extends Component {
           menus={this.props.menus.menus}
           locations={this.props.locations.locations}
           error={this.props.schedules.errorAdding}
-          userUuid={this.props.user.uuid}
-          fromDate={this.props.schedules.fromDate} // date used in the filter
         />
       );
     };
@@ -306,7 +299,6 @@ class Main extends Component {
           menus={this.props.menus.menus}
           locations={this.props.locations.locations}
           error={this.props.menus.errorEditing}
-          fromDate={this.props.schedules.fromDate} // date used in the filter
         />
       );
     };

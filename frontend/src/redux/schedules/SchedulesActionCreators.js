@@ -2,32 +2,24 @@ import * as ActionTypes from "./SchedulesActionTypes";
 import { axiosInstance } from "../Axios";
 import { fetchAttendanceUser } from "../attendance/AttendanceActionCreators";
 
-export const fetchSchedules = (fromDate) => (dispatch) => {
+export const fetchSchedules = () => (dispatch) => {
   dispatch(schedulesLoading(true));
 
-  axiosInstance
-    .get("/schedulesWithMenusInfo?fromdate=" + fromDate)
-    .then(function (response) {
-      dispatch(showAllSchedules(response, fromDate));
-    })
-    .catch(function (error) {
-      console.log("Failed loading Schedules: " + error);
-      dispatch(schedulesLoadingFailed(error.message));
-    });
-};
+  const savedDate = localStorage.getItem("filterDate");
+  const date =
+    savedDate === null ? new Date().toISOString().substring(0, 10) : savedDate;
 
-export const fetchSchedulesWithFilter = (fromDate, location) => (dispatch) => {
-  dispatch(schedulesLoading(true));
+  const location = localStorage.getItem("filterLocation");
 
   var filter =
-    location === ""
-      ? "?fromdate=" + fromDate
-      : "?fromdate=" + fromDate + "&location=" + location;
+    location === null || location === ""
+      ? "?fromdate=" + date
+      : "?fromdate=" + date + "&location=" + location;
 
   axiosInstance
     .get("/schedulesWithMenusInfo" + filter)
     .then(function (response) {
-      dispatch(showAllSchedules(response, fromDate));
+      dispatch(showAllSchedules(response));
     })
     .catch(function (error) {
       console.log("Failed loading Schedules: " + error);
@@ -49,30 +41,28 @@ export const fetchSchedulesAttendance = () => (dispatch) => {
     });
 };
 
-export const addNewSchedule =
-  (newSchedule, userUuid, fromDate) => (dispatch) => {
-    console.log("addNewSchedule fromDate " + fromDate);
-
-    const scheduleToAdd = {
-      menuUuid: newSchedule.menuUuid,
-      locationUuid: newSchedule.locationUuid,
-      date: newSchedule.date,
-    };
-
-    axiosInstance
-      .post("/schedules", scheduleToAdd)
-      .then((response) => {
-        dispatch(fetchSchedules(fromDate));
-        dispatch(fetchSchedulesAttendance());
-        dispatch(fetchAttendanceUser(userUuid));
-      })
-      .catch(function (error) {
-        console.log("Failed adding Schedule: " + error);
-        dispatch(scheduleAddingFailed(error.message));
-      });
+export const addNewSchedule = (newSchedule) => (dispatch) => {
+  const scheduleToAdd = {
+    menuUuid: newSchedule.menuUuid,
+    locationUuid: newSchedule.locationUuid,
+    date: newSchedule.date,
   };
 
-export const editSchedule = (editedSchedule, fromDate) => (dispatch) => {
+  const userUuid = localStorage.getItem("userUuid");
+  axiosInstance
+    .post("/schedules", scheduleToAdd)
+    .then((response) => {
+      dispatch(fetchSchedules());
+      dispatch(fetchSchedulesAttendance());
+      dispatch(fetchAttendanceUser(userUuid));
+    })
+    .catch(function (error) {
+      console.log("Failed adding Schedule: " + error);
+      dispatch(scheduleAddingFailed(error.message));
+    });
+};
+
+export const editSchedule = (editedSchedule) => (dispatch) => {
   const sheduleToEdit = {
     menuUuid: editedSchedule.menuUuid,
     locationUuid: editedSchedule.locationUuid,
@@ -82,7 +72,7 @@ export const editSchedule = (editedSchedule, fromDate) => (dispatch) => {
   axiosInstance
     .put("/schedules/" + editedSchedule.uuid, sheduleToEdit)
     .then((response) => {
-      dispatch(fetchSchedules(fromDate));
+      dispatch(fetchSchedules());
     })
     .catch(function (error) {
       console.log("Failed editing Schedule: " + error);
@@ -90,11 +80,13 @@ export const editSchedule = (editedSchedule, fromDate) => (dispatch) => {
     });
 };
 
-export const deleteSchedule = (scheduleUuid, fromDate) => (dispatch) => {
+export const deleteSchedule = (scheduleUuid) => (dispatch) => {
+  console.log("lets remove a schedule");
+
   axiosInstance
     .delete("/schedules/" + scheduleUuid)
     .then((response) => {
-      dispatch(fetchSchedules(fromDate));
+      dispatch(fetchSchedules());
     })
     .catch(function (error) {
       console.log("Failed removing Schedule: " + error);
@@ -110,10 +102,9 @@ export const schedulesAttendanceLoading = () => ({
   type: ActionTypes.SCHEDULES_ATTENDANCE_LOADING,
 });
 
-export const showAllSchedules = (schedules, fromDate) => ({
+export const showAllSchedules = (schedules) => ({
   type: ActionTypes.SHOW_ALL_SCHEDULES,
   payload: schedules.data,
-  fromDate: fromDate,
 });
 
 export const showAllSchedulesAttendance = (schedulesAttendance) => ({

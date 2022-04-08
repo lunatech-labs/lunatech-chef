@@ -17,8 +17,8 @@ export const login = (token) => (dispatch) => {
       dispatch(userLoggedIn(response.data));
 
       const userUuid = response.data.uuid;
-      console.log("Fetching all initial data");
-      getInitalData(dispatch, userUuid);
+      localStorage.setItem("userUuid", userUuid);
+      getInitialData(dispatch);
     })
     .catch(function (error) {
       console.log("Failed logging in user " + error);
@@ -57,7 +57,6 @@ export const saveUserProfile = (userUuid, userProfile) => (dispatch) => {
   axiosInstance
     .put("/users/" + userUuid, userProfileToSave)
     .then((response) => {
-      console.log("User profile saved with response " + response);
       dispatch(userDataUpdayed(userProfileToSave));
     })
     .catch(function (error) {
@@ -66,21 +65,12 @@ export const saveUserProfile = (userUuid, userProfile) => (dispatch) => {
     });
 };
 
-const getInitalData = (dispatch, userUuid) => {
-  var today = new Date();
-  var day = today.getDate();
-  var paddedDay = day < 10 ? "0" + day : day;
-
-  var month = today.getMonth() + 1;
-  var paddedMonth = month < 10 ? "0" + month : month;
-
-  var date = today.getFullYear() + "-" + paddedMonth + "-" + paddedDay;
-
+const getInitialData = (dispatch) => {
   dispatch(fetchLocations());
   dispatch(fetchDishes());
   dispatch(fetchMenus());
-  dispatch(fetchSchedules(date));
-  dispatch(fetchAttendanceUser(userUuid));
+  dispatch(fetchSchedules());
+  dispatch(fetchAttendanceUser());
   dispatch(fetchSchedulesAttendance());
 };
 

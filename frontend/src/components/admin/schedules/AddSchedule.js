@@ -7,11 +7,11 @@ class AddSchedule extends Component {
   constructor(props) {
     super();
     this.handleChange = this.handleChange.bind(this);
-  }
 
-  state = {
-    startDate: new Date(),
-  };
+    this.state = {
+      startDate: new Date(),
+    };
+  }
 
   handleChange = (date) => {
     this.setState({
@@ -23,14 +23,10 @@ class AddSchedule extends Component {
     const required = (value) => (value ? undefined : "Required");
     const onSubmit = (values) => {
       let shortDate = this.state.startDate.toISOString().substring(0, 10);
-      this.props.addNewSchedule(
-        {
-          ...values,
-          date: shortDate,
-        },
-        this.props.userUuid, // to refresh fetchAttendanceUser
-        this.props.fromDate // to refresh fetchSchedules
-      );
+      this.props.addNewSchedule({
+        ...values,
+        date: shortDate,
+      });
       this.props.history.push("/allschedules");
     };
 

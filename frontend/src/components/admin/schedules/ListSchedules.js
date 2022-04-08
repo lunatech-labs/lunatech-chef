@@ -28,8 +28,12 @@ class ListSchedules extends Component {
     this.handleDateChange = this.handleDateChange.bind(this);
     this.handleFilter = this.handleFilter.bind(this);
 
+    const savedDate = localStorage.getItem("filterDate");
+    const savedLocation = localStorage.getItem("filterLocation");
+
     this.state = {
-      startDate: new Date(props.fromDate),
+      startDate: savedDate === null ? new Date() : new Date(savedDate),
+      startLocation: savedLocation === null ? "" : savedLocation,
     };
   }
 
@@ -44,12 +48,17 @@ class ListSchedules extends Component {
   };
 
   handleRemove = (uuid) => {
-    // this.state.startDate to refresh fetchSchedules
-    this.props.deleteSchedule(uuid, this.state.startDate);
+    this.props.deleteSchedule(uuid);
   };
 
   handleFilter = (values) => {
-    let shortDate = this.state.startDate.toISOString().substring(0, 10);
+    const shortDate = this.state.startDate.toISOString().substring(0, 10);
+
+    const choosenLocation =
+      values.location === undefined ? "" : values.location;
+
+    localStorage.setItem("filterDate", shortDate);
+    localStorage.setItem("filterLocation", choosenLocation);
     this.props.filter(shortDate, values.location);
   };
 
@@ -96,7 +105,7 @@ class ListSchedules extends Component {
                 <Form
                   onSubmit={this.handleFilter}
                   initialValues={{
-                    location: "",
+                    location: this.state.startLocation,
                     date: "", // not used. this.state.startDate used instead
                   }}
                   render={({ handleSubmit, submitting }) => (
@@ -105,7 +114,7 @@ class ListSchedules extends Component {
                         <div className="column">
                           <label>Location:</label>
                           <Field name="location" component="select">
-                            <option value="" />
+                            <option value="" key="" />
                             {this.props.locations.map((location) => {
                               return (
                                 <option

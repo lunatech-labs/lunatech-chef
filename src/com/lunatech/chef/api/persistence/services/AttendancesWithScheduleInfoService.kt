@@ -4,23 +4,44 @@ import com.lunatech.chef.api.domain.Attendance
 import com.lunatech.chef.api.domain.AttendanceWithInfo
 import com.lunatech.chef.api.persistence.schemas.Attendances
 import com.lunatech.chef.api.persistence.schemas.Locations
+import com.lunatech.chef.api.persistence.schemas.Schedules
 import java.util.UUID
 import org.ktorm.database.Database
 import org.ktorm.dsl.and
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.from
+import org.ktorm.dsl.greaterEq
+import org.ktorm.dsl.leftJoin
 import org.ktorm.dsl.map
 import org.ktorm.dsl.select
 import org.ktorm.dsl.where
+import org.ktorm.schema.ColumnDeclaring
+import java.time.LocalDate
 
 class AttendancesWithScheduleInfoService(
   val database: Database,
   private val schedulesService: SchedulesService,
   private val menusWithDishesService: MenusWithDishesNamesService
 ) {
-    fun getByUserUuid(userUuid: UUID): List<AttendanceWithInfo> =
-        database.from(Attendances).select()
-            .where { (Attendances.userUuid eq userUuid) and (Attendances.isDeleted eq false) }
+    fun getByUserUuidFiltered(userUuid: UUID, fromDate: LocalDate?, location: UUID?): List<AttendanceWithInfo> =
+        database.from(Attendances)
+            .leftJoin(Schedules, on = Schedules.uuid eq Attendances.scheduleUuid)
+            .select()
+            .where {
+                val conditions = ArrayList<ColumnDeclaring<Boolean>>()
+
+                conditions += Attendances.userUuid eq userUuid
+                conditions += Attendances.isDeleted eq false
+
+                if (fromDate != null) {
+                    conditions += Schedules.date greaterEq fromDate
+                }
+                if (location != null) {
+                    conditions += Schedules.location eq location
+                }
+
+                conditions.reduce { a, b -> a and b }
+            }
             .map { Attendances.createEntity(it) }
             .flatMap { getAttendanceWithInfo(it) }
 

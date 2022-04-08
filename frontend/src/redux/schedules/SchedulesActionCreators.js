@@ -30,8 +30,19 @@ export const fetchSchedules = () => (dispatch) => {
 export const fetchSchedulesAttendance = () => (dispatch) => {
   dispatch(schedulesAttendanceLoading(true));
 
+  const savedDate = localStorage.getItem("filterDate");
+  const date =
+    savedDate === null ? new Date().toISOString().substring(0, 10) : savedDate;
+
+  const location = localStorage.getItem("filterLocation");
+
+  var filter =
+    location === null || location === ""
+      ? "?fromdate=" + date
+      : "?fromdate=" + date + "&location=" + location;
+
   axiosInstance
-    .get("/schedulesWithAttendanceInfo")
+    .get("/schedulesWithAttendanceInfo" + filter)
     .then(function (response) {
       dispatch(showAllSchedulesAttendance(response));
     })

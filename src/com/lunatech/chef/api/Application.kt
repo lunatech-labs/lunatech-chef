@@ -183,6 +183,7 @@ fun Application.module() {
         // - date
         // - location
 
+        // TODO delete schedule not working
         // TODO Add recurrent schedules
         // TODO FE user profile updates is now showing possible errors
         // TODO proper error when calling endpoint that does not exist

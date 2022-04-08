@@ -117,8 +117,11 @@ class EditSchedule extends Component {
         uuid: this.props.schedule.uuid,
         date: shortDate,
       };
-      // this.props.fromDate to refresh fetchSchedules
-      this.props.editSchedule(editedSchedule, this.props.fromDate);
+      // filterDate to refresh fetchSchedules
+      this.props.editSchedule(
+        editedSchedule,
+        localStorage.getItem("filterDate")
+      );
       this.props.history.push("/allschedules");
     };
 

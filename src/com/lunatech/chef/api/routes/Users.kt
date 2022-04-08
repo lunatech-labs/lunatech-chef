@@ -25,7 +25,7 @@ import mu.KotlinLogging
 private val logger = KotlinLogging.logger {}
 
 data class UpdatedUser(
-  val locationUuid: UUID,
+  val locationUuid: UUID?,
   val isVegetarian: Boolean = false,
   val hasNutsRestriction: Boolean = false,
   val hasSeafoodRestriction: Boolean = false,

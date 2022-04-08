@@ -67,7 +67,6 @@ fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 private val logger = KotlinLogging.logger {}
 
 @Suppress("unused") // Referenced in application.conf
-@kotlin.jvm.JvmOverloads
 @ExperimentalStdlibApi
 fun Application.module() {
     val config = ConfigFactory.load()

@@ -2,9 +2,10 @@ import * as ActionTypes from "./AttendanceActionTypes";
 import { axiosInstance } from "../Axios";
 import { fetchSchedulesAttendance } from "../schedules/SchedulesActionCreators";
 
-export const fetchAttendanceUser = (userUuid) => (dispatch) => {
+export const fetchAttendanceUser = () => (dispatch) => {
   dispatch(attendanceLoading(true));
 
+  const userUuid = localStorage.getItem("userUuid");
   axiosInstance
     .get("/attendancesWithScheduleInfo/" + userUuid)
     .then(function (response) {

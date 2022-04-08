@@ -41,13 +41,14 @@ export const fetchSchedulesAttendance = () => (dispatch) => {
     });
 };
 
-export const addNewSchedule = (newSchedule, userUuid) => (dispatch) => {
+export const addNewSchedule = (newSchedule) => (dispatch) => {
   const scheduleToAdd = {
     menuUuid: newSchedule.menuUuid,
     locationUuid: newSchedule.locationUuid,
     date: newSchedule.date,
   };
 
+  const userUuid = localStorage.getItem("userUuid");
   axiosInstance
     .post("/schedules", scheduleToAdd)
     .then((response) => {
@@ -85,7 +86,7 @@ export const deleteSchedule = (scheduleUuid) => (dispatch) => {
   axiosInstance
     .delete("/schedules/" + scheduleUuid)
     .then((response) => {
-      // dispatch(fetchSchedules());
+      dispatch(fetchSchedules());
     })
     .catch(function (error) {
       console.log("Failed removing Schedule: " + error);

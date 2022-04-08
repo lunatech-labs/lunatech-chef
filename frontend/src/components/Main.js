@@ -119,8 +119,8 @@ const mapDispatchToProps = (dispatch) => ({
   fetchSchedules: () => {
     dispatch(fetchSchedules());
   },
-  addNewSchedule: (newSchedule, userUuid) => {
-    dispatch(addNewSchedule(newSchedule, userUuid));
+  addNewSchedule: (newSchedule) => {
+    dispatch(addNewSchedule(newSchedule));
   },
   editSchedule: (editedSchedule) => {
     dispatch(editSchedule(editedSchedule));
@@ -130,8 +130,8 @@ const mapDispatchToProps = (dispatch) => ({
   },
   //
   // Attendance
-  fetchAttendanceUser: (userUuid) => {
-    dispatch(fetchAttendanceUser(userUuid));
+  fetchAttendanceUser: () => {
+    dispatch(fetchAttendanceUser());
   },
   fetchSchedulesAttendance: () => {
     dispatch(fetchSchedulesAttendance());
@@ -287,7 +287,6 @@ class Main extends Component {
           menus={this.props.menus.menus}
           locations={this.props.locations.locations}
           error={this.props.schedules.errorAdding}
-          userUuid={this.props.user.uuid}
         />
       );
     };

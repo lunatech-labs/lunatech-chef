@@ -17,7 +17,8 @@ export const login = (token) => (dispatch) => {
       dispatch(userLoggedIn(response.data));
 
       const userUuid = response.data.uuid;
-      getInitialData(dispatch, userUuid);
+      localStorage.setItem("userUuid", userUuid);
+      getInitialData(dispatch);
     })
     .catch(function (error) {
       console.log("Failed logging in user " + error);
@@ -64,12 +65,12 @@ export const saveUserProfile = (userUuid, userProfile) => (dispatch) => {
     });
 };
 
-const getInitialData = (dispatch, userUuid) => {
+const getInitialData = (dispatch) => {
   dispatch(fetchLocations());
   dispatch(fetchDishes());
   dispatch(fetchMenus());
   dispatch(fetchSchedules());
-  dispatch(fetchAttendanceUser(userUuid));
+  dispatch(fetchAttendanceUser());
   dispatch(fetchSchedulesAttendance());
 };
 

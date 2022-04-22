@@ -102,7 +102,7 @@ fun Application.module() {
         header(HttpHeaders.AccessControlAllowOrigin)
         header(HttpHeaders.Authorization)
         header(CHEF_SESSSION)
-        host("localhost:3000")
+        host("localhost:3001")
     }
 
     install(ContentNegotiation) {
@@ -176,15 +176,6 @@ fun Application.module() {
             files("frontend/build")
         }
 
-        // TODO places to add filter:
-        // - Who is joining?
-        // - Meals scheduled
-
-        // TODO filters to add
-        // - date
-        // - location
-
-        // TODO delete schedule not working
         // TODO How to choose a specific dish instead of a whole menu?
         // TODO Add recurrent schedules
         // TODO FE user profile updates is not showing possible errors

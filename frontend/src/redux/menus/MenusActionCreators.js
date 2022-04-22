@@ -1,5 +1,10 @@
 import * as ActionTypes from "./MenusActionTypes";
 import { axiosInstance } from "../Axios";
+import {
+  fetchSchedules,
+  fetchSchedulesAttendance,
+} from "../schedules/SchedulesActionCreators";
+import { fetchAttendanceUser } from "../attendance/AttendanceActionCreators";
 
 export const fetchMenus = () => (dispatch) => {
   dispatch(menusLoading(true));
@@ -38,10 +43,14 @@ export const editMenu = (editedMenu) => (dispatch) => {
     dishesUuids: editedMenu.dishesUuids,
   };
 
+  const userUuid = localStorage.getItem("userUuid");
   axiosInstance
     .put("/menus/" + editedMenu.uuid, menuToEdit)
     .then((response) => {
       dispatch(fetchMenus());
+      dispatch(fetchSchedules());
+      dispatch(fetchSchedulesAttendance());
+      dispatch(fetchAttendanceUser(userUuid));
     })
     .catch(function (error) {
       console.log("Failed editing Menu: " + error);

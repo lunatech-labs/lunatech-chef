@@ -80,10 +80,13 @@ export const editSchedule = (editedSchedule) => (dispatch) => {
     date: editedSchedule.date,
   };
 
+  const userUuid = localStorage.getItem("userUuid");
   axiosInstance
     .put("/schedules/" + editedSchedule.uuid, sheduleToEdit)
     .then((response) => {
       dispatch(fetchSchedules());
+      dispatch(fetchSchedulesAttendance());
+      dispatch(fetchAttendanceUser(userUuid));
     })
     .catch(function (error) {
       console.log("Failed editing Schedule: " + error);

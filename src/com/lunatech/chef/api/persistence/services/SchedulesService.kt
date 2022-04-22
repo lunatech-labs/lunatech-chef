@@ -6,16 +6,18 @@ import com.lunatech.chef.api.persistence.schemas.Schedules
 import com.lunatech.chef.api.routes.UpdatedSchedule
 import java.util.UUID
 import org.ktorm.database.Database
+import org.ktorm.dsl.asc
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.from
 import org.ktorm.dsl.insert
 import org.ktorm.dsl.map
+import org.ktorm.dsl.orderBy
 import org.ktorm.dsl.select
 import org.ktorm.dsl.update
 import org.ktorm.dsl.where
 
 class SchedulesService(val database: Database) {
-    fun getAll() = database.from(Schedules).select().where { Schedules.isDeleted eq false }.map { Schedules.createEntity(it) }
+    fun getAll() = database.from(Schedules).select().where { Schedules.isDeleted eq false }.orderBy(Schedules.date.asc()).map { Schedules.createEntity(it) }
 
     fun getByUuid(uuid: UUID): List<Schedule> =
         database.from(Schedules).select().where { Schedules.uuid eq uuid }.map { Schedules.createEntity(it) }

@@ -11,11 +11,13 @@ import java.time.LocalDate
 import java.util.UUID
 import org.ktorm.database.Database
 import org.ktorm.dsl.and
+import org.ktorm.dsl.asc
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.from
 import org.ktorm.dsl.greaterEq
 import org.ktorm.dsl.leftJoin
 import org.ktorm.dsl.map
+import org.ktorm.dsl.orderBy
 import org.ktorm.dsl.select
 import org.ktorm.dsl.selectDistinct
 import org.ktorm.dsl.where
@@ -41,6 +43,7 @@ class SchedulesWithAttendanceInfo(
 
                 conditions.reduce { a, b -> a and b }
             }
+            .orderBy(Schedules.date.asc())
             .map { Schedules.createEntity(it) }
             .map { getScheduleWithAttendanceInfo(it) }
 

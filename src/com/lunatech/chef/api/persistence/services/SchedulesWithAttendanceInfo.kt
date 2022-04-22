@@ -2,7 +2,6 @@ package com.lunatech.chef.api.persistence.services
 
 import com.lunatech.chef.api.domain.Schedule
 import com.lunatech.chef.api.domain.ScheduleWithAttendanceInfo
-import com.lunatech.chef.api.domain.ScheduleWithMenuInfo
 import com.lunatech.chef.api.persistence.schemas.Attendances
 import com.lunatech.chef.api.persistence.schemas.DEFAULT_STRING
 import com.lunatech.chef.api.persistence.schemas.Locations

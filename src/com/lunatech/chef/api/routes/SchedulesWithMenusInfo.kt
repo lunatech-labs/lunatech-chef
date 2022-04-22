@@ -12,7 +12,6 @@ import io.ktor.routing.get
 import io.ktor.routing.route
 import java.time.LocalDate
 import java.util.UUID
-import mu.KotlinLogging
 
 fun Routing.schedulesWithMenusInfo(schedulesWithInfoService: SchedulesWithMenuInfo) {
     val menusRoute = "/schedulesWithMenusInfo"

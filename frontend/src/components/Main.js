@@ -313,6 +313,8 @@ class Main extends Component {
           editAttendance={this.props.editAttendance}
           showNewAttendance={this.props.showNewAttendance}
           errorListing={this.props.attendance.errorListing}
+          locations={this.props.locations.locations}
+          filter={this.props.fetchAttendanceUser}
         />
       );
     };

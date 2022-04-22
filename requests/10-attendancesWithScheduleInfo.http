@@ -1,4 +1,13 @@
-GET {{ host }}/attendancesWithScheduleInfo/9629c3e0-3531-45fa-9fea-ea097f8e3b46
+GET {{ host }}/attendancesWithScheduleInfo/d4628d1f-98f5-42f7-ab53-4e5e1e089750
+CHEF_SESSION: {{ session }}
+
+###
+
+GET {{ host }}/attendancesWithScheduleInfo/d4628d1f-98f5-42f7-ab53-4e5e1e089750?fromdate=2022-02-01
+
+###
+
+GET {{ host }}/attendancesWithScheduleInfo/d4628d1f-98f5-42f7-ab53-4e5e1e089750?fromdate=2022-02-01&location=44279b13-2308-4bc5-93fc-f0addee353f5
 CHEF_SESSION: {{ session }}
 
 ###

@@ -9,13 +9,9 @@ CHEF_SESSION: {{ session }}
 
 ###
 
-GET {{ host }}/schedulesWithMenusInfo?fromdate=2021-08-01&location=425f62da-56c7-4167-9653-cccb8b4c2f17
+GET {{ host }}/schedulesWithMenusInfo?fromdate=2021-08-01&location=3915e475-9fb0-4d81-8664-55bcc9c8400b
 CHEF_SESSION: {{ session }}
 
 ###
 
-GET {{ host }}/schedulesWithMenusInfo/21e816ae-279f-4733-a2d2-48ad732065c5
-CHEF_SESSION: {{ session }}
-
-###
 

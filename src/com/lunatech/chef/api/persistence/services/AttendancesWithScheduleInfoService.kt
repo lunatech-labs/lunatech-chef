@@ -5,18 +5,20 @@ import com.lunatech.chef.api.domain.AttendanceWithInfo
 import com.lunatech.chef.api.persistence.schemas.Attendances
 import com.lunatech.chef.api.persistence.schemas.Locations
 import com.lunatech.chef.api.persistence.schemas.Schedules
+import java.time.LocalDate
 import java.util.UUID
 import org.ktorm.database.Database
 import org.ktorm.dsl.and
+import org.ktorm.dsl.asc
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.from
 import org.ktorm.dsl.greaterEq
 import org.ktorm.dsl.leftJoin
 import org.ktorm.dsl.map
+import org.ktorm.dsl.orderBy
 import org.ktorm.dsl.select
 import org.ktorm.dsl.where
 import org.ktorm.schema.ColumnDeclaring
-import java.time.LocalDate
 
 class AttendancesWithScheduleInfoService(
   val database: Database,
@@ -42,6 +44,7 @@ class AttendancesWithScheduleInfoService(
 
                 conditions.reduce { a, b -> a and b }
             }
+            .orderBy(Schedules.date.asc())
             .map { Attendances.createEntity(it) }
             .flatMap { getAttendanceWithInfo(it) }
 

@@ -1,5 +1,11 @@
 import * as ActionTypes from "./DishesActionTypes";
 import { axiosInstance } from "../Axios";
+import { fetchMenus } from "../menus/MenusActionCreators";
+import {
+  fetchSchedules,
+  fetchSchedulesAttendance,
+} from "../schedules/SchedulesActionCreators";
+import { fetchAttendanceUser } from "../attendance/AttendanceActionCreators";
 
 export const fetchDishes = () => (dispatch) => {
   dispatch(dishesLoading(true));
@@ -52,10 +58,13 @@ export const editDish = (editedDish) => (dispatch) => {
     hasLactose: editedDish.hasLactose,
   };
 
+  const userUuid = localStorage.getItem("userUuid");
   axiosInstance
     .put("/dishes/" + editedDish.uuid, sishToEdit)
     .then((response) => {
       dispatch(fetchDishes());
+      dispatch(fetchMenus());
+      dispatch(fetchAttendanceUser(userUuid));
     })
     .catch(function (error) {
       console.log("Failed editing Dish: " + error);

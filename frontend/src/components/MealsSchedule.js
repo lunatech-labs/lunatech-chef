@@ -6,6 +6,7 @@ import { ToMonth } from "./shared/Functions";
 
 export const MealsAttendance = (props) => {
   const [attendance, setAttendance] = React.useState(props.attendance);
+  const savedLocation = localStorage.getItem("filterLocation");
 
   const onSubmit = (values) => {
     const newAttendance = attendance.map((item) => {
@@ -24,7 +25,15 @@ export const MealsAttendance = (props) => {
     props.showNewAttendance(newAttendance);
   };
 
-  function RenderData({ isLoading, error, attendance }) {
+  const handleFilter = (values) => {
+    const choosenLocation =
+      values.location === undefined ? "" : values.location;
+
+    localStorage.setItem("filterLocation", choosenLocation);
+    props.filter(values.location);
+  };
+
+  function RenderData({ isLoading, error, attendance, locations }) {
     if (isLoading) {
       return (
         <div className="container">
@@ -44,6 +53,45 @@ export const MealsAttendance = (props) => {
     } else {
       return (
         <div className="container">
+          <div className="row">
+            <label>Filter by:</label>
+          </div>
+          <div className="row">
+            <Form
+              onSubmit={handleFilter}
+              initialValues={{
+                location: savedLocation,
+              }}
+              render={({ handleSubmit, submitting }) => (
+                <form onSubmit={handleSubmit}>
+                  <div className="row">
+                    <div className="column">
+                      <label>Location:</label>
+                      <Field name="location" component="select">
+                        <option value="" key="" />
+                        {locations.map((location) => {
+                          return (
+                            <option value={location.uuid} key={location.uuid}>
+                              {location.city}, {location.country}
+                            </option>
+                          );
+                        })}
+                      </Field>
+                    </div>
+                    <div>
+                      <button
+                        type="submit"
+                        color="primary"
+                        disabled={submitting}
+                      >
+                        Filter
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              )}
+            ></Form>
+          </div>
           <div className="row">
             <Table striped bordered hover>
               <thead>
@@ -121,6 +169,7 @@ export const MealsAttendance = (props) => {
           isLoading={props.isLoading}
           errorListing={props.errorListing}
           attendance={attendance}
+          locations={props.locations}
         />
       </div>
     </div>

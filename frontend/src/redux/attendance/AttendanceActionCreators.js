@@ -6,8 +6,16 @@ export const fetchAttendanceUser = () => (dispatch) => {
   dispatch(attendanceLoading(true));
 
   const userUuid = localStorage.getItem("userUuid");
+  const location = localStorage.getItem("filterLocation");
+  const date = new Date().toISOString().substring(0, 10);
+
+  var filter =
+    location === null || location === ""
+      ? "?fromdate=" + date
+      : "?fromdate=" + date + "&location=" + location;
+
   axiosInstance
-    .get("/attendancesWithScheduleInfo/" + userUuid)
+    .get("/attendancesWithScheduleInfo/" + userUuid + filter)
     .then(function (response) {
       dispatch(showAllAttendance(response));
     })

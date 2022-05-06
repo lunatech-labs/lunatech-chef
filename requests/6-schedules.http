@@ -2,9 +2,9 @@ POST {{ host }}/schedules
 Content-Type: application/json
 CHEF_SESSION: {{ session }}
 
-{ "menuUuid":"3d396a7d-3628-43b6-bfbe-c5c69355d560",
-  "locationUuid":"425f62da-56c7-4167-9653-cccb8b4c2f17",
-  "date":"2020-06-30"
+{ "menuUuid":"36cb6be6-6ded-447a-8273-57636b3b3675",
+  "locationUuid":"8b06e81d-4065-4139-bb42-88ef31393227",
+  "date":"2022-06-30"
 }
 
 ###

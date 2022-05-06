@@ -17,7 +17,11 @@ import org.ktorm.dsl.update
 import org.ktorm.dsl.where
 
 class SchedulesService(val database: Database) {
-    fun getAll() = database.from(Schedules).select().where { Schedules.isDeleted eq false }.orderBy(Schedules.date.asc()).map { Schedules.createEntity(it) }
+    fun getAll(): List<Schedule> =
+        database.from(Schedules).select()
+            .where { Schedules.isDeleted eq false }
+            .orderBy(Schedules.date.asc())
+            .map { Schedules.createEntity(it) }
 
     fun getByUuid(uuid: UUID): List<Schedule> =
         database.from(Schedules).select().where { Schedules.uuid eq uuid }.map { Schedules.createEntity(it) }
@@ -27,7 +31,7 @@ class SchedulesService(val database: Database) {
             set(it.uuid, schedule.uuid)
             set(it.menuUuid, schedule.menuUuid)
             set(it.date, schedule.date)
-            set(it.location, schedule.locationUuid)
+            set(it.locationUuid, schedule.locationUuid)
             set(it.isDeleted, schedule.isDeleted)
         }
 
@@ -35,7 +39,7 @@ class SchedulesService(val database: Database) {
         database.update(Schedules) {
             set(it.menuUuid, schedule.menuUuid)
             set(it.date, schedule.date)
-            set(it.location, schedule.locationUuid)
+            set(it.locationUuid, schedule.locationUuid)
             where {
                 it.uuid eq uuid
             }

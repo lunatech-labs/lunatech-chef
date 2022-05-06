@@ -17,6 +17,7 @@ import com.lunatech.chef.api.persistence.services.DishesService
 import com.lunatech.chef.api.persistence.services.LocationsService
 import com.lunatech.chef.api.persistence.services.MenusService
 import com.lunatech.chef.api.persistence.services.MenusWithDishesNamesService
+import com.lunatech.chef.api.persistence.services.RecurrentSchedulesService
 import com.lunatech.chef.api.persistence.services.SchedulesService
 import com.lunatech.chef.api.persistence.services.SchedulesWithAttendanceInfo
 import com.lunatech.chef.api.persistence.services.SchedulesWithMenuInfo
@@ -30,6 +31,7 @@ import com.lunatech.chef.api.routes.healthCheck
 import com.lunatech.chef.api.routes.locations
 import com.lunatech.chef.api.routes.menus
 import com.lunatech.chef.api.routes.menusWithDishesInfo
+import com.lunatech.chef.api.routes.recurrentSchedules
 import com.lunatech.chef.api.routes.schedules
 import com.lunatech.chef.api.routes.schedulesWithAttendanceInfo
 import com.lunatech.chef.api.routes.schedulesWithMenusInfo
@@ -86,6 +88,7 @@ fun Application.module() {
     val menusService = MenusService(dbConnection)
     val menusWithDishesService = MenusWithDishesNamesService(dbConnection)
     val schedulesService = SchedulesService(dbConnection)
+    val recurrentSchedulesService = RecurrentSchedulesService(dbConnection)
     val schedulesWithInfoService = SchedulesWithMenuInfo(dbConnection, menusWithDishesService)
     val schedulesWithAttendanceInfoService = SchedulesWithAttendanceInfo(dbConnection, menusService)
     val usersService = UsersService(dbConnection)
@@ -165,6 +168,7 @@ fun Application.module() {
         schedules(schedulesService, attendancesService)
         schedulesWithMenusInfo(schedulesWithInfoService)
         schedulesWithAttendanceInfo(schedulesWithAttendanceInfoService)
+        recurrentSchedules(recurrentSchedulesService)
         attendancesWithScheduleInfo(attendancesWithInfoService)
         users(usersService)
         attendances(attendancesService)
@@ -176,6 +180,13 @@ fun Application.module() {
             files("frontend/build")
         }
 
+        //
+
+        // TODO delete all related attendance when deleting schedules, if is a future schedule
+        // TODO delete recurrent schedule when deleting a schedule
+
+        // TODO calling PUT with and uuid that does exist throws error
+
         // TODO How to choose a specific dish instead of a whole menu?
         // TODO Add recurrent schedules
         // TODO FE user profile updates is not showing possible errors
@@ -186,7 +197,7 @@ fun Application.module() {
         // TODO integration with people API ?
         // TODO integration with vacation app ?
         // TODO Automatically add people to a schedule
-        // TODO reports -> asked Shelley how they should look like, but she couldnt say
+        // TODO reports -> asked Shelley how they should look like, but she couldn't say
         // TODO replace google sign-in by google identity, check for a new react-google-login
     }
 }

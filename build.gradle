@@ -19,6 +19,8 @@ apply plugin: 'org.jlleitschuh.gradle.ktlint-idea'
 group 'com.lunatech'
 version '0.0.1'
 mainClassName = "io.ktor.server.netty.EngineMain"
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 sourceSets {
     main.kotlin.srcDirs = main.java.srcDirs = ['src']
@@ -53,7 +55,6 @@ dependencies {
     implementation "io.ktor:ktor-client-core-jvm:$ktor_version"
     implementation "io.ktor:ktor-client-apache:$ktor_version"
     implementation "io.ktor:ktor-client-logging-jvm:$ktor_version"
-    implementation "org.flywaydb:flyway-core:$flyway_version"
     implementation "org.flywaydb:flyway-core:$flyway_version"
     implementation "io.github.config4k:config4k:$config4k_version"
     implementation "org.postgresql:postgresql:$postgresql_version"

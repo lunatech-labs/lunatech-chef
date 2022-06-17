@@ -102,7 +102,7 @@ fun Application.module() {
         header(HttpHeaders.AccessControlAllowOrigin)
         header(HttpHeaders.Authorization)
         header(CHEF_SESSSION)
-        host("localhost:3001")
+        host("localhost:3000")
     }
 
     install(ContentNegotiation) {

@@ -284,7 +284,8 @@ class Main extends Component {
           errorAdding={this.props.schedules.errorAdding}
           errorEditing={this.props.schedules.errorEditing}
           errorDeleting={this.props.schedules.errorDeleting}
-          filter={this.props.fetchSchedules}
+          filterSchedules={this.props.fetchSchedules}
+          filterRecurrentSchedules={this.props.fetchRecurrentSchedules}
         />
       );
     };

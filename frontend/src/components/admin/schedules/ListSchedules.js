@@ -28,18 +28,21 @@ class ListSchedules extends Component {
     this.handleDateChange = this.handleDateChange.bind(this);
     this.handleFilter = this.handleFilter.bind(this);
 
-    const savedDate = localStorage.getItem("filterDate");
-    const savedLocation = localStorage.getItem("filterLocation");
+    const savedDate = localStorage.getItem("filterDateSchedule");
+    const savedLocationSchedule = localStorage.getItem(
+      "filterLocationSchedule"
+    );
 
     this.state = {
-      startDate: savedDate === null ? new Date() : new Date(savedDate),
-      startLocation: savedLocation === null ? "" : savedLocation,
+      startDateSchedule: savedDate === null ? new Date() : new Date(savedDate),
+      startLocationSchedule:
+        savedLocationSchedule === null ? "" : savedLocationSchedule,
     };
   }
 
   handleDateChange = (date) => {
     this.setState({
-      startDate: date,
+      startDateSchedule: date,
     });
   };
 
@@ -52,14 +55,17 @@ class ListSchedules extends Component {
   };
 
   handleFilter = (values) => {
-    const shortDate = this.state.startDate.toISOString().substring(0, 10);
+    const shortDate = this.state.startDateSchedule
+      .toISOString()
+      .substring(0, 10);
 
     const choosenLocation =
       values.location === undefined ? "" : values.location;
 
-    localStorage.setItem("filterDate", shortDate);
-    localStorage.setItem("filterLocation", choosenLocation);
-    this.props.filter(shortDate, values.location);
+    localStorage.setItem("filterDateSchedule", shortDate);
+    localStorage.setItem("filterLocationSchedule", choosenLocation);
+    this.props.filterSchedules();
+    this.props.filterRecurrentSchedules();
   };
 
   render() {
@@ -105,8 +111,8 @@ class ListSchedules extends Component {
                 <Form
                   onSubmit={this.handleFilter}
                   initialValues={{
-                    location: this.state.startLocation,
-                    date: "", // not used. this.state.startDate used instead
+                    location: this.state.startLocationSchedule,
+                    date: "", // not used. this.state.startDateSchedule used instead
                   }}
                   render={({ handleSubmit, submitting }) => (
                     <form onSubmit={handleSubmit}>
@@ -228,42 +234,6 @@ class ListSchedules extends Component {
           <div className="container">
             <div className="row">
               <label>Filter by:</label>
-            </div>
-            <div className="row">
-              <Form
-                onSubmit={this.handleFilter}
-                initialValues={{
-                  location: this.state.startLocation,
-                }}
-                render={({ handleSubmit, submitting }) => (
-                  <form onSubmit={handleSubmit}>
-                    <div className="row">
-                      <div className="column">
-                        <label>Location:</label>
-                        <Field name="location" component="select">
-                          <option value="" key="" />
-                          {this.props.locations.map((location) => {
-                            return (
-                              <option value={location.uuid} key={location.uuid}>
-                                {location.city}, {location.country}
-                              </option>
-                            );
-                          })}
-                        </Field>
-                      </div>
-                      <div>
-                        <button
-                          type="submit"
-                          color="primary"
-                          disabled={submitting}
-                        >
-                          Filter
-                        </button>
-                      </div>
-                    </div>
-                  </form>
-                )}
-              ></Form>
             </div>
             <div className="row">
               <Table striped bordered hover>

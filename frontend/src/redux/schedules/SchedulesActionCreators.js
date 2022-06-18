@@ -5,11 +5,11 @@ import { fetchAttendanceUser } from "../attendance/AttendanceActionCreators";
 export const fetchSchedules = () => (dispatch) => {
   dispatch(schedulesLoading(true));
 
-  const savedDate = localStorage.getItem("filterDate");
+  const savedDate = localStorage.getItem("filterDateSchedule");
   const date =
     savedDate === null ? new Date().toISOString().substring(0, 10) : savedDate;
 
-  const location = localStorage.getItem("filterLocation");
+  const location = localStorage.getItem("filterLocationSchedule");
 
   var filter =
     location === null || location === ""
@@ -30,7 +30,7 @@ export const fetchSchedules = () => (dispatch) => {
 export const fetchRecurrentSchedules = () => (dispatch) => {
   dispatch(schedulesLoading(true));
 
-  const location = localStorage.getItem("filterLocation");
+  const location = localStorage.getItem("filterLocationSchedule");
 
   var filter =
     location === null || location === "" ? "" : "?location=" + location;

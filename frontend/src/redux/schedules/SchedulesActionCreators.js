@@ -49,11 +49,11 @@ export const fetchRecurrentSchedules = () => (dispatch) => {
 export const fetchSchedulesAttendance = () => (dispatch) => {
   dispatch(schedulesAttendanceLoading(true));
 
-  const savedDate = localStorage.getItem("filterDate");
+  const savedDate = localStorage.getItem("filterDateWhoIsJoining");
   const date =
     savedDate === null ? new Date().toISOString().substring(0, 10) : savedDate;
 
-  const location = localStorage.getItem("filterLocation");
+  const location = localStorage.getItem("filterLocationWhoIsJoining");
 
   var filter =
     location === null || location === ""

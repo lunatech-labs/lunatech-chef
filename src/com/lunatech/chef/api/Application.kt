@@ -186,13 +186,15 @@ fun Application.module() {
 
         //
 
+        // TODO handles edition of schedules and recurrent schedules
+        // Add script that grabs recurrent schedules and creates schedules
+
         // TODO delete all related attendance when deleting schedules, if is a future schedule
         // TODO delete recurrent schedule when deleting a schedule
 
         // TODO calling PUT with and uuid that does exist throws error
 
         // TODO How to choose a specific dish instead of a whole menu?
-        // TODO Add recurrent schedules
         // TODO FE user profile updates is not showing possible errors
         // TODO proper error when calling endpoint that does not exist
         // TODO HTTPS

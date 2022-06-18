@@ -18,6 +18,7 @@ import com.lunatech.chef.api.persistence.services.LocationsService
 import com.lunatech.chef.api.persistence.services.MenusService
 import com.lunatech.chef.api.persistence.services.MenusWithDishesNamesService
 import com.lunatech.chef.api.persistence.services.RecurrentSchedulesService
+import com.lunatech.chef.api.persistence.services.RecurrentSchedulesWithMenuInfo
 import com.lunatech.chef.api.persistence.services.SchedulesService
 import com.lunatech.chef.api.persistence.services.SchedulesWithAttendanceInfo
 import com.lunatech.chef.api.persistence.services.SchedulesWithMenuInfo
@@ -32,6 +33,7 @@ import com.lunatech.chef.api.routes.locations
 import com.lunatech.chef.api.routes.menus
 import com.lunatech.chef.api.routes.menusWithDishesInfo
 import com.lunatech.chef.api.routes.recurrentSchedules
+import com.lunatech.chef.api.routes.recurrentSchedulesWithMenusInfo
 import com.lunatech.chef.api.routes.schedules
 import com.lunatech.chef.api.routes.schedulesWithAttendanceInfo
 import com.lunatech.chef.api.routes.schedulesWithMenusInfo
@@ -89,7 +91,8 @@ fun Application.module() {
     val menusWithDishesService = MenusWithDishesNamesService(dbConnection)
     val schedulesService = SchedulesService(dbConnection)
     val recurrentSchedulesService = RecurrentSchedulesService(dbConnection)
-    val schedulesWithInfoService = SchedulesWithMenuInfo(dbConnection, menusWithDishesService)
+    val schedulesWithMenuInfoService = SchedulesWithMenuInfo(dbConnection, menusWithDishesService)
+    val recurrentSchedulesMenuWithInfoService = RecurrentSchedulesWithMenuInfo(dbConnection, menusWithDishesService)
     val schedulesWithAttendanceInfoService = SchedulesWithAttendanceInfo(dbConnection, menusService)
     val usersService = UsersService(dbConnection)
     val attendancesService = AttendancesService(dbConnection, usersService)
@@ -166,9 +169,10 @@ fun Application.module() {
         menus(menusService)
         menusWithDishesInfo(menusWithDishesService)
         schedules(schedulesService, attendancesService)
-        schedulesWithMenusInfo(schedulesWithInfoService)
+        schedulesWithMenusInfo(schedulesWithMenuInfoService)
         schedulesWithAttendanceInfo(schedulesWithAttendanceInfoService)
         recurrentSchedules(recurrentSchedulesService)
+        recurrentSchedulesWithMenusInfo(recurrentSchedulesMenuWithInfoService)
         attendancesWithScheduleInfo(attendancesWithInfoService)
         users(usersService)
         attendances(attendancesService)

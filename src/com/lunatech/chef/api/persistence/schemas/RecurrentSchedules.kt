@@ -20,7 +20,7 @@ object RecurrentSchedules : BaseTable<RecurrentSchedule>("recurrent_schedules") 
     override fun doCreateEntity(row: QueryRowSet, withReferences: Boolean) = RecurrentSchedule(
         uuid = row[uuid] ?: DEFAULT_UUID,
         menuUuid = row[menuUuid] ?: DEFAULT_UUID,
-        locationUuid = row[Schedules.locationUuid] ?: DEFAULT_UUID,
+        locationUuid = row[locationUuid] ?: DEFAULT_UUID,
         repetitionDays = row[repetitionDays] ?: DEFAULT_RECURRENCY,
         nextDate = row[nextDate] ?: LocalDate.now(),
         isDeleted = row[isDeleted] ?: DEFAULT_FALSE

@@ -139,8 +139,8 @@ class WhoIsJoining extends Component {
     this.handleDateChange = this.handleDateChange.bind(this);
     this.handleFilter = this.handleFilter.bind(this);
 
-    const savedDate = localStorage.getItem("filterDate");
-    const savedLocation = localStorage.getItem("filterLocation");
+    const savedDate = localStorage.getItem("filterDateWhoIsJoining");
+    const savedLocation = localStorage.getItem("filterLocationWhoIsJoining");
 
     this.state = {
       startDate: savedDate === null ? new Date() : new Date(savedDate),
@@ -160,8 +160,8 @@ class WhoIsJoining extends Component {
     const choosenLocation =
       values.location === undefined ? "" : values.location;
 
-    localStorage.setItem("filterDate", shortDate);
-    localStorage.setItem("filterLocation", choosenLocation);
+    localStorage.setItem("filterDateWhoIsJoining", shortDate);
+    localStorage.setItem("filterLocationWhoIsJoining", choosenLocation);
     this.props.filter(shortDate, values.location);
   };
 

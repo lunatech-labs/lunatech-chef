@@ -5,6 +5,7 @@ import { fetchLocations } from "../locations/LocationsActionCreators";
 import { fetchMenus } from "../menus/MenusActionCreators";
 import {
   fetchSchedules,
+  fetchRecurrentSchedules,
   fetchSchedulesAttendance,
 } from "../schedules/SchedulesActionCreators";
 import { fetchAttendanceUser } from "../attendance/AttendanceActionCreators";
@@ -70,6 +71,7 @@ const getInitialData = (dispatch) => {
   dispatch(fetchDishes());
   dispatch(fetchMenus());
   dispatch(fetchSchedules());
+  dispatch(fetchRecurrentSchedules());
   dispatch(fetchAttendanceUser());
   dispatch(fetchSchedulesAttendance());
 };

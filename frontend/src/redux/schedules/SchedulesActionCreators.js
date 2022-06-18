@@ -27,6 +27,25 @@ export const fetchSchedules = () => (dispatch) => {
     });
 };
 
+export const fetchRecurrentSchedules = () => (dispatch) => {
+  dispatch(schedulesLoading(true));
+
+  const location = localStorage.getItem("filterLocation");
+
+  var filter =
+    location === null || location === "" ? "" : "?location=" + location;
+
+  axiosInstance
+    .get("/recurrentSchedulesWithMenusInfo" + filter)
+    .then(function (response) {
+      dispatch(showAllRecurrentSchedules(response));
+    })
+    .catch(function (error) {
+      console.log("Failed loading Recurrent Schedules: " + error);
+      dispatch(schedulesLoadingFailed(error.message));
+    });
+};
+
 export const fetchSchedulesAttendance = () => (dispatch) => {
   dispatch(schedulesAttendanceLoading(true));
 
@@ -147,6 +166,11 @@ export const schedulesAttendanceLoading = () => ({
 
 export const showAllSchedules = (schedules) => ({
   type: ActionTypes.SHOW_ALL_SCHEDULES,
+  payload: schedules.data,
+});
+
+export const showAllRecurrentSchedules = (schedules) => ({
+  type: ActionTypes.SHOW_ALL_RECURRENT_SCHEDULES,
   payload: schedules.data,
 });
 

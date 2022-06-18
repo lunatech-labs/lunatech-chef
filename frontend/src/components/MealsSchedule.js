@@ -6,7 +6,7 @@ import { ToMonth } from "./shared/Functions";
 
 export const MealsAttendance = (props) => {
   const [attendance, setAttendance] = React.useState(props.attendance);
-  const savedLocation = localStorage.getItem("filterLocation");
+  const savedLocation = localStorage.getItem("filterLocationMealSchedule");
 
   const onSubmit = (values) => {
     const newAttendance = attendance.map((item) => {
@@ -29,7 +29,7 @@ export const MealsAttendance = (props) => {
     const choosenLocation =
       values.location === undefined ? "" : values.location;
 
-    localStorage.setItem("filterLocation", choosenLocation);
+    localStorage.setItem("filterLocationMealSchedule", choosenLocation);
     props.filter(values.location);
   };
 

@@ -6,7 +6,7 @@ export const fetchAttendanceUser = () => (dispatch) => {
   dispatch(attendanceLoading(true));
 
   const userUuid = localStorage.getItem("userUuid");
-  const location = localStorage.getItem("filterLocation");
+  const location = localStorage.getItem("filterLocationMealSchedule");
   const date = new Date().toISOString().substring(0, 10);
 
   var filter =

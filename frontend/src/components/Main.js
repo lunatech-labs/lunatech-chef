@@ -24,6 +24,7 @@ import {
 } from "../redux/menus/MenusActionCreators";
 import {
   fetchSchedules,
+  fetchRecurrentSchedules,
   fetchSchedulesAttendance,
   addNewSchedule,
   editSchedule,
@@ -127,6 +128,11 @@ const mapDispatchToProps = (dispatch) => ({
   },
   deleteSchedule: (scheduleUuid) => {
     dispatch(deleteSchedule(scheduleUuid));
+  },
+  //
+  // Recurrent Schedules
+  fetchRecurrentSchedules: () => {
+    dispatch(fetchRecurrentSchedules());
   },
   //
   // Attendance
@@ -271,6 +277,7 @@ class Main extends Component {
         <ListSchedules
           isLoading={this.props.schedules.isLoading}
           schedules={this.props.schedules.schedules}
+          recurrentSchedules={this.props.schedules.recurrentSchedules}
           locations={this.props.locations.locations}
           deleteSchedule={this.props.deleteSchedule}
           errorListing={this.props.schedules.errorListing}

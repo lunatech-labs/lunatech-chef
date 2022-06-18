@@ -40,7 +40,7 @@ class SchedulesWithMenuInfo(
                     conditions += Schedules.date greaterEq fromDate
                 }
                 if (location != null) {
-                    conditions += Schedules.location eq location
+                    conditions += Schedules.locationUuid eq location
                 }
 
                 conditions.reduce { a, b -> a and b }

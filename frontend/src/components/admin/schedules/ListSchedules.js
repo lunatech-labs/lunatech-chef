@@ -209,6 +209,110 @@ class ListSchedules extends Component {
             </div>
           )}
         </div>
+        <div>
+          <h3 className="mt-4">Management of Recurrent Schedules</h3>
+        </div>
+        <div>
+          <ShowError error={this.props.errorAdding} reason="adding" />
+          <ShowError error={this.props.errorDeleting} reason="deleting" />
+          <ShowError error={this.props.errorEditing} reason="saving" />
+          {this.props.isLoading ? (
+            <div className="container">
+              <div className="row">
+                <Loading />
+              </div>
+            </div>
+          ) : (
+            <div></div>
+          )}
+          <div className="container">
+            <div className="row">
+              <label>Filter by:</label>
+            </div>
+            <div className="row">
+              <Form
+                onSubmit={this.handleFilter}
+                initialValues={{
+                  location: this.state.startLocation,
+                }}
+                render={({ handleSubmit, submitting }) => (
+                  <form onSubmit={handleSubmit}>
+                    <div className="row">
+                      <div className="column">
+                        <label>Location:</label>
+                        <Field name="location" component="select">
+                          <option value="" key="" />
+                          {this.props.locations.map((location) => {
+                            return (
+                              <option value={location.uuid} key={location.uuid}>
+                                {location.city}, {location.country}
+                              </option>
+                            );
+                          })}
+                        </Field>
+                      </div>
+                      <div>
+                        <button
+                          type="submit"
+                          color="primary"
+                          disabled={submitting}
+                        >
+                          Filter
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                )}
+              ></Form>
+            </div>
+            <div className="row">
+              <Table striped bordered hover>
+                <thead>
+                  <tr>
+                    <th>Menu</th>
+                    <th>Location</th>
+                    <th>Date</th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {this.props.recurrentSchedules.map((recurrentSchedule) => {
+                    return (
+                      <tr key={recurrentSchedule.uuid}>
+                        <td>{recurrentSchedule.menu.name}</td>
+                        <td>
+                          {recurrentSchedule.location.city},{" "}
+                          {recurrentSchedule.location.country}
+                        </td>
+                        <td>
+                          <Button
+                            variant="primary"
+                            value={recurrentSchedule.uuid}
+                            onClick={() => this.handleEdit(recurrentSchedule)}
+                          >
+                            <FontAwesomeIcon icon={faEdit} />
+                          </Button>
+                        </td>
+                        <td>
+                          <Button
+                            variant="danger"
+                            value={recurrentSchedule.uuid}
+                            onClick={() =>
+                              this.handleRemove(recurrentSchedule.uuid)
+                            }
+                          >
+                            <FontAwesomeIcon icon={faMinus} />
+                          </Button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </Table>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

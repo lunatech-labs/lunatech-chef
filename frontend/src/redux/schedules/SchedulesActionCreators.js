@@ -27,6 +27,25 @@ export const fetchSchedules = () => (dispatch) => {
     });
 };
 
+export const fetchRecurrentSchedules = () => (dispatch) => {
+  dispatch(schedulesLoading(true));
+
+  const location = localStorage.getItem("filterLocation");
+
+  var filter =
+    location === null || location === "" ? "" : "?location=" + location;
+
+  axiosInstance
+    .get("/recurrentSchedulesWithMenusInfo" + filter)
+    .then(function (response) {
+      dispatch(showAllRecurrentSchedules(response));
+    })
+    .catch(function (error) {
+      console.log("Failed loading Recurrent Schedules: " + error);
+      dispatch(schedulesLoadingFailed(error.message));
+    });
+};
+
 export const fetchSchedulesAttendance = () => (dispatch) => {
   dispatch(schedulesAttendanceLoading(true));
 
@@ -63,12 +82,43 @@ export const addNewSchedule = (newSchedule) => (dispatch) => {
   axiosInstance
     .post("/schedules", scheduleToAdd)
     .then((response) => {
+      console.log("newSchedule.recurrency " + newSchedule.recurrency);
+      console.log(
+        "parseInt(newSchedule.recurrency, 10) " +
+          parseInt(newSchedule.recurrency, 10)
+      );
+
+      if (newSchedule.recurrency > 0) {
+        dispatch(addNewRecurrentSchedule(newSchedule));
+      }
+    })
+    .then((response) => {
       dispatch(fetchSchedules());
       dispatch(fetchSchedulesAttendance());
       dispatch(fetchAttendanceUser(userUuid));
     })
     .catch(function (error) {
       console.log("Failed adding Schedule: " + error);
+      dispatch(scheduleAddingFailed(error.message));
+    });
+};
+
+export const addNewRecurrentSchedule = (newRecurrentSchedule) => (dispatch) => {
+  console.log("addNewRecurrentSchedule addNewRecurrentSchedule");
+  const scheduleToAdd = {
+    menuUuid: newRecurrentSchedule.menuUuid,
+    locationUuid: newRecurrentSchedule.locationUuid,
+    repetitionDays: newRecurrentSchedule.recurrency,
+    nextDate: newRecurrentSchedule.date,
+  };
+
+  axiosInstance
+    .post("/recurrentschedules", scheduleToAdd)
+    .then((response) => {
+      // dispatch(fetchRecurrentSchedules());
+    })
+    .catch(function (error) {
+      console.log("Failed adding Recurrent Schedule: " + error);
       dispatch(scheduleAddingFailed(error.message));
     });
 };
@@ -95,8 +145,6 @@ export const editSchedule = (editedSchedule) => (dispatch) => {
 };
 
 export const deleteSchedule = (scheduleUuid) => (dispatch) => {
-  console.log("lets remove a schedule");
-
   axiosInstance
     .delete("/schedules/" + scheduleUuid)
     .then((response) => {
@@ -118,6 +166,11 @@ export const schedulesAttendanceLoading = () => ({
 
 export const showAllSchedules = (schedules) => ({
   type: ActionTypes.SHOW_ALL_SCHEDULES,
+  payload: schedules.data,
+});
+
+export const showAllRecurrentSchedules = (schedules) => ({
+  type: ActionTypes.SHOW_ALL_RECURRENT_SCHEDULES,
   payload: schedules.data,
 });
 

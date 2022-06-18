@@ -4,6 +4,7 @@ const initState = {
   isLoading: false,
   isLoadingAttendance: false,
   schedules: [],
+  recurrentSchedules: [],
   attendance: [],
   errorListing: null,
   errorListingAttendance: null,
@@ -24,7 +25,16 @@ export const SchedulesReducer = (state = initState, action) => {
         errorEditing: null,
         errorDeleting: null,
       };
-
+    case ActionTypes.SHOW_ALL_RECURRENT_SCHEDULES:
+      return {
+        ...state,
+        recurrentSchedules: action.payload,
+        isLoading: false,
+        errorListing: null,
+        errorAdding: null,
+        errorEditing: null,
+        errorDeleting: null,
+      };
     case ActionTypes.SHOW_ALL_SCHEDULES_ATTENDANCE:
       return {
         ...state,

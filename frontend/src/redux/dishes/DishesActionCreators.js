@@ -1,10 +1,6 @@
 import * as ActionTypes from "./DishesActionTypes";
 import { axiosInstance } from "../Axios";
 import { fetchMenus } from "../menus/MenusActionCreators";
-import {
-  fetchSchedules,
-  fetchSchedulesAttendance,
-} from "../schedules/SchedulesActionCreators";
 import { fetchAttendanceUser } from "../attendance/AttendanceActionCreators";
 
 export const fetchDishes = () => (dispatch) => {

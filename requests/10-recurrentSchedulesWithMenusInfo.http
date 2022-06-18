@@ -1,0 +1,12 @@
+
+GET {{ host }}/recurrentSchedulesWithMenusInfo
+CHEF_SESSION: {{ session }}
+
+###
+
+GET {{ host }}/recurrentSchedulesWithMenusInfo?location=064ccd79-1657-4707-8384-d78fed07d06d
+CHEF_SESSION: {{ session }}
+
+###
+
+

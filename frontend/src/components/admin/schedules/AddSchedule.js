@@ -41,6 +41,7 @@ class AddSchedule extends Component {
             menuUuid: "",
             locationUuid: "",
             date: "", // not used. this.state.startDate used instead
+            recurrency: "0",
           }}
           render={({ handleSubmit, submitting, pristine }) => (
             <form onSubmit={handleSubmit}>
@@ -87,6 +88,26 @@ class AddSchedule extends Component {
                       {meta.error && meta.touched && <span>{meta.error}</span>}
                     </div>
                   )}
+                </Field>
+              </div>
+              <div>
+                <label>Repetition:</label>
+                <Field validate={required} name="recurrency" component="select">
+                  <option value="0" key="0">
+                    Single event
+                  </option>
+                  <option value="7" key="7">
+                    Every 7 days
+                  </option>
+                  <option value="14" key="14">
+                    Every 14 days
+                  </option>
+                  <option value="21" key="21">
+                    Every 21 days
+                  </option>
+                  <option value="28" key="28">
+                    Every 28 days
+                  </option>
                 </Field>
               </div>
               <div>

@@ -47,6 +47,7 @@ function RenderData({ isLoading, error, dishes, handleEdit, handleRemove }) {
                 <th>Name</th>
                 <th>Description</th>
                 <th>Vegetarian</th>
+                <th>Halal</th>
                 <th>Nuts</th>
                 <th>Seafood</th>
                 <th>Pork</th>
@@ -65,6 +66,15 @@ function RenderData({ isLoading, error, dishes, handleEdit, handleRemove }) {
                     <td>{dish.description}</td>
                     <td>
                       {dish.isVegetarian ? (
+                        <span>
+                          <FontAwesomeIcon icon={faCheck} />
+                        </span>
+                      ) : (
+                        ""
+                      )}
+                    </td>
+                    <td>
+                      {dish.isHalal ? (
                         <span>
                           <FontAwesomeIcon icon={faCheck} />
                         </span>

@@ -47,6 +47,7 @@ export const saveUserProfile = (userUuid, userProfile) => (dispatch) => {
     locationUuid: userProfile.locationUuid,
     isVegetarian: userProfile.isVegetarian,
     hasNutsRestriction: userProfile.hasNutsRestriction,
+    hasHalalRestriction: userProfile.hasHalalRestriction,
     hasSeafoodRestriction: userProfile.hasSeafoodRestriction,
     hasPorkRestriction: userProfile.hasPorkRestriction,
     hasBeefRestriction: userProfile.hasBeefRestriction,

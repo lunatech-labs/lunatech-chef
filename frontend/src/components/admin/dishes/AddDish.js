@@ -18,6 +18,7 @@ export const AddDish = (props) => {
           name: "",
           description: "",
           isVegetarian: false,
+          isHalal: false,
           hasNuts: false,
           hasSeafood: false,
           hasPork: false,
@@ -59,6 +60,10 @@ export const AddDish = (props) => {
                 type="checkbox"
               ></Field>
               <label>Is vegetarian</label>
+            </div>
+            <div>
+              <Field name="isHalal" component="input" type="checkbox"></Field>
+              <label>Is halal</label>
             </div>
             <div>
               <Field name="hasNuts" component="input" type="checkbox"></Field>

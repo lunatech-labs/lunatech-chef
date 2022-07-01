@@ -34,6 +34,7 @@ export const EditDish = (props) => {
           name: props.dish.name,
           description: props.dish.description,
           isVegetarian: props.dish.isVegetarian,
+          isHalal: props.dish.isHalal,
           hasNuts: props.dish.hasNuts,
           hasSeafood: props.dish.hasSeafood,
           hasPork: props.dish.hasPork,
@@ -75,6 +76,10 @@ export const EditDish = (props) => {
                 type="checkbox"
               ></Field>
               <label>Is vegetarian</label>
+            </div>
+            <div>
+              <Field name="isHalal" component="input" type="checkbox"></Field>
+              <label>Is halal</label>
             </div>
             <div>
               <Field name="hasNuts" component="input" type="checkbox"></Field>

@@ -6,6 +6,7 @@ CHEF_SESSION: {{ session }}
   "emailAddress": "leonor.boga@lunatech.nl",
   "locationUuid": "5a7865b3-ed05-4569-aae5-d38d8a02c490",
   "isVegetarian": "false",
+  "hasHalalRestriction": "false",
   "hasNutsRestriction": "false",
   "hasSeafoodRestriction": "false",
   "hasPorkRestriction": "true",
@@ -27,16 +28,14 @@ CHEF_SESSION: {{ session }}
 
 ###
 
-PUT {{ host }}/users/f0daa634-8ec7-4fef-88c7-a92d608b6eea
+PUT {{ host }}/users/3529bd57-94b7-4e82-b3d4-132c38d5b188
 Content-Type: application/json
 CHEF_SESSION: {{ session }}
 
 {
-  "name": "Maria Albertina",
-  "emailAddress": "maria.albertina@lunatech.nl",
-  "locationUuid": "61edaf14-b018-4ffa-afba-dc5844426176",
-  "isInactive": "false",
+  "locationUuid": "3d13f21d-a96e-4fd2-a2a9-3077f2729caf",
   "isVegetarian": "false",
+  "hasHalalRestriction": "true",
   "hasNutsRestriction": "false",
   "hasSeafoodRestriction": "false",
   "hasPorkRestriction": "true",

@@ -5,6 +5,7 @@ CHEF_SESSION: {{ session }}
 { "name": "Lasagna",
   "description": "Lasagna de ragu e espinafres",
   "isVegetarian": "false",
+  "isHalal": "true",
   "hasNuts": "false",
   "hasSeafood": "false",
   "hasPork": "true",
@@ -25,7 +26,7 @@ CHEF_SESSION: {{ session }}
 
 ###
 
-PUT {{ host }}/dishes/7399b112-59a2-44d7-bd95-c4df1dfd63e9
+PUT {{ host }}/dishes/e3f4a940-8064-4d66-ba21-23b1edb04687
 Content-Type: application/json
 CHEF_SESSION: {{ session }}
 
@@ -33,10 +34,11 @@ CHEF_SESSION: {{ session }}
   "name": "Lasagna italiana",
   "description": "Lasagna de ragu e espinafres",
   "isVegetarian": "false",
+  "isHalal": "true",
   "hasNuts": "false",
   "hasSeafood": "false",
-  "hasPork": "true",
-  "hasBeef": "false",
+  "hasPork": "false",
+  "hasBeef": "true",
   "isGlutenFree": "false",
   "hasLactose": "false"
 }

@@ -33,6 +33,7 @@ class UsersService(val database: Database) {
             set(it.emailAddress, user.emailAddress)
             set(it.locationUuid, user.locationUuid)
             set(it.isVegetarian, user.isVegetarian)
+            set(it.hasHalalRestriction, user.hasHalalRestriction)
             set(it.hasNutsRestriction, user.hasNutsRestriction)
             set(it.hasSeafoodRestriction, user.hasSeafoodRestriction)
             set(it.hasPorkRestriction, user.hasPorkRestriction)
@@ -48,6 +49,7 @@ class UsersService(val database: Database) {
         database.update(Users) {
             set(it.locationUuid, user.locationUuid)
             set(it.isVegetarian, user.isVegetarian)
+            set(it.hasHalalRestriction, user.hasHalalRestriction)
             set(it.hasNutsRestriction, user.hasNutsRestriction)
             set(it.hasSeafoodRestriction, user.hasSeafoodRestriction)
             set(it.hasPorkRestriction, user.hasPorkRestriction)

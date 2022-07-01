@@ -82,12 +82,6 @@ export const addNewSchedule = (newSchedule) => (dispatch) => {
   axiosInstance
     .post("/schedules", scheduleToAdd)
     .then((response) => {
-      console.log("newSchedule.recurrency " + newSchedule.recurrency);
-      console.log(
-        "parseInt(newSchedule.recurrency, 10) " +
-          parseInt(newSchedule.recurrency, 10)
-      );
-
       if (newSchedule.recurrency > 0) {
         dispatch(addNewRecurrentSchedule(newSchedule));
       }
@@ -115,7 +109,7 @@ export const addNewRecurrentSchedule = (newRecurrentSchedule) => (dispatch) => {
   axiosInstance
     .post("/recurrentschedules", scheduleToAdd)
     .then((response) => {
-      // dispatch(fetchRecurrentSchedules());
+      dispatch(fetchRecurrentSchedules());
     })
     .catch(function (error) {
       console.log("Failed adding Recurrent Schedule: " + error);

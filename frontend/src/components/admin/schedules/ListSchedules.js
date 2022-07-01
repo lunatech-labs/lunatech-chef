@@ -104,6 +104,9 @@ class ListSchedules extends Component {
             </div>
           ) : (
             <div className="container">
+              <div>
+                <h4 className="row">Single Schedules</h4>
+              </div>
               <div className="row">
                 <label>Filter by:</label>
               </div>
@@ -216,7 +219,7 @@ class ListSchedules extends Component {
           )}
         </div>
         <div>
-          <h3 className="mt-4">Management of Recurrent Schedules</h3>
+          <h4 className="mt-4">Recurrent Schedules</h4>
         </div>
         <div>
           <ShowError error={this.props.errorAdding} reason="adding" />
@@ -241,7 +244,6 @@ class ListSchedules extends Component {
                   <tr>
                     <th>Menu</th>
                     <th>Location</th>
-                    <th>Date</th>
                     <th></th>
                     <th></th>
                   </tr>

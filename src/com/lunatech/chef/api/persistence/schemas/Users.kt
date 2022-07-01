@@ -13,6 +13,7 @@ object Users : BaseTable<User>("users") {
     val emailAddress = varchar("email_address")
     val locationUuid = uuid("location_uuid")
     val isVegetarian = boolean("is_vegetarian")
+    val hasHalalRestriction = boolean("has_halal_restriction")
     val hasNutsRestriction = boolean("has_nuts_restriction")
     val hasSeafoodRestriction = boolean("has_seafood_restriction")
     val hasPorkRestriction = boolean("has_pork_restriction")
@@ -29,6 +30,7 @@ object Users : BaseTable<User>("users") {
         emailAddress = row[emailAddress] ?: DEFAULT_STRING,
         locationUuid = row[locationUuid] ?: DEFAULT_UUID,
         isVegetarian = row[isVegetarian] ?: DEFAULT_FALSE,
+        hasHalalRestriction = row[hasHalalRestriction] ?: DEFAULT_FALSE,
         hasNutsRestriction = row[hasNutsRestriction] ?: DEFAULT_FALSE,
         hasSeafoodRestriction = row[hasSeafoodRestriction] ?: DEFAULT_FALSE,
         hasPorkRestriction = row[hasPorkRestriction] ?: DEFAULT_FALSE,

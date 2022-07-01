@@ -13,6 +13,7 @@ export const UserProfile = (props) => {
         initialValues={{
           locationUuid: props.user.locationUuid,
           isVegetarian: props.user.isVegetarian,
+          hasHalalRestriction: props.user.hasHalalRestriction,
           hasNutsRestriction: props.user.hasNutsRestriction,
           hasSeafoodRestriction: props.user.hasSeafoodRestriction,
           hasPorkRestriction: props.user.hasPorkRestriction,
@@ -59,6 +60,14 @@ export const UserProfile = (props) => {
                 type="checkbox"
               ></Field>
               <label>Vegetarian</label>
+            </div>
+            <div>
+              <Field
+                name="hasHalalRestriction"
+                component="input"
+                type="checkbox"
+              ></Field>
+              <label>I only eat halal food</label>
             </div>
             <div>
               <Field

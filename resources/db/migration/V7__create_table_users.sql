@@ -4,6 +4,7 @@
   email_address VARCHAR(100) NOT NULL,
   location_uuid UUID,
   is_vegetarian BOOLEAN NOT NULL DEFAULT FALSE,
+  has_halal_restriction BOOLEAN NOT NULL DEFAULT FALSE,
   has_nuts_restriction BOOLEAN NOT NULL DEFAULT FALSE,
   has_seafood_restriction BOOLEAN NOT NULL DEFAULT FALSE,
   has_pork_restriction BOOLEAN NOT NULL DEFAULT FALSE,

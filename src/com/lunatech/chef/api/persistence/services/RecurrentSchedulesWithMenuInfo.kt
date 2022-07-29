@@ -44,21 +44,29 @@ class RecurrentSchedulesWithMenuInfo(
         database.from(RecurrentSchedules).select()
             .where { (RecurrentSchedules.uuid eq uuid) and (RecurrentSchedules.isDeleted eq false) }
             .map { RecurrentSchedules.createEntity(it) }
-            .map { schedule ->
-                val menu = menusWithDishesService.getByUuid(schedule.menuUuid)
+            .map { recSchedule ->
+                val menu = menusWithDishesService.getByUuid(recSchedule.menuUuid)
                 val location = database.from(Locations).select()
-                    .where { Locations.uuid eq schedule.locationUuid }
+                    .where { Locations.uuid eq recSchedule.locationUuid }
                     .map { Locations.createEntity(it) }.firstOrNull()
 
-                RecurrentScheduleWithMenuInfo(schedule.uuid, menu!!, schedule.nextDate, location!!)
+                RecurrentScheduleWithMenuInfo(
+                    recSchedule.uuid, menu!!,
+                    recSchedule.nextDate,
+                    location!!,
+                    recSchedule.repetitionDays)
             }
 
-    private fun getScheduleWithMenuInfo(recurrentSchedule: RecurrentSchedule): RecurrentScheduleWithMenuInfo {
-        val menu = menusWithDishesService.getByUuid(recurrentSchedule.menuUuid)
+    private fun getScheduleWithMenuInfo(recSchedule: RecurrentSchedule): RecurrentScheduleWithMenuInfo {
+        val menu = menusWithDishesService.getByUuid(recSchedule.menuUuid)
         val location = database.from(Locations).select()
-            .where { Locations.uuid eq recurrentSchedule.locationUuid }
+            .where { Locations.uuid eq recSchedule.locationUuid }
             .map { Locations.createEntity(it) }.firstOrNull()
 
-        return RecurrentScheduleWithMenuInfo(recurrentSchedule.uuid, menu!!, recurrentSchedule.nextDate, location!!)
+        return RecurrentScheduleWithMenuInfo(
+            recSchedule.uuid, menu!!,
+            recSchedule.nextDate,
+            location!!,
+            recSchedule.repetitionDays)
     }
 }

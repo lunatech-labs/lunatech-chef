@@ -35,5 +35,6 @@ data class RecurrentScheduleWithMenuInfo(
   val uuid: UUID,
   val menu: MenuWithDishes,
   val nextDate: LocalDate,
-  val location: Location
+  val location: Location,
+  val repetitionDays: Int
 )

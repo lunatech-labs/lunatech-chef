@@ -29,6 +29,7 @@ import {
   addNewSchedule,
   editSchedule,
   deleteSchedule,
+  deleteRecurrentSchedule,
 } from "../redux/schedules/SchedulesActionCreators";
 import {
   fetchAttendanceUser,
@@ -133,6 +134,9 @@ const mapDispatchToProps = (dispatch) => ({
   // Recurrent Schedules
   fetchRecurrentSchedules: () => {
     dispatch(fetchRecurrentSchedules());
+  },
+  deleteRecurrentSchedule: (scheduleUuid) => {
+    dispatch(deleteRecurrentSchedule(scheduleUuid));
   },
   //
   // Attendance
@@ -280,6 +284,7 @@ class Main extends Component {
           recurrentSchedules={this.props.schedules.recurrentSchedules}
           locations={this.props.locations.locations}
           deleteSchedule={this.props.deleteSchedule}
+          deleteRecurrentSchedule={this.props.deleteRecurrentSchedule}
           errorListing={this.props.schedules.errorListing}
           errorAdding={this.props.schedules.errorAdding}
           errorEditing={this.props.schedules.errorEditing}

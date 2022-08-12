@@ -24,7 +24,7 @@ class ListSchedules extends Component {
   constructor(props) {
     super();
     this.handleEdit = this.handleEdit.bind(this);
-    this.handleRemove = this.handleRemove.bind(this);
+    this.handleRemoveSchedule = this.handleRemoveSchedule.bind(this);
     this.handleDateChange = this.handleDateChange.bind(this);
     this.handleFilter = this.handleFilter.bind(this);
 
@@ -50,8 +50,12 @@ class ListSchedules extends Component {
     this.props.history.push("/editschedule", schedule);
   };
 
-  handleRemove = (uuid) => {
+  handleRemoveSchedule = (uuid) => {
     this.props.deleteSchedule(uuid);
+  };
+
+  handleRemoveRecurrentSchedule = (uuid) => {
+    this.props.deleteRecurrentSchedule(uuid);
   };
 
   handleFilter = (values) => {
@@ -72,7 +76,7 @@ class ListSchedules extends Component {
     return (
       <div className="container">
         <div>
-          <h3 className="mt-4">Management of Schedules</h3>
+          <h3 className="mt-4">Management of Scheduled Menus</h3>
         </div>
         <Link to={`/newSchedule`}>
           <button type="button" className="btn btn-success">
@@ -105,7 +109,8 @@ class ListSchedules extends Component {
           ) : (
             <div className="container">
               <div>
-                <h4 className="row">Single Schedules</h4>
+                <h4 className="row">Schedule of Menus</h4>
+                <h5 className="mt-4">Where and when a menu will be served</h5>
               </div>
               <div className="row">
                 <label>Filter by:</label>
@@ -204,7 +209,9 @@ class ListSchedules extends Component {
                             <Button
                               variant="danger"
                               value={schedule.uuid}
-                              onClick={() => this.handleRemove(schedule.uuid)}
+                              onClick={() =>
+                                this.handleRemoveSchedule(schedule.uuid)
+                              }
                             >
                               <FontAwesomeIcon icon={faMinus} />
                             </Button>
@@ -220,6 +227,10 @@ class ListSchedules extends Component {
         </div>
         <div>
           <h4 className="mt-4">Recurrent Schedules</h4>
+          <h5 className="mt-4">
+            A list of menus that will be scheduled automatically based on it's
+            recurrency
+          </h5>
         </div>
         <div>
           <ShowError error={this.props.errorAdding} reason="adding" />
@@ -244,6 +255,8 @@ class ListSchedules extends Component {
                   <tr>
                     <th>Menu</th>
                     <th>Location</th>
+                    <th>Recurrency (days)</th>
+                    <th>Next date</th>
                     <th></th>
                     <th></th>
                   </tr>
@@ -256,6 +269,13 @@ class ListSchedules extends Component {
                         <td>
                           {recurrentSchedule.location.city},{" "}
                           {recurrentSchedule.location.country}
+                        </td>
+                        <td>{recurrentSchedule.repetitionDays}</td>
+                        <td>
+                          {" "}
+                          {recurrentSchedule.nextDate[2]}{" "}
+                          {ToMonth(recurrentSchedule.nextDate[1])}{" "}
+                          {recurrentSchedule.nextDate[0]}
                         </td>
                         <td>
                           <Button
@@ -271,7 +291,9 @@ class ListSchedules extends Component {
                             variant="danger"
                             value={recurrentSchedule.uuid}
                             onClick={() =>
-                              this.handleRemove(recurrentSchedule.uuid)
+                              this.handleRemoveRecurrentSchedule(
+                                recurrentSchedule.uuid
+                              )
                             }
                           >
                             <FontAwesomeIcon icon={faMinus} />

@@ -98,7 +98,6 @@ export const addNewSchedule = (newSchedule) => (dispatch) => {
 };
 
 export const addNewRecurrentSchedule = (newRecurrentSchedule) => (dispatch) => {
-  console.log("addNewRecurrentSchedule addNewRecurrentSchedule");
   const scheduleToAdd = {
     menuUuid: newRecurrentSchedule.menuUuid,
     locationUuid: newRecurrentSchedule.locationUuid,
@@ -118,6 +117,20 @@ export const addNewRecurrentSchedule = (newRecurrentSchedule) => (dispatch) => {
 };
 
 export const editSchedule = (editedSchedule) => (dispatch) => {
+  console.log(
+    "editSchedule edited with recurrency" + editedSchedule.recurrency
+  );
+  if (editedSchedule.recurrency > 0) {
+    dispatch(editRecurrentSchedule(editedSchedule));
+  } else {
+    dispatch(editSingleSchedule(editedSchedule));
+  }
+};
+
+export const editSingleSchedule = (editedSchedule) => (dispatch) => {
+  console.log(
+    "editSingleSchedule edited with recurrency" + editedSchedule.recurrency
+  );
   const sheduleToEdit = {
     menuUuid: editedSchedule.menuUuid,
     locationUuid: editedSchedule.locationUuid,
@@ -138,11 +151,46 @@ export const editSchedule = (editedSchedule) => (dispatch) => {
     });
 };
 
+export const editRecurrentSchedule = (editedSchedule) => (dispatch) => {
+  console.log("called editRecurrentSchedule ");
+  const recScheduleToEdit = {
+    menuUuid: editedSchedule.menuUuid,
+    locationUuid: editedSchedule.locationUuid,
+    repetitionDays: editedSchedule.recurrency,
+    nextDate: editedSchedule.date,
+  };
+
+  const userUuid = localStorage.getItem("userUuid");
+  axiosInstance
+    .put("/recurrentschedules/" + editedSchedule.uuid, recScheduleToEdit)
+    .then((response) => {
+      dispatch(fetchRecurrentSchedules());
+      dispatch(fetchSchedulesAttendance());
+      dispatch(fetchAttendanceUser(userUuid));
+    })
+    .catch(function (error) {
+      console.log("Failed editing Recurrent Schedule: " + error);
+      dispatch(scheduleAddingFailed(error.message));
+    });
+};
+
 export const deleteSchedule = (scheduleUuid) => (dispatch) => {
   axiosInstance
     .delete("/schedules/" + scheduleUuid)
     .then((response) => {
       dispatch(fetchSchedules());
+    })
+    .catch(function (error) {
+      console.log("Failed removing Schedule: " + error);
+      dispatch(scheduleDeletingFailed(error.message));
+    });
+};
+
+export const deleteRecurrentSchedule = (recScheduleUuid) => (dispatch) => {
+  axiosInstance
+    .delete("/recurrentschedules/" + recScheduleUuid)
+    .then((response) => {
+      dispatch(fetchRecurrentSchedules());
     })
     .catch(function (error) {
       console.log("Failed removing Schedule: " + error);

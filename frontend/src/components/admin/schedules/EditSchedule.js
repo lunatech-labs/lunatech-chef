@@ -23,6 +23,7 @@ function RenderData({
   menus,
   locations,
   startDate,
+  isRecurrent,
 }) {
   return (
     <Form
@@ -31,6 +32,7 @@ function RenderData({
         menuUuid: schedule.menu.uuid,
         locationUuid: schedule.location.uuid,
         date: startDate,
+        recurrency: isRecurrent ? schedule.repetitionDays : "0",
       }}
       render={({ handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit}>
@@ -60,21 +62,49 @@ function RenderData({
               })}
             </Field>
           </div>
-          <div>
-            <Field name="date" component="input">
-              {({ input, meta }) => (
-                <div>
-                  <label>Choose the date:</label>
-                  <DatePicker
-                    selected={startDate}
-                    onChange={handleChange}
-                    dateFormat="dd-MM-yyyy"
-                  />
-                  {meta.error && meta.touched && <span>{meta.error}</span>}
-                </div>
-              )}
-            </Field>
-          </div>
+          {!isRecurrent /** Only modify date for single schedules  */ ? (
+            <div>
+              <Field name="date" component="input">
+                {({ input, meta }) => (
+                  <div>
+                    <label>Choose the date:</label>
+                    <DatePicker
+                      selected={startDate}
+                      onChange={handleChange}
+                      dateFormat="dd-MM-yyyy"
+                    />
+                    {meta.error && meta.touched && <span>{meta.error}</span>}
+                  </div>
+                )}
+              </Field>
+            </div>
+          ) : (
+            <div></div>
+          )}
+          {isRecurrent /** A single schedule cannot be made recurrent  */ ? (
+            <div>
+              <label>Repetition:</label>
+              <Field validate={required} name="recurrency" component="select">
+                <option value="0" key="0">
+                  Single event
+                </option>
+                <option value="7" key="7">
+                  Every 7 days
+                </option>
+                <option value="14" key="14">
+                  Every 14 days
+                </option>
+                <option value="21" key="21">
+                  Every 21 days
+                </option>
+                <option value="28" key="28">
+                  Every 28 days
+                </option>
+              </Field>
+            </div>
+          ) : (
+            <div></div>
+          )}
           <div>
             <button type="submit" color="primary" disabled={submitting}>
               Save Schedule
@@ -86,6 +116,22 @@ function RenderData({
   );
 }
 
+const getInitialDate = (schedule) => {
+  if ("date" in schedule) {
+    return new Date().setFullYear(
+      schedule.date[0],
+      schedule.date[1] - 1,
+      schedule.date[2]
+    );
+  } else {
+    return new Date().setFullYear(
+      schedule.nextDate[0],
+      schedule.nextDate[1] - 1,
+      schedule.nextDate[2]
+    );
+  }
+};
+
 class EditSchedule extends Component {
   constructor(props) {
     super(props);
@@ -93,13 +139,7 @@ class EditSchedule extends Component {
   }
 
   state = {
-    startDate: new Date(
-      new Date().setFullYear(
-        this.props.schedule.date[0],
-        this.props.schedule.date[1] - 1,
-        this.props.schedule.date[2]
-      )
-    ),
+    startDate: new Date(getInitialDate(this.props.schedule)),
   };
 
   handleChange = (date) => {
@@ -118,10 +158,7 @@ class EditSchedule extends Component {
         date: shortDate,
       };
       // filterDate to refresh fetchSchedules
-      this.props.editSchedule(
-        editedSchedule,
-        localStorage.getItem("filterDate")
-      );
+      this.props.editSchedule(editedSchedule);
       this.props.history.push("/allschedules");
     };
 
@@ -138,6 +175,7 @@ class EditSchedule extends Component {
           menus={this.props.menus}
           locations={this.props.locations}
           startDate={this.state.startDate}
+          isRecurrent={"repetitionDays" in this.props.schedule ? true : false}
         />
         <ShowError error={this.props.error} />
       </div>

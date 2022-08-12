@@ -8,17 +8,6 @@ CHEF_SESSION: {{ session }}
   "nextDate":"2022-07-30"
 }
 
-###
-
-POST {{ host }}/recurrentschedules
-Content-Type: application/json
-CHEF_SESSION: {{ session }}
-
-{ "menuUuid":"bc0b999e-a202-47e5-9485-529134273837",
-  "locationUuid":"8b06e81d-4065-4139-bb42-88ef31393227",
-  "repetitionDays":"7",
-  "nextDate":"2022-07-30"
-}
 
 ###
 

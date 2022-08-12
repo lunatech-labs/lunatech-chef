@@ -184,17 +184,15 @@ fun Application.module() {
             files("frontend/build")
         }
 
-        //
-
-        // TODO handles edition of schedules and recurrent schedules
-        // Add script that grabs recurrent schedules and creates schedules
+        // TODO Add script that grabs recurrent schedules and creates schedules
 
         // TODO delete all related attendance when deleting schedules, if is a future schedule
         // TODO delete recurrent schedule when deleting a schedule
 
-        // TODO calling PUT with and uuid that does exist throws error
+        // TODO add cancel buttons to add/edit panels to improve navigation
+        // TODO calling PUT with an uuid that does exist throws error
 
-        // TODO How to choose a specific dish instead of a whole menu?
+        // TODO How to sign up for a specific dish instead of a whole menu?
         // TODO FE user profile updates is not showing possible errors
         // TODO proper error when calling endpoint that does not exist
         // TODO HTTPS

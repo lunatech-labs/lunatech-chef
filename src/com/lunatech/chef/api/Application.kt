@@ -39,8 +39,11 @@ import com.lunatech.chef.api.routes.schedulesWithAttendanceInfo
 import com.lunatech.chef.api.routes.schedulesWithMenusInfo
 import com.lunatech.chef.api.routes.users
 import com.lunatech.chef.api.routes.validateSession
+import com.lunatech.chef.api.schedulers.schedulerTrigger
 import com.typesafe.config.ConfigFactory
 import io.ktor.application.Application
+import io.ktor.application.ApplicationStarted
+import io.ktor.application.ApplicationStopped
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.auth.Authentication
@@ -67,6 +70,7 @@ import io.ktor.sessions.header
 import java.io.File
 import java.util.Collections
 import mu.KotlinLogging
+import org.quartz.impl.StdSchedulerFactory
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 private val logger = KotlinLogging.logger {}
@@ -97,6 +101,9 @@ fun Application.module() {
     val usersService = UsersService(dbConnection)
     val attendancesService = AttendancesService(dbConnection, usersService)
     val attendancesWithInfoService = AttendancesWithScheduleInfoService(dbConnection, schedulesService, menusWithDishesService)
+
+    val scheduler = StdSchedulerFactory.getDefaultScheduler()
+    schedulerTrigger(scheduler)
 
     val CHEF_SESSSION = "CHEF_SESSION"
     install(CORS) {
@@ -154,6 +161,15 @@ fun Application.module() {
             logger.info("*********** allowedRoles: {}", allowedRoles)
             true
         }
+    }
+
+    environment.monitor.subscribe(ApplicationStarted) {
+        logger.info("The chef app is ready to roll")
+        scheduler.start()
+    }
+    environment.monitor.subscribe(ApplicationStopped) {
+        logger.info("Time to clean up")
+        scheduler.shutdown()
     }
 
     logger.info { "Booting up!!" }

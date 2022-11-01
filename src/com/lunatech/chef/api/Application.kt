@@ -78,9 +78,13 @@ private val logger = KotlinLogging.logger {}
 @Suppress("unused") // Referenced in application.conf
 @ExperimentalStdlibApi
 fun Application.module() {
+    KotlinModule.Builder()
+
     val config = ConfigFactory.load()
     val dbConfig = FlywayConfig.fromConfig(config.getConfig("database"))
     val authConfig = AuthConfig.fromConfig(config.getConfig("auth"))
+    val cronString = config.getString("recurrent-schedules-cron")
+
 
     val verifier = GoogleIdTokenVerifier.Builder(NetHttpTransport(), JacksonFactory.getDefaultInstance())
         .setAudience(Collections.singletonList(authConfig.clientId))
@@ -103,7 +107,7 @@ fun Application.module() {
     val attendancesWithInfoService = AttendancesWithScheduleInfoService(dbConnection, schedulesService, menusWithDishesService)
 
     val scheduler = StdSchedulerFactory.getDefaultScheduler()
-    schedulerTrigger(scheduler)
+    schedulerTrigger(scheduler, schedulesService, recurrentSchedulesService, cronString)
 
     val CHEF_SESSSION = "CHEF_SESSION"
     install(CORS) {
@@ -122,7 +126,6 @@ fun Application.module() {
         jackson {
             configure(SerializationFeature.INDENT_OUTPUT, true)
             registerModule(JavaTimeModule()) // support java.time.* types
-            registerModule(KotlinModule())
         }
     }
 
@@ -169,7 +172,7 @@ fun Application.module() {
     }
     environment.monitor.subscribe(ApplicationStopped) {
         logger.info("Time to clean up")
-        scheduler.shutdown()
+//        scheduler.shutdown() # the shutdown is problematic
     }
 
     logger.info { "Booting up!!" }

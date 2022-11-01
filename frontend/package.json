@@ -37,7 +37,8 @@
     "sockjs": "0.3.20",
     "ssri": "6.0.2",
     "typescript": "^4.1.3",
-    "url-parse": "1.5.1"
+    "url-parse": "1.5.1",
+    "yarn": "^1.22.19"
   },
   "scripts": {
     "start": "react-scripts start",

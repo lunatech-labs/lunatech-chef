@@ -39,8 +39,11 @@ import com.lunatech.chef.api.routes.schedulesWithAttendanceInfo
 import com.lunatech.chef.api.routes.schedulesWithMenusInfo
 import com.lunatech.chef.api.routes.users
 import com.lunatech.chef.api.routes.validateSession
+import com.lunatech.chef.api.schedulers.schedulerTrigger
 import com.typesafe.config.ConfigFactory
 import io.ktor.application.Application
+import io.ktor.application.ApplicationStarted
+import io.ktor.application.ApplicationStopped
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.auth.Authentication
@@ -67,6 +70,7 @@ import io.ktor.sessions.header
 import java.io.File
 import java.util.Collections
 import mu.KotlinLogging
+import org.quartz.impl.StdSchedulerFactory
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 private val logger = KotlinLogging.logger {}
@@ -74,9 +78,13 @@ private val logger = KotlinLogging.logger {}
 @Suppress("unused") // Referenced in application.conf
 @ExperimentalStdlibApi
 fun Application.module() {
+    KotlinModule.Builder()
+
     val config = ConfigFactory.load()
     val dbConfig = FlywayConfig.fromConfig(config.getConfig("database"))
     val authConfig = AuthConfig.fromConfig(config.getConfig("auth"))
+    val cronString = config.getString("recurrent-schedules-cron")
+
 
     val verifier = GoogleIdTokenVerifier.Builder(NetHttpTransport(), JacksonFactory.getDefaultInstance())
         .setAudience(Collections.singletonList(authConfig.clientId))
@@ -98,6 +106,9 @@ fun Application.module() {
     val attendancesService = AttendancesService(dbConnection, usersService)
     val attendancesWithInfoService = AttendancesWithScheduleInfoService(dbConnection, schedulesService, menusWithDishesService)
 
+    val scheduler = StdSchedulerFactory.getDefaultScheduler()
+    schedulerTrigger(scheduler, schedulesService, recurrentSchedulesService, cronString)
+
     val CHEF_SESSSION = "CHEF_SESSION"
     install(CORS) {
         method(HttpMethod.Options)
@@ -115,7 +126,6 @@ fun Application.module() {
         jackson {
             configure(SerializationFeature.INDENT_OUTPUT, true)
             registerModule(JavaTimeModule()) // support java.time.* types
-            registerModule(KotlinModule())
         }
     }
 
@@ -154,6 +164,15 @@ fun Application.module() {
             logger.info("*********** allowedRoles: {}", allowedRoles)
             true
         }
+    }
+
+    environment.monitor.subscribe(ApplicationStarted) {
+        logger.info("The chef app is ready to roll")
+        scheduler.start()
+    }
+    environment.monitor.subscribe(ApplicationStopped) {
+        logger.info("Time to clean up")
+//        scheduler.shutdown() # the shutdown is problematic
     }
 
     logger.info { "Booting up!!" }

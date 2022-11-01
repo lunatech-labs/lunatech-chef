@@ -60,6 +60,7 @@ dependencies {
     implementation "org.postgresql:postgresql:$postgresql_version"
     implementation "org.ktorm:ktorm-core:$ktorm_version"
     implementation "uy.kohesive.injekt:injekt-core:$injekt_version"
+    implementation "org.quartz-scheduler:quartz:2.3.2"
     testImplementation "io.ktor:ktor-server-tests:$ktor_version"
 }
 

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Jumbotron } from "react-bootstrap";
+import Jumbotron from "react-bootstrap/Jumbotron";
 import "../../css/simple-sidebar.css";
 
 class Header extends Component {

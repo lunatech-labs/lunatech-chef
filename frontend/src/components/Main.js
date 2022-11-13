@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Switch, Route, Redirect, withRouter, Link } from "react-router-dom";
-import { Button } from "react-bootstrap";
+import Button from "react-bootstrap/Button";
 import Header from "./shared/Header";
 import Footer from "./shared/Footer";
 import { connect } from "react-redux";

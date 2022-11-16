@@ -1,13 +1,13 @@
 import React from "react";
 import { Form, Field } from "react-final-form";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-export const AddMenu = (props) => {
-  let history = useHistory();
+export function AddMenu(props) {
+  let navigate = useNavigate();
   const required = (value) => (value ? undefined : "Required");
   const onSubmit = (values) => {
     props.addNewMenu(values);
-    history.push("/allmenus");
+    navigate.push("/allmenus");
   };
 
   function RenderData() {

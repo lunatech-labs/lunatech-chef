@@ -1,9 +1,9 @@
 import React from "react";
 import { Form, Field } from "react-final-form";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-export const EditMenu = (props) => {
-  let history = useHistory();
+export function EditMenu(props) {
+  let navigate = useNavigate();
   const required = (value) => (value ? undefined : "Required");
   const onSubmit = (values) => {
     let editedMenu = {
@@ -11,7 +11,7 @@ export const EditMenu = (props) => {
       uuid: props.menu.uuid,
     };
     props.editMenu(editedMenu);
-    history.push("/allmenus");
+    navigate.push("/allmenus");
   };
 
   function ShowError({ error }) {

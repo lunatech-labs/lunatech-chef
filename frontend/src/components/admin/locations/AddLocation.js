@@ -1,13 +1,13 @@
 import React from "react";
 import { Form, Field } from "react-final-form";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-export const AddLocation = (props) => {
-  let history = useHistory();
+export function AddLocation(props) {
+  let navigate = useNavigate();
   const required = (value) => (value ? undefined : "Required");
   const onSubmit = (values) => {
     props.addNewLocation(values);
-    history.push("/alllocations");
+    navigate.push("/alllocations");
   };
 
   function RenderData() {

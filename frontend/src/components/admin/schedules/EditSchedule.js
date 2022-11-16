@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
 import { Form, Field } from "react-final-form";
 import DatePicker from "react-datepicker";
 
@@ -183,4 +182,4 @@ class EditSchedule extends Component {
   }
 }
 
-export default withRouter(EditSchedule);
+export default EditSchedule;

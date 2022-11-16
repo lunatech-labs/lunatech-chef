@@ -1,9 +1,9 @@
 import React from "react";
 import { Form, Field } from "react-final-form";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-export const EditLocation = (props) => {
-  let history = useHistory();
+export function EditLocation(props) {
+  let navigate = useNavigate();
   const required = (value) => (value ? undefined : "Required");
   const onSubmit = (values) => {
     let editedLoc = {
@@ -11,7 +11,7 @@ export const EditLocation = (props) => {
       uuid: props.location.uuid,
     };
     props.editLocation(editedLoc);
-    history.push("/alllocations");
+    navigate.push("/alllocations");
   };
 
   function ShowError({ error }) {

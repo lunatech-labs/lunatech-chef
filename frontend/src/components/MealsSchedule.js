@@ -1,5 +1,5 @@
 import React from "react";
-import { Table } from "react-bootstrap";
+import Table from "react-bootstrap/Table";
 import { Loading } from "./shared/Loading";
 import { Form, Field } from "react-final-form";
 import { ToMonth } from "./shared/Functions";

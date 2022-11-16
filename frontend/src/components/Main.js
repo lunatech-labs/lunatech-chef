@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Switch, Route, Redirect, withRouter, Link } from "react-router-dom";
+import { Route, Routes, Navigate, Link } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Header from "./shared/Header";
 import Footer from "./shared/Footer";
@@ -42,25 +42,25 @@ import {
   saveUserProfile,
 } from "../redux/users/UsersActionCreators";
 import "../css/simple-sidebar.css";
-import ErrorBoundary from "./shared/ErrorBoundary";
-import ListDishes from "./admin/dishes/ListDishes";
 import { AddDish } from "./admin/dishes/AddDish";
 import { EditDish } from "./admin/dishes/EditDish";
-import ListLocations from "./admin/locations/ListLocations";
 import { AddLocation } from "./admin/locations/AddLocation";
 import { EditLocation } from "./admin/locations/EditLocation";
-import ListMenus from "./admin/menus/ListMenus";
 import { AddMenu } from "./admin/menus/AddMenu";
 import { EditMenu } from "./admin/menus/EditMenu";
-import Login from "./auth/Login";
-import ProtectedRoute from "./auth/ProtectedRoute";
-import ListSchedules from "./admin/schedules/ListSchedules";
-import AddSchedule from "./admin/schedules/AddSchedule";
-import EditSchedule from "./admin/schedules/EditSchedule";
 import { MealsAttendance } from "./MealsSchedule";
-import WhoIsJoining from "./WhoIsJoining";
 import { WhoIsJoiningListing } from "./WhoIsJoiningListing";
 import { UserProfile } from "./UserProfile";
+import AddSchedule from "./admin/schedules/AddSchedule";
+import ErrorBoundary from "./shared/ErrorBoundary";
+import EditSchedule from "./admin/schedules/EditSchedule";
+import ListDishes from "./admin/dishes/ListDishes";
+import ListMenus from "./admin/menus/ListMenus";
+import ListLocations from "./admin/locations/ListLocations";
+import ListSchedules from "./admin/schedules/ListSchedules";
+import Login from "./auth/Login";
+import WhoIsJoining from "./WhoIsJoining";
+import ProtectedRoutes from "./auth/ProtectedRoutes";
 
 const mapStateToProps = (state) => {
   return {
@@ -414,84 +414,42 @@ class Main extends Component {
                 </Link>
               </div>
             </div>
-            <Switch>
+            <Routes>
               {/* do not use the same routes as the ones available in the BE server */}
-              <ProtectedRoute
+              <Route
                 path="/whoisjoining"
-                component={WhoIsJoiningSchedule}
-                isAdmin={this.props.user.isAdmin}
+                element={<WhoIsJoiningSchedule />}
               />
-              <ProtectedRoute
+              <Route
                 path="/whoisjoininglisting"
-                component={WhoIsJoiningScheduleList}
-                isAdmin={this.props.user.isAdmin}
+                element={<WhoIsJoiningScheduleList />}
               />
+              <Route element={<ProtectedRoutes isAdmin={this.props.user.isAdmin} />}>
+                <Route path="/alllocations" element={<AllLocations />} />
+                <Route path="/newlocation" element={<AddNewLocation />} />
+                <Route path="/editlocation" element={<EditExistingLocation />} />
 
-              <ProtectedRoute
-                path="/alllocations"
-                component={AllLocations}
-                isAdmin={this.props.user.isAdmin}
+                <Route path="/alldishes" element={<AllDishes />} />
+                <Route path="/newdish" element={<AddNewDish />} />
+                <Route path="/editdish" element={<EditExistingDish />} />
+
+                <Route path="/allmenus" element={<AllMenus />} />
+                <Route path="/newmenu" element={<AddNewMenu />} />
+                <Route path="/editmenu" element={<EditExistingMenu />} />
+
+                <Route path="/allschedules" element={<AllSchedules />} />
+                <Route path="/newschedule" element={<AddNewSchedule />} />
+                <Route path="/editschedule" element={<EditExistingSchedule />} />
+
+              </Route>
+              <Route path="/loginUser" element={<LoginUser />} />
+              <Route path="/userProfile" element={<Profile />} />
+              <Route path="/" element={<ShowAttendance />} />
+              <Route
+                path="*"
+                element={<Navigate to="/" replace />}
               />
-              <ProtectedRoute
-                path="/newlocation"
-                component={AddNewLocation}
-                isAdmin={this.props.user.isAdmin}
-              />
-              <ProtectedRoute
-                path="/editlocation"
-                component={EditExistingLocation}
-                isAdmin={this.props.user.isAdmin}
-              />
-              <ProtectedRoute
-                path="/alldishes"
-                component={AllDishes}
-                isAdmin={this.props.user.isAdmin}
-              />
-              <ProtectedRoute
-                path="/newdish"
-                component={AddNewDish}
-                isAdmin={this.props.user.isAdmin}
-              />
-              <ProtectedRoute
-                path="/editdish"
-                component={EditExistingDish}
-                isAdmin={this.props.user.isAdmin}
-              />
-              <ProtectedRoute
-                path="/allmenus"
-                component={AllMenus}
-                isAdmin={this.props.user.isAdmin}
-              />
-              <ProtectedRoute
-                path="/newmenu"
-                component={AddNewMenu}
-                isAdmin={this.props.user.isAdmin}
-              />
-              <ProtectedRoute
-                path="/editmenu"
-                component={EditExistingMenu}
-                isAdmin={this.props.user.isAdmin}
-              />
-              <ProtectedRoute
-                path="/allschedules"
-                component={AllSchedules}
-                isAdmin={this.props.user.isAdmin}
-              />
-              <ProtectedRoute
-                path="/newschedule"
-                component={AddNewSchedule}
-                isAdmin={this.props.user.isAdmin}
-              />
-              <ProtectedRoute
-                path="/editschedule"
-                component={EditExistingSchedule}
-                isAdmin={this.props.user.isAdmin}
-              />
-              <Route path="/loginUser" component={LoginUser} />
-              <Route path="/userProfile" component={Profile} />
-              <Route path="/" component={ShowAttendance} />
-              <Redirect to="/" />
-            </Switch>
+            </Routes>
             <div className="d-flex">
               <Footer />
             </div>
@@ -500,10 +458,11 @@ class Main extends Component {
           <div className="d-flex" id="wrapper">
             <LoginUser />
           </div>
-        )}
+        )
+        }
       </ErrorBoundary>
     );
   }
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));
+export default connect(mapStateToProps, mapDispatchToProps)(Main);

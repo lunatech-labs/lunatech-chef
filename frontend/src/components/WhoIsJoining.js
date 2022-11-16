@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -193,4 +192,4 @@ class WhoIsJoining extends Component {
   }
 }
 
-export default withRouter(WhoIsJoining);
+export default WhoIsJoining;

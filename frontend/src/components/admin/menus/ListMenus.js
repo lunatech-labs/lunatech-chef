@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link, withRouter } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import { Loading } from "../../shared/Loading";
@@ -131,4 +131,4 @@ class ListMenus extends Component {
   }
 }
 
-export default withRouter(ListMenus);
+export default ListMenus;

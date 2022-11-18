@@ -180,7 +180,7 @@ class Main extends Component {
     };
 
     const WhoIsJoiningScheduleList = () => {
-      return <WhoIsJoiningListing listAttendants={this.props.location.state} />;
+      return <WhoIsJoiningListing />;
     };
 
     const AllDishes = () => {

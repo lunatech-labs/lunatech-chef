@@ -3,11 +3,11 @@ import { Form, Field } from "react-final-form";
 import { useNavigate } from "react-router-dom";
 
 export function AddLocation(props) {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
   const required = (value) => (value ? undefined : "Required");
   const onSubmit = (values) => {
     props.addNewLocation(values);
-    navigate.push("/alllocations");
+    navigate("/alllocations");
   };
 
   function RenderData() {

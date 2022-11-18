@@ -1,8 +1,11 @@
 import React from "react";
 import Table from "react-bootstrap/Table";
+import { useLocation } from "react-router-dom";
 
-export const WhoIsJoiningListing = (props) => {
-  function RenderData({ attendances }) {
+export const WhoIsJoiningListing = () => {
+  const attendances = useLocation().state;
+
+  function RenderData() {
     return (
       <div className="container">
         <div className="row">
@@ -28,7 +31,7 @@ export const WhoIsJoiningListing = (props) => {
         <h3 className="mt-4">Who is joining?</h3>
       </div>
       <div>
-        <RenderData attendances={props.listAttendants} />
+        <RenderData />
       </div>
     </div>
   );

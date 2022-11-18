@@ -1,14 +1,17 @@
 import React from "react";
 import { Form, Field } from "react-final-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export function EditDish(props) {
   const navigate = useNavigate();
   const required = (value) => (value ? undefined : "Required");
+
+  const dish = useLocation().state;
+
   const onSubmit = (values) => {
     let editedDish = {
       ...values,
-      uuid: props.dish.uuid,
+      uuid: dish.uuid,
     };
     props.editDish(editedDish);
     navigate("/alldishes");
@@ -31,16 +34,16 @@ export function EditDish(props) {
       <Form
         onSubmit={onSubmit}
         initialValues={{
-          name: props.dish.name,
-          description: props.dish.description,
-          isVegetarian: props.dish.isVegetarian,
-          isHalal: props.dish.isHalal,
-          hasNuts: props.dish.hasNuts,
-          hasSeafood: props.dish.hasSeafood,
-          hasPork: props.dish.hasPork,
-          hasBeef: props.dish.hasBeef,
-          isGlutenFree: props.dish.isGlutenFree,
-          hasLactose: props.dish.hasLactose,
+          name: dish.name,
+          description: dish.description,
+          isVegetarian: dish.isVegetarian,
+          isHalal: dish.isHalal,
+          hasNuts: dish.hasNuts,
+          hasSeafood: dish.hasSeafood,
+          hasPork: dish.hasPork,
+          hasBeef: dish.hasBeef,
+          isGlutenFree: dish.isGlutenFree,
+          hasLactose: dish.hasLactose,
         }}
         render={({ handleSubmit, submitting }) => (
           <form onSubmit={handleSubmit}>

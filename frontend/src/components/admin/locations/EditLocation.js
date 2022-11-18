@@ -1,14 +1,17 @@
 import React from "react";
 import { Form, Field } from "react-final-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export function EditLocation(props) {
-  const navigate = useNavigate();
   const required = (value) => (value ? undefined : "Required");
+
+  const location = useLocation().state;
+
+  const navigate = useNavigate();
   const onSubmit = (values) => {
     let editedLoc = {
       ...values,
-      uuid: props.location.uuid,
+      uuid: location.uuid,
     };
     props.editLocation(editedLoc);
     navigate("/alllocations");
@@ -31,8 +34,8 @@ export function EditLocation(props) {
       <Form
         onSubmit={onSubmit}
         initialValues={{
-          city: props.location.city,
-          country: props.location.country,
+          city: location.city,
+          country: location.country,
         }}
         render={({ handleSubmit, submitting }) => (
           <form onSubmit={handleSubmit}>

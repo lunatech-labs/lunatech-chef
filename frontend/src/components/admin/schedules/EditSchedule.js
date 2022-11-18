@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Form, Field } from "react-final-form";
 import DatePicker from "react-datepicker";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function EditSchedule(props) {
   function ShowError({ error }) {
@@ -17,51 +17,14 @@ export default function EditSchedule(props) {
   }
 
   function RenderData({ isRecurrent }) {
-    const required = (value) => (value ? undefined : "Required");
-
-    const getInitialDate = (schedule) => {
-      if ("date" in schedule) {
-        return new Date().setFullYear(
-          schedule.date[0],
-          schedule.date[1] - 1,
-          schedule.date[2]
-        );
-      } else {
-        return new Date().setFullYear(
-          schedule.nextDate[0],
-          schedule.nextDate[1] - 1,
-          schedule.nextDate[2]
-        );
-      }
-    };
-
-    const [date, setDate] = useState(new Date(getInitialDate(props.schedule)));
-
-    const handleChange = (date) => {
-      setDate(date)
-    };
-
-    const navigate = useNavigate();
-    const onSubmit = (values) => {
-      let shortDate = date.toISOString().substring(0, 10);
-      let editedSchedule = {
-        ...values,
-        uuid: props.schedule.uuid,
-        date: shortDate,
-      };
-      // filterDate to refresh fetchSchedules
-      props.editSchedule(editedSchedule);
-      navigate("/allschedules");
-    };
-
     return (
       <Form
         onSubmit={onSubmit}
         initialValues={{
-          menuUuid: props.schedule.menu.uuid,
-          locationUuid: props.schedule.location.uuid,
+          menuUuid: schedule.menu.uuid,
+          locationUuid: schedule.location.uuid,
           date: date,
-          recurrency: isRecurrent ? props.schedule.repetitionDays : "0",
+          recurrency: isRecurrent ? schedule.repetitionDays : "0",
         }}
         render={({ handleSubmit, submitting }) => (
           <form onSubmit={handleSubmit}>
@@ -145,13 +108,52 @@ export default function EditSchedule(props) {
     );
   }
 
+  const required = (value) => (value ? undefined : "Required");
+
+  const getInitialDate = (schedule) => {
+    if ("date" in schedule) {
+      return new Date().setFullYear(
+        schedule.date[0],
+        schedule.date[1] - 1,
+        schedule.date[2]
+      );
+    } else {
+      return new Date().setFullYear(
+        schedule.nextDate[0],
+        schedule.nextDate[1] - 1,
+        schedule.nextDate[2]
+      );
+    }
+  };
+
+  const schedule = useLocation().state;
+
+  const [date, setDate] = useState(new Date(getInitialDate(schedule)));
+
+  const handleChange = (date) => {
+    setDate(date)
+  };
+
+  const navigate = useNavigate();
+  const onSubmit = (values) => {
+    let shortDate = date.toISOString().substring(0, 10);
+    let editedSchedule = {
+      ...values,
+      uuid: schedule.uuid,
+      date: shortDate,
+    };
+    // filterDate to refresh fetchSchedules
+    props.editSchedule(editedSchedule);
+    navigate("/allschedules");
+  };
+
   return (
     <div className="container">
       <div>
         <h3 className="mt-4">Editing Schedule</h3>
       </div>
       <RenderData
-        isRecurrent={"repetitionDays" in props.schedule ? true : false}
+        isRecurrent={"repetitionDays" in schedule ? true : false}
       />
       <ShowError error={props.error} />
     </div>

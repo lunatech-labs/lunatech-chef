@@ -42,7 +42,7 @@ class RecurrentSchedulesWithMenuInfo(
 
     fun getByUuid(uuid: UUID): List<RecurrentScheduleWithMenuInfo> =
         database.from(RecurrentSchedules).select()
-            .where { (RecurrentSchedules.uuid eq uuid) and (RecurrentSchedules.isDeleted eq false) }
+            .where {RecurrentSchedules.uuid eq uuid}
             .map { RecurrentSchedules.createEntity(it) }
             .map { recSchedule ->
                 val menu = menusWithDishesService.getByUuid(recSchedule.menuUuid)
@@ -62,6 +62,11 @@ class RecurrentSchedulesWithMenuInfo(
         val location = database.from(Locations).select()
             .where { Locations.uuid eq recSchedule.locationUuid }
             .map { Locations.createEntity(it) }.firstOrNull()
+
+        println("Inside getScheduleWithMenuInfo")
+        println("recSchedule: ${recSchedule}")
+        println("menu: ${menu}")
+        println("location: ${location}")
 
         return RecurrentScheduleWithMenuInfo(
             recSchedule.uuid, menu!!,

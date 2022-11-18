@@ -180,7 +180,7 @@ class Main extends Component {
     };
 
     const WhoIsJoiningScheduleList = () => {
-      return <WhoIsJoiningListing listAttendants={this.props.location.state} />;
+      return <WhoIsJoiningListing />;
     };
 
     const AllDishes = () => {
@@ -206,7 +206,6 @@ class Main extends Component {
       return (
         <EditDish
           editDish={this.props.editDish}
-          dish={this.props.location.state}
           error={this.props.dishes.errorEditing}
         />
       );
@@ -235,7 +234,6 @@ class Main extends Component {
       return (
         <EditLocation
           editLocation={this.props.editLocation}
-          location={this.props.location.state}
           error={this.props.locations.errorEditing}
         />
       );
@@ -269,7 +267,6 @@ class Main extends Component {
       return (
         <EditMenu
           editMenu={this.props.editMenu}
-          menu={this.props.location.state}
           dishes={this.props.dishes.dishes}
           error={this.props.menus.errorEditing}
         />
@@ -310,7 +307,6 @@ class Main extends Component {
       return (
         <EditSchedule
           editSchedule={this.props.editSchedule}
-          schedule={this.props.location.state}
           menus={this.props.menus.menus}
           locations={this.props.locations.locations}
           error={this.props.menus.errorEditing}

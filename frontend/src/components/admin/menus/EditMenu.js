@@ -3,7 +3,7 @@ import { Form, Field } from "react-final-form";
 import { useNavigate } from "react-router-dom";
 
 export function EditMenu(props) {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
   const required = (value) => (value ? undefined : "Required");
   const onSubmit = (values) => {
     let editedMenu = {
@@ -11,7 +11,7 @@ export function EditMenu(props) {
       uuid: props.menu.uuid,
     };
     props.editMenu(editedMenu);
-    navigate.push("/allmenus");
+    navigate("/allmenus");
   };
 
   function ShowError({ error }) {

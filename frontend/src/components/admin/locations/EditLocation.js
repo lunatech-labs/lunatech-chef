@@ -3,7 +3,7 @@ import { Form, Field } from "react-final-form";
 import { useNavigate } from "react-router-dom";
 
 export function EditLocation(props) {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
   const required = (value) => (value ? undefined : "Required");
   const onSubmit = (values) => {
     let editedLoc = {
@@ -11,7 +11,7 @@ export function EditLocation(props) {
       uuid: props.location.uuid,
     };
     props.editLocation(editedLoc);
-    navigate.push("/alllocations");
+    navigate("/alllocations");
   };
 
   function ShowError({ error }) {

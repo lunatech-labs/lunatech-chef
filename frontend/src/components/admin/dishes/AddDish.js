@@ -3,11 +3,11 @@ import { Form, Field } from "react-final-form";
 import { useNavigate } from "react-router-dom";
 
 export function AddDish(props) {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
   const required = (value) => (value ? undefined : "Required");
   const onSubmit = (values) => {
     props.addNewDish(values);
-    navigate.push("/alldishes");
+    navigate("/alldishes");
   };
 
   function RenderData() {

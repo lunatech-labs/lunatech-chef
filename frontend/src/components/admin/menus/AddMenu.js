@@ -3,11 +3,11 @@ import { Form, Field } from "react-final-form";
 import { useNavigate } from "react-router-dom";
 
 export function AddMenu(props) {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
   const required = (value) => (value ? undefined : "Required");
   const onSubmit = (values) => {
     props.addNewMenu(values);
-    navigate.push("/allmenus");
+    navigate("/allmenus");
   };
 
   function RenderData() {

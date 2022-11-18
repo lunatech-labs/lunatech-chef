@@ -3,7 +3,7 @@ import { Form, Field } from "react-final-form";
 import { useNavigate } from "react-router-dom";
 
 export function EditDish(props) {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
   const required = (value) => (value ? undefined : "Required");
   const onSubmit = (values) => {
     let editedDish = {
@@ -11,7 +11,7 @@ export function EditDish(props) {
       uuid: props.dish.uuid,
     };
     props.editDish(editedDish);
-    navigate.push("/alldishes");
+    navigate("/alldishes");
   };
 
   function ShowError({ error }) {

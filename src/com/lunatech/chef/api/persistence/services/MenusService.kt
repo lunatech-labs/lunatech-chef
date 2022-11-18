@@ -39,7 +39,7 @@ class MenusService(val database: Database) {
         val menuName =
             database
             .from(MenuNames)
-            .select().where { (MenuNames.uuid eq uuid) and (MenuNames.isDeleted eq false) }
+            .select().where {MenuNames.uuid eq uuid}
             .map { MenuNames.createEntity(it) }
             .firstOrNull()
 

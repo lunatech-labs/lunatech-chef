@@ -234,7 +234,6 @@ class Main extends Component {
       return (
         <EditLocation
           editLocation={this.props.editLocation}
-          location={this.props.location.state}
           error={this.props.locations.errorEditing}
         />
       );

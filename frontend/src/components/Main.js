@@ -206,7 +206,6 @@ class Main extends Component {
       return (
         <EditDish
           editDish={this.props.editDish}
-          dish={this.props.location.state}
           error={this.props.dishes.errorEditing}
         />
       );

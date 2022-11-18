@@ -1,14 +1,17 @@
 import React from "react";
 import { Form, Field } from "react-final-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export function EditMenu(props) {
-  const navigate = useNavigate();
   const required = (value) => (value ? undefined : "Required");
+
+  const menu = useLocation().state;
+
+  const navigate = useNavigate();
   const onSubmit = (values) => {
     let editedMenu = {
       ...values,
-      uuid: props.menu.uuid,
+      uuid: menu.uuid,
     };
     props.editMenu(editedMenu);
     navigate("/allmenus");
@@ -31,8 +34,8 @@ export function EditMenu(props) {
       <Form
         onSubmit={onSubmit}
         initialValues={{
-          name: props.menu.name,
-          dishesUuids: props.menu.dishes.map((dish) => dish.uuid),
+          name: menu.name,
+          dishesUuids: menu.dishes.map((dish) => dish.uuid),
         }}
         render={({ handleSubmit, submitting }) => (
           <form onSubmit={handleSubmit}>

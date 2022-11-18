@@ -267,7 +267,6 @@ class Main extends Component {
       return (
         <EditMenu
           editMenu={this.props.editMenu}
-          menu={this.props.location.state}
           dishes={this.props.dishes.dishes}
           error={this.props.menus.errorEditing}
         />

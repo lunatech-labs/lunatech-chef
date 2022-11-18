@@ -307,7 +307,6 @@ class Main extends Component {
       return (
         <EditSchedule
           editSchedule={this.props.editSchedule}
-          schedule={this.props.location.state}
           menus={this.props.menus.menus}
           locations={this.props.locations.locations}
           error={this.props.menus.errorEditing}

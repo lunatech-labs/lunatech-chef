@@ -28,7 +28,7 @@ export default function WhoIsJoining(props) {
 
     localStorage.setItem("filterDateWhoIsJoining", shortDate);
     localStorage.setItem("filterLocationWhoIsJoining", choosenLocation);
-    this.props.filter(shortDate, values.location);
+    props.filter(shortDate, values.location);
   };
 
   const navigate = useNavigate();

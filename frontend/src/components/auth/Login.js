@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { GoogleLogin } from "react-google-login";
+import { GoogleLogin } from '@react-oauth/google';
 
 class Login extends Component {
   constructor(props) {
@@ -10,8 +10,8 @@ class Login extends Component {
   }
 
   handleLogin(response) {
-    console.log("tokenId: " + response.tokenId);
-    this.props.login(response.tokenId);
+    console.log("tokenId: " + response.credential);
+    this.props.login(response.credential);
   }
 
   handleLoginFailure(response) {
@@ -24,15 +24,12 @@ class Login extends Component {
         <h2>Lunatech Chef</h2>
         <p>
           You must be a Lunatech employee with a valid Google account to use
-          this software. <br />
+          this software.<br />
         </p>
         <GoogleLogin
-          clientId={process.env.REACT_APP_CLIENT_ID}
-          buttonText="Sign in with Google"
           onSuccess={this.handleLogin}
-          onFailure={this.handleLoginFailure}
-          cookiePolicy={"single_host_origin"}
-          responseType="code,token"
+          onError={this.handleLoginFailure}
+          useOneTap
         />
       </div>
     );

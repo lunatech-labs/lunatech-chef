@@ -202,8 +202,6 @@ fun Application.module() {
             files("frontend/build")
         }
 
-        // TODO Add script that grabs recurrent schedules and creates schedules
-
         // TODO delete all related attendance when deleting schedules, if is a future schedule
         // TODO delete recurrent schedule when deleting a schedule
 
@@ -219,8 +217,6 @@ fun Application.module() {
         // TODO integration with people API ?
         // TODO integration with vacation app ?
         // TODO Automatically add people to a schedule
-        // TODO reports -> asked Shelley how they should look like, but she couldn't say
-        // TODO replace google sign-in by google identity, check for a new react-google-login
     }
 }
 

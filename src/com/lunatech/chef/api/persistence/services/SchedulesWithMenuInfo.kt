@@ -51,7 +51,7 @@ class SchedulesWithMenuInfo(
 
     fun getByUuid(uuid: UUID): List<ScheduleWithMenuInfo> =
         database.from(Schedules).select()
-            .where {Schedules.uuid eq uuid }
+            .where { Schedules.uuid eq uuid }
             .map { Schedules.createEntity(it) }
             .map { schedule ->
                 val menu = menusWithDishesService.getByUuid(schedule.menuUuid)

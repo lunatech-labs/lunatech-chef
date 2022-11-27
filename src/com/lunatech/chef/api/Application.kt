@@ -85,7 +85,6 @@ fun Application.module() {
     val authConfig = AuthConfig.fromConfig(config.getConfig("auth"))
     val cronString = config.getString("recurrent-schedules-cron")
 
-
     val verifier = GoogleIdTokenVerifier.Builder(NetHttpTransport(), JacksonFactory.getDefaultInstance())
         .setAudience(Collections.singletonList(authConfig.clientId))
         .build()

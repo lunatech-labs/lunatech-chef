@@ -6,7 +6,6 @@ import com.lunatech.chef.api.persistence.schemas.DishesOnMenus
 import com.lunatech.chef.api.persistence.schemas.MenuNames
 import java.util.UUID
 import org.ktorm.database.Database
-import org.ktorm.dsl.and
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.from
 import org.ktorm.dsl.leftJoin
@@ -35,7 +34,7 @@ class MenusWithDishesNamesService(val database: Database) {
         val menuName =
             database
                 .from(MenuNames)
-                .select().where {MenuNames.uuid eq uuid }
+                .select().where { MenuNames.uuid eq uuid }
                 .map { MenuNames.createEntity(it) }
                 .firstOrNull()
 

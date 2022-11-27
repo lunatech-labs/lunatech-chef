@@ -7,7 +7,6 @@ import com.lunatech.chef.api.persistence.schemas.MenuNames
 import com.lunatech.chef.api.routes.UpdatedMenu
 import java.util.UUID
 import org.ktorm.database.Database
-import org.ktorm.dsl.and
 import org.ktorm.dsl.delete
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.from
@@ -39,7 +38,7 @@ class MenusService(val database: Database) {
         val menuName =
             database
             .from(MenuNames)
-            .select().where {MenuNames.uuid eq uuid}
+            .select().where { MenuNames.uuid eq uuid }
             .map { MenuNames.createEntity(it) }
             .firstOrNull()
 

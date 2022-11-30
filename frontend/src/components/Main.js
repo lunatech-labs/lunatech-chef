@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Route, Routes, Navigate, Link } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Header from "./shared/Header";
-import Footer from "./shared/Footer";
 import { connect } from "react-redux";
 import {
   fetchDishes,
@@ -446,9 +445,6 @@ class Main extends Component {
                 element={<Navigate to="/" replace />}
               />
             </Routes>
-            <div className="d-flex">
-              <Footer />
-            </div>
           </div>
         ) : (
           <div className="d-flex" id="wrapper">

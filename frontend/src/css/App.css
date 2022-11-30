@@ -1,33 +1,44 @@
-.row-header{
-    margin:0px auto;
-    padding:0px auto;
+.row {
+    margin: 5px auto;
+}
+
+.row-header {
+    margin: 0px auto;
+    padding: 0px auto;
 }
 
 .row-content {
-    margin:0px auto;
+    margin: 0px auto;
     padding: 50px 0px 50px 0px;
     border-bottom: 1px ridge;
-    min-height:400px;
+    min-height: 400px;
 }
 
-.footer{
-    background-color: #D1C4E9;
-    margin:0px auto;
-    padding: 20px 0px 20px 0px;
-}
 .jumbotron {
-    padding:70px 30px 70px 30px;
-    margin:0px auto;
-    background: #9575CD ;
-    color:floralwhite;
+    padding: 70px 30px 70px 30px;
+    margin: 0px auto;
+    background: #9575CD;
+    color: floralwhite;
 }
 
-address{
-    font-size:80%;
-    margin:0px;
-    color:#0f0f0f;
+address {
+    font-size: 80%;
+    margin: 0px;
+    color: #0f0f0f;
 }
 
 .navbar-dark {
     background-color: #512DA8;
+}
+
+.select {
+    display: grid;
+}
+
+.datePicker>div>div.react-datepicker__input-container input {
+    width: 100%;
+}
+
+.table {
+    margin-left: 10px;
 }

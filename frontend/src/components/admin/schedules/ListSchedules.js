@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import { Loading } from "../../shared/Loading";
@@ -14,9 +16,9 @@ export default function ListSchedules(props) {
   function ShowError({ error, reason }) {
     if (error) {
       return (
-        <h4>
+        <Row>
           An error ocurred when {reason} a schedule: {error}
-        </h4>
+        </Row>
       );
     } else {
       return <div></div>;
@@ -63,7 +65,7 @@ export default function ListSchedules(props) {
   };
 
   return (
-    <div className="container">
+    <Container>
       <div>
         <h3 className="mt-4">Management of Scheduled Menus</h3>
       </div>
@@ -80,31 +82,29 @@ export default function ListSchedules(props) {
         <ShowError error={props.errorDeleting} reason="deleting" />
         <ShowError error={props.errorEditing} reason="saving" />
         {props.isLoading ? (
-          <div className="container">
-            <div className="row">
-              <Loading />
-            </div>
-          </div>
+          <Row>
+            <Loading />
+          </Row>
         ) : (
           <div></div>
         )}
         {props.errorListing ? (
-          <div>
+          <Row>
             <h4>
               An error ocurred when fetching Schedules from server:{" "}
               {props.errorListing}
             </h4>
-          </div>
+          </Row>
         ) : (
-          <div className="container">
-            <div>
-              <h4 className="row">Schedule of Menus</h4>
+          <div>
+            <Row>
+              <h4 >Schedule of Menus</h4>
               <h5 className="mt-4">Where and when a menu will be served</h5>
-            </div>
-            <div className="row">
+            </Row>
+            <Row>
               <label>Filter by:</label>
-            </div>
-            <div className="row">
+            </Row>
+            <Row>
               <Form
                 onSubmit={handleFilter}
                 initialValues={{
@@ -113,10 +113,10 @@ export default function ListSchedules(props) {
                 }}
                 render={({ handleSubmit, submitting }) => (
                   <form onSubmit={handleSubmit}>
-                    <div className="row">
+                    <Row>
                       <div className="column">
                         <label>Location:</label>
-                        <Field name="location" component="select">
+                        <Field name="location" component="select"> # className="select"
                           <option value="" key="" />
                           {props.locations.map((location) => {
                             return (
@@ -133,7 +133,7 @@ export default function ListSchedules(props) {
                       <div className="column">
                         <Field name="date" component="input">
                           {({ input, meta }) => (
-                            <div>
+                            <div className="datePicker" >
                               <label>Date:</label>
                               <DatePicker
                                 selected={startDateSchedule}
@@ -156,12 +156,12 @@ export default function ListSchedules(props) {
                           Filter
                         </button>
                       </div>
-                    </div>
+                    </Row>
                   </form>
                 )}
               ></Form>
-            </div>
-            <div className="row">
+            </Row>
+            <Row>
               <Table striped bordered hover>
                 <thead>
                   <tr>
@@ -209,7 +209,7 @@ export default function ListSchedules(props) {
                   })}
                 </tbody>
               </Table>
-            </div>
+            </Row>
           </div>
         )}
       </div>
@@ -225,72 +225,68 @@ export default function ListSchedules(props) {
         <ShowError error={props.errorDeleting} reason="deleting" />
         <ShowError error={props.errorEditing} reason="saving" />
         {props.isLoading ? (
-          <div className="container">
-            <div className="row">
-              <Loading />
-            </div>
-          </div>
+          <Row>
+            <Loading />
+          </Row>
         ) : (
           <div></div>
         )}
-        <div className="container">
-          <div className="row">
-            <label>Filter by:</label>
-          </div>
-          <div className="row">
-            <Table striped bordered hover>
-              <thead>
-                <tr>
-                  <th>Menu</th>
-                  <th>Location</th>
-                  <th>Recurrency (days)</th>
-                  <th>Next date</th>
-                  <th></th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {props.recurrentSchedules.map((recurrentSchedule) => {
-                  return (
-                    <tr key={recurrentSchedule.uuid}>
-                      <td>{recurrentSchedule.menu.name}</td>
-                      <td>
-                        {recurrentSchedule.location.city},{" "}
-                        {recurrentSchedule.location.country}
-                      </td>
-                      <td>{recurrentSchedule.repetitionDays}</td>
-                      <td>
-                        {" "}
-                        {recurrentSchedule.nextDate[2]}{" "}
-                        {ToMonth(recurrentSchedule.nextDate[1])}{" "}
-                        {recurrentSchedule.nextDate[0]}
-                      </td>
-                      <td>
-                        <Button
-                          variant="primary"
-                          value={recurrentSchedule.uuid}
-                          onClick={() => handleEdit(recurrentSchedule)}
-                        >
-                          <FontAwesomeIcon icon={faEdit} />
-                        </Button>
-                      </td>
-                      <td>
-                        <Button
-                          variant="danger"
-                          value={recurrentSchedule.uuid}
-                          onClick={() => handleRemoveRecurrentSchedule(recurrentSchedule.uuid)}
-                        >
-                          <FontAwesomeIcon icon={faMinus} />
-                        </Button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </Table>
-          </div>
-        </div>
+        <Row>
+          <label>Filter by:</label>
+        </Row>
+        <Row>
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>Menu</th>
+                <th>Location</th>
+                <th>Recurrency (days)</th>
+                <th>Next date</th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {props.recurrentSchedules.map((recurrentSchedule) => {
+                return (
+                  <tr key={recurrentSchedule.uuid}>
+                    <td>{recurrentSchedule.menu.name}</td>
+                    <td>
+                      {recurrentSchedule.location.city},{" "}
+                      {recurrentSchedule.location.country}
+                    </td>
+                    <td>{recurrentSchedule.repetitionDays}</td>
+                    <td>
+                      {" "}
+                      {recurrentSchedule.nextDate[2]}{" "}
+                      {ToMonth(recurrentSchedule.nextDate[1])}{" "}
+                      {recurrentSchedule.nextDate[0]}
+                    </td>
+                    <td>
+                      <Button
+                        variant="primary"
+                        value={recurrentSchedule.uuid}
+                        onClick={() => handleEdit(recurrentSchedule)}
+                      >
+                        <FontAwesomeIcon icon={faEdit} />
+                      </Button>
+                    </td>
+                    <td>
+                      <Button
+                        variant="danger"
+                        value={recurrentSchedule.uuid}
+                        onClick={() => handleRemoveRecurrentSchedule(recurrentSchedule.uuid)}
+                      >
+                        <FontAwesomeIcon icon={faMinus} />
+                      </Button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </Table>
+        </Row>
       </div>
-    </div>
+    </Container>
   );
 }

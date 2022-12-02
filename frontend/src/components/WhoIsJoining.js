@@ -3,10 +3,9 @@ import { useNavigate } from "react-router-dom";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import Container from 'react-bootstrap/Container';
+import Accordion from 'react-bootstrap/Accordion';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faList } from "@fortawesome/free-solid-svg-icons";
 import { Loading } from "./shared/Loading";
 import { ToMonth } from "./shared/Functions";
 import { Form, Field } from "react-final-form";
@@ -123,45 +122,43 @@ export default function WhoIsJoining(props) {
             ></Form>
           </Row >
           <Row></Row>
-          <Row>
-            <Table striped bordered hover>
-              <thead>
-                <tr>
-                  <th>Menu</th>
-                  <th>Location</th>
-                  <th>Date</th>
-                  <th>Number attendants</th>
-                  <th>See details</th>
-                </tr>
-              </thead>
-              <tbody>
-                {attendances.map((attendance) => {
-                  return (
-                    <tr key={attendance.uuid}>
-                      <td>{attendance.menuName}</td>
-                      <td>
-                        {attendance.location.city}, {attendance.location.country}
-                      </td>
-                      <td>
-                        {attendance.date[2]} {ToMonth(attendance.date[1])}{" "}
-                        {attendance.date[0]}
-                      </td>
-                      <td>{attendance.attendants.length}</td>
-                      <td>
-                        <Button
-                          variant="primary"
-                          value={attendance.uuid}
-                          onClick={() => handleDetails(attendance.attendants)}
-                        >
-                          <FontAwesomeIcon icon={faList} />
-                        </Button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </Table>
-          </Row>
+          <Table striped bordered>
+            <thead>
+              <tr key="head">
+                <td>Menu</td>
+                <td>Location</td>
+                <td>Date</td>
+                <td>Total attendants</td>
+              </tr>
+            </thead>
+          </Table>
+          <Accordion>
+            {attendances.map((attendance) => {
+              return (
+                <Accordion.Item eventKey={attendance.uuid}>
+                  <Accordion.Header>
+                    <Col>{attendance.menuName}</Col>
+                    <Col>{attendance.location.city}, {attendance.location.country}</Col>
+                    <Col>{attendance.date[2]} {ToMonth(attendance.date[1])} {attendance.date[0]}</Col>
+                    <Col>{attendance.attendants.length}</Col>
+                  </Accordion.Header>
+                  <Accordion.Body>
+                    <Table striped bordered hover>
+                      <tbody>
+                        {attendance.attendants.map((name) => {
+                          return (
+                            <tr key={name}>
+                              <td>{name}</td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </Table>
+                  </Accordion.Body>
+                </Accordion.Item>
+              );
+            })}
+          </Accordion>
         </div >
       );
     }

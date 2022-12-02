@@ -48,7 +48,6 @@ import { EditLocation } from "./admin/locations/EditLocation";
 import { AddMenu } from "./admin/menus/AddMenu";
 import { EditMenu } from "./admin/menus/EditMenu";
 import { MealsAttendance } from "./MealsSchedule";
-import { WhoIsJoiningListing } from "./WhoIsJoiningListing";
 import { UserProfile } from "./UserProfile";
 import AddSchedule from "./admin/schedules/AddSchedule";
 import ErrorBoundary from "./shared/ErrorBoundary";
@@ -176,10 +175,6 @@ class Main extends Component {
           filter={this.props.fetchSchedulesAttendance}
         />
       );
-    };
-
-    const WhoIsJoiningScheduleList = () => {
-      return <WhoIsJoiningListing />;
     };
 
     const AllDishes = () => {
@@ -414,10 +409,6 @@ class Main extends Component {
               <Route
                 path="/whoisjoining"
                 element={<WhoIsJoiningSchedule />}
-              />
-              <Route
-                path="/whoisjoininglisting"
-                element={<WhoIsJoiningScheduleList />}
               />
               <Route element={<ProtectedRoutes isAdmin={this.props.user.isAdmin} />}>
                 <Route path="/alllocations" element={<AllLocations />} />

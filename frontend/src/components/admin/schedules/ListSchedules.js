@@ -98,6 +98,7 @@ export default function ListSchedules(props) {
           </Row>
         ) : (
           <div>
+
             <Row>
               <Form
                 onSubmit={handleFilter}
@@ -108,8 +109,7 @@ export default function ListSchedules(props) {
                 render={({ handleSubmit, submitting }) => (
                   <form onSubmit={handleSubmit}>
                     <Row>
-                      <Col lg="2">
-                        <label>Location:</label>
+                      <Col lg="2">Location:
                       </Col>
                       <Col lg="3">
                         <div className="select">
@@ -128,8 +128,7 @@ export default function ListSchedules(props) {
                     </Row>
 
                     <Row>
-                      <Col lg="2">
-                        <label>Date:</label>
+                      <Col lg="2">Date:
                       </Col>
                       <Col lg="3">
                         <Field name="date" component="input" >
@@ -140,8 +139,7 @@ export default function ListSchedules(props) {
                                 onChange={handleDateChange}
                                 dateFormat="dd-MM-yyyy"
                               />
-                              {meta.error && meta.touched && (
-                                <span>{meta.error}</span>
+                              {meta.error && meta.touched && (<span className="text-danger">  {meta.error}</span>
                               )}
                             </div>
                           )}

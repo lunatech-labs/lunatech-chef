@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { Form, Field } from "react-final-form";
 import DatePicker from "react-datepicker";
 import { useNavigate } from "react-router-dom";
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
 
 export default function AddSchedule(props) {
   function RenderData() {
@@ -34,80 +37,97 @@ export default function AddSchedule(props) {
         }}
         render={({ handleSubmit, submitting, pristine }) => (
           <form onSubmit={handleSubmit}>
-            <div>
-              <label>Choose the menu:</label>
-              <Field validate={required} name="menuUuid" component="select">
-                <option value="" />
-                {props.menus.map((menu) => {
-                  return (
-                    <option value={menu.uuid} key={menu.uuid}>
-                      {menu.name}
+            <Row>
+              <Col lg="2">Choose menu:</Col>
+              <Col lg="3">
+                <div className="select">
+                  <Field validate={required} name="menuUuid" component="select"> # className="select"
+                    <option value="" />
+                    {props.menus.map((menu) => {
+                      return (
+                        <option value={menu.uuid} key={menu.uuid}>
+                          {menu.name}
+                        </option>
+                      );
+                    })}
+                  </Field>
+                </div>
+              </Col>
+            </Row>
+            <Row>
+              <Col lg="2">Choose location:</Col>
+              <Col lg="3">
+                <div className="select">
+                  <Field
+                    validate={required}
+                    name="locationUuid"
+                    component="select"
+                  >
+                    <option value="" />
+                    {props.locations.map((location) => {
+                      return (
+                        <option value={location.uuid} key={location.uuid}>
+                          {location.city}, {location.country}
+                        </option>
+                      );
+                    })}
+                  </Field>
+                </div>
+              </Col>
+            </Row>
+            <Row>
+              <Col lg="2">Choose date:</Col>
+              <Col lg="3">
+                <Field name="date" component="input">
+                  {({ meta }) => (
+                    <div className="datePicker" >
+                      <DatePicker
+                        selected={date}
+                        onChange={handleChange}
+                        dateFormat="dd-MM-yyyy"
+                      />
+                    </div>
+                  )}
+                </Field>
+              </Col>
+            </Row>
+            <Row>
+              <Col lg="2">Repetition:</Col>
+              <Col lg="3">
+                <div className="select">
+                  <Field validate={required} name="recurrency" component="select">
+                    <option value="0" key="0">
+                      Single event
                     </option>
-                  );
-                })}
-              </Field>
-            </div>
-            <div>
-              <label>Choose the location:</label>
-              <Field
-                validate={required}
-                name="locationUuid"
-                component="select"
-              >
-                <option value="" />
-                {props.locations.map((location) => {
-                  return (
-                    <option value={location.uuid} key={location.uuid}>
-                      {location.city}, {location.country}
+                    <option value="7" key="7">
+                      Every 7 days
                     </option>
-                  );
-                })}
-              </Field>
-            </div>
-            <div>
-              <Field name="date" component="input">
-                {({ meta }) => (
-                  <div>
-                    <label>Choose the date:</label>
-                    <DatePicker
-                      selected={date}
-                      onChange={handleChange}
-                      dateFormat="dd-MM-yyyy"
-                    />
-                    {meta.error && meta.touched && <span>{meta.error}</span>}
-                  </div>
-                )}
-              </Field>
-            </div>
-            <div>
-              <label>Repetition:</label>
-              <Field validate={required} name="recurrency" component="select">
-                <option value="0" key="0">
-                  Single event
-                </option>
-                <option value="7" key="7">
-                  Every 7 days
-                </option>
-                <option value="14" key="14">
-                  Every 14 days
-                </option>
-                <option value="21" key="21">
-                  Every 21 days
-                </option>
-                <option value="28" key="28">
-                  Every 28 days
-                </option>
-              </Field>
-            </div>
-            <div>
-              <button
-                type="submit"
-                color="primary"
-                disabled={submitting || pristine}
-              >
-                Add Schedule
-              </button>
-            </div>
+                    <option value="14" key="14">
+                      Every 14 days
+                    </option>
+                    <option value="21" key="21">
+                      Every 21 days
+                    </option>
+                    <option value="28" key="28">
+                      Every 28 days
+                    </option>
+                  </Field>
+                </div>
+              </Col>
+            </Row>
+            <Row>
+              <Col lg="5">
+                <div className="d-grid">
+                  <Button
+                    type="submit"
+                    variant="success"
+                    disabled={submitting || pristine}
+                  >
+                    Add Schedule
+                  </Button>
+                </div>
+              </Col>
+            </Row>
           </form>
         )}
       ></Form>

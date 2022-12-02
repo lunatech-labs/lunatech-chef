@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import { Loading } from "../../shared/Loading";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
@@ -98,13 +99,6 @@ export default function ListSchedules(props) {
         ) : (
           <div>
             <Row>
-              <h4 >Schedule of Menus</h4>
-              <h5 className="mt-4">Where and when a menu will be served</h5>
-            </Row>
-            <Row>
-              <label>Filter by:</label>
-            </Row>
-            <Row>
               <Form
                 onSubmit={handleFilter}
                 initialValues={{
@@ -114,27 +108,33 @@ export default function ListSchedules(props) {
                 render={({ handleSubmit, submitting }) => (
                   <form onSubmit={handleSubmit}>
                     <Row>
-                      <div className="column">
+                      <Col lg="2">
                         <label>Location:</label>
-                        <Field name="location" component="select"> # className="select"
-                          <option value="" key="" />
-                          {props.locations.map((location) => {
-                            return (
-                              <option
-                                value={location.uuid}
-                                key={location.uuid}
-                              >
-                                {location.city}, {location.country}
-                              </option>
-                            );
-                          })}
-                        </Field>
-                      </div>
-                      <div className="column">
-                        <Field name="date" component="input">
+                      </Col>
+                      <Col lg="3">
+                        <div className="select">
+                          <Field name="location" component="select" md="auto">
+                            <option value="" key="" />
+                            {props.locations.map((location) => {
+                              return (
+                                <option value={location.uuid} key={location.uuid}>
+                                  {location.city}, {location.country}
+                                </option>
+                              );
+                            })}
+                          </Field>
+                        </div>
+                      </Col>
+                    </Row>
+
+                    <Row>
+                      <Col lg="2">
+                        <label>Date:</label>
+                      </Col>
+                      <Col lg="3">
+                        <Field name="date" component="input" >
                           {({ input, meta }) => (
                             <div className="datePicker" >
-                              <label>Date:</label>
                               <DatePicker
                                 selected={startDateSchedule}
                                 onChange={handleDateChange}
@@ -146,16 +146,16 @@ export default function ListSchedules(props) {
                             </div>
                           )}
                         </Field>
-                      </div>
-                      <div>
-                        <button
-                          type="submit"
-                          color="primary"
-                          disabled={submitting}
-                        >
-                          Filter
-                        </button>
-                      </div>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col lg="5">
+                        <div className="d-grid">
+                          <Button variant="info" type="submit" disabled={submitting}>
+                            Filter
+                          </Button>
+                        </div>
+                      </Col>
                     </Row>
                   </form>
                 )}
@@ -231,9 +231,6 @@ export default function ListSchedules(props) {
         ) : (
           <div></div>
         )}
-        <Row>
-          <label>Filter by:</label>
-        </Row>
         <Row>
           <Table striped bordered hover>
             <thead>

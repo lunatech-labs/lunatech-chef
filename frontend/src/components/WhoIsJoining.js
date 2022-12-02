@@ -74,7 +74,7 @@ export default function WhoIsJoining(props) {
                     </Col>
                     <Col lg="3">
                       <div className="select">
-                        <Field name="location" component="select" md="auto"> # className="select"
+                        <Field name="location" component="select" md="auto">
                           <option value="" key="" />
                           {locations.map((location) => {
                             return (

@@ -1,5 +1,9 @@
 import React from "react";
 import Table from "react-bootstrap/Table";
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
 import { Loading } from "./shared/Loading";
 import { Form, Field } from "react-final-form";
 import { ToMonth } from "./shared/Functions";
@@ -36,11 +40,11 @@ export const MealsAttendance = (props) => {
   function RenderData({ isLoading, error, attendance, locations }) {
     if (isLoading) {
       return (
-        <div className="container">
-          <div className="row">
+        <Container>
+          <Row>
             <Loading />
-          </div>
-        </div>
+          </Row>
+        </Container>
       );
     } else if (error) {
       return (
@@ -53,46 +57,48 @@ export const MealsAttendance = (props) => {
     } else {
       return (
         <div className="container">
-          <div className="row">
-            <label>Filter by:</label>
-          </div>
-          <div className="row">
+          <Row>
             <Form
               onSubmit={handleFilter}
               initialValues={{
                 location: savedLocation,
               }}
               render={({ handleSubmit, submitting }) => (
+
                 <form onSubmit={handleSubmit}>
-                  <div className="row">
-                    <div className="column">
+                  <Row>
+                    <Col lg="2">
                       <label>Location:</label>
-                      <Field name="location" component="select">
-                        <option value="" key="" />
-                        {locations.map((location) => {
-                          return (
-                            <option value={location.uuid} key={location.uuid}>
-                              {location.city}, {location.country}
-                            </option>
-                          );
-                        })}
-                      </Field>
-                    </div>
-                    <div>
-                      <button
-                        type="submit"
-                        color="primary"
-                        disabled={submitting}
-                      >
-                        Filter
-                      </button>
-                    </div>
-                  </div>
+                    </Col>
+                    <Col lg="3">
+                      <div className="select">
+                        <Field name="location" component="select" md="auto">
+                          <option value="" key="" />
+                          {locations.map((location) => {
+                            return (
+                              <option value={location.uuid} key={location.uuid}>
+                                {location.city}, {location.country}
+                              </option>
+                            );
+                          })}
+                        </Field>
+                      </div>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col lg="5">
+                      <div className="d-grid">
+                        <Button variant="info" type="submit" disabled={submitting}>
+                          Filter
+                        </Button>
+                      </div>
+                    </Col>
+                  </Row>
                 </form>
               )}
             ></Form>
-          </div>
-          <div className="row">
+          </Row>
+          <Row>
             <Table striped bordered hover>
               <thead>
                 <tr>
@@ -153,7 +159,7 @@ export const MealsAttendance = (props) => {
                 })}
               </tbody>
             </Table>
-          </div>
+          </Row>
         </div>
       );
     }

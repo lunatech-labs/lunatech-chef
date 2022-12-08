@@ -41,7 +41,7 @@ export default function AddSchedule(props) {
               <Col lg="2">Choose menu:</Col>
               <Col lg="3">
                 <div className="select">
-                  <Field validate={required} name="menuUuid" component="select"> # className="select"
+                  <Field validate={required} name="menuUuid" component="select">
                     <option value="" />
                     {props.menus.map((menu) => {
                       return (

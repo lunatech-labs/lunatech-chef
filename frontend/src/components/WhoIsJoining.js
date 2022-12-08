@@ -101,7 +101,7 @@ export default function WhoIsJoining(props) {
                               dateFormat="dd-MM-yyyy"
                             />
                             {meta.error && meta.touched && (
-                              <span>{meta.error}</span>
+                              <span className="text-danger">  {meta.error}</span>
                             )}
                           </div>
                         )}
@@ -122,12 +122,12 @@ export default function WhoIsJoining(props) {
             ></Form>
           </Row >
           <Row></Row>
-          <Table striped bordered>
+          <Table striped bordered className="table-whoisjoining" >
             <thead>
               <tr key="head">
-                <td>Menu</td>
-                <td>Location</td>
-                <td>Date</td>
+                <td width={240}>Menu</td>
+                <td width={230}>Location</td>
+                <td width={230}>Date</td>
                 <td>Total attendants</td>
               </tr>
             </thead>

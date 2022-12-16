@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { Route, Routes, Navigate, Link } from "react-router-dom";
-import Button from "react-bootstrap/Button";
-import Header from "./shared/Header";
+import { Route, Routes, Navigate } from "react-router-dom";
+import Container from 'react-bootstrap/Container';
+import Sidebar from "./shared/Sidebar";
 import { connect } from "react-redux";
 import {
   fetchDishes,
@@ -40,7 +40,6 @@ import {
   logout,
   saveUserProfile,
 } from "../redux/users/UsersActionCreators";
-import "../css/simple-sidebar.css";
 import { AddDish } from "./admin/dishes/AddDish";
 import { EditDish } from "./admin/dishes/EditDish";
 import { AddLocation } from "./admin/locations/AddLocation";
@@ -339,108 +338,51 @@ class Main extends Component {
     return (
       <ErrorBoundary>
         {this.props.user.isAuthenticated ? (
-          <div className="d-flex" id="wrapper">
-            <div className="bg-light border-right" id="sidebar-wrapper">
-              <Header />
-              <div className="list-group list-group-flush">
-                <Link
-                  className="list-group-item list-group-item-action bg-light"
-                  to="/"
-                >
-                  Meals schedule
-                </Link>
-                <Link
-                  className="list-group-item list-group-item-action bg-light"
-                  to="/whoisjoining"
-                >
-                  Who is joining?
-                </Link>
-                {this.props.user.isAdmin ? (
-                  <div>
-                    <Link
-                      className="list-group-item list-group-item-action bg-light"
-                      to="/alllocations"
-                    >
-                      Locations
-                    </Link>
-                    <Link
-                      className="list-group-item list-group-item-action bg-light"
-                      to="/alldishes"
-                    >
-                      Dishes
-                    </Link>
-                    <Link
-                      className="list-group-item list-group-item-action bg-light"
-                      to="/allmenus"
-                    >
-                      Menus
-                    </Link>
-                    <Link
-                      className="list-group-item list-group-item-action bg-light"
-                      to="/allschedules"
-                    >
-                      Schedules
-                    </Link>
-                  </div>
-                ) : (
-                  <div></div>
-                )}
-                <div className="list-group-item list-group-item-action bg-light">
-                  {this.props.user.name}
-                </div>
-                <Link
-                  className="list-group-item list-group-item-action bg-light"
-                  to="/userProfile"
-                >
-                  Profile
-                </Link>
-                <Link to="/">
-                  <Button
-                    className="list-group-item list-group-item-action bg-light"
-                    onClick={this.props.logout}
-                  >
-                    <span>Logout</span>
-                  </Button>
-                </Link>
-              </div>
+          <Container>
+            <div className="d-flex" id="wrapper">
+              {/* <div className="bg-light border-right" id="sidebar-wrapper"> */}
+              <Sidebar logout={this.props.logout} isAdmin={this.props.user.isAdmin} />
+              {/* </div> */}
+              <Routes>
+                {/* do not use the same routes as the ones available in the BE server */}
+                <Route
+                  path="/whoisjoining"
+                  element={<WhoIsJoiningSchedule />}
+                />
+                <Route element={<ProtectedRoutes isAdmin={this.props.user.isAdmin} />}>
+                  <Route path="/alllocations" element={<AllLocations />} />
+                  <Route path="/newlocation" element={<AddNewLocation />} />
+                  <Route path="/editlocation" element={<EditExistingLocation />} />
+
+                  <Route path="/alldishes" element={<AllDishes />} />
+                  <Route path="/newdish" element={<AddNewDish />} />
+                  <Route path="/editdish" element={<EditExistingDish />} />
+
+                  <Route path="/allmenus" element={<AllMenus />} />
+                  <Route path="/newmenu" element={<AddNewMenu />} />
+                  <Route path="/editmenu" element={<EditExistingMenu />} />
+
+                  <Route path="/allschedules" element={<AllSchedules />} />
+                  <Route path="/newschedule" element={<AddNewSchedule />} />
+                  <Route path="/editschedule" element={<EditExistingSchedule />} />
+
+                </Route>
+                <Route path="/loginUser" element={<LoginUser />} />
+                <Route path="/userProfile" element={<Profile />} />
+                <Route path="/" element={<ShowAttendance />} />
+                <Route
+                  path="*"
+                  element={<Navigate to="/" replace />}
+                />
+              </Routes>
             </div>
-            <Routes>
-              {/* do not use the same routes as the ones available in the BE server */}
-              <Route
-                path="/whoisjoining"
-                element={<WhoIsJoiningSchedule />}
-              />
-              <Route element={<ProtectedRoutes isAdmin={this.props.user.isAdmin} />}>
-                <Route path="/alllocations" element={<AllLocations />} />
-                <Route path="/newlocation" element={<AddNewLocation />} />
-                <Route path="/editlocation" element={<EditExistingLocation />} />
-
-                <Route path="/alldishes" element={<AllDishes />} />
-                <Route path="/newdish" element={<AddNewDish />} />
-                <Route path="/editdish" element={<EditExistingDish />} />
-
-                <Route path="/allmenus" element={<AllMenus />} />
-                <Route path="/newmenu" element={<AddNewMenu />} />
-                <Route path="/editmenu" element={<EditExistingMenu />} />
-
-                <Route path="/allschedules" element={<AllSchedules />} />
-                <Route path="/newschedule" element={<AddNewSchedule />} />
-                <Route path="/editschedule" element={<EditExistingSchedule />} />
-
-              </Route>
-              <Route path="/loginUser" element={<LoginUser />} />
-              <Route path="/userProfile" element={<Profile />} />
-              <Route path="/" element={<ShowAttendance />} />
-              <Route
-                path="*"
-                element={<Navigate to="/" replace />}
-              />
-            </Routes>
-          </div>
+          </Container>
         ) : (
-          <div className="d-flex" id="wrapper">
-            <LoginUser />
-          </div>
+          <Container>
+            <div className="d-flex" id="wrapper">
+              <LoginUser />
+            </div>
+          </Container>
         )
         }
       </ErrorBoundary>

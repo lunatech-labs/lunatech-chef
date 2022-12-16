@@ -46,3 +46,9 @@ address {
 .table-whoisjoining {
     margin-left: 0px;
 }
+
+.sidebar {
+    display: flex;
+    height: 100vh;
+    overflow: scroll initial;
+}

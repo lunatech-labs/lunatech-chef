@@ -1,6 +1,9 @@
 import React from "react";
 import { Form, Field } from "react-final-form";
 import { useNavigate, useLocation } from "react-router-dom";
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
 
 export function EditDish(props) {
   const navigate = useNavigate();
@@ -47,84 +50,112 @@ export function EditDish(props) {
         }}
         render={({ handleSubmit, submitting }) => (
           <form onSubmit={handleSubmit}>
-            <div>
-              <Field validate={required} name="name">
-                {({ input, meta }) => (
-                  <div>
-                    <label>Name</label>
-                    <input {...input} type="text" placeholder="Name" />
-                    {meta.error && meta.touched && <span>{meta.error}</span>}
-                  </div>
-                )}
-              </Field>
-            </div>
-            <div>
-              <Field validate={required} name="description">
-                {({ input, meta }) => (
-                  <div>
-                    <label>Description</label>
-                    <input {...input} type="text" placeholder="Description" />
-                    {meta.error && meta.touched && <span>{meta.error}</span>}
-                  </div>
-                )}
-              </Field>
-            </div>
-            <div>
-              <label>Choose all that apply:</label>
-            </div>
-            <div>
-              <Field
-                name="isVegetarian"
-                component="input"
-                type="checkbox"
-              ></Field>
-              <label>Is vegetarian</label>
-            </div>
-            <div>
-              <Field name="isHalal" component="input" type="checkbox"></Field>
-              <label>Is halal</label>
-            </div>
-            <div>
-              <Field name="hasNuts" component="input" type="checkbox"></Field>
-              <label>Contains nuts</label>
-            </div>
-            <div>
-              <Field
-                name="hasSeafood"
-                component="input"
-                type="checkbox"
-              ></Field>
-              <label>Contains seafood</label>
-            </div>
-            <div>
-              <Field name="hasPork" component="input" type="checkbox"></Field>
-              <label>Contains pork</label>
-            </div>
-            <div>
-              <Field name="hasBeef" component="input" type="checkbox"></Field>
-              <label>Contains beef</label>
-            </div>
-            <div>
-              <Field
-                name="isGlutenFree"
-                component="input"
-                type="checkbox"
-              ></Field>
-              <label>Is gluten free</label>
-            </div>
-            <div>
-              <Field
-                name="hasLactose"
-                component="input"
-                type="checkbox"
-              ></Field>
-              <label>Contains lactose</label>
-            </div>
-            <div>
-              <button type="submit" color="primary" disabled={submitting}>
-                Save Dish
-              </button>
-            </div>
+            <Row>
+              <Col lg="2">Name</Col>
+              <Col lg="4">
+                <Field validate={required} name="name">
+                  {({ input, meta }) => (
+                    <div>
+                      <input {...input} type="text" placeholder="Name" />
+                      {meta.error && meta.touched && <span className="text-danger">  {meta.error}</span>}
+                    </div>
+                  )}
+                </Field>
+              </Col>
+            </Row>
+            <Row>
+              <Col lg="2">Description</Col>
+              <Col lg="4">
+                <Field validate={required} name="description">
+                  {({ input, meta }) => (
+                    <div>
+                      <input {...input} type="text" placeholder="Description" />
+                      {meta.error && meta.touched && <span className="text-danger">  {meta.error}</span>}
+                    </div>
+                  )}
+                </Field>
+              </Col>
+            </Row>
+            <Row>
+              <Col lg="4">Choose all that apply:</Col>
+            </Row>
+            <Row>
+              <Col lg="1">
+                <Field
+                  name="isVegetarian"
+                  component="input"
+                  type="checkbox"
+                ></Field>
+              </Col>
+              <Col lg="2">Is vegetarian</Col>
+            </Row>
+            <Row>
+              <Col lg="1">
+                <Field name="isHalal" component="input" type="checkbox"></Field>
+              </Col>
+              <Col lg="2">Is halal</Col>
+            </Row>
+            <Row>
+              <Col lg="1">
+                <Field name="hasNuts" component="input" type="checkbox"></Field>
+              </Col>
+              <Col lg="2">Contains nuts</Col>
+            </Row>
+            <Row>
+              <Col lg="1">
+                <Field
+                  name="hasSeafood"
+                  component="input"
+                  type="checkbox"
+                ></Field>
+              </Col>
+              <Col lg="2">Contains seafood</Col>
+            </Row>
+            <Row>
+              <Col lg="1">
+                <Field name="hasPork" component="input" type="checkbox"></Field>
+              </Col>
+              <Col lg="2">Contains pork</Col>
+            </Row>
+            <Row>
+              <Col lg="1">
+                <Field name="hasBeef" component="input" type="checkbox"></Field>
+              </Col>
+              <Col lg="2">Contains beef</Col>
+            </Row>
+            <Row>
+              <Col lg="1">
+                <Field
+                  name="isGlutenFree"
+                  component="input"
+                  type="checkbox"
+                ></Field>
+              </Col>
+              <Col lg="2">Is gluten free</Col>
+            </Row>
+            <Row>
+              <Col lg="1">
+                <Field
+                  name="hasLactose"
+                  component="input"
+                  type="checkbox"
+                ></Field>
+              </Col>
+              <Col lg="2">Contains lactose</Col>
+            </Row>
+            <Row>
+              <Col lg="5">
+                <div className="d-grid">
+                  <Button
+                    type="submit"
+                    variant="success"
+                    disabled={submitting}
+                  >
+                    Save Dish
+                  </Button>
+                </div>
+              </Col>
+            </Row>
           </form>
         )}
       ></Form>

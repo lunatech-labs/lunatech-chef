@@ -1,6 +1,9 @@
 import React from "react";
 import { Form, Field } from "react-final-form";
 import { useNavigate } from "react-router-dom";
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
 
 export function AddLocation(props) {
   const navigate = useNavigate();
@@ -17,37 +20,47 @@ export function AddLocation(props) {
         initialValues={{ city: "", country: "" }}
         render={({ handleSubmit, submitting, pristine }) => (
           <form onSubmit={handleSubmit}>
-            <div>
-              <Field validate={required} name="city">
-                {({ input, meta }) => (
-                  <div>
-                    <label>City</label>
-                    <input {...input} type="text" placeholder="City" />
-                    {meta.error && meta.touched && <span>{meta.error}</span>}
-                  </div>
-                )}
-              </Field>
-            </div>
-            <div>
-              <Field validate={required} name="country">
-                {({ input, meta }) => (
-                  <div>
-                    <label>Country</label>
-                    <input {...input} type="text" placeholder="Country" />
-                    {meta.error && meta.touched && <span>{meta.error}</span>}
-                  </div>
-                )}
-              </Field>
-            </div>
-            <div>
-              <button
-                type="submit"
-                color="primary"
-                disabled={submitting || pristine}
-              >
-                Add Location
-              </button>
-            </div>
+            <Row>
+              <Col lg="2">City</Col>
+              <Col lg="5">
+                <Field validate={required} name="city">
+                  {({ input, meta }) => (
+                    <div>
+                      <input {...input} type="text" placeholder="City" />
+                      {meta.error && meta.touched && <span className="text-danger">  {meta.error}</span>}
+                    </div>
+                  )}
+                </Field>
+              </Col>
+            </Row>
+            <Row>
+              <Col lg="2">Country</Col>
+              <Col lg="5">
+                <div className="d-grid">
+                  <Field validate={required} name="country">
+                    {({ input, meta }) => (
+                      <div>
+                        <input {...input} type="text" placeholder="Country" />
+                        {meta.error && meta.touched && <span className="text-danger">  {meta.error}</span>}
+                      </div>
+                    )}
+                  </Field>
+                </div>
+              </Col>
+            </Row>
+            <Row>
+              <Col lg="5">
+                <div className="d-grid">
+                  <Button
+                    type="submit"
+                    variant="success"
+                    disabled={submitting || pristine}
+                  >
+                    Add Location
+                  </Button>
+                </div>
+              </Col>
+            </Row>
           </form>
         )}
       ></Form>

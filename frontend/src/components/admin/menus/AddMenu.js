@@ -1,6 +1,9 @@
 import React from "react";
 import { Form, Field } from "react-final-form";
 import { useNavigate } from "react-router-dom";
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
 
 export function AddMenu(props) {
   const navigate = useNavigate();
@@ -20,40 +23,47 @@ export function AddMenu(props) {
         }}
         render={({ handleSubmit, submitting, pristine }) => (
           <form onSubmit={handleSubmit}>
-            <div>
-              <Field validate={required} name="name">
-                {({ input, meta }) => (
-                  <div>
-                    <label>Name</label>
-                    <input {...input} type="text" placeholder="Name" />
-                    {meta.error && meta.touched && <span>{meta.error}</span>}
-                  </div>
-                )}
-              </Field>
-            </div>
+            <Row>
+              <Col lg="2">Name</Col>
+              <Col lg="5">
+                <Field validate={required} name="name">
+                  {({ input, meta }) => (
+                    <div>
+                      <input {...input} type="text" placeholder="Name" />
+                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                    </div>
+                  )}
+                </Field>
+              </Col>
+            </Row>
             {props.dishes.map((dish, index, arr) => {
               return (
-                <div key={dish.uuid}>
-                  <Field
-                    name="dishesUuids"
-                    component="input"
-                    type="checkbox"
-                    value={dish.uuid}
-                  ></Field>
-                  <label>{dish.name}</label>
-                </div>
+                <Row key={dish.uuid}>
+                  <Col lg="2">{dish.name}</Col>
+                  <Col lg="1">
+                    <Field
+                      name="dishesUuids"
+                      component="input"
+                      type="checkbox"
+                      value={dish.uuid}
+                    ></Field>
+                  </Col>
+                </Row>
               );
             })}
-
-            <div>
-              <button
-                type="submit"
-                color="primary"
-                disabled={submitting || pristine}
-              >
-                Add Menu
-              </button>
-            </div>
+            <Row>
+              <Col lg="5">
+                <div className="d-grid">
+                  <Button
+                    type="submit"
+                    variant="success"
+                    disabled={submitting || pristine}
+                  >
+                    Add Menu
+                  </Button>
+                </div>
+              </Col>
+            </Row>
           </form>
         )}
       ></Form>

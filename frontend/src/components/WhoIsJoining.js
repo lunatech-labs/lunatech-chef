@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faList } from "@fortawesome/free-solid-svg-icons";
+import Container from 'react-bootstrap/Container';
+import Accordion from 'react-bootstrap/Accordion';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import { Loading } from "./shared/Loading";
 import { ToMonth } from "./shared/Functions";
 import { Form, Field } from "react-final-form";
@@ -44,25 +46,20 @@ export default function WhoIsJoining(props) {
   }) {
     if (isLoading) {
       return (
-        <div className="container">
-          <div className="row">
-            <Loading />
-          </div>
-        </div>
+        <Row>
+          <Loading />
+        </Row>
       );
     } else if (error) {
       return (
-        <div>
+        <Row>
           <h4>An error ocurred when feching attendances from server: {error}</h4>
-        </div>
+        </Row>
       );
     } else {
       return (
-        <div className="container">
-          <div className="row">
-            <label>Filter by:</label>
-          </div>
-          <div className="row">
+        <div>
+          <Row>
             <Form
               onSubmit={handleFilter}
               initialValues={{
@@ -71,104 +68,113 @@ export default function WhoIsJoining(props) {
               }}
               render={({ handleSubmit, submitting }) => (
                 <form onSubmit={handleSubmit}>
-                  <div className="row">
-                    <div className="column">
+                  <Row>
+                    <Col lg="2">
                       <label>Location:</label>
-                      <Field name="location" component="select">
-                        <option value="" key="" />
-                        {locations.map((location) => {
-                          return (
-                            <option value={location.uuid} key={location.uuid}>
-                              {location.city}, {location.country}
-                            </option>
-                          );
-                        })}
-                      </Field>
-                    </div>
-                    <div className="column">
-                      <Field name="date" component="input">
+                    </Col>
+                    <Col lg="3">
+                      <div className="select">
+                        <Field name="location" component="select" md="auto">
+                          <option value="" key="" />
+                          {locations.map((location) => {
+                            return (
+                              <option value={location.uuid} key={location.uuid}>
+                                {location.city}, {location.country}
+                              </option>
+                            );
+                          })}
+                        </Field>
+                      </div>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col lg="2">
+                      <label>Date:</label>
+                    </Col>
+                    <Col lg="3">
+                      <Field name="date" component="input" >
                         {({ input, meta }) => (
-                          <div>
-                            <label>Date:</label>
+                          <div className="datePicker" >
                             <DatePicker
                               selected={startDate}
                               onChange={handleDateChange}
                               dateFormat="dd-MM-yyyy"
                             />
                             {meta.error && meta.touched && (
-                              <span>{meta.error}</span>
+                              <span className="text-danger">  {meta.error}</span>
                             )}
                           </div>
                         )}
                       </Field>
-                    </div>
-                    <div>
-                      <button type="submit" color="primary" disabled={submitting}>
-                        Filter
-                      </button>
-                    </div>
-                  </div>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col lg="5">
+                      <div className="d-grid">
+                        <Button variant="info" type="submit" disabled={submitting}>
+                          Filter
+                        </Button>
+                      </div>
+                    </Col>
+                  </Row>
                 </form>
               )}
             ></Form>
-          </div>
-          <div className="row">
-            <Table striped bordered hover>
-              <thead>
-                <tr>
-                  <th>Menu</th>
-                  <th>Location</th>
-                  <th>Date</th>
-                  <th>Number attendants</th>
-                  <th>See details</th>
-                </tr>
-              </thead>
-              <tbody>
-                {attendances.map((attendance) => {
-                  return (
-                    <tr key={attendance.uuid}>
-                      <td>{attendance.menuName}</td>
-                      <td>
-                        {attendance.location.city}, {attendance.location.country}
-                      </td>
-                      <td>
-                        {attendance.date[2]} {ToMonth(attendance.date[1])}{" "}
-                        {attendance.date[0]}
-                      </td>
-                      <td>{attendance.attendants.length}</td>
-                      <td>
-                        <Button
-                          variant="primary"
-                          value={attendance.uuid}
-                          onClick={() => handleDetails(attendance.attendants)}
-                        >
-                          <FontAwesomeIcon icon={faList} />
-                        </Button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </Table>
-          </div>
-        </div>
+          </Row >
+          <Row></Row>
+          <Table striped bordered className="table-whoisjoining" >
+            <thead>
+              <tr key="head">
+                <td width={240}>Menu</td>
+                <td width={230}>Location</td>
+                <td width={230}>Date</td>
+                <td>Total attendants</td>
+              </tr>
+            </thead>
+          </Table>
+          <Accordion>
+            {attendances.map((attendance) => {
+              return (
+                <Accordion.Item eventKey={attendance.uuid}>
+                  <Accordion.Header>
+                    <Col>{attendance.menuName}</Col>
+                    <Col>{attendance.location.city}, {attendance.location.country}</Col>
+                    <Col>{attendance.date[2]} {ToMonth(attendance.date[1])} {attendance.date[0]}</Col>
+                    <Col>{attendance.attendants.length}</Col>
+                  </Accordion.Header>
+                  <Accordion.Body>
+                    <Table striped bordered hover>
+                      <tbody>
+                        {attendance.attendants.map((name) => {
+                          return (
+                            <tr key={name}>
+                              <td>{name}</td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </Table>
+                  </Accordion.Body>
+                </Accordion.Item>
+              );
+            })}
+          </Accordion>
+        </div >
       );
     }
   }
 
   return (
-    <div className="container">
-      <div>
+    <Container>
+      <Row>
         <h3 className="mt-4">Who is joining?</h3>
-      </div>
-      <div>
-        <RenderData
-          isLoading={props.isLoading}
-          error={props.errorListing}
-          attendances={props.attendance}
-          locations={props.locations}
-        />
-      </div>
-    </div>
+      </Row>
+      <RenderData
+        isLoading={props.isLoading}
+        error={props.errorListing}
+        attendances={props.attendance}
+        locations={props.locations}
+      />
+    </Container>
   );
 }

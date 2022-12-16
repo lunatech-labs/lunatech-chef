@@ -1,12 +1,13 @@
 import React from "react";
 import "./css/App.css";
 import Main from "./components/Main";
+import Container from 'react-bootstrap/Container';
 
 function App() {
   return (
-    <div className="App">
+    <Container className="App" >
       <Main />
-    </div>
+    </Container>
   );
 }
 

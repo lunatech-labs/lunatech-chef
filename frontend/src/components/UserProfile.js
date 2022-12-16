@@ -38,7 +38,7 @@ export const UserProfile = (props) => {
                 <Col lg="2">E-mail: </Col> <Col lg="3">{props.user.emailAddress}</Col>
               </Row>
               <Row>
-                <Col lg="2">Prefered location: *</Col>
+                <Col lg="2">Prefered location: </Col>
                 <Col lg="3">
                   <div className="select">
                     <Field name="locationUuid" component="select">
@@ -61,63 +61,55 @@ export const UserProfile = (props) => {
                 </Col>
               </Row>
               <Row>
-                <Col lg="2">
-                  <Field name="isVegetarian" component="input" type="checkbox"></Field>
+                <Col lg="4">
+                  <Field name="isVegetarian" component="input" type="checkbox" ></Field><span>  I'm vegetarian</span>
                 </Col>
-                <Col lg="3">I'm vegetarian</Col>
               </Row>
               <Row>
-                <Col lg="2">
-                  <Field name="isGlutenIntolerant" component="input" type="checkbox"></Field>
+                <Col lg="4">
+                  <Field name="isGlutenIntolerant" component="input" type="checkbox"></Field><span>  I'm gluten intolerant</span>
                 </Col>
-                <Col>I'm gluten intolerant</Col>
               </Row>
               <Row>
-                <Col lg="2">
-                  <Field name="isLactoseIntolerant" component="input" type="checkbox" ></Field>
+                <Col lg="4">
+                  <Field name="isLactoseIntolerant" component="input" type="checkbox" ></Field><span>  I'm lactose intolerant</span>
                 </Col>
-                <Col lg="3">I'm lactose intolerant</Col>
               </Row>
               <Row>
-                <Col lg="2">
-                  <Field name="hasHalalRestriction" component="input" type="checkbox"></Field>
+                <Col lg="4">
+                  <Field name="hasHalalRestriction" component="input" type="checkbox"></Field><span>  I only eat halal food</span>
                 </Col>
-                <Col lg="3">I only eat halal food</Col>
               </Row>
               <Row>
-                <Col lg="2">
-                  <Field name="hasNutsRestriction" component="input" type="checkbox"></Field>
+                <Col lg="4">
+                  <Field name="hasNutsRestriction" component="input" type="checkbox"></Field><span>  I have a nuts allergy</span>
                 </Col>
-                <Col lg="3">I have a nuts allergy</Col>
               </Row>
               <Row>
-                <Col lg="2">
-                  <Field name="hasSeafoodRestriction" component="input" type="checkbox"></Field>
+                <Col lg="4">
+                  <Field name="hasSeafoodRestriction" component="input" type="checkbox"></Field><span>  I have seafood allergy</span>
                 </Col>
-                <Col lg="3">I have seafood allergy</Col>
               </Row>
               <Row>
-                <Col lg="2">
-                  <Field name="hasPorkRestriction" component="input" type="checkbox"></Field>
+                <Col lg="4">
+                  <Field name="hasPorkRestriction" component="input" type="checkbox"></Field><span>  I don't eat pork</span>
                 </Col>
-                <Col lg="3">I don't eat pork</Col>
               </Row>
               <Row>
-                <Col lg="2">
-                  <Field name="hasBeefRestriction" component="input" type="checkbox"></Field>
+                <Col lg="4">
+                  <Field name="hasBeefRestriction" component="input" type="checkbox"></Field><span>  I don't eat beef</span>
                 </Col>
-                <Col lg="3">I don't eat beef</Col>
               </Row>
               <Row>
                 <Col lg="2">Other restrictions:</Col>
-                <Col lg="3">
+                <Col lg="5">
                   <div className="d-grid">
                     <Field name="otherRestrictions" component="textarea" lines="2" ></Field>
                   </div>
                 </Col>
               </Row>
               <Row>
-                <Col lg="5">
+                <Col lg="7">
                   <div className="d-grid">
                     <Button
                       type="submit"
@@ -130,9 +122,10 @@ export const UserProfile = (props) => {
                 </Col>
               </Row>
             </form>
-          )}
-        ></Form>
-      </Row>
+          )
+          }
+        ></Form >
+      </Row >
     );
   }
 

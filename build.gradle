@@ -50,7 +50,7 @@ dependencies {
     implementation "org.flywaydb:flyway-core:8.5.13"
     implementation "io.github.config4k:config4k:0.4.2"
     implementation "org.postgresql:postgresql:42.4.0"
-    implementation "org.ktorm:ktorm-core:3.2.0"
+    implementation "org.ktorm:ktorm-core:3.5.0"
     implementation "uy.kohesive.injekt:injekt-core:1.16.1"
     implementation "org.quartz-scheduler:quartz:2.3.2"
     implementation "io.ktor:ktor-server-status-pages:2.2.1"

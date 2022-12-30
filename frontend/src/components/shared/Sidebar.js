@@ -11,8 +11,8 @@ import { NavLink } from 'react-router-dom';
 
 const Sidebar = (props) => {
     return (
-        <div className="sidebar" >
-            <CDBSidebar textColor="#fff" backgroundColor="#333">
+        <div className="sidebar">
+            <CDBSidebar textColor="#000" backgroundColor="#d9d9d9">
                 <CDBSidebarHeader prefix={<i className="fa fa-bars fa-large"></i>}> Lunatech Chef </CDBSidebarHeader>
                 <CDBSidebarContent className="sidebar-content">
                     <CDBSidebarMenu>

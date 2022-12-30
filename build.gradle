@@ -3,8 +3,8 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "org.jlleitschuh.gradle:ktlint-gradle:$ktlint_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.0"
+        classpath "org.jlleitschuh.gradle:ktlint-gradle:9.2.1"
     }
 }
 
@@ -36,36 +36,38 @@ repositories {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation "org.slf4j:slf4j-api:$slf4j_api_version"
-    implementation "org.apache.logging.log4j:log4j-slf4j-impl:$log4j_version"
-    implementation "org.apache.logging.log4j:log4j-api:$log4j_version"
-    implementation "org.apache.logging.log4j:log4j-core:$log4j_version"
-    implementation "io.github.microutils:kotlin-logging:$logging_version"
-    implementation "com.lmax:disruptor:$disruptorversion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.0"
+
+    implementation "org.slf4j:slf4j-api:1.7.36"
+    implementation "org.apache.logging.log4j:log4j-slf4j-impl:2.17.2"
+    implementation "org.apache.logging.log4j:log4j-api:2.17.2"
+    implementation "org.apache.logging.log4j:log4j-core:2.17.2"
+    implementation "io.github.microutils:kotlin-logging:2.1.23"
+    implementation "com.lmax:disruptor:3.4.4"
+
     implementation "com.google.api-client:google-api-client:1.30.9"
-    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jackson_module_version"
-    implementation "org.flywaydb:flyway-core:$flyway_version"
-    implementation "io.github.config4k:config4k:$config4k_version"
-    implementation "org.postgresql:postgresql:$postgresql_version"
-    implementation "org.ktorm:ktorm-core:$ktorm_version"
-    implementation "uy.kohesive.injekt:injekt-core:$injekt_version"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:1.16.1"
+    implementation "org.flywaydb:flyway-core:8.5.13"
+    implementation "io.github.config4k:config4k:0.4.2"
+    implementation "org.postgresql:postgresql:42.4.0"
+    implementation "org.ktorm:ktorm-core:3.2.0"
+    implementation "uy.kohesive.injekt:injekt-core:1.16.1"
     implementation "org.quartz-scheduler:quartz:2.3.2"
-    implementation "io.ktor:ktor-server-status-pages:$ktor_version"
-    implementation "io.ktor:ktor-server-default-headers:$ktor_version"
-    implementation "io.ktor:ktor-server-cors:$ktor_version"
-    implementation "io.ktor:ktor-server-content-negotiation-jvm:$ktor_version"
-    implementation "io.ktor:ktor-server-netty-jvm:$ktor_version"
-    implementation "io.ktor:ktor-server-core-jvm:$ktor_version"
-    implementation "io.ktor:ktor-server-host-common-jvm:$ktor_version"
-    implementation "io.ktor:ktor-server-auth-jvm:$ktor_version"
-    implementation "io.ktor:ktor-server-sessions-jvm:$ktor_version"
-    implementation "io.ktor:ktor-serialization-jackson:$ktor_version"
-    implementation "io.ktor:ktor-client-core-jvm:$ktor_version"
-    implementation "io.ktor:ktor-client-core-jvm:$ktor_version"
-    implementation "io.ktor:ktor-client-apache-jvm:$ktor_version"
-    implementation "io.ktor:ktor-client-logging-jvm:$ktor_version"
-    testImplementation "io.ktor:ktor-server-tests-jvm:$ktor_version"
+    implementation "io.ktor:ktor-server-status-pages:2.2.1"
+    implementation "io.ktor:ktor-server-default-headers:2.2.1"
+    implementation "io.ktor:ktor-server-cors:2.2.1"
+    implementation "io.ktor:ktor-server-content-negotiation-jvm:2.2.1"
+    implementation "io.ktor:ktor-server-netty-jvm:2.2.1"
+    implementation "io.ktor:ktor-server-core-jvm:2.2.1"
+    implementation "io.ktor:ktor-server-host-common-jvm:2.2.1"
+    implementation "io.ktor:ktor-server-auth-jvm:2.2.1"
+    implementation "io.ktor:ktor-server-sessions-jvm:2.2.1"
+    implementation "io.ktor:ktor-serialization-jackson:2.2.1"
+    implementation "io.ktor:ktor-client-core-jvm:2.2.1"
+    implementation "io.ktor:ktor-client-core-jvm:2.2.1"
+    implementation "io.ktor:ktor-client-apache-jvm:2.2.1"
+    implementation "io.ktor:ktor-client-logging-jvm:2.2.1"
+    testImplementation "io.ktor:ktor-server-tests-jvm:2.2.1"
 }
 
 autostyle {

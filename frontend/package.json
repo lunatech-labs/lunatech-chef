@@ -14,7 +14,7 @@
     "@types/react": "^18.0.26",
     "axios": "^1.2.2",
     "bootstrap": "^5.2.3",
-    "cdbreact": "^1.5.3",
+    "cdbreact": "^1.5.4",
     "dns-packet": "5.4.0",
     "elliptic": "6.5.4",
     "final-form": "^4.19.1",

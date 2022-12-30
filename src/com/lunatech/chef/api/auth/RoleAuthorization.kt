@@ -1,8 +1,6 @@
 package com.lunatech.chef.api.auth
 
-import io.ktor.application.ApplicationCall
-import io.ktor.application.ApplicationCallPipeline
-import io.ktor.application.ApplicationFeature
+import io.ktor.server.application.*
 import io.ktor.util.AttributeKey
 import io.ktor.util.pipeline.PipelinePhase
 
@@ -12,6 +10,7 @@ import io.ktor.util.pipeline.PipelinePhase
 class RoleAuthorization internal constructor(config: Configuration) {
 
     constructor(provider: RoleBasedAuthorizer) : this(Configuration(provider))
+
     private var config = config.copy()
 
     class Configuration internal constructor(provider: RoleBasedAuthorizer) {
@@ -36,21 +35,21 @@ class RoleAuthorization internal constructor(config: Configuration) {
     //     }
     // }
 
-    companion object Feature : ApplicationFeature<ApplicationCallPipeline, RoleBasedAuthorizer, RoleAuthorization> {
-        private val authorizationPhase = PipelinePhase("authorization")
-
-        override val key: AttributeKey<RoleAuthorization> = AttributeKey("RoleAuthorization")
-
-        override fun install(
-          pipeline: ApplicationCallPipeline,
-          configure: RoleBasedAuthorizer.() -> Unit
-        ): RoleAuthorization {
-            val configuration = RoleBasedAuthorizer().apply { configure }
-            val feature = RoleAuthorization(configuration)
-
-            return feature
-        }
-    }
+//    companion object Feature : ApplicationPlugin<ApplicationCallPipeline, RoleBasedAuthorizer, RoleAuthorization> {
+//        private val authorizationPhase = PipelinePhase("authorization")
+//
+//        override val key: AttributeKey<RoleAuthorization> = AttributeKey("RoleAuthorization")
+//
+//        override fun install(
+//            pipeline: ApplicationCallPipeline,
+//            configure: RoleBasedAuthorizer.() -> Unit
+//        ): RoleAuthorization {
+//            val configuration = RoleBasedAuthorizer().apply { configure }
+//            val feature = RoleAuthorization(configuration)
+//
+//            return feature
+//        }
+//    }
 }
 
 enum class Role(val roleStr: String) {

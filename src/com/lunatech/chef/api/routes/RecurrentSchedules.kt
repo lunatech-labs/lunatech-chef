@@ -4,28 +4,33 @@ package com.lunatech.chef.api.routes
 import com.lunatech.chef.api.domain.NewRecurrentSchedule
 import com.lunatech.chef.api.domain.RecurrentSchedule
 import com.lunatech.chef.api.persistence.services.RecurrentSchedulesService
-import io.ktor.application.call
-import io.ktor.auth.authenticate
+import io.ktor.server.application.call
+import io.ktor.server.auth.authenticate
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.InternalServerError
 import io.ktor.http.HttpStatusCode.Companion.NotFound
 import io.ktor.http.HttpStatusCode.Companion.OK
-import io.ktor.request.receive
-import io.ktor.response.respond
-import io.ktor.routing.Routing
-import io.ktor.routing.delete
-import io.ktor.routing.get
-import io.ktor.routing.post
-import io.ktor.routing.put
-import io.ktor.routing.route
+import io.ktor.server.request.receive
+import io.ktor.server.response.respond
+import io.ktor.server.routing.Routing
+import io.ktor.server.routing.delete
+import io.ktor.server.routing.get
+import io.ktor.server.routing.post
+import io.ktor.server.routing.put
+import io.ktor.server.routing.route
 import java.time.LocalDate
 import java.util.UUID
 import mu.KotlinLogging
 
 private val logger = KotlinLogging.logger {}
 
-data class UpdatedRecurrentSchedule(val menuUuid: UUID, val locationUuid: UUID, val repetitionDays: Int, val nextDate: LocalDate)
+data class UpdatedRecurrentSchedule(
+    val menuUuid: UUID,
+    val locationUuid: UUID,
+    val repetitionDays: Int,
+    val nextDate: LocalDate
+)
 
 fun Routing.recurrentSchedules(recurrentSchedulesService: RecurrentSchedulesService) {
     val recurrentSchedulesRoute = "/recurrentschedules"
@@ -35,11 +40,11 @@ fun Routing.recurrentSchedules(recurrentSchedulesService: RecurrentSchedulesServ
     route(recurrentSchedulesRoute) {
         authenticate("session-auth") {
             // rolesAllowed(Role.ADMIN) {
-                // get all recurrent schedules
-                get {
-                    val schedules = recurrentSchedulesService.getAll()
-                    call.respond(OK, schedules)
-                }
+            // get all recurrent schedules
+            get {
+                val schedules = recurrentSchedulesService.getAll()
+                call.respond(OK, schedules)
+            }
             post {
                 try {
                     val newRecurrentSchedule = call.receive<NewRecurrentSchedule>()
@@ -82,7 +87,7 @@ fun Routing.recurrentSchedules(recurrentSchedulesService: RecurrentSchedulesServ
                     if (result == 1) call.respond(OK) else call.respond(InternalServerError)
                 }
             }
-        // }
+            // }
         }
     }
 }

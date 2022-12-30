@@ -41,32 +41,32 @@ import com.lunatech.chef.api.routes.users
 import com.lunatech.chef.api.routes.validateSession
 import com.lunatech.chef.api.schedulers.schedulerTrigger
 import com.typesafe.config.ConfigFactory
-import io.ktor.application.Application
-import io.ktor.application.ApplicationStarted
-import io.ktor.application.ApplicationStopped
-import io.ktor.application.call
-import io.ktor.application.install
-import io.ktor.auth.Authentication
-import io.ktor.auth.session
-import io.ktor.features.CORS
-import io.ktor.features.ContentNegotiation
-import io.ktor.features.DefaultHeaders
-import io.ktor.features.StatusPages
+import io.ktor.server.application.Application
+import io.ktor.server.application.ApplicationStarted
+import io.ktor.server.application.ApplicationStopped
+import io.ktor.server.application.call
+import io.ktor.server.application.install
+import io.ktor.server.auth.Authentication
+import io.ktor.server.auth.session
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
-import io.ktor.http.content.files
-import io.ktor.http.content.static
-import io.ktor.jackson.jackson
-import io.ktor.response.respond
-import io.ktor.response.respondFile
-import io.ktor.response.respondText
-import io.ktor.routing.get
-import io.ktor.routing.routing
-import io.ktor.sessions.SessionTransportTransformerMessageAuthentication
-import io.ktor.sessions.Sessions
-import io.ktor.sessions.header
+import io.ktor.server.http.content.files
+import io.ktor.server.http.content.static
+import io.ktor.serialization.jackson.jackson
+import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.plugins.cors.routing.*
+import io.ktor.server.plugins.defaultheaders.*
+import io.ktor.server.plugins.statuspages.*
+import io.ktor.server.response.respond
+import io.ktor.server.response.respondFile
+import io.ktor.server.response.respondText
+import io.ktor.server.routing.get
+import io.ktor.server.routing.routing
+import io.ktor.server.sessions.SessionTransportTransformerMessageAuthentication
+import io.ktor.server.sessions.Sessions
+import io.ktor.server.sessions.header
 import java.io.File
 import java.util.Collections
 import mu.KotlinLogging
@@ -103,22 +103,23 @@ fun Application.module() {
     val schedulesWithAttendanceInfoService = SchedulesWithAttendanceInfo(dbConnection, menusService)
     val usersService = UsersService(dbConnection)
     val attendancesService = AttendancesService(dbConnection, usersService)
-    val attendancesWithInfoService = AttendancesWithScheduleInfoService(dbConnection, schedulesService, menusWithDishesService)
+    val attendancesWithInfoService =
+        AttendancesWithScheduleInfoService(dbConnection, schedulesService, menusWithDishesService)
 
     val scheduler = StdSchedulerFactory.getDefaultScheduler()
     schedulerTrigger(scheduler, schedulesService, recurrentSchedulesService, cronString)
 
     val CHEF_SESSSION = "CHEF_SESSION"
     install(CORS) {
-        method(HttpMethod.Options)
-        method(HttpMethod.Put)
-        method(HttpMethod.Delete)
-        header(HttpHeaders.AccessControlAllowHeaders)
-        header(HttpHeaders.ContentType)
-        header(HttpHeaders.AccessControlAllowOrigin)
-        header(HttpHeaders.Authorization)
-        header(CHEF_SESSSION)
-        host("localhost:3000")
+        allowMethod(HttpMethod.Options)
+        allowMethod(HttpMethod.Put)
+        allowMethod(HttpMethod.Delete)
+        allowHeader(HttpHeaders.AccessControlAllowHeaders)
+        allowHeader(HttpHeaders.ContentType)
+        allowHeader(HttpHeaders.AccessControlAllowOrigin)
+        allowHeader(HttpHeaders.Authorization)
+        allowHeader(CHEF_SESSSION)
+        allowHost("localhost:3000")
     }
 
     install(ContentNegotiation) {
@@ -128,11 +129,11 @@ fun Application.module() {
         }
     }
 
-    install(StatusPages) {
-        exception<Throwable> { e ->
-            call.respondText(e.stackTraceToString(), ContentType.Text.Plain, HttpStatusCode.BadRequest)
-        }
-    }
+//    install(StatusPages) {
+//        exception<Throwable> { e ->
+//            call.respondText(e.stackTraceToString(), ContentType.Text.Plain, HttpStatusCode.BadRequest)
+//        }
+//    }
 
     // This will add Date and Server headers to each HTTP response besides CHEF_SESSSION header
     install(DefaultHeaders) {
@@ -157,13 +158,13 @@ fun Application.module() {
         }
     }
 
-    install(RoleAuthorization) {
-        validate { allowedRoles ->
-            // preciso do ChefSession e do allowedRoles
-            logger.info("*********** allowedRoles: {}", allowedRoles)
-            true
-        }
-    }
+//    install(RoleAuthorization) {
+//        validate { allowedRoles ->
+//            // preciso do ChefSession e do allowedRoles
+//            logger.info("*********** allowedRoles: {}", allowedRoles)
+//            true
+//        }
+//    }
 
     environment.monitor.subscribe(ApplicationStarted) {
         logger.info("The chef app is ready to roll")

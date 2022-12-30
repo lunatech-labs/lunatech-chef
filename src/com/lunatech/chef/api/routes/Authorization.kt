@@ -5,17 +5,17 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
 import com.lunatech.chef.api.domain.NewUser
 import com.lunatech.chef.api.domain.User
 import com.lunatech.chef.api.persistence.services.UsersService
-import io.ktor.application.call
-import io.ktor.auth.Principal
+import io.ktor.server.application.call
+import io.ktor.server.auth.Principal
 import io.ktor.http.HttpStatusCode.Companion.InternalServerError
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.http.HttpStatusCode.Companion.Unauthorized
-import io.ktor.response.respond
-import io.ktor.routing.Routing
-import io.ktor.routing.get
-import io.ktor.routing.route
-import io.ktor.sessions.sessions
-import io.ktor.sessions.set
+import io.ktor.server.response.respond
+import io.ktor.server.routing.Routing
+import io.ktor.server.routing.get
+import io.ktor.server.routing.route
+import io.ktor.server.sessions.sessions
+import io.ktor.server.sessions.set
 import java.lang.Exception
 import java.lang.IllegalArgumentException
 import java.text.SimpleDateFormat
@@ -29,21 +29,21 @@ private val logger = KotlinLogging.logger {}
 private val formatDate = SimpleDateFormat("yyMMddHHmmss")
 
 data class ChefSession(
-  val ttl: String,
-  val isAdmin: Boolean,
-  val uuid: UUID,
-  val name: String,
-  val emailAddress: String,
-  val locationUuid: UUID?,
-  val isVegetarian: Boolean = false,
-  val hasHalalRestriction: Boolean = false,
-  val hasNutsRestriction: Boolean = false,
-  val hasSeafoodRestriction: Boolean = false,
-  val hasPorkRestriction: Boolean = false,
-  val hasBeefRestriction: Boolean = false,
-  val isGlutenIntolerant: Boolean = false,
-  val isLactoseIntolerant: Boolean = false,
-  val otherRestrictions: String = ""
+    val ttl: String,
+    val isAdmin: Boolean,
+    val uuid: UUID,
+    val name: String,
+    val emailAddress: String,
+    val locationUuid: UUID?,
+    val isVegetarian: Boolean = false,
+    val hasHalalRestriction: Boolean = false,
+    val hasNutsRestriction: Boolean = false,
+    val hasSeafoodRestriction: Boolean = false,
+    val hasPorkRestriction: Boolean = false,
+    val hasBeefRestriction: Boolean = false,
+    val isGlutenIntolerant: Boolean = false,
+    val isLactoseIntolerant: Boolean = false,
+    val otherRestrictions: String = ""
 )
 
 data class AccountPrincipal(val email: String) : Principal
@@ -55,7 +55,8 @@ fun Routing.authorization(usersService: UsersService, verifier: GoogleIdTokenVer
 
     route("$loginRoute$tokenRoute") {
         get {
-            val idToken = call.parameters[tokenParam] ?: throw IllegalArgumentException("Error: $tokenParam was not found.")
+            val idToken =
+                call.parameters[tokenParam] ?: throw IllegalArgumentException("Error: $tokenParam was not found.")
 
             try {
                 val token = verifier.verify(idToken)
@@ -121,7 +122,8 @@ fun buildChefSession(user: User, admins: List<String>): ChefSession {
         hasBeefRestriction = user.hasBeefRestriction,
         isGlutenIntolerant = user.isGlutenIntolerant,
         isLactoseIntolerant = user.isLactoseIntolerant,
-        otherRestrictions = user.otherRestrictions)
+        otherRestrictions = user.otherRestrictions
+    )
 }
 
 fun isAdmin(admins: List<String>, email: String): Boolean = admins.contains(email)

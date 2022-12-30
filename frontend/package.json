@@ -25,7 +25,7 @@
     "node-notifier": "10.0.1",
     "npm": "^9.2.0",
     "react": "^18.2.0",
-    "react-bootstrap": "^2.6.0",
+    "react-bootstrap": "^2.7.0",
     "react-bootstrap-sidebar-menu": "^2.0.3",
     "react-datepicker": "^4.8.0",
     "react-dev-utils": "^12.0.1",

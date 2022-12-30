@@ -1,8 +1,6 @@
 package com.lunatech.chef.api.auth
 
-import io.ktor.server.application.*
-import io.ktor.util.AttributeKey
-import io.ktor.util.pipeline.PipelinePhase
+import io.ktor.server.application.ApplicationCall
 
 /**
  * https://medium.com/@shrikantjagtap99/role-based-authorization-feature-in-ktor-web-framework-in-kotlin-dda88262a86a

@@ -4,13 +4,13 @@ package com.lunatech.chef.api.routes
 import com.lunatech.chef.api.domain.NewUser
 import com.lunatech.chef.api.domain.User
 import com.lunatech.chef.api.persistence.services.UsersService
-import io.ktor.server.application.call
-import io.ktor.server.auth.authenticate
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.InternalServerError
 import io.ktor.http.HttpStatusCode.Companion.NotFound
 import io.ktor.http.HttpStatusCode.Companion.OK
+import io.ktor.server.application.call
+import io.ktor.server.auth.authenticate
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Routing
@@ -25,16 +25,16 @@ import mu.KotlinLogging
 private val logger = KotlinLogging.logger {}
 
 data class UpdatedUser(
-    val locationUuid: UUID?,
-    val isVegetarian: Boolean = false,
-    val hasHalalRestriction: Boolean = false,
-    val hasNutsRestriction: Boolean = false,
-    val hasSeafoodRestriction: Boolean = false,
-    val hasPorkRestriction: Boolean = false,
-    val hasBeefRestriction: Boolean = false,
-    val isGlutenIntolerant: Boolean = false,
-    val isLactoseIntolerant: Boolean = false,
-    val otherRestrictions: String = ""
+  val locationUuid: UUID?,
+  val isVegetarian: Boolean = false,
+  val hasHalalRestriction: Boolean = false,
+  val hasNutsRestriction: Boolean = false,
+  val hasSeafoodRestriction: Boolean = false,
+  val hasPorkRestriction: Boolean = false,
+  val hasBeefRestriction: Boolean = false,
+  val isGlutenIntolerant: Boolean = false,
+  val isLactoseIntolerant: Boolean = false,
+  val otherRestrictions: String = ""
 )
 
 fun Routing.users(usersService: UsersService) {

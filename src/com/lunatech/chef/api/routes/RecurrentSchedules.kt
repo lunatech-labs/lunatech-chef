@@ -4,13 +4,13 @@ package com.lunatech.chef.api.routes
 import com.lunatech.chef.api.domain.NewRecurrentSchedule
 import com.lunatech.chef.api.domain.RecurrentSchedule
 import com.lunatech.chef.api.persistence.services.RecurrentSchedulesService
-import io.ktor.server.application.call
-import io.ktor.server.auth.authenticate
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.InternalServerError
 import io.ktor.http.HttpStatusCode.Companion.NotFound
 import io.ktor.http.HttpStatusCode.Companion.OK
+import io.ktor.server.application.call
+import io.ktor.server.auth.authenticate
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Routing
@@ -26,10 +26,10 @@ import mu.KotlinLogging
 private val logger = KotlinLogging.logger {}
 
 data class UpdatedRecurrentSchedule(
-    val menuUuid: UUID,
-    val locationUuid: UUID,
-    val repetitionDays: Int,
-    val nextDate: LocalDate
+  val menuUuid: UUID,
+  val locationUuid: UUID,
+  val repetitionDays: Int,
+  val nextDate: LocalDate
 )
 
 fun Routing.recurrentSchedules(recurrentSchedulesService: RecurrentSchedulesService) {

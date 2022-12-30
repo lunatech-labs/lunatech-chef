@@ -5,11 +5,11 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
 import com.lunatech.chef.api.domain.NewUser
 import com.lunatech.chef.api.domain.User
 import com.lunatech.chef.api.persistence.services.UsersService
-import io.ktor.server.application.call
-import io.ktor.server.auth.Principal
 import io.ktor.http.HttpStatusCode.Companion.InternalServerError
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.http.HttpStatusCode.Companion.Unauthorized
+import io.ktor.server.application.call
+import io.ktor.server.auth.Principal
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Routing
 import io.ktor.server.routing.get
@@ -29,21 +29,21 @@ private val logger = KotlinLogging.logger {}
 private val formatDate = SimpleDateFormat("yyMMddHHmmss")
 
 data class ChefSession(
-    val ttl: String,
-    val isAdmin: Boolean,
-    val uuid: UUID,
-    val name: String,
-    val emailAddress: String,
-    val locationUuid: UUID?,
-    val isVegetarian: Boolean = false,
-    val hasHalalRestriction: Boolean = false,
-    val hasNutsRestriction: Boolean = false,
-    val hasSeafoodRestriction: Boolean = false,
-    val hasPorkRestriction: Boolean = false,
-    val hasBeefRestriction: Boolean = false,
-    val isGlutenIntolerant: Boolean = false,
-    val isLactoseIntolerant: Boolean = false,
-    val otherRestrictions: String = ""
+  val ttl: String,
+  val isAdmin: Boolean,
+  val uuid: UUID,
+  val name: String,
+  val emailAddress: String,
+  val locationUuid: UUID?,
+  val isVegetarian: Boolean = false,
+  val hasHalalRestriction: Boolean = false,
+  val hasNutsRestriction: Boolean = false,
+  val hasSeafoodRestriction: Boolean = false,
+  val hasPorkRestriction: Boolean = false,
+  val hasBeefRestriction: Boolean = false,
+  val isGlutenIntolerant: Boolean = false,
+  val isLactoseIntolerant: Boolean = false,
+  val otherRestrictions: String = ""
 )
 
 data class AccountPrincipal(val email: String) : Principal

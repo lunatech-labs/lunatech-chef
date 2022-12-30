@@ -4,13 +4,13 @@ package com.lunatech.chef.api.routes
 import com.lunatech.chef.api.domain.Dish
 import com.lunatech.chef.api.domain.NewDish
 import com.lunatech.chef.api.persistence.services.DishesService
-import io.ktor.server.application.call
-import io.ktor.server.auth.authenticate
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.InternalServerError
 import io.ktor.http.HttpStatusCode.Companion.NotFound
 import io.ktor.http.HttpStatusCode.Companion.OK
+import io.ktor.server.application.call
+import io.ktor.server.auth.authenticate
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Routing
@@ -25,16 +25,16 @@ import mu.KotlinLogging
 private val logger = KotlinLogging.logger {}
 
 data class UpdatedDish(
-    val name: String,
-    val description: String = "",
-    val isVegetarian: Boolean = false,
-    val isHalal: Boolean = false,
-    val hasNuts: Boolean = false,
-    val hasSeafood: Boolean = false,
-    val hasPork: Boolean = false,
-    val hasBeef: Boolean = false,
-    val isGlutenFree: Boolean = false,
-    val hasLactose: Boolean = false
+  val name: String,
+  val description: String = "",
+  val isVegetarian: Boolean = false,
+  val isHalal: Boolean = false,
+  val hasNuts: Boolean = false,
+  val hasSeafood: Boolean = false,
+  val hasPork: Boolean = false,
+  val hasBeef: Boolean = false,
+  val isGlutenFree: Boolean = false,
+  val hasLactose: Boolean = false
 )
 
 fun Routing.dishes(dishesService: DishesService) {

@@ -2,9 +2,9 @@ POST {{ host }}/users
 Content-Type: application/json
 CHEF_SESSION: {{ session }}
 
-{ "name": "Leonor",
-  "emailAddress": "leonor.boga@lunatech.nl",
-  "locationUuid": "5a7865b3-ed05-4569-aae5-d38d8a02c490",
+{ "name": "Maria do Carmo",
+  "emailAddress": "maria.do.carmo@lunatech.nl",
+  "locationUuid": "4f3a4488-241b-42f7-8c4e-de50fe4d1f57",
   "isVegetarian": "false",
   "hasHalalRestriction": "false",
   "hasNutsRestriction": "false",
@@ -12,8 +12,8 @@ CHEF_SESSION: {{ session }}
   "hasPorkRestriction": "true",
   "hasBeefRestriction": "false",
   "isGlutenIntolerant": "false",
-  "isLactoseIntolerant": "false",
-  "otherRestrictions": ""
+  "isLactoseIntolerant": "true",
+  "otherRestrictions": "spicy food"
 }
 
 ###

@@ -70,14 +70,6 @@ export default function ListSchedules(props) {
       <div>
         <h3 className="mt-4">Management of Scheduled Menus</h3>
       </div>
-      <Link to={`/newSchedule`}>
-        <button type="button" className="btn btn-success">
-          <i>
-            <FontAwesomeIcon icon={faPlus} />
-          </i>{" "}
-          New Schedule
-        </button>
-      </Link>
       <div>
         <ShowError error={props.errorAdding} reason="adding" />
         <ShowError error={props.errorDeleting} reason="deleting" />
@@ -160,6 +152,16 @@ export default function ListSchedules(props) {
               ></Form>
             </Row>
             <Row>
+              <Link to={`/newSchedule`}>
+                <button type="button" className="btn btn-success">
+                  <i>
+                    <FontAwesomeIcon icon={faPlus} />
+                  </i>{" "}
+                  New Schedule
+                </button>
+              </Link>
+            </Row>
+            <Row>
               <Table striped bordered hover>
                 <thead>
                   <tr>
@@ -214,8 +216,7 @@ export default function ListSchedules(props) {
       <div>
         <h4 className="mt-4">Recurrent Schedules</h4>
         <h5 className="mt-4">
-          A list of menus that will be scheduled automatically based on it's
-          recurrency
+          List of menus to be scheduled automatically based on its recurrency
         </h5>
       </div>
       <div>

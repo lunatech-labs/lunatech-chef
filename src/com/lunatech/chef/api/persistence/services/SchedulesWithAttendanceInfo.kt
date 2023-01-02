@@ -3,7 +3,6 @@ package com.lunatech.chef.api.persistence.services
 import com.lunatech.chef.api.domain.Schedule
 import com.lunatech.chef.api.domain.ScheduleWithAttendanceInfo
 import com.lunatech.chef.api.persistence.schemas.Attendances
-import com.lunatech.chef.api.persistence.schemas.DEFAULT_STRING
 import com.lunatech.chef.api.persistence.schemas.Locations
 import com.lunatech.chef.api.persistence.schemas.Schedules
 import com.lunatech.chef.api.persistence.schemas.Users
@@ -19,7 +18,6 @@ import org.ktorm.dsl.leftJoin
 import org.ktorm.dsl.map
 import org.ktorm.dsl.orderBy
 import org.ktorm.dsl.select
-import org.ktorm.dsl.selectDistinct
 import org.ktorm.dsl.where
 import org.ktorm.schema.ColumnDeclaring
 
@@ -55,9 +53,12 @@ class SchedulesWithAttendanceInfo(
         val attendants =
             database.from(Users)
                 .leftJoin(Attendances, on = Attendances.userUuid eq Users.uuid)
-                .selectDistinct(Users.name)
+                .select(Users.uuid, Users.name, Users.emailAddress, Users.isVegetarian, Users.hasHalalRestriction,
+                    Users.hasNutsRestriction, Users.hasSeafoodRestriction, Users.hasPorkRestriction,
+                    Users.hasBeefRestriction, Users.isGlutenIntolerant, Users.isLactoseIntolerant,
+                    Users.otherRestrictions, Users.isInactive, Users.isDeleted)
                 .where { (Attendances.scheduleUuid eq schedule.uuid) and (Attendances.isAttending eq true) and (Attendances.isDeleted eq false) }
-                .map { row -> row[Users.name] ?: DEFAULT_STRING }
+                .map { Users.createEntity(it) }
 
         return ScheduleWithAttendanceInfo(schedule.uuid, menu!!.name, attendants, schedule.date, location!!)
     }

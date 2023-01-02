@@ -5,7 +5,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
 import com.google.api.client.http.javanet.NetHttpTransport
-import com.google.api.client.json.jackson2.JacksonFactory
+import com.google.api.client.json.gson.GsonFactory
 import com.lunatech.chef.api.config.AuthConfig
 import com.lunatech.chef.api.config.FlywayConfig
 import com.lunatech.chef.api.persistence.DBEvolution
@@ -81,7 +81,7 @@ fun Application.module() {
     val authConfig = AuthConfig.fromConfig(config.getConfig("auth"))
     val cronString = config.getString("recurrent-schedules-cron")
 
-    val verifier = GoogleIdTokenVerifier.Builder(NetHttpTransport(), JacksonFactory.getDefaultInstance())
+    val verifier = GoogleIdTokenVerifier.Builder(NetHttpTransport(), GsonFactory.getDefaultInstance())
         .setAudience(Collections.singletonList(authConfig.clientId))
         .build()
 

@@ -340,9 +340,7 @@ class Main extends Component {
         {this.props.user.isAuthenticated ? (
           <Container>
             <div className="d-flex" id="wrapper">
-              {/* <div className="bg-light border-right" id="sidebar-wrapper"> */}
               <Sidebar logout={this.props.logout} isAdmin={this.props.user.isAdmin} />
-              {/* </div> */}
               <Routes>
                 {/* do not use the same routes as the ones available in the BE server */}
                 <Route

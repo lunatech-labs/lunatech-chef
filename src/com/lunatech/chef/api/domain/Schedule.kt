@@ -38,7 +38,7 @@ data class ScheduleWithMenuInfo(
 data class ScheduleWithAttendanceInfo(
   val uuid: UUID,
   val menuName: String,
-  val attendants: List<String>,
+  val attendants: List<User>,
   val date: LocalDate,
   val location: Location
 )

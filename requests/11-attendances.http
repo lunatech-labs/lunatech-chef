@@ -2,8 +2,8 @@ POST {{ host }}/attendances
 Content-Type: application/json
 CHEF_SESSION: {{ session }}
 
-{ "scheduleUuid": "a2842866-a89d-43e9-b653-3d856af01b23",
-  "userUuid": "b31f0cc1-981d-4819-a245-2bb8a3a003ca",
+{ "scheduleUuid": "aa6ff83d-b07d-4cb0-a414-7172391dd12b",
+  "userUuid": "4207d44e-3d53-4b28-b43a-ae42f8204b9c",
   "isAttending": "true"
 }
 

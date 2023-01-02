@@ -41,6 +41,7 @@ class AttendancesService(val database: Database, val usersService: UsersService)
             set(it.scheduleUuid, attendance.scheduleUuid)
             set(it.userUuid, attendance.userUuid)
             set(it.isAttending, attendance.isAttending)
+            set(it.isDeleted, attendance.isDeleted)
         }
 
     fun update(uuid: UUID, attendance: UpdatedAttendance): Int =

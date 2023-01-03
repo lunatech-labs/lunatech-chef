@@ -61,68 +61,44 @@ export function AddDish(props) {
               <Col lg="4">Choose all that apply:</Col>
             </Row>
             <Row>
-              <Col lg="1">
-                <Field
-                  name="isVegetarian"
-                  component="input"
-                  type="checkbox"
-                ></Field>
+              <Col lg="4">
+                <Field name="isVegetarian" component="input" type="checkbox" ></Field><span> Is vegetarian</span>
               </Col>
-              <Col lg="2">Is vegetarian</Col>
             </Row>
             <Row>
-              <Col lg="1">
-                <Field name="isHalal" component="input" type="checkbox"></Field>
+              <Col lg="4">
+                <Field name="isHalal" component="input" type="checkbox"></Field> <span> Is halal</span>
               </Col>
-              <Col lg="2">Is halal</Col>
             </Row>
             <Row>
-              <Col lg="1">
-                <Field name="hasNuts" component="input" type="checkbox"></Field>
+              <Col lg="4">
+                <Field name="hasNuts" component="input" type="checkbox"></Field><span> Contains nuts</span>
               </Col>
-              <Col lg="2">Contains nuts</Col>
             </Row>
             <Row>
-              <Col lg="1">
-                <Field
-                  name="hasSeafood"
-                  component="input"
-                  type="checkbox"
-                ></Field>
+              <Col lg="4">
+                <Field name="hasSeafood" component="input" type="checkbox"></Field><span> Contains seafood</span>
               </Col>
-              <Col lg="2">Contains seafood</Col>
             </Row>
             <Row>
-              <Col lg="1">
-                <Field name="hasPork" component="input" type="checkbox"></Field>
+              <Col lg="4">
+                <Field name="hasPork" component="input" type="checkbox"></Field><span> Contains pork</span>
               </Col>
-              <Col lg="2">Contains pork</Col>
             </Row>
             <Row>
-              <Col lg="1">
-                <Field name="hasBeef" component="input" type="checkbox"></Field>
+              <Col lg="4">
+                <Field name="hasBeef" component="input" type="checkbox"></Field><span> Contains beef</span>
               </Col>
-              <Col lg="2">Contains beef</Col>
             </Row>
             <Row>
-              <Col lg="1">
-                <Field
-                  name="isGlutenFree"
-                  component="input"
-                  type="checkbox"
-                ></Field>
+              <Col lg="4">
+                <Field name="isGlutenFree" component="input" type="checkbox"  ></Field><span> Is gluten free</span>
               </Col>
-              <Col lg="2">Is gluten free</Col>
             </Row>
             <Row>
-              <Col lg="1">
-                <Field
-                  name="hasLactose"
-                  component="input"
-                  type="checkbox"
-                ></Field>
+              <Col lg="4">
+                <Field name="hasLactose" component="input" type="checkbox" ></Field><span> Contains lactose</span>
               </Col>
-              <Col lg="2">Contains lactose</Col>
             </Row>
             <Row>
               <Col lg="5">

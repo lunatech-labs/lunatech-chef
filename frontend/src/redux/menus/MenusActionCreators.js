@@ -59,10 +59,14 @@ export const editMenu = (editedMenu) => (dispatch) => {
 };
 
 export const deleteMenu = (menuUuid) => (dispatch) => {
+  const userUuid = localStorage.getItem("userUuid");
   axiosInstance
     .delete("/menus/" + menuUuid)
     .then((response) => {
       dispatch(fetchMenus());
+      dispatch(fetchSchedules());
+      dispatch(fetchSchedulesAttendance());
+      dispatch(fetchAttendanceUser(userUuid));
     })
     .catch(function (error) {
       console.log("Failed removing Menu: " + error);

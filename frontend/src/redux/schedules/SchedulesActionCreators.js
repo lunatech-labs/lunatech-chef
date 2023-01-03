@@ -175,10 +175,13 @@ export const editRecurrentSchedule = (editedSchedule) => (dispatch) => {
 };
 
 export const deleteSchedule = (scheduleUuid) => (dispatch) => {
+  const userUuid = localStorage.getItem("userUuid");
   axiosInstance
     .delete("/schedules/" + scheduleUuid)
     .then((response) => {
       dispatch(fetchSchedules());
+      dispatch(fetchSchedulesAttendance());
+      dispatch(fetchAttendanceUser(userUuid));
     })
     .catch(function (error) {
       console.log("Failed removing Schedule: " + error);

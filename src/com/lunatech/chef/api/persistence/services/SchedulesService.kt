@@ -52,6 +52,7 @@ class SchedulesService(val database: Database) {
                 it.uuid eq uuid
             }
         }
+        // delete related attendances
         database.update(Attendances) {
             set(it.isDeleted, true)
             where {

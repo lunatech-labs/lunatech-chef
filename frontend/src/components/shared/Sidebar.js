@@ -16,24 +16,24 @@ const Sidebar = (props) => {
                 <CDBSidebarHeader prefix={<i className="fa fa-bars fa-large"></i>}> Lunatech Chef </CDBSidebarHeader>
                 <CDBSidebarContent className="sidebar-content">
                     <CDBSidebarMenu>
-                        <NavLink exact to="/" activeClassName="activeClicked">
+                        <NavLink exact="true" to="/" activeclassname="activeClicked">
                             <CDBSidebarMenuItem icon="hippo">Meals schedules</CDBSidebarMenuItem>
                         </NavLink>
-                        <NavLink exact to="/whoisjoining" activeClassName="activeClicked">
+                        <NavLink exact="true" to="/whoisjoining" activeclassname="activeClicked">
                             <CDBSidebarMenuItem icon="question">Who is joining?</CDBSidebarMenuItem>
                         </NavLink>
                         {props.isAdmin ? (
                             <div>
-                                <NavLink exact to="/alllocations" activeClassName="activeClicked">
+                                <NavLink exact="true" to="/alllocations" activeclassname="activeClicked">
                                     <CDBSidebarMenuItem icon="map">Locations</CDBSidebarMenuItem>
                                 </NavLink>
-                                <NavLink exact to="/alldishes" activeClassName="activeClicked">
+                                <NavLink exact="true" to="/alldishes" activeclassname="activeClicked">
                                     <CDBSidebarMenuItem icon="utensils">Dishes</CDBSidebarMenuItem>
                                 </NavLink>
-                                <NavLink exact to="/allmenus" activeClassName="activeClicked">
+                                <NavLink exact="true" to="/allmenus" activeclassname="activeClicked">
                                     <CDBSidebarMenuItem icon="folder">Menus</CDBSidebarMenuItem>
                                 </NavLink>
-                                <NavLink exact to="/allschedules" activeClassName="activeClicked">
+                                <NavLink exact="true" to="/allschedules" activeclassname="activeClicked">
                                     <CDBSidebarMenuItem icon="calendar">Schedules</CDBSidebarMenuItem>
                                 </NavLink>
                             </div>
@@ -41,10 +41,10 @@ const Sidebar = (props) => {
                             <div></div>
                         )}
 
-                        <NavLink exact to="/userProfile" activeClassName="activeClicked">
+                        <NavLink exact="true" to="/userProfile" activeclassname="activeClicked">
                             <CDBSidebarMenuItem icon="user">Profile</CDBSidebarMenuItem>
                         </NavLink>
-                        <NavLink exact onClick={props.logout} activeClassName="activeClicked">
+                        <NavLink exact="true" onClick={props.logout} activeclassname="activeClicked">
                             <CDBSidebarMenuItem icon="user-slash">Logout</CDBSidebarMenuItem>
                         </NavLink>
                     </CDBSidebarMenu>

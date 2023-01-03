@@ -1,5 +1,10 @@
 import * as ActionTypes from "./LocationsActionTypes";
 import { axiosInstance } from "../Axios";
+import {
+  fetchSchedules,
+  fetchSchedulesAttendance,
+} from "../schedules/SchedulesActionCreators";
+import { fetchAttendanceUser } from "../attendance/AttendanceActionCreators";
 
 export const fetchLocations = () => (dispatch) => {
   dispatch(locationsLoading(true));
@@ -38,10 +43,14 @@ export const editLocation = (editedLocation) => (dispatch) => {
     country: editedLocation.country,
   };
 
+  const userUuid = localStorage.getItem("userUuid");
   axiosInstance
     .put("/locations/" + editedLocation.uuid, locationToEdit)
     .then((response) => {
       dispatch(fetchLocations());
+      dispatch(fetchSchedules());
+      dispatch(fetchSchedulesAttendance());
+      dispatch(fetchAttendanceUser(userUuid));
     })
     .catch(function (error) {
       console.log("Failed editing Location: " + error);
@@ -50,10 +59,15 @@ export const editLocation = (editedLocation) => (dispatch) => {
 };
 
 export const deleteLocation = (locationUuid) => (dispatch) => {
+  const userUuid = localStorage.getItem("userUuid");
   axiosInstance
     .delete("/locations/" + locationUuid)
     .then((response) => {
       dispatch(fetchLocations());
+      dispatch(fetchSchedules());
+      dispatch(fetchSchedulesAttendance());
+      dispatch(fetchAttendanceUser(userUuid));
+
     })
     .catch(function (error) {
       console.log("Failed removing Location: " + error);

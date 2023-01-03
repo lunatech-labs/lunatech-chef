@@ -2,8 +2,10 @@ package com.lunatech.chef.api.persistence.services
 
 import com.lunatech.chef.api.domain.DishOnMenu
 import com.lunatech.chef.api.domain.MenuWithDishesUuid
+import com.lunatech.chef.api.persistence.schemas.Attendances
 import com.lunatech.chef.api.persistence.schemas.DishesOnMenus
 import com.lunatech.chef.api.persistence.schemas.MenuNames
+import com.lunatech.chef.api.persistence.schemas.Schedules
 import com.lunatech.chef.api.routes.UpdatedMenu
 import java.util.UUID
 import org.ktorm.database.Database
@@ -95,11 +97,36 @@ class MenusService(val database: Database) {
     }
 
     fun delete(uuid: UUID): Int {
-        return database.update(MenuNames) {
+        val result = database.update(MenuNames) {
             set(it.isDeleted, true)
             where {
                 it.uuid eq uuid
             }
         }
+
+        // delete related schedules and attendances
+        val schedulesUuid = database
+            .from(Schedules)
+            .select()
+            .where { Schedules.menuUuid eq uuid }
+            .map { sch -> Schedules.createEntity(sch) }
+            .map { schedule -> schedule.uuid }
+
+        database.update(Schedules) {
+            set(it.isDeleted, true)
+            where {
+                it.menuUuid eq uuid
+            }
+        }
+        schedulesUuid.map { scheduleUuid ->
+            database.update(Attendances) { attendance ->
+                set(attendance.isDeleted, true)
+                where {
+                    attendance.scheduleUuid eq scheduleUuid
+                }
+            }
+        }
+
+        return result
     }
 }

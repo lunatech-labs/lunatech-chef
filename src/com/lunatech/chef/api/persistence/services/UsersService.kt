@@ -1,6 +1,7 @@
 package com.lunatech.chef.api.persistence.services
 
 import com.lunatech.chef.api.domain.User
+import com.lunatech.chef.api.persistence.schemas.Attendances
 import com.lunatech.chef.api.persistence.schemas.Users
 import com.lunatech.chef.api.routes.UpdatedUser
 import java.util.UUID
@@ -62,10 +63,20 @@ class UsersService(val database: Database) {
             }
         }
 
-    fun delete(uuid: UUID): Int = database.update(Users) {
-        set(it.isDeleted, true)
-        where {
-            it.uuid eq uuid
+    fun delete(uuid: UUID): Int {
+        val result = database.update(Users) {
+            set(it.isDeleted, true)
+            where {
+                it.uuid eq uuid
+            }
         }
+        // delete related attendances
+        database.update(Attendances) {
+            set(it.isDeleted, true)
+            where {
+                it.userUuid eq uuid
+            }
+        }
+        return result
     }
 }

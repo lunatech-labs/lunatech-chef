@@ -2,9 +2,11 @@ package com.lunatech.chef.api.persistence.services
 
 import com.lunatech.chef.api.domain.Dish
 import com.lunatech.chef.api.persistence.schemas.Dishes
+import com.lunatech.chef.api.persistence.schemas.DishesOnMenus
 import com.lunatech.chef.api.routes.UpdatedDish
 import java.util.UUID
 import org.ktorm.database.Database
+import org.ktorm.dsl.delete
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.from
 import org.ktorm.dsl.insert
@@ -57,5 +59,8 @@ class DishesService(val database: Database) {
         where {
             it.uuid eq uuid
         }
+
+        // delete dishes from DishesOnMenus tables
+        database.delete(DishesOnMenus) { dish -> dish.dishUuid eq uuid }
     }
 }

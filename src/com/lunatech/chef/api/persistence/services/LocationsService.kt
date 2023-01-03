@@ -1,7 +1,9 @@
 package com.lunatech.chef.api.persistence.services
 
 import com.lunatech.chef.api.domain.Location
+import com.lunatech.chef.api.persistence.schemas.Attendances
 import com.lunatech.chef.api.persistence.schemas.Locations
+import com.lunatech.chef.api.persistence.schemas.Schedules
 import com.lunatech.chef.api.routes.UpdatedLocation
 import java.util.UUID
 import org.ktorm.database.Database
@@ -40,6 +42,28 @@ class LocationsService(val database: Database) {
         set(it.isDeleted, true)
         where {
             it.uuid eq uuid
+        }
+
+        // update related schedules and attendances
+        val schedulesUuid = database
+            .from(Schedules)
+            .select()
+            .where { Schedules.locationUuid eq uuid }
+            .map { sch -> Schedules.createEntity(sch) }
+            .map { schedule -> schedule.uuid }
+        database.update(Schedules) { sch ->
+        set(sch.isDeleted, true)
+            where {
+                sch.locationUuid eq uuid
+            }
+        }
+        schedulesUuid.map { scheduleUuid ->
+            database.update(Attendances) { attendance ->
+                set(attendance.isDeleted, true)
+                where {
+                    attendance.scheduleUuid eq scheduleUuid
+                }
+            }
         }
     }
 }

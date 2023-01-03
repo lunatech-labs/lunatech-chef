@@ -71,10 +71,13 @@ export const editDish = (editedDish) => (dispatch) => {
 };
 
 export const deleteDish = (dishUuid) => (dispatch) => {
+  const userUuid = localStorage.getItem("userUuid");
   axiosInstance
     .delete("/dishes/" + dishUuid)
     .then((response) => {
       dispatch(fetchDishes());
+      dispatch(fetchMenus());
+      dispatch(fetchAttendanceUser(userUuid));
     })
     .catch(function (error) {
       console.log("Failed removing dish: " + error);

@@ -58,7 +58,7 @@ dependencies {
     implementation "io.ktor:ktor-server-host-common-jvm:2.2.1"
     implementation "io.ktor:ktor-server-auth-jvm:2.2.1"
     implementation "io.ktor:ktor-server-sessions-jvm:2.2.1"
-    implementation "io.ktor:ktor-serialization-jackson:2.2.1"
+    implementation "io.ktor:ktor-serialization-jackson:2.2.2"
     implementation "io.ktor:ktor-client-core-jvm:2.2.1"
     implementation "io.ktor:ktor-client-core-jvm:2.2.1"
     implementation "io.ktor:ktor-client-apache-jvm:2.2.1"

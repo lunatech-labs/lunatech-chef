@@ -1,8 +1,9 @@
 {
   "build": {
-    "type": "gradle"
+    "type": "gradle",
+    "goal": "--no-daemon buildAll"
   },
   "deploy": {
-    "goal": "grails:run"
+    "goal": "--no-daemon run"
   }
 }

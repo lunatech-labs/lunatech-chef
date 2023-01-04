@@ -102,7 +102,7 @@ export const addNewRecurrentSchedule = (newRecurrentSchedule) => (dispatch) => {
     menuUuid: newRecurrentSchedule.menuUuid,
     locationUuid: newRecurrentSchedule.locationUuid,
     repetitionDays: newRecurrentSchedule.recurrency,
-    nextDate: newRecurrentSchedule.date,
+    nextDate: newRecurrentSchedule.nextDate,
   };
 
   axiosInstance

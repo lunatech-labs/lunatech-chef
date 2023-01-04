@@ -31,7 +31,7 @@ class SchedulerJob() : Job {
 
         val recSchedules = recurrentSchedulesService.getIntervalDate(today, inAWeek)
 
-        logger.info("Found ${recSchedules.size} recurrent schedules.")
+        logger.info("Found ${recSchedules.size} recurrent schedules to be created.")
         for (rec in recSchedules) {
             val newSchedule = NewSchedule(menuUuid = rec.menuUuid, date = rec.nextDate, locationUuid = rec.locationUuid)
             schedulesService.insert(Schedule.fromNewSchedule(newSchedule))

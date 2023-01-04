@@ -63,11 +63,6 @@ class RecurrentSchedulesWithMenuInfo(
             .where { Locations.uuid eq recSchedule.locationUuid }
             .map { Locations.createEntity(it) }.firstOrNull()
 
-        println("Inside getScheduleWithMenuInfo")
-        println("recSchedule: $recSchedule")
-        println("menu: $menu")
-        println("location: $location")
-
         return RecurrentScheduleWithMenuInfo(
             recSchedule.uuid, menu!!,
             recSchedule.nextDate,

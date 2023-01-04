@@ -9,13 +9,19 @@ import org.quartz.JobDetail
 import org.quartz.Scheduler
 import org.quartz.TriggerBuilder.newTrigger
 
-fun schedulerTrigger(scheduler: Scheduler, schedulesService: SchedulesService, recurrentSchedulesService: RecurrentSchedulesService, cronExpression: String) {
+fun schedulerTrigger(
+  scheduler: Scheduler,
+  schedulesService: SchedulesService,
+  recurrentSchedulesService: RecurrentSchedulesService,
+  cronExpression: String
+) {
+
     val job: JobDetail = newJob(SchedulerJob::class.java)
         .withIdentity("recurrentSchedules", "chefSchedules")
         .build()
 
-    job.jobDataMap.put(SchedulerJob.schedulesService, schedulesService)
-    job.jobDataMap.put(SchedulerJob.recurrentSchedulesService, recurrentSchedulesService)
+    job.jobDataMap[SchedulerJob.schedulesService] = schedulesService
+    job.jobDataMap[SchedulerJob.recurrentSchedulesService] = recurrentSchedulesService
 
     val trigger: CronTrigger = newTrigger()
         .withIdentity("weekSchedules", "weekSchedulesTrigger")

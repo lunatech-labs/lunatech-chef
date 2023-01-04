@@ -1,7 +1,7 @@
 {
   "build": {
     "type": "gradle",
-    "goal": "--no-daemon buildAll"
+    "goal": "--no-daemon build"
   },
   "deploy": {
     "goal": "--no-daemon run"

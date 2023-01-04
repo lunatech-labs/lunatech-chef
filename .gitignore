@@ -6,3 +6,4 @@
 *.ipr
 *.iws
 /resources/override.conf
+.clever.json

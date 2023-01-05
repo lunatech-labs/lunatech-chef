@@ -23,10 +23,8 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 sourceSets {
-    main.kotlin.srcDirs = main.java.srcDirs = ['src']
-    test.kotlin.srcDirs = test.java.srcDirs = ['test']
-    main.resources.srcDirs = ['resources']
-    test.resources.srcDirs = ['testresources']
+    main.kotlin.srcDirs = main.java.srcDirs = ['src/main']
+    test.kotlin.srcDirs = test.java.srcDirs = ['src/test']
 }
 
 repositories {

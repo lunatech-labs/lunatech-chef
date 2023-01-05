@@ -55,7 +55,7 @@
     "dev-debug": "node src/index.js"
   },
   "engines": {
-    "node": "^10"
+    "node": "^18"
   },
   "eslintConfig": {
     "extends": "react-app"

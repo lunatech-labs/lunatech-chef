@@ -5,5 +5,5 @@
 *.iml
 *.ipr
 *.iws
-/resources/override.conf
+src/main/resources/override.conf
 .clever.json

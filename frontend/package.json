@@ -54,9 +54,6 @@
     "eject": "react-scripts eject",
     "dev-debug": "node src/index.js"
   },
-  "engines": {
-    "node": "^18"
-  },
   "eslintConfig": {
     "extends": "react-app"
   },

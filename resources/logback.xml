@@ -1,23 +1,11 @@
 <configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} MDC=%X{user} - %msg%n</pattern>
+        </encoder>
+    </appender>
 
-<conversionRule conversionWord="coloredLevel" converterClass="play.api.libs.logback.ColoredLevel"/>
-
-<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-
-    <!-- changed the encoder -->
-    <encoder class="com.newrelic.logging.logback.NewRelicEncoder"/>
-
-</appender>
-
-<!-- added the ASYNC appender -->
-<appender name="ASYNC" class="com.newrelic.logging.logback.NewRelicAsyncAppender">
-    <appender-ref ref="STDOUT" />
-</appender>
-
-...
-
-<root level="INFO">
-    <appender-ref ref="ASYNC"/>
-</root>
-
+    <root level="info">
+        <appender-ref ref="STDOUT" />
+    </root>
 </configuration>

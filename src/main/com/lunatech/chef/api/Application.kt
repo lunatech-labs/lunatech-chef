@@ -83,6 +83,8 @@ fun Application.module() {
     val hostAllowed = config.getString("host-allowed")
 
     val chefSession = "CHEF_SESSION"
+    val http = "http"
+    val https = "http2"
 
     val verifier = GoogleIdTokenVerifier.Builder(NetHttpTransport(), GsonFactory.getDefaultInstance())
         .setAudience(Collections.singletonList(authConfig.clientId))
@@ -117,7 +119,7 @@ fun Application.module() {
         allowHeader(HttpHeaders.AccessControlAllowOrigin)
         allowHeader(HttpHeaders.Authorization)
         allowHeader(chefSession)
-        allowHost(hostAllowed)
+        allowHost(hostAllowed, listOf(http, https))
     }
 
     install(ContentNegotiation) {

@@ -9,11 +9,12 @@ import {
 } from 'cdbreact';
 import { NavLink } from 'react-router-dom';
 
+// based on https://medium.com/@devwares/how-to-create-a-responsive-sidebar-in-react-using-bootstrap-and-contrast-86d0829f8c6c
 const Sidebar = (props) => {
     return (
         <div className="sidebar">
             <CDBSidebar textColor="#000" backgroundColor="#f0f0f0">
-                <CDBSidebarHeader prefix={<i className="fa fa-bars fa-large"></i>}> Lunatech Chef</CDBSidebarHeader>
+                <CDBSidebarHeader prefix={<i className="fa fa-bars fa-large"></i>}>Lunatech Chef</CDBSidebarHeader>
                 <CDBSidebarContent className="sidebar-content">
                     <CDBSidebarMenu>
                         <NavLink exact="true" to="/" activeclassname="activeClicked">

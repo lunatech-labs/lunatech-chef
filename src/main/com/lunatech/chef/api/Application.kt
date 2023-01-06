@@ -192,6 +192,9 @@ fun Application.module() {
         users(usersService)
         attendances(attendancesService)
 
+        static("static/media") {
+            files("frontend/build/static/media")
+        }
         static("static") {
             files("frontend/build/static")
         }

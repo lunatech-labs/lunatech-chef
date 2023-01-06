@@ -80,6 +80,9 @@ fun Application.module() {
     val dbConfig = FlywayConfig.fromConfig(config.getConfig("database"))
     val authConfig = AuthConfig.fromConfig(config.getConfig("auth"))
     val cronString = config.getString("recurrent-schedules-cron")
+    val hostAllowed = config.getString("host-allowed")
+
+    val chefSession = "CHEF_SESSION"
 
     val verifier = GoogleIdTokenVerifier.Builder(NetHttpTransport(), GsonFactory.getDefaultInstance())
         .setAudience(Collections.singletonList(authConfig.clientId))
@@ -105,7 +108,6 @@ fun Application.module() {
     val scheduler = StdSchedulerFactory.getDefaultScheduler()
     schedulerTrigger(scheduler, schedulesService, recurrentSchedulesService, cronString)
 
-    val CHEF_SESSSION = "CHEF_SESSION"
     install(CORS) {
         allowMethod(HttpMethod.Options)
         allowMethod(HttpMethod.Put)
@@ -114,8 +116,8 @@ fun Application.module() {
         allowHeader(HttpHeaders.ContentType)
         allowHeader(HttpHeaders.AccessControlAllowOrigin)
         allowHeader(HttpHeaders.Authorization)
-        allowHeader(CHEF_SESSSION)
-        allowHost("localhost:3000")
+        allowHeader(chefSession)
+        allowHost(hostAllowed)
     }
 
     install(ContentNegotiation) {
@@ -131,13 +133,13 @@ fun Application.module() {
 //        }
 //    }
 
-    // This will add Date and Server headers to each HTTP response besides CHEF_SESSSION header
+    // This will add Date and Server headers to each HTTP response besides CHEF_SESSION header
     install(DefaultHeaders) {
-        header(HttpHeaders.AccessControlExposeHeaders, CHEF_SESSSION)
+        header(HttpHeaders.AccessControlExposeHeaders, chefSession)
     }
 
     install(Sessions) {
-        header<ChefSession>(CHEF_SESSSION) {
+        header<ChefSession>(chefSession) {
             val secretSignKey = authConfig.secretKey.encodeToByteArray()
             transform(SessionTransportTransformerMessageAuthentication(secretSignKey))
         }
@@ -156,7 +158,7 @@ fun Application.module() {
 
 //    install(RoleAuthorization) {
 //        validate { allowedRoles ->
-//            // preciso do ChefSession e do allowedRoles
+//            // need ChefSession and allowedRoles
 //            logger.info("*********** allowedRoles: {}", allowedRoles)
 //            true
 //        }

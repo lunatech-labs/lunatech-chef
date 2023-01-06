@@ -12,8 +12,8 @@ import { NavLink } from 'react-router-dom';
 const Sidebar = (props) => {
     return (
         <div className="sidebar">
-            <CDBSidebar textColor="#000" backgroundColor="#d9d9d9">
-                <CDBSidebarHeader prefix={<i className="fa fa-bars fa-large"></i>}> Lunatech Chef </CDBSidebarHeader>
+            <CDBSidebar textColor="#000" backgroundColor="#f0f0f0">
+                <CDBSidebarHeader prefix={<i className="fa fa-bars fa-large"></i>}> Lunatech Chef</CDBSidebarHeader>
                 <CDBSidebarContent className="sidebar-content">
                     <CDBSidebarMenu>
                         <NavLink exact="true" to="/" activeclassname="activeClicked">
@@ -50,7 +50,11 @@ const Sidebar = (props) => {
                     </CDBSidebarMenu>
                 </CDBSidebarContent>
                 <CDBSidebarFooter>
-                    <img src={process.env.PUBLIC_URL + '/root/lunatech-logo.png'} alt="Lunatech logo" width="270px" />
+                    {process.env.NODE_ENV === "production" ? (
+                        <img src={process.env.PUBLIC_URL + 'root/lunatech-logo.png'} alt="Lunatech logo" width="270px" />)
+                        : (
+                            <img src={process.env.PUBLIC_URL + 'lunatech-logo.png'} alt="Lunatech logo" width="270px" />)
+                    }
                 </CDBSidebarFooter>
             </CDBSidebar>
         </div>

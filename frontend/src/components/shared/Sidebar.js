@@ -50,7 +50,7 @@ const Sidebar = (props) => {
                     </CDBSidebarMenu>
                 </CDBSidebarContent>
                 <CDBSidebarFooter>
-                    <img src={process.env.PUBLIC_URL + '/lunatech-logo.png'} alt="Lunatech logo" width="270px" />
+                    <img src={process.env.PUBLIC_URL + '/root/lunatech-logo.png'} alt="Lunatech logo" width="270px" />
                 </CDBSidebarFooter>
             </CDBSidebar>
         </div>

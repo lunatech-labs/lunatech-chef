@@ -19,8 +19,8 @@ apply plugin: 'org.jlleitschuh.gradle.ktlint-idea'
 group 'com.lunatech'
 version '0.0.1'
 mainClassName = "io.ktor.server.netty.EngineMain"
-sourceCompatibility = JavaVersion.VERSION_11
-targetCompatibility = JavaVersion.VERSION_11
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 sourceSets {
     main.kotlin.srcDirs = main.java.srcDirs = ['src/main']

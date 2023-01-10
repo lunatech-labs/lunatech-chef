@@ -111,6 +111,7 @@ fun Application.module() {
     schedulerTrigger(scheduler, schedulesService, recurrentSchedulesService, cronString)
 
     install(CORS) {
+        allowMethod(HttpMethod.Post)
         allowMethod(HttpMethod.Options)
         allowMethod(HttpMethod.Put)
         allowMethod(HttpMethod.Delete)

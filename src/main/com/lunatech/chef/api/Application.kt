@@ -80,7 +80,6 @@ fun Application.module() {
     val dbConfig = FlywayConfig.fromConfig(config.getConfig("database"))
     val authConfig = AuthConfig.fromConfig(config.getConfig("auth"))
     val cronString = config.getString("recurrent-schedules-cron")
-    val hostAllowed = config.getString("host-allowed")
 
     val chefSession = "CHEF_SESSION"
     val http = "http"
@@ -121,7 +120,6 @@ fun Application.module() {
         allowHeader(HttpHeaders.Authorization)
         allowHeader(chefSession)
         anyHost()
-//        allowHost(hostAllowed, listOf(http, https))
     }
 
     install(ContentNegotiation) {

@@ -120,7 +120,8 @@ fun Application.module() {
         allowHeader(HttpHeaders.AccessControlAllowOrigin)
         allowHeader(HttpHeaders.Authorization)
         allowHeader(chefSession)
-        allowHost(hostAllowed, listOf(http, https))
+        anyHost()
+//        allowHost(hostAllowed, listOf(http, https))
     }
 
     install(ContentNegotiation) {

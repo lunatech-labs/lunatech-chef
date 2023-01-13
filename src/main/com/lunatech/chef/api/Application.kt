@@ -82,8 +82,6 @@ fun Application.module() {
     val cronString = config.getString("recurrent-schedules-cron")
 
     val chefSession = "CHEF_SESSION"
-    val http = "http"
-    val https = "http2"
 
     val verifier = GoogleIdTokenVerifier.Builder(NetHttpTransport(), GsonFactory.getDefaultInstance())
         .setAudience(Collections.singletonList(authConfig.clientId))

@@ -107,7 +107,7 @@ fun Application.module() {
         AttendancesWithScheduleInfoService(dbConnection, schedulesService, menusWithDishesService)
 
     val scheduler = StdSchedulerFactory.getDefaultScheduler()
-    schedulerTrigger(scheduler, schedulesService, recurrentSchedulesService, cronString)
+    schedulerTrigger(scheduler, schedulesService, recurrentSchedulesService, attendancesService, cronString)
 
     install(CORS) {
         allowMethod(HttpMethod.Post)

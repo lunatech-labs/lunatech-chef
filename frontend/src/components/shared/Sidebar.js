@@ -45,7 +45,7 @@ const Sidebar = (props) => {
                         <NavLink exact="true" to="/userProfile" activeclassname="activeClicked">
                             <CDBSidebarMenuItem icon="user">Profile</CDBSidebarMenuItem>
                         </NavLink>
-                        <NavLink exact="true" onClick={props.logout} activeclassname="activeClicked">
+                        <NavLink exact="true" to="/" onClick={props.logout} activeclassname="activeClicked">
                             <CDBSidebarMenuItem icon="user-slash">Logout</CDBSidebarMenuItem>
                         </NavLink>
                     </CDBSidebarMenu>

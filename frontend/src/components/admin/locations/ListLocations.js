@@ -98,7 +98,7 @@ export default function ListLocations(props) {
         <h3 className="mt-4">Management of Locations</h3>
       </Row>
       <Row>
-        <Link to={`/newlocation`}>
+        <Link to="/newlocation">
           <button type="button" className="btn btn-success">
             <i>
               <FontAwesomeIcon icon={faPlus} />

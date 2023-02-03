@@ -183,7 +183,7 @@ export default function ListDishes(props) {
         <h3 className="mt-4">Management of Dishes</h3>
       </Row>
       <Row>
-        <Link to={`/newdish`}>
+        <Link to="/newdish">
           <button type="button" className="btn btn-success">
             <i>
               <FontAwesomeIcon icon={faPlus} />

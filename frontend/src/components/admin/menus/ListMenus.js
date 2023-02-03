@@ -100,7 +100,7 @@ export default function ListMenus(props) {
         <h3 className="mt-4">Management of Menus</h3>
       </Row>
       <Row>
-        <Link to={`/newMenu`}>
+        <Link to="/newMenu">
           <button type="button" className="btn btn-success">
             <i>
               <FontAwesomeIcon icon={faPlus} />

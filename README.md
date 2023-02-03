@@ -33,11 +33,18 @@ POSTGRESQL_ADDON_DB="lunatech-chef-api"
 POSTGRESQL_ADDON_USER="lunatech-chef-api"
 POSTGRESQL_ADDON_PASSWORD=""
 
-AUTH_SESSION_SECRET_KEY = "" //ask a current developer
-AUTH_SESSION_CLIENT_ID = "" //ask a current developer
+AUTH_SESSION_SECRET_KEY = "" //ask a current developer or check clever-cloud configuration
+AUTH_SESSION_CLIENT_ID = "" //ask a current developer or check clever-cloud configuration
 
 KTOR_ENV = dev
 RECURRENT_SCHEDULES_CRON =  "0 */20 * ? * *" // every 20 minutes
+```
+
+In `frontend/` create the files `.env.development` and `.env.production`. The one that is needed depends on the way the app is started so having both is advised.
+Both take the same information:
+```hocon
+REACT_APP_BASE_URL=http://localhost:8080
+REACT_APP_CLIENT_ID= // ask acurrent  developer or check clever-cloud configuration
 ```
 
 ### Start both backend and frontend together
@@ -82,6 +89,6 @@ Running this request will output a `CHEF_SESSION` string. Update the `session` i
 The application has started being tested in a production environment by deploying it to clever-cloud. Everytime a PR is merged to `master` branch it
 triggers a deployment in clever-cloud.
 If you don't have access to clever-cloud you can request it to one of the following clever-cloud admins:
-Gustavo de Micheli, Vincent Grente, Trevor Burton-readie, Neil Benn, Willem Jan Glerum, Erik Bakker, Nicolas Leroux, Jasper Dij.
+Gustavo de Micheli, Vincent Grente, Trevor Burton-McCreadie, Neil Benn, Willem Jan Glerum, Erik Bakker, Nicolas Leroux, Jasper Dijt.
 
 You will see `Lunatech-chef` in the list of deployed applications and also `Lunatech-chef-api-database` running a postgres DB that supports `Lunatech-chef`.

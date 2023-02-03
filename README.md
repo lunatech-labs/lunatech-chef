@@ -33,8 +33,8 @@ POSTGRESQL_ADDON_DB="lunatech-chef-api"
 POSTGRESQL_ADDON_USER="lunatech-chef-api"
 POSTGRESQL_ADDON_PASSWORD=""
 
-AUTH_SESSION_SECRET_KEY = "" //ask to a current developer
-AUTH_SESSION_CLIENT_ID = "" //ask to a current developer
+AUTH_SESSION_SECRET_KEY = "" //ask a current developer
+AUTH_SESSION_CLIENT_ID = "" //ask a current developer
 
 KTOR_ENV = dev
 RECURRENT_SCHEDULES_CRON =  "0 */20 * ? * *" // every 20 minutes
@@ -77,3 +77,11 @@ Run the login request in `1-login.http`.
 Running this request will output a `CHEF_SESSION` string. Update the `session` in `http-client.env.json` with that string.
 
 3. You are now ready to run the other requests.
+
+## Deployment
+The application has started being tested in a production environment by deploying it to clever-cloud. Everytime a PR is merged to `master` branch it
+triggers a deployment in clever-cloud.
+If you don't have access to clever-cloud you can request it to one of the following clever-cloud admins:
+Gustavo de Micheli, Vincent Grente, Trevor Burton-readie, Neil Benn, Willem Jan Glerum, Erik Bakker, Nicolas Leroux, Jasper Dij.
+
+You will see `Lunatech-chef` in the list of deployed applications and also `Lunatech-chef-api-database` running a postgres DB that supports `Lunatech-chef`.

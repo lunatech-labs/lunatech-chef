@@ -40,7 +40,7 @@ dependencies {
     implementation "ch.qos.logback:logback-classic:1.4.5"
     implementation "com.newrelic.logging:logback:2.6.0"
 
-    implementation "com.google.api-client:google-api-client:2.1.2"
+    implementation "com.google.api-client:google-api-client:2.2.0"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.1"
     implementation "io.github.config4k:config4k:0.5.0"
     implementation "org.flywaydb:flyway-core:9.11.0"

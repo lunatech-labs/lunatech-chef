@@ -27,7 +27,7 @@
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.0",
     "react-bootstrap-sidebar-menu": "^2.0.3",
-    "react-datepicker": "^4.8.0",
+    "react-datepicker": "^4.10.0",
     "react-dev-utils": "^12.0.1",
     "react-dom": "^18.2.0",
     "react-final-form": "^6.4.0",

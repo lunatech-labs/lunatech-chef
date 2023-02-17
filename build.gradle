@@ -41,7 +41,7 @@ dependencies {
     implementation "com.google.api-client:google-api-client:2.2.0"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.2"
     implementation "io.github.config4k:config4k:0.5.0"
-    implementation "org.flywaydb:flyway-core:9.14.1"
+    implementation "org.flywaydb:flyway-core:9.15.0"
     implementation "org.ktorm:ktorm-core:3.6.0"
     implementation "com.zaxxer:HikariCP:5.0.1"
     implementation "org.postgresql:postgresql:42.5.4"

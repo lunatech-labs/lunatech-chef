@@ -39,6 +39,6 @@ object Users : BaseTable<User>("users") {
         isLactoseIntolerant = row[isLactoseIntolerant] ?: DEFAULT_FALSE,
         otherRestrictions = row[otherRestrictions] ?: DEFAULT_STRING,
         isInactive = row[isInactive] ?: DEFAULT_FALSE,
-        isDeleted = row[isDeleted] ?: DEFAULT_FALSE
+        isDeleted = row[isDeleted] ?: DEFAULT_FALSE,
     )
 }

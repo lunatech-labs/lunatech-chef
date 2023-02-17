@@ -7,7 +7,6 @@ import com.lunatech.chef.api.persistence.schemas.DishesOnMenus
 import com.lunatech.chef.api.persistence.schemas.MenuNames
 import com.lunatech.chef.api.persistence.schemas.Schedules
 import com.lunatech.chef.api.routes.UpdatedMenu
-import java.util.UUID
 import org.ktorm.database.Database
 import org.ktorm.dsl.delete
 import org.ktorm.dsl.eq
@@ -17,6 +16,7 @@ import org.ktorm.dsl.map
 import org.ktorm.dsl.select
 import org.ktorm.dsl.update
 import org.ktorm.dsl.where
+import java.util.UUID
 
 class MenusService(val database: Database) {
     fun getAll(): List<MenuWithDishesUuid> =
@@ -28,10 +28,10 @@ class MenusService(val database: Database) {
             .map { menuName ->
                 val dishes =
                     database
-                    .from(DishesOnMenus)
-                    .select().where { DishesOnMenus.menuUuid eq menuName.uuid }
-                    .map { DishesOnMenus.createEntity(it) }
-                    .map { it.dishUuid }
+                        .from(DishesOnMenus)
+                        .select().where { DishesOnMenus.menuUuid eq menuName.uuid }
+                        .map { DishesOnMenus.createEntity(it) }
+                        .map { it.dishUuid }
 
                 MenuWithDishesUuid(menuName.uuid, menuName.name, dishes)
             }
@@ -39,18 +39,18 @@ class MenusService(val database: Database) {
     fun getByUuid(uuid: UUID): MenuWithDishesUuid? {
         val menuName =
             database
-            .from(MenuNames)
-            .select().where { MenuNames.uuid eq uuid }
-            .map { MenuNames.createEntity(it) }
-            .firstOrNull()
+                .from(MenuNames)
+                .select().where { MenuNames.uuid eq uuid }
+                .map { MenuNames.createEntity(it) }
+                .firstOrNull()
 
         return menuName?.let {
             val dishes =
                 database
-                .from(DishesOnMenus)
-                .select().where { DishesOnMenus.menuUuid eq it.uuid }
-                .map { DishesOnMenus.createEntity(it) }
-                .map { it.dishUuid }
+                    .from(DishesOnMenus)
+                    .select().where { DishesOnMenus.menuUuid eq it.uuid }
+                    .map { DishesOnMenus.createEntity(it) }
+                    .map { it.dishUuid }
 
             MenuWithDishesUuid(it.uuid, it.name, dishes)
         }

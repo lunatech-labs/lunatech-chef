@@ -4,7 +4,6 @@ import com.lunatech.chef.api.domain.RecurrentSchedule
 import com.lunatech.chef.api.domain.RecurrentScheduleWithMenuInfo
 import com.lunatech.chef.api.persistence.schemas.Locations
 import com.lunatech.chef.api.persistence.schemas.RecurrentSchedules
-import java.util.UUID
 import org.ktorm.database.Database
 import org.ktorm.dsl.and
 import org.ktorm.dsl.eq
@@ -13,10 +12,11 @@ import org.ktorm.dsl.map
 import org.ktorm.dsl.select
 import org.ktorm.dsl.where
 import org.ktorm.schema.ColumnDeclaring
+import java.util.UUID
 
 class RecurrentSchedulesWithMenuInfo(
-  val database: Database,
-  private val menusWithDishesService: MenusWithDishesNamesService
+    val database: Database,
+    private val menusWithDishesService: MenusWithDishesNamesService,
 ) {
     fun getAll(): List<RecurrentScheduleWithMenuInfo> =
         database.from(RecurrentSchedules).select()
@@ -51,10 +51,12 @@ class RecurrentSchedulesWithMenuInfo(
                     .map { Locations.createEntity(it) }.firstOrNull()
 
                 RecurrentScheduleWithMenuInfo(
-                    recSchedule.uuid, menu!!,
+                    recSchedule.uuid,
+                    menu!!,
                     recSchedule.nextDate,
                     location!!,
-                    recSchedule.repetitionDays)
+                    recSchedule.repetitionDays,
+                )
             }
 
     private fun getScheduleWithMenuInfo(recSchedule: RecurrentSchedule): RecurrentScheduleWithMenuInfo {
@@ -64,9 +66,11 @@ class RecurrentSchedulesWithMenuInfo(
             .map { Locations.createEntity(it) }.firstOrNull()
 
         return RecurrentScheduleWithMenuInfo(
-            recSchedule.uuid, menu!!,
+            recSchedule.uuid,
+            menu!!,
             recSchedule.nextDate,
             location!!,
-            recSchedule.repetitionDays)
+            recSchedule.repetitionDays,
+        )
     }
 }

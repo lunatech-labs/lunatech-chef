@@ -4,7 +4,6 @@ import com.lunatech.chef.api.domain.Dish
 import com.lunatech.chef.api.persistence.schemas.Dishes
 import com.lunatech.chef.api.persistence.schemas.DishesOnMenus
 import com.lunatech.chef.api.routes.UpdatedDish
-import java.util.UUID
 import org.ktorm.database.Database
 import org.ktorm.dsl.delete
 import org.ktorm.dsl.eq
@@ -14,6 +13,7 @@ import org.ktorm.dsl.map
 import org.ktorm.dsl.select
 import org.ktorm.dsl.update
 import org.ktorm.dsl.where
+import java.util.UUID
 
 class DishesService(val database: Database) {
     fun getAll() = database.from(Dishes).select().where { Dishes.isDeleted eq false }.map { Dishes.createEntity(it) }

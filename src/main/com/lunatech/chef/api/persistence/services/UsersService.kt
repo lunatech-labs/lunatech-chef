@@ -4,7 +4,6 @@ import com.lunatech.chef.api.domain.User
 import com.lunatech.chef.api.persistence.schemas.Attendances
 import com.lunatech.chef.api.persistence.schemas.Users
 import com.lunatech.chef.api.routes.UpdatedUser
-import java.util.UUID
 import org.ktorm.database.Database
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.from
@@ -13,6 +12,7 @@ import org.ktorm.dsl.map
 import org.ktorm.dsl.select
 import org.ktorm.dsl.update
 import org.ktorm.dsl.where
+import java.util.UUID
 
 class UsersService(val database: Database) {
     fun getAll(): List<User> = database.from(Users).select().where { Users.isDeleted eq false }

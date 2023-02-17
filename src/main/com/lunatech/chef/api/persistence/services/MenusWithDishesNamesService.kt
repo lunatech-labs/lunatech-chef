@@ -4,7 +4,6 @@ import com.lunatech.chef.api.domain.MenuWithDishes
 import com.lunatech.chef.api.persistence.schemas.Dishes
 import com.lunatech.chef.api.persistence.schemas.DishesOnMenus
 import com.lunatech.chef.api.persistence.schemas.MenuNames
-import java.util.UUID
 import org.ktorm.database.Database
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.from
@@ -12,6 +11,7 @@ import org.ktorm.dsl.leftJoin
 import org.ktorm.dsl.map
 import org.ktorm.dsl.select
 import org.ktorm.dsl.where
+import java.util.UUID
 
 class MenusWithDishesNamesService(val database: Database) {
     fun getAll(): List<MenuWithDishes> =

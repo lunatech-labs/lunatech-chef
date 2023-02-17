@@ -37,7 +37,7 @@ fun Routing.attendancesWithScheduleInfo(attendancesWithScheduleInfoService: Atte
                     val attendance = attendancesWithScheduleInfoService.getByUserUuidFiltered(
                         UUID.fromString(uuid),
                         dateFrom,
-                        locationName
+                        locationName,
                     )
                     call.respond(OK, attendance)
                 }

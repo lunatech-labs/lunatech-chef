@@ -5,7 +5,6 @@ import com.lunatech.chef.api.persistence.schemas.Attendances
 import com.lunatech.chef.api.persistence.schemas.Locations
 import com.lunatech.chef.api.persistence.schemas.Schedules
 import com.lunatech.chef.api.routes.UpdatedLocation
-import java.util.UUID
 import org.ktorm.database.Database
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.from
@@ -14,9 +13,11 @@ import org.ktorm.dsl.map
 import org.ktorm.dsl.select
 import org.ktorm.dsl.update
 import org.ktorm.dsl.where
+import java.util.UUID
 
 class LocationsService(val database: Database) {
-    fun getAll() = database.from(Locations).select().where { Locations.isDeleted eq false }.map { Locations.createEntity(it) }
+    fun getAll() =
+        database.from(Locations).select().where { Locations.isDeleted eq false }.map { Locations.createEntity(it) }
 
     fun getByUuid(uuid: UUID): List<Location> =
         database.from(Locations).select().where { Locations.uuid eq uuid }.map { Locations.createEntity(it) }
@@ -52,7 +53,7 @@ class LocationsService(val database: Database) {
             .map { sch -> Schedules.createEntity(sch) }
             .map { schedule -> schedule.uuid }
         database.update(Schedules) { sch ->
-        set(sch.isDeleted, true)
+            set(sch.isDeleted, true)
             where {
                 sch.locationUuid eq uuid
             }

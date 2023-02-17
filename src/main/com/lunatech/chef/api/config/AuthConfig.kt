@@ -4,11 +4,11 @@ import com.typesafe.config.Config
 import io.github.config4k.getValue
 
 data class AuthConfig(
-  val secretKey: String,
-  val clientId: String,
-  val ttlLimit: Int,
-  val domains: List<String>,
-  val admins: List<String>
+    val secretKey: String,
+    val clientId: String,
+    val ttlLimit: Int,
+    val domains: List<String>,
+    val admins: List<String>,
 ) {
     companion object {
         fun fromConfig(config: Config): AuthConfig {

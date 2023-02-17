@@ -6,10 +6,10 @@ import com.lunatech.chef.api.persistence.services.AttendancesService
 import com.lunatech.chef.api.persistence.services.RecurrentSchedulesService
 import com.lunatech.chef.api.persistence.services.SchedulesService
 import com.lunatech.chef.api.routes.UpdatedRecurrentSchedule
-import java.time.LocalDate
 import mu.KotlinLogging
 import org.quartz.Job
 import org.quartz.JobExecutionContext
+import java.time.LocalDate
 
 private val logger = KotlinLogging.logger {}
 
@@ -29,7 +29,8 @@ class SchedulerJob() : Job {
         val dataMap = context!!.jobDetail.jobDataMap
 
         val schedulesService: SchedulesService = dataMap.get(schedulesService) as SchedulesService
-        val recurrentSchedulesService: RecurrentSchedulesService = dataMap.get(recurrentSchedulesService) as RecurrentSchedulesService
+        val recurrentSchedulesService: RecurrentSchedulesService =
+            dataMap.get(recurrentSchedulesService) as RecurrentSchedulesService
         val attendancesService: AttendancesService = dataMap.get(attendancesService) as AttendancesService
 
         val recSchedules = recurrentSchedulesService.getIntervalDate(today, inAWeek)
@@ -46,7 +47,7 @@ class SchedulerJob() : Job {
                     menuUuid = rec.menuUuid,
                     locationUuid = rec.locationUuid,
                     repetitionDays = rec.repetitionDays,
-                    nextDate = rec.nextDate.plusDays(rec.repetitionDays.toLong())
+                    nextDate = rec.nextDate.plusDays(rec.repetitionDays.toLong()),
                 )
                 recurrentSchedulesService.update(rec.uuid, updatedRecSchedule)
             } else {

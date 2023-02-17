@@ -4,8 +4,6 @@ import com.lunatech.chef.api.domain.Schedule
 import com.lunatech.chef.api.domain.ScheduleWithMenuInfo
 import com.lunatech.chef.api.persistence.schemas.Locations
 import com.lunatech.chef.api.persistence.schemas.Schedules
-import java.time.LocalDate
-import java.util.UUID
 import org.ktorm.database.Database
 import org.ktorm.dsl.and
 import org.ktorm.dsl.asc
@@ -17,10 +15,12 @@ import org.ktorm.dsl.orderBy
 import org.ktorm.dsl.select
 import org.ktorm.dsl.where
 import org.ktorm.schema.ColumnDeclaring
+import java.time.LocalDate
+import java.util.UUID
 
 class SchedulesWithMenuInfo(
-  val database: Database,
-  private val menusWithDishesService: MenusWithDishesNamesService
+    val database: Database,
+    private val menusWithDishesService: MenusWithDishesNamesService,
 ) {
     fun getAll(): List<ScheduleWithMenuInfo> =
         database.from(Schedules).select()

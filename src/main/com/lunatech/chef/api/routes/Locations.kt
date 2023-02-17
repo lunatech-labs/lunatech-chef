@@ -4,7 +4,7 @@ package com.lunatech.chef.api.routes
 import com.lunatech.chef.api.domain.Location
 import com.lunatech.chef.api.domain.NewLocation
 import com.lunatech.chef.api.persistence.services.LocationsService
-import io.ktor.http.HttpStatusCode
+import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.InternalServerError
 import io.ktor.http.HttpStatusCode.Companion.NotFound
@@ -19,8 +19,8 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.put
 import io.ktor.server.routing.route
-import java.util.UUID
 import mu.KotlinLogging
+import java.util.UUID
 
 private val logger = KotlinLogging.logger {}
 
@@ -47,7 +47,7 @@ fun Routing.locations(locationsService: LocationsService) {
                     if (inserted == 1) call.respond(Created) else call.respond(InternalServerError)
                 } catch (exception: Exception) {
                     logger.error("Error creating a new Location :( ", exception)
-                    call.respond(HttpStatusCode.BadRequest, exception)
+                    call.respond(BadRequest, exception)
                 }
             }
 
@@ -71,7 +71,7 @@ fun Routing.locations(locationsService: LocationsService) {
                         if (result == 1) call.respond(OK) else call.respond(InternalServerError)
                     } catch (exception: Exception) {
                         logger.error("Error updating a Location :( ", exception)
-                        call.respond(HttpStatusCode.BadRequest, exception.message ?: "")
+                        call.respond(BadRequest, exception.message ?: "")
                     }
                 }
                 // delete a single location

@@ -17,6 +17,6 @@ object Locations : BaseTable<Location>("locations") {
         uuid = row[uuid] ?: DEFAULT_UUID,
         city = row[city] ?: DEFAULT_STRING,
         country = row[country] ?: DEFAULT_STRING,
-        isDeleted = row[isDeleted] ?: DEFAULT_FALSE
+        isDeleted = row[isDeleted] ?: DEFAULT_FALSE,
     )
 }

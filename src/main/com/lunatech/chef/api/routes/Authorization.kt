@@ -16,34 +16,32 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.route
 import io.ktor.server.sessions.sessions
 import io.ktor.server.sessions.set
+import mu.KotlinLogging
 import java.lang.Exception
 import java.lang.IllegalArgumentException
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import java.util.UUID
+import java.util.*
 import java.util.concurrent.TimeUnit
-import mu.KotlinLogging
 
 private val logger = KotlinLogging.logger {}
 private val formatDate = SimpleDateFormat("yyMMddHHmmss")
 
 data class ChefSession(
-  val ttl: String,
-  val isAdmin: Boolean,
-  val uuid: UUID,
-  val name: String,
-  val emailAddress: String,
-  val locationUuid: UUID?,
-  val isVegetarian: Boolean = false,
-  val hasHalalRestriction: Boolean = false,
-  val hasNutsRestriction: Boolean = false,
-  val hasSeafoodRestriction: Boolean = false,
-  val hasPorkRestriction: Boolean = false,
-  val hasBeefRestriction: Boolean = false,
-  val isGlutenIntolerant: Boolean = false,
-  val isLactoseIntolerant: Boolean = false,
-  val otherRestrictions: String = ""
+    val ttl: String,
+    val isAdmin: Boolean,
+    val uuid: UUID,
+    val name: String,
+    val emailAddress: String,
+    val locationUuid: UUID?,
+    val isVegetarian: Boolean = false,
+    val hasHalalRestriction: Boolean = false,
+    val hasNutsRestriction: Boolean = false,
+    val hasSeafoodRestriction: Boolean = false,
+    val hasPorkRestriction: Boolean = false,
+    val hasBeefRestriction: Boolean = false,
+    val isGlutenIntolerant: Boolean = false,
+    val isLactoseIntolerant: Boolean = false,
+    val otherRestrictions: String = "",
 )
 
 data class AccountPrincipal(val email: String) : Principal
@@ -122,7 +120,7 @@ fun buildChefSession(user: User, admins: List<String>): ChefSession {
         hasBeefRestriction = user.hasBeefRestriction,
         isGlutenIntolerant = user.isGlutenIntolerant,
         isLactoseIntolerant = user.isLactoseIntolerant,
-        otherRestrictions = user.otherRestrictions
+        otherRestrictions = user.otherRestrictions,
     )
 }
 

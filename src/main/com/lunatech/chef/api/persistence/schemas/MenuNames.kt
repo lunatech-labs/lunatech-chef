@@ -18,12 +18,12 @@ object MenuNames : BaseTable<MenuName>("menus") {
     override fun doCreateEntity(row: QueryRowSet, withReferences: Boolean) = MenuName(
         uuid = row[uuid] ?: DEFAULT_UUID,
         name = row[name] ?: DEFAULT_STRING,
-        isDeleted = row[isDeleted] ?: DEFAULT_FALSE
+        isDeleted = row[isDeleted] ?: DEFAULT_FALSE,
     )
 
     fun toMenuWithDishes(menuName: MenuName, dishes: Query) = MenuWithDishes(
         uuid = menuName.uuid,
         name = menuName.name,
-        dishes = dishes.map { Dishes.createEntity(it) }
+        dishes = dishes.map { Dishes.createEntity(it) },
     )
 }

@@ -4,7 +4,6 @@ import com.lunatech.chef.api.domain.Schedule
 import com.lunatech.chef.api.persistence.schemas.Attendances
 import com.lunatech.chef.api.persistence.schemas.Schedules
 import com.lunatech.chef.api.routes.UpdatedSchedule
-import java.util.UUID
 import org.ktorm.database.Database
 import org.ktorm.dsl.asc
 import org.ktorm.dsl.eq
@@ -15,6 +14,7 @@ import org.ktorm.dsl.orderBy
 import org.ktorm.dsl.select
 import org.ktorm.dsl.update
 import org.ktorm.dsl.where
+import java.util.UUID
 
 class SchedulesService(val database: Database) {
     fun getAll(): List<Schedule> =

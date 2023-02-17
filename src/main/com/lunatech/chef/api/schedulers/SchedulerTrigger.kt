@@ -11,13 +11,12 @@ import org.quartz.Scheduler
 import org.quartz.TriggerBuilder.newTrigger
 
 fun schedulerTrigger(
-  scheduler: Scheduler,
-  schedulesService: SchedulesService,
-  recurrentSchedulesService: RecurrentSchedulesService,
-  attendancesService: AttendancesService,
-  cronExpression: String
+    scheduler: Scheduler,
+    schedulesService: SchedulesService,
+    recurrentSchedulesService: RecurrentSchedulesService,
+    attendancesService: AttendancesService,
+    cronExpression: String,
 ) {
-
     val job: JobDetail = newJob(SchedulerJob::class.java)
         .withIdentity("recurrentSchedules", "chefSchedules")
         .build()

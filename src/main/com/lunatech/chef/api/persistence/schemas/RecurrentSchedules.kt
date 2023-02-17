@@ -1,13 +1,13 @@
 package com.lunatech.chef.api.persistence.schemas
 
 import com.lunatech.chef.api.domain.RecurrentSchedule
-import java.time.LocalDate
 import org.ktorm.dsl.QueryRowSet
 import org.ktorm.schema.BaseTable
 import org.ktorm.schema.boolean
 import org.ktorm.schema.date
 import org.ktorm.schema.int
 import org.ktorm.schema.uuid
+import java.time.LocalDate
 
 object RecurrentSchedules : BaseTable<RecurrentSchedule>("recurrent_schedules") {
     val uuid = uuid("uuid").primaryKey()
@@ -23,6 +23,6 @@ object RecurrentSchedules : BaseTable<RecurrentSchedule>("recurrent_schedules") 
         locationUuid = row[locationUuid] ?: DEFAULT_UUID,
         repetitionDays = row[repetitionDays] ?: DEFAULT_RECURRENCY,
         nextDate = row[nextDate] ?: LocalDate.now(),
-        isDeleted = row[isDeleted] ?: DEFAULT_FALSE
+        isDeleted = row[isDeleted] ?: DEFAULT_FALSE,
     )
 }

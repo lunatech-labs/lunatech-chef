@@ -11,6 +11,6 @@ object DishesOnMenus : BaseTable<DishOnMenu>("dishes_on_menus") {
 
     override fun doCreateEntity(row: QueryRowSet, withReferences: Boolean) = DishOnMenu(
         menuUuid = row[menuUuid] ?: DEFAULT_UUID,
-        dishUuid = row [dishUuid] ?: DEFAULT_UUID
+        dishUuid = row[dishUuid] ?: DEFAULT_UUID,
     )
 }

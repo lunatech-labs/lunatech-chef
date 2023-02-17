@@ -11,7 +11,7 @@ object Database {
             jdbcUrl = config.url
             username = config.user
             password = config.password
-            maximumPoolSize = 4
+            maximumPoolSize = config.maxPoolSize
         }
         val dataSource = HikariDataSource(hikariConfig)
         return Database.connect(dataSource)

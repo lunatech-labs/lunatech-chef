@@ -33,6 +33,6 @@ object Dishes : BaseTable<Dish>("dishes") {
         hasBeef = row[hasBeef] ?: DEFAULT_FALSE,
         isGlutenFree = row[isGlutenFree] ?: DEFAULT_FALSE,
         hasLactose = row[hasLactose] ?: DEFAULT_FALSE,
-        isDeleted = row[isDeleted] ?: DEFAULT_FALSE
+        isDeleted = row[isDeleted] ?: DEFAULT_FALSE,
     )
 }

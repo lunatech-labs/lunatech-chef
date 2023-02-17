@@ -5,8 +5,6 @@ import com.lunatech.chef.api.domain.AttendanceWithInfo
 import com.lunatech.chef.api.persistence.schemas.Attendances
 import com.lunatech.chef.api.persistence.schemas.Locations
 import com.lunatech.chef.api.persistence.schemas.Schedules
-import java.time.LocalDate
-import java.util.UUID
 import org.ktorm.database.Database
 import org.ktorm.dsl.and
 import org.ktorm.dsl.asc
@@ -19,11 +17,13 @@ import org.ktorm.dsl.orderBy
 import org.ktorm.dsl.select
 import org.ktorm.dsl.where
 import org.ktorm.schema.ColumnDeclaring
+import java.time.LocalDate
+import java.util.UUID
 
 class AttendancesWithScheduleInfoService(
-  val database: Database,
-  private val schedulesService: SchedulesService,
-  private val menusWithDishesService: MenusWithDishesNamesService
+    val database: Database,
+    private val schedulesService: SchedulesService,
+    private val menusWithDishesService: MenusWithDishesNamesService,
 ) {
     fun getByUserUuidFiltered(userUuid: UUID, fromDate: LocalDate?, location: UUID?): List<AttendanceWithInfo> =
         database.from(Attendances)
@@ -62,7 +62,7 @@ class AttendancesWithScheduleInfoService(
                         menu = menu!!,
                         date = schedule.date,
                         location = location,
-                        isAttending = attendance.isAttending
+                        isAttending = attendance.isAttending,
                     )
                 }
         }

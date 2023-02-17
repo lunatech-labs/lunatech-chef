@@ -15,7 +15,7 @@ data class FlywayConfig(val url: String, val user: String, val password: String,
                 url,
                 user,
                 password,
-                maxPoolSize
+                maxPoolSize,
             )
         }
     }

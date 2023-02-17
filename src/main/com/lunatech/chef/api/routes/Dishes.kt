@@ -19,22 +19,22 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.put
 import io.ktor.server.routing.route
-import java.util.UUID
 import mu.KotlinLogging
+import java.util.UUID
 
 private val logger = KotlinLogging.logger {}
 
 data class UpdatedDish(
-  val name: String,
-  val description: String = "",
-  val isVegetarian: Boolean = false,
-  val isHalal: Boolean = false,
-  val hasNuts: Boolean = false,
-  val hasSeafood: Boolean = false,
-  val hasPork: Boolean = false,
-  val hasBeef: Boolean = false,
-  val isGlutenFree: Boolean = false,
-  val hasLactose: Boolean = false
+    val name: String,
+    val description: String = "",
+    val isVegetarian: Boolean = false,
+    val isHalal: Boolean = false,
+    val hasNuts: Boolean = false,
+    val hasSeafood: Boolean = false,
+    val hasPork: Boolean = false,
+    val hasBeef: Boolean = false,
+    val isGlutenFree: Boolean = false,
+    val hasLactose: Boolean = false,
 )
 
 fun Routing.dishes(dishesService: DishesService) {

@@ -19,17 +19,17 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.put
 import io.ktor.server.routing.route
+import mu.KotlinLogging
 import java.time.LocalDate
 import java.util.UUID
-import mu.KotlinLogging
 
 private val logger = KotlinLogging.logger {}
 
 data class UpdatedRecurrentSchedule(
-  val menuUuid: UUID,
-  val locationUuid: UUID,
-  val repetitionDays: Int,
-  val nextDate: LocalDate
+    val menuUuid: UUID,
+    val locationUuid: UUID,
+    val repetitionDays: Int,
+    val nextDate: LocalDate,
 )
 
 fun Routing.recurrentSchedules(recurrentSchedulesService: RecurrentSchedulesService) {

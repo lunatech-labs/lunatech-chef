@@ -19,22 +19,22 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.put
 import io.ktor.server.routing.route
-import java.util.UUID
 import mu.KotlinLogging
+import java.util.UUID
 
 private val logger = KotlinLogging.logger {}
 
 data class UpdatedUser(
-  val locationUuid: UUID?,
-  val isVegetarian: Boolean = false,
-  val hasHalalRestriction: Boolean = false,
-  val hasNutsRestriction: Boolean = false,
-  val hasSeafoodRestriction: Boolean = false,
-  val hasPorkRestriction: Boolean = false,
-  val hasBeefRestriction: Boolean = false,
-  val isGlutenIntolerant: Boolean = false,
-  val isLactoseIntolerant: Boolean = false,
-  val otherRestrictions: String = ""
+    val locationUuid: UUID?,
+    val isVegetarian: Boolean = false,
+    val hasHalalRestriction: Boolean = false,
+    val hasNutsRestriction: Boolean = false,
+    val hasSeafoodRestriction: Boolean = false,
+    val hasPorkRestriction: Boolean = false,
+    val hasBeefRestriction: Boolean = false,
+    val isGlutenIntolerant: Boolean = false,
+    val isLactoseIntolerant: Boolean = false,
+    val otherRestrictions: String = "",
 )
 
 fun Routing.users(usersService: UsersService) {

@@ -18,6 +18,6 @@ object Attendances : BaseTable<Attendance>("attendances") {
         scheduleUuid = row[scheduleUuid] ?: DEFAULT_UUID,
         userUuid = row[userUuid] ?: DEFAULT_UUID,
         isAttending = row[isAttending] ?: DEFAULT_FALSE,
-        isDeleted = row[isDeleted] ?: DEFAULT_FALSE
+        isDeleted = row[isDeleted] ?: DEFAULT_FALSE,
     )
 }

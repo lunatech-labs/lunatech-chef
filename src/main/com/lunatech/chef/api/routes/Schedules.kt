@@ -20,9 +20,9 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.put
 import io.ktor.server.routing.route
+import mu.KotlinLogging
 import java.time.LocalDate
 import java.util.UUID
-import mu.KotlinLogging
 
 private val logger = KotlinLogging.logger {}
 
@@ -49,10 +49,14 @@ fun Routing.schedules(schedulesService: SchedulesService, attendancesService: At
                     val scheduleToInsert = Schedule.fromNewSchedule(newSchedule)
                     val insertedSchedule = schedulesService.insert(scheduleToInsert)
 
-                    val insertedAttendance = if (insertedSchedule == 1) attendancesService.insertAttendanceAllUsers(
-                        scheduleToInsert.uuid,
-                        isAttending = false
-                    ) else error
+                    val insertedAttendance = if (insertedSchedule == 1) {
+                        attendancesService.insertAttendanceAllUsers(
+                            scheduleToInsert.uuid,
+                            isAttending = false,
+                        )
+                    } else {
+                        error
+                    }
                     if (insertedAttendance > 0) call.respond(Created) else call.respond(InternalServerError)
                 } catch (exception: Exception) {
                     logger.error("Error adding new Schedule :( ", exception)

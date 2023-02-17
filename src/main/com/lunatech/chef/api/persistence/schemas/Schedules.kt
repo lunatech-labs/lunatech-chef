@@ -1,12 +1,12 @@
 package com.lunatech.chef.api.persistence.schemas
 
 import com.lunatech.chef.api.domain.Schedule
-import java.time.LocalDate
 import org.ktorm.dsl.QueryRowSet
 import org.ktorm.schema.BaseTable
 import org.ktorm.schema.boolean
 import org.ktorm.schema.date
 import org.ktorm.schema.uuid
+import java.time.LocalDate
 
 object Schedules : BaseTable<Schedule>("schedules") {
     val uuid = uuid("uuid").primaryKey()
@@ -20,6 +20,6 @@ object Schedules : BaseTable<Schedule>("schedules") {
         menuUuid = row[menuUuid] ?: DEFAULT_UUID,
         date = row[date] ?: LocalDate.now(),
         locationUuid = row[locationUuid] ?: DEFAULT_UUID,
-        isDeleted = row[isDeleted] ?: DEFAULT_FALSE
+        isDeleted = row[isDeleted] ?: DEFAULT_FALSE,
     )
 }

@@ -20,10 +20,10 @@ import com.lunatech.chef.api.persistence.services.LocationsService
 import com.lunatech.chef.api.persistence.services.MenusService
 import com.lunatech.chef.api.persistence.services.MenusWithDishesNamesService
 import com.lunatech.chef.api.persistence.services.RecurrentSchedulesService
-import com.lunatech.chef.api.persistence.services.RecurrentSchedulesWithMenuInfo
+import com.lunatech.chef.api.persistence.services.RecurrentSchedulesWithMenuInfoService
 import com.lunatech.chef.api.persistence.services.SchedulesService
-import com.lunatech.chef.api.persistence.services.SchedulesWithAttendanceInfo
-import com.lunatech.chef.api.persistence.services.SchedulesWithMenuInfo
+import com.lunatech.chef.api.persistence.services.SchedulesWithAttendanceInfoService
+import com.lunatech.chef.api.persistence.services.SchedulesWithMenuInfoService
 import com.lunatech.chef.api.persistence.services.UsersService
 import com.lunatech.chef.api.routes.ChefSession
 import com.lunatech.chef.api.routes.attendances
@@ -41,7 +41,7 @@ import com.lunatech.chef.api.routes.schedulesWithAttendanceInfo
 import com.lunatech.chef.api.routes.schedulesWithMenusInfo
 import com.lunatech.chef.api.routes.users
 import com.lunatech.chef.api.routes.validateSession
-import com.lunatech.chef.api.schedulers.schedulerTrigger
+import com.lunatech.chef.api.schedulers.mealSchedulerTrigger
 import com.typesafe.config.ConfigFactory
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
@@ -100,16 +100,17 @@ fun Application.module() {
     val menusWithDishesService = MenusWithDishesNamesService(dbConnection)
     val schedulesService = SchedulesService(dbConnection)
     val recurrentSchedulesService = RecurrentSchedulesService(dbConnection)
-    val schedulesWithMenuInfoService = SchedulesWithMenuInfo(dbConnection, menusWithDishesService)
-    val recurrentSchedulesMenuWithInfoService = RecurrentSchedulesWithMenuInfo(dbConnection, menusWithDishesService)
-    val schedulesWithAttendanceInfoService = SchedulesWithAttendanceInfo(dbConnection, menusService)
+    val schedulesWithMenuInfoService = SchedulesWithMenuInfoService(dbConnection, menusWithDishesService)
+    val recurrentSchedulesMenuWithInfoService =
+        RecurrentSchedulesWithMenuInfoService(dbConnection, menusWithDishesService)
+    val schedulesWithAttendanceInfoService = SchedulesWithAttendanceInfoService(dbConnection, menusService)
     val usersService = UsersService(dbConnection)
     val attendancesService = AttendancesService(dbConnection, usersService)
     val attendancesWithInfoService =
         AttendancesWithScheduleInfoService(dbConnection, schedulesService, menusWithDishesService)
 
     val scheduler = StdSchedulerFactory.getDefaultScheduler()
-    schedulerTrigger(scheduler, schedulesService, recurrentSchedulesService, attendancesService, cronString)
+    mealSchedulerTrigger(scheduler, schedulesService, recurrentSchedulesService, attendancesService, cronString)
 
     install(CORS) {
         allowMethod(HttpMethod.Post)

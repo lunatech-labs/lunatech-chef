@@ -1,7 +1,7 @@
 package com.lunatech.chef.api.routes
 
 // import com.lunatech.chef.api.auth.rolesAllowed
-import com.lunatech.chef.api.persistence.services.SchedulesWithAttendanceInfo
+import com.lunatech.chef.api.persistence.services.SchedulesWithAttendanceInfoService
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.server.application.call
 import io.ktor.server.auth.authenticate
@@ -12,7 +12,7 @@ import io.ktor.server.routing.route
 import java.time.LocalDate
 import java.util.UUID
 
-fun Routing.schedulesWithAttendanceInfo(schedulesWithAttendanceInfoService: SchedulesWithAttendanceInfo) {
+fun Routing.schedulesWithAttendanceInfo(schedulesWithAttendanceInfoService: SchedulesWithAttendanceInfoService) {
     val menusRoute = "/schedulesWithAttendanceInfo"
     val fromDateParam = "fromdate"
     val locationParam = "location"

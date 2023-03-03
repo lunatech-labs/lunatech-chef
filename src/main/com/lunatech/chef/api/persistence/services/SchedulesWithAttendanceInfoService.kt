@@ -21,7 +21,7 @@ import org.ktorm.schema.ColumnDeclaring
 import java.time.LocalDate
 import java.util.UUID
 
-class SchedulesWithAttendanceInfo(
+class SchedulesWithAttendanceInfoService(
     val database: Database,
     private val menusService: MenusService,
 ) {

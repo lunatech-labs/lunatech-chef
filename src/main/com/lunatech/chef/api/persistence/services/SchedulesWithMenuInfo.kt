@@ -59,7 +59,7 @@ class SchedulesWithMenuInfo(
                     .where { Locations.uuid eq schedule.locationUuid }
                     .map { Locations.createEntity(it) }.firstOrNull()
 
-                ScheduleWithMenuInfo(schedule.uuid, menu!!, schedule.date, location!!)
+                ScheduleWithMenuInfo(schedule.uuid, menu!!, schedule.date, location!!, schedule.isDeleted, schedule.date.toString())
             }
 
     private fun getScheduleWithMenuInfo(schedule: Schedule): ScheduleWithMenuInfo {
@@ -68,6 +68,6 @@ class SchedulesWithMenuInfo(
             .where { Locations.uuid eq schedule.locationUuid }
             .map { Locations.createEntity(it) }.firstOrNull()
 
-        return ScheduleWithMenuInfo(schedule.uuid, menu!!, schedule.date, location!!)
+        return ScheduleWithMenuInfo(schedule.uuid, menu!!, schedule.date, location!!, schedule.isDeleted, schedule.date.toString())
     }
 }

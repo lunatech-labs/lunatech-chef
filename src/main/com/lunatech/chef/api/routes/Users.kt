@@ -25,6 +25,7 @@ import io.ktor.server.routing.route
 import io.ktor.server.sessions.*
 import mu.KotlinLogging
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 private val logger = KotlinLogging.logger {}
 
@@ -83,7 +84,7 @@ fun Routing.users(usersService: UsersService, jwtConfig: JwtConfig) {
                 }
             }
 
-            // generate token for app usage
+            // generate token for api usage
             route(tokenGeneration) {
                 get {
                     val chefSession = call.sessions.get<ChefSession>()
@@ -98,7 +99,7 @@ fun Routing.users(usersService: UsersService, jwtConfig: JwtConfig) {
                             val token = JWT.create()
                                 .withIssuer(jwtConfig.issuer)
                                 .withClaim("username", user.emailAddress)
-                                .withExpiresAt(Date(System.currentTimeMillis() + 600000))
+                                .withExpiresAt(Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(jwtConfig.ttlLimit.toLong())))
                                 .sign(Algorithm.HMAC256(jwtConfig.secretKey))
                             call.respond(OK,hashMapOf("token" to token))
                         }

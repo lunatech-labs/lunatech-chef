@@ -1,7 +1,10 @@
 
 GET {{ host }}/schedulesWithMenusInfo
-CHEF_SESSION: {{ session }}
+Authorization: Bearer {{token}}
+###
 
+GET {{ host }}/schedulesWithMenusInfo/107567ce-ad9d-4cd7-8a8a-5252ffb67fb6
+Authorization: Bearer {{token}}
 ###
 
 GET {{ host }}/schedulesWithMenusInfo?fromdate=2021-08-01

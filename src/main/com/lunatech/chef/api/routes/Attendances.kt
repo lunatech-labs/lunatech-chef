@@ -27,7 +27,7 @@ fun Routing.attendances(attendancesService: AttendancesService) {
     val uuidParam = "uuid"
 
     route(attendancesRoute) {
-        authenticate("session-auth") {
+        authenticate("session-auth","auth-jwt") {
             // rolesAllowed(Role.ADMIN, Role.USER) {
             // create a new single attendance
             post {

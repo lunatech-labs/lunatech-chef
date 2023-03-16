@@ -55,8 +55,7 @@ import io.ktor.server.application.install
 import io.ktor.server.auth.Authentication
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.auth.session
-import io.ktor.server.http.content.files
-import io.ktor.server.http.content.static
+import io.ktor.server.http.content.*
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.cors.routing.CORS
 import io.ktor.server.plugins.defaultheaders.DefaultHeaders
@@ -220,14 +219,8 @@ fun Application.module() {
         users(usersService,jwtConfig)
         attendances(attendancesService)
 
-        static("static/media") {
-            files("frontend/build/static/media")
-        }
-        static("static") {
-            files("frontend/build/static")
-        }
-        static("root") {
-            files("frontend/build")
+        singlePageApplication {
+            react("frontend/build")
         }
 
         // TODO add cancel buttons to add/edit panels to improve navigation

@@ -2,14 +2,18 @@ POST {{ host }}/attendances
 Content-Type: application/json
 CHEF_SESSION: {{ session }}
 
-{ "scheduleUuid": "aa6ff83d-b07d-4cb0-a414-7172391dd12b",
-  "userUuid": "4207d44e-3d53-4b28-b43a-ae42f8204b9c",
+{ "scheduleUuid": "334ba1ab-1be8-4be7-b3fb-46e6dcb38187",
+  "userUuid": "6a1810c0-8f99-487d-bc4b-a8a037c35da2",
   "isAttending": "true"
 }
 
 ###
 
 GET {{ host }}/attendances
+CHEF_SESSION: {{ session }}
+
+###
+GET {{ host }}/attendances/upcoming
 CHEF_SESSION: {{ session }}
 ###
 

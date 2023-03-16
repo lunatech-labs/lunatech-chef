@@ -1,5 +1,7 @@
 package com.lunatech.chef.api
 
+import com.auth0.jwt.JWT
+import com.auth0.jwt.algorithms.Algorithm
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
@@ -8,6 +10,7 @@ import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.gson.GsonFactory
 import com.lunatech.chef.api.config.AuthConfig
 import com.lunatech.chef.api.config.FlywayConfig
+import com.lunatech.chef.api.config.JwtConfig
 import com.lunatech.chef.api.persistence.DBEvolution
 import com.lunatech.chef.api.persistence.Database
 import com.lunatech.chef.api.persistence.services.AttendancesService
@@ -50,9 +53,9 @@ import io.ktor.server.application.ApplicationStopped
 import io.ktor.server.application.call
 import io.ktor.server.application.install
 import io.ktor.server.auth.Authentication
+import io.ktor.server.auth.jwt.*
 import io.ktor.server.auth.session
-import io.ktor.server.http.content.files
-import io.ktor.server.http.content.static
+import io.ktor.server.http.content.*
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.cors.routing.CORS
 import io.ktor.server.plugins.defaultheaders.DefaultHeaders
@@ -79,6 +82,7 @@ fun Application.module() {
     val config = ConfigFactory.load()
     val dbConfig = FlywayConfig.fromConfig(config.getConfig("database"))
     val authConfig = AuthConfig.fromConfig(config.getConfig("auth"))
+    val jwtConfig = JwtConfig.fromConfig(config.getConfig("jwt"))
     val cronString = config.getString("recurrent-schedules-cron")
 
     val chefSession = "CHEF_SESSION"
@@ -146,7 +150,7 @@ fun Application.module() {
     }
 
     install(Authentication) {
-        session<ChefSession>("session-auth") {
+        session("session-auth") {
             validate { chefSession ->
                 validateSession(chefSession, authConfig.ttlLimit)
             }
@@ -154,7 +158,28 @@ fun Application.module() {
                 call.respond(HttpStatusCode.Unauthorized)
             }
         }
+
+        jwt("auth-jwt") {
+            verifier(
+                JWT
+                    .require(Algorithm.HMAC256(jwtConfig.secretKey))
+                    .withIssuer(jwtConfig.issuer)
+                    .build()
+            )
+            challenge { defaultScheme, realm ->
+                call.respond(HttpStatusCode.Unauthorized, "Token is not valid or has expired")
+            }
+            validate { credential ->
+                if (credential.payload.getClaim("username").asString() != "") {
+                    JWTPrincipal(credential.payload)
+                } else {
+                    null
+                }
+            }
+        }
     }
+
+
 
 //    install(RoleAuthorization) {
 //        validate { allowedRoles ->
@@ -191,17 +216,11 @@ fun Application.module() {
         recurrentSchedules(recurrentSchedulesService)
         recurrentSchedulesWithMenusInfo(recurrentSchedulesMenuWithInfoService)
         attendancesWithScheduleInfo(attendancesWithInfoService)
-        users(usersService)
+        users(usersService,jwtConfig)
         attendances(attendancesService)
 
-        static("static/media") {
-            files("frontend/build/static/media")
-        }
-        static("static") {
-            files("frontend/build/static")
-        }
-        static("root") {
-            files("frontend/build")
+        singlePageApplication {
+            react("frontend/build")
         }
 
         // TODO add cancel buttons to add/edit panels to improve navigation

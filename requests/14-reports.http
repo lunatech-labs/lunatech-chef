@@ -1,0 +1,7 @@
+GET {{ host }}/reports?year=2023&month=3
+CHEF_SESSION: {{ session }}
+
+###
+
+GET {{ host }}/reports?year=2023
+CHEF_SESSION: {{ session }}

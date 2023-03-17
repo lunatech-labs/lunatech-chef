@@ -16,11 +16,13 @@ import com.lunatech.chef.api.persistence.Database
 import com.lunatech.chef.api.persistence.services.AttendancesService
 import com.lunatech.chef.api.persistence.services.AttendancesWithScheduleInfoService
 import com.lunatech.chef.api.persistence.services.DishesService
+import com.lunatech.chef.api.persistence.services.ExcelService
 import com.lunatech.chef.api.persistence.services.LocationsService
 import com.lunatech.chef.api.persistence.services.MenusService
 import com.lunatech.chef.api.persistence.services.MenusWithDishesNamesService
 import com.lunatech.chef.api.persistence.services.RecurrentSchedulesService
 import com.lunatech.chef.api.persistence.services.RecurrentSchedulesWithMenuInfoService
+import com.lunatech.chef.api.persistence.services.ReportService
 import com.lunatech.chef.api.persistence.services.SchedulesService
 import com.lunatech.chef.api.persistence.services.SchedulesWithAttendanceInfoService
 import com.lunatech.chef.api.persistence.services.SchedulesWithMenuInfoService
@@ -36,6 +38,7 @@ import com.lunatech.chef.api.routes.menus
 import com.lunatech.chef.api.routes.menusWithDishesInfo
 import com.lunatech.chef.api.routes.recurrentSchedules
 import com.lunatech.chef.api.routes.recurrentSchedulesWithMenusInfo
+import com.lunatech.chef.api.routes.reports
 import com.lunatech.chef.api.routes.schedules
 import com.lunatech.chef.api.routes.schedulesWithAttendanceInfo
 import com.lunatech.chef.api.routes.schedulesWithMenusInfo
@@ -108,6 +111,8 @@ fun Application.module() {
     val attendancesService = AttendancesService(dbConnection, usersService)
     val attendancesWithInfoService =
         AttendancesWithScheduleInfoService(dbConnection, schedulesService, menusWithDishesService)
+    val reportService = ReportService(dbConnection)
+    val excelService = ExcelService()
 
     val scheduler = StdSchedulerFactory.getDefaultScheduler()
     mealSchedulerTrigger(scheduler, schedulesService, recurrentSchedulesService, attendancesService, cronString)
@@ -219,6 +224,7 @@ fun Application.module() {
         attendancesWithScheduleInfo(attendancesWithInfoService)
         users(usersService,jwtConfig)
         attendances(attendancesService)
+        reports(reportService, excelService)
 
         singlePageApplication {
             react("frontend/build")

@@ -220,6 +220,7 @@ fun Application.module() {
         attendances(attendancesService)
 
         singlePageApplication {
+
             react("frontend/build")
         }
 

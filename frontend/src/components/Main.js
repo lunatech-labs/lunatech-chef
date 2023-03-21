@@ -39,6 +39,7 @@ import {
   login,
   logout,
   saveUserProfile,
+  restoreSessionFromLocalStorage, removeExpiredSession,
 } from "../redux/users/UsersActionCreators";
 import { AddDish } from "./admin/dishes/AddDish";
 import { EditDish } from "./admin/dishes/EditDish";
@@ -154,6 +155,12 @@ const mapDispatchToProps = (dispatch) => ({
   login: (token) => {
     dispatch(login(token));
   },
+  restoreSession: ()=>{
+    dispatch(restoreSessionFromLocalStorage());
+  },
+  removeExpiredSession: () => {
+    dispatch(removeExpiredSession())
+  },
   logout: () => {
     dispatch(logout());
   },
@@ -163,6 +170,11 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 class Main extends Component {
+  componentDidMount() {
+    this.props.removeExpiredSession();
+    this.props.restoreSession();
+  }
+
   render() {
     const WhoIsJoiningSchedule = () => {
       return (

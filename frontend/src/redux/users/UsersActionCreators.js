@@ -9,16 +9,17 @@ import {
   fetchSchedulesAttendance,
 } from "../schedules/SchedulesActionCreators";
 import { fetchAttendanceUser } from "../attendance/AttendanceActionCreators";
-
 export const login = (token) => (dispatch) => {
   axiosInstance
     .get("/login/" + token)
     .then((response) => {
-      configureAxios(response);
+      const chefSession = response.headers?.chef_session;
+      configureAxios(chefSession);
       dispatch(userLoggedIn(response.data));
-
       const userUuid = response.data.uuid;
       localStorage.setItem("userUuid", userUuid);
+      localStorage.setItem('chef_session', chefSession);
+      localStorage.setItem("userInfo", JSON.stringify(response.data));
       getInitialData(dispatch);
     })
     .catch(function (error) {
@@ -27,12 +28,41 @@ export const login = (token) => (dispatch) => {
     });
 };
 
-const configureAxios = (response) => {
+export const restoreSessionFromLocalStorage = () => (dispatch) => {
+    const userUuid = localStorage.getItem("userUuid");
+    const chefSession = localStorage.getItem("chef_session");
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    if (userUuid && userInfo && chefSession) {
+        configureAxios(chefSession);
+        dispatch(userLoggedIn(userInfo));
+        getInitialData(dispatch);
+    }
+}
+
+export const removeExpiredSession = () => (dispatch) => {
+    const chefSession = localStorage.getItem("chef_session");
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    if (chefSession && userInfo) {
+        const ttl = parseInt(userInfo.ttl);
+        const ttlLimit = process.env.REACT_APP_TTL_LIMIT;
+        const now = new Date().getTime();
+        const duration = new Date(now - ttl).getMinutes();
+        if (duration < 0 || duration > ttlLimit) {
+            localStorage.removeItem("userUuid");
+            localStorage.removeItem("chef_session");
+            localStorage.removeItem("userInfo");
+            dispatch(userLoggedOut());
+        }
+
+    }
+}
+
+const configureAxios = (chefSession) => {
   axiosInstance.interceptors.request.use(
     function (config) {
       config.headers = {
         ...config.headers,
-        CHEF_SESSION: response.headers.chef_session,
+        CHEF_SESSION: chefSession //response.headers.chef_session,
       };
       return config;
     },
@@ -79,6 +109,7 @@ const getInitialData = (dispatch) => {
 
 export const logout = () => (dispatch) => {
   dispatch(userLoggedOut());
+  localStorage.clear();
 };
 
 export const userLoggedIn = (data) => ({

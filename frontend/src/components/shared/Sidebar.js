@@ -52,9 +52,9 @@ const Sidebar = (props) => {
                 </CDBSidebarContent>
                 <CDBSidebarFooter>
                     {process.env.NODE_ENV === "production" ? (
-                        <img src={process.env.PUBLIC_URL + 'root/lunatech-logo.png'} alt="Lunatech logo" width="270px" />)
+                        <img src={process.env.PUBLIC_URL + '/lunatech-logo.png'} alt="Lunatech logo" width="270px" />)
                         : (
-                            <img src={process.env.PUBLIC_URL + 'lunatech-logo.png'} alt="Lunatech logo" width="270px" />)
+                            <img src={process.env.PUBLIC_URL + '/lunatech-logo.png'} alt="Lunatech logo" width="270px" />)
                     }
                 </CDBSidebarFooter>
             </CDBSidebar>

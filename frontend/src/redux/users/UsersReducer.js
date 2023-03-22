@@ -18,6 +18,7 @@ const initState = {
   isLactoseIntolerant: false,
   otherRestrictions: false,
   error: null,
+  token: "",
 };
 
 export const UsersReducer = (state = initState, action) => {
@@ -66,6 +67,18 @@ export const UsersReducer = (state = initState, action) => {
         isAuthenticated: false,
         error: action.payload,
       };
+
+    case ActionTypes.TOKEN_GENERATED:
+        return { ...state, isLoading: false, error: null, token: action.payload.token };
+
+    case ActionTypes.TOKEN_GENERATING:
+        return { ...state, isLoading: true, error: null, token: "" };
+
+    case ActionTypes.TOKEN_GENERATION_ERROR:
+        return { ...state, isLoading: false, error: action.payload, token: "" };
+
+    case ActionTypes.TOKEN_CLEAR:
+        return { ...state, isLoading: false, error: null, token: "" };
 
     case ActionTypes.USER_LOGOUT:
       return initState;

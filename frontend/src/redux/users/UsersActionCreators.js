@@ -1,7 +1,12 @@
 import * as ActionTypes from "./UsersActionTypes";
 import { axiosInstance } from "../Axios";
 import { fetchDishes } from "../dishes/DishesActionCreators";
-import { fetchLocations } from "../locations/LocationsActionCreators";
+import {
+    fetchLocations,
+    locationsLoading,
+    locationsLoadingFailed,
+    showAllLocations
+} from "../locations/LocationsActionCreators";
 import { fetchMenus } from "../menus/MenusActionCreators";
 import {
   fetchSchedules,
@@ -27,6 +32,24 @@ export const login = (token) => (dispatch) => {
       dispatch(userLoginError(error));
     });
 };
+
+export const generateToken = () => (dispatch) => {
+    dispatch(tokenGeneratingLoading());
+
+    axiosInstance
+        .get("/users/token-generation")
+        .then(function (response) {
+            dispatch(tokenGenerated(response.data));
+        })
+        .catch(function (error) {
+            console.log("Failed loading Locations: " + error);
+            dispatch(tokenGenerationError(error.message));
+        });
+};
+
+export const clearToken = () => (dispatch) => {
+    dispatch(tokenCleared());
+}
 
 export const restoreSessionFromLocalStorage = () => (dispatch) => {
     const userUuid = localStorage.getItem("userUuid");
@@ -135,3 +158,20 @@ export const userProfileSaveError = (errmess) => ({
   type: ActionTypes.USER_PROFILE_SAVE_ERROR,
   payload: errmess,
 });
+
+export const tokenGeneratingLoading = () => ({
+    type: ActionTypes.TOKEN_GENERATING,
+});
+
+export const tokenGenerationError = (errmess) => ({
+    type: ActionTypes.TOKEN_GENERATION_ERROR,
+    payload: errmess,
+})
+
+export const tokenGenerated = (data) => ({
+    type: ActionTypes.TOKEN_GENERATED,
+    payload: data,
+})
+export const tokenCleared = () => ({
+    type: ActionTypes.TOKEN_CLEAR,
+})

@@ -39,7 +39,7 @@ import {
   login,
   logout,
   saveUserProfile,
-  restoreSessionFromLocalStorage, removeExpiredSession,
+  restoreSessionFromLocalStorage, removeExpiredSession, generateToken, clearToken
 } from "../redux/users/UsersActionCreators";
 import { AddDish } from "./admin/dishes/AddDish";
 import { EditDish } from "./admin/dishes/EditDish";
@@ -59,6 +59,7 @@ import ListSchedules from "./admin/schedules/ListSchedules";
 import Login from "./auth/Login";
 import WhoIsJoining from "./WhoIsJoining";
 import ProtectedRoutes from "./auth/ProtectedRoutes";
+import Settings from "./Settings";
 
 const mapStateToProps = (state) => {
   return {
@@ -167,6 +168,12 @@ const mapDispatchToProps = (dispatch) => ({
   saveUserProfile: (uuid, profile) => {
     dispatch(saveUserProfile(uuid, profile));
   },
+  generateToken: () => {
+    dispatch(generateToken());
+  },
+  clearToken: () => {
+    dispatch(clearToken());
+  }
 });
 
 class Main extends Component {
@@ -337,15 +344,18 @@ class Main extends Component {
       return <Login login={this.props.login} />;
     };
 
-    const Profile = () => {
-      return (
-        <UserProfile
-          user={this.props.user}
-          locations={this.props.locations.locations}
-          saveUserProfile={this.props.saveUserProfile}
-        />
-      );
-    };
+
+    const SettingPage = () => {
+        return (
+            <Settings
+            user={this.props.user}
+            locations={this.props.locations.locations}
+            saveUserProfile={this.props.saveUserProfile}
+            generateToken={this.props.generateToken}
+            deleteToken={this.props.clearToken}
+            />
+        );
+    }
 
     return (
       <ErrorBoundary>
@@ -378,7 +388,8 @@ class Main extends Component {
 
                 </Route>
                 <Route path="/loginUser" element={<LoginUser />} />
-                <Route path="/userProfile" element={<Profile />} />
+                {/*<Route exact path="/settings/:id" element={<Profile />} />*/}
+                <Route exact path="/settings/:id" element={<SettingPage />} />
                 <Route path="/" element={<ShowAttendance />} />
                 <Route
                   path="*"

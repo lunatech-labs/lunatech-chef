@@ -65,7 +65,56 @@ class UsersService(val database: Database) {
                 it.uuid eq uuid
             }
         }
-
+    /**
+     * Get all attendances for a given schedule.
+     * We need a way to know users who have not yet responded if they will be attending. The attendances table is not sufficient to get that information, hence
+     * we need to write the below native query using the schedules table, users table and attendances table.
+     * @return List of Users
+     */
+    fun getUsersForUpcomingLunch(): List<User> =
+        database.useConnection { connection ->
+            val statements = """
+                WITH    upcomingScheduleCount as (select count(*) from schedules where date > now() and is_deleted = false),
+                        upcomingSchedules as (select * from schedules where date > now() and is_deleted = false),
+                        upcomingAttendances as (select distinct on(attendances.user_uuid) * from attendances 
+                            where schedule_uuid in (select uuid from upcomingSchedules) and is_attending = true and is_deleted = false),
+                        upcomingAttendancesCount as (select count(*) from upcomingAttendances),
+                        upcomingUsers as (select *,
+                                            (select * from upcomingAttendancesCount) as upac, 
+                                            (select * from upcomingScheduleCount) upsc  
+                                        from users as u  )
+                select * from upcomingUsers where (upac=0 and upsc = 0) or  upac < upsc;
+            """.trimIndent()
+            connection.prepareStatement(
+                statements
+            ).use { statement ->
+                statement.executeQuery().use { resultSet ->
+                    val users = mutableListOf<User>()
+                    while (resultSet.next()) {
+                        users.add(
+                            User(
+                                UUID.fromString(resultSet.getString("uuid")),
+                                resultSet.getString("name"),
+                                resultSet.getString("email_address"),
+                                UUID.fromString(resultSet.getString("location_uuid")),
+                                resultSet.getBoolean("is_vegetarian"),
+                                resultSet.getBoolean("has_halal_restriction"),
+                                resultSet.getBoolean("has_nuts_restriction"),
+                                resultSet.getBoolean("has_seafood_restriction"),
+                                resultSet.getBoolean("has_pork_restriction"),
+                                resultSet.getBoolean("has_beef_restriction"),
+                                resultSet.getBoolean("is_gluten_intolerant"),
+                                resultSet.getBoolean("is_lactose_intolerant"),
+                                resultSet.getString("other_restrictions"),
+                                resultSet.getBoolean("is_inactive"),
+                                resultSet.getBoolean("is_deleted")
+                            )
+                        )
+                    }
+                    users
+                }
+            }
+        }
     fun delete(uuid: UUID): Int {
         val result = database.update(Users) {
             set(it.isDeleted, true)

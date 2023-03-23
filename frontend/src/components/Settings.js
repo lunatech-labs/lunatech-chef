@@ -8,7 +8,6 @@ import Tabs from 'react-bootstrap/Tabs';
 import {UserProfile} from "./UserProfile";
 import AddToken from "./admin/developer/AddToken";
 
-import ProtectedRoutes from "./auth/ProtectedRoutes";
 
 export default function Settings(props) {
  const { id } = useParams();

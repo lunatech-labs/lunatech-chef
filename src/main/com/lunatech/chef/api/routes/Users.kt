@@ -139,6 +139,10 @@ fun Routing.users(usersService: UsersService, jwtConfig: JwtConfig) {
                     if (result == 1) call.respond(OK) else call.respond(InternalServerError)
                 }
             }
+            get("/upcoming") {
+                val attendances = usersService.getUsersForUpcomingLunch()
+                call.respond(OK, attendances)
+            }
             // }
         }
     }

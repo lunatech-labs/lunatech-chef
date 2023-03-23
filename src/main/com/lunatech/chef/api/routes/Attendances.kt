@@ -12,10 +12,14 @@ import io.ktor.server.application.call
 import io.ktor.server.auth.authenticate
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
-import io.ktor.server.routing.*
+import io.ktor.server.routing.Routing
+import io.ktor.server.routing.get
+import io.ktor.server.routing.post
+import io.ktor.server.routing.put
+import io.ktor.server.routing.route
+
 import mu.KotlinLogging
 import java.util.UUID
-import kotlin.text.get
 
 private val logger = KotlinLogging.logger {}
 
@@ -54,10 +58,7 @@ fun Routing.attendances(attendancesService: AttendancesService) {
                     }
                 }
             }
-            get("/upcoming") {
-                val attendances = attendancesService.getUsersForUpcomingAttendance()
-                call.respond(OK, attendances)
-            }
+
 
             // }
         }

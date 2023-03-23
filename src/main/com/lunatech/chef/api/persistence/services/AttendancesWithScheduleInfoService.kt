@@ -46,6 +46,7 @@ class AttendancesWithScheduleInfoService(
             }
             .orderBy(Schedules.date.asc())
             .map { Attendances.createEntity(it) }
+            .distinctBy { it.uuid }
             .flatMap { getAttendanceWithInfo(it) }
 
     private fun getAttendanceWithInfo(attendance: Attendance): List<AttendanceWithInfo> {

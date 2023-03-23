@@ -8,28 +8,12 @@ import com.lunatech.chef.api.routes.UpdatedAttendance
 import java.util.UUID
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
+import java.time.LocalDate
 
 class AttendancesService(val database: Database, val usersService: UsersService) {
     fun getAll(): List<Attendance> =
         database.from(Attendances).select().where { Attendances.isDeleted eq false }
             .map { Attendances.createEntity(it) }
-
-    fun getUsersForUpcomingAttendance(): List<User> =
-        database.from(Attendances)
-            .select()
-            .where { Attendances.isAttending and Attendances.isDeleted eq false }
-
-            .map {attendance ->
-                database.from(Attendances)
-                    .leftJoin(Users, Attendances.userUuid eq Users.uuid)
-                    .select()
-                    .where { Users.isDeleted eq false}
-                    .map { Users.createEntity(it) }
-
-
-            }
-            .flatten()
-            .distinctBy { it.uuid }
 
 
     fun getAllAttending(): List<Attendance> =
@@ -55,11 +39,14 @@ class AttendancesService(val database: Database, val usersService: UsersService)
             set(it.userUuid, attendance.userUuid)
             set(it.isAttending, attendance.isAttending)
             set(it.isDeleted, attendance.isDeleted)
+            set(it.createdAt, attendance.createdAt)
+            set(it.updatedAt, attendance.updatedAt)
         }
 
     fun update(uuid: UUID, attendance: UpdatedAttendance): Int =
         database.update(Attendances) {
             set(it.isAttending, attendance.isAttending)
+            set(it.updatedAt, LocalDate.now())
             where {
                 it.uuid eq uuid
             }

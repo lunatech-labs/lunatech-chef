@@ -18,7 +18,7 @@ fun Routing.schedulesWithAttendanceInfo(schedulesWithAttendanceInfoService: Sche
     val locationParam = "location"
 
     route(menusRoute) {
-        authenticate("session-auth") {
+        authenticate("session-auth", "auth-jwt") {
             // rolesAllowed(Role.ADMIN) {
             // get all menus with the complete data about the dishes
             get {

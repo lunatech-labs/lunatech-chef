@@ -9,6 +9,7 @@ import com.lunatech.chef.api.persistence.schemas.Users
 import org.ktorm.database.Database
 import org.ktorm.dsl.and
 import org.ktorm.dsl.asc
+import org.ktorm.dsl.desc
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.from
 import org.ktorm.dsl.greaterEq
@@ -16,6 +17,7 @@ import org.ktorm.dsl.leftJoin
 import org.ktorm.dsl.map
 import org.ktorm.dsl.orderBy
 import org.ktorm.dsl.select
+import org.ktorm.dsl.selectDistinct
 import org.ktorm.dsl.where
 import org.ktorm.schema.ColumnDeclaring
 import java.time.LocalDate
@@ -60,7 +62,9 @@ class SchedulesWithAttendanceInfo(
                     Users.otherRestrictions, Users.isInactive, Users.isDeleted,
                 )
                 .where { (Attendances.scheduleUuid eq schedule.uuid) and (Attendances.isAttending eq true) and (Attendances.isDeleted eq false) }
-                .map { Users.createEntity(it) }
+                .orderBy(Attendances.createdAt.desc())
+                .map { Users.createEntity(it) }.distinctBy { it.uuid }
+
 
         return ScheduleWithAttendanceInfo(schedule.uuid, menu!!.name, attendants, schedule.date, location!!)
     }

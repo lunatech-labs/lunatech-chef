@@ -1,5 +1,6 @@
 package com.lunatech.chef.api.domain
 
+import org.ktorm.schema.datetime
 import java.time.LocalDate
 import java.util.UUID
 
@@ -15,6 +16,8 @@ data class Attendance(
     val userUuid: UUID,
     val isAttending: Boolean,
     val isDeleted: Boolean = false,
+    val createdAt:LocalDate,
+    val updatedAt: LocalDate,
 ) {
     companion object {
         fun fromNewAttendance(newAttendance: NewAttendance): Attendance {
@@ -23,6 +26,8 @@ data class Attendance(
                 scheduleUuid = newAttendance.scheduleUuid,
                 userUuid = newAttendance.userUuid,
                 isAttending = newAttendance.isAttending,
+                createdAt = LocalDate.now(),
+                updatedAt = LocalDate.now(),
             )
         }
     }

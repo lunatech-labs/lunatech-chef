@@ -28,6 +28,10 @@ CHEF_SESSION: {{ session }}
 
 ###
 
+GET {{ host }}/users/upcoming
+Authorization: Bearer {{token}}
+###
+
 GET {{ host }}/users/f0daa634-8ec7-4fef-88c7-a92d608b6eea
 CHEF_SESSION: {{ session }}
 

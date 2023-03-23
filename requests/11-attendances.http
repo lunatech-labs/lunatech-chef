@@ -10,12 +10,10 @@ CHEF_SESSION: {{ session }}
 ###
 
 GET {{ host }}/attendances
-CHEF_SESSION: {{ session }}
+Authorization: Bearer {{token}}
 
 ###
-GET {{ host }}/attendances/upcoming
-CHEF_SESSION: {{ session }}
-###
+
 
 GET {{ host }}/attendances/1dcbc463-f6d1-4164-aaa0-deb17f06cf59
 CHEF_SESSION: {{ session }}

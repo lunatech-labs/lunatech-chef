@@ -6,13 +6,8 @@ import Col from "react-bootstrap/Col";
 import ClipboardCopy from "../../shared/ClipboardCopy";
 export default function AddToken(props){
 
-
     const { user } = props;
     const tokenText = user.token
-
-
-
-
 
     return (
         <div className="container">

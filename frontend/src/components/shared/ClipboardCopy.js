@@ -7,7 +7,6 @@ import Row from "react-bootstrap/Row";
 export default function ClipboardCopy({ copyText }) {
     const [isCopied, setIsCopied] = useState(false);
 
-    // This is the function we wrote earlier
     async function copyTextToClipboard(text) {
         if ('clipboard' in navigator) {
             return await navigator.clipboard.writeText(text);
@@ -54,8 +53,6 @@ export default function ClipboardCopy({ copyText }) {
                     </Col>
                 </Row>
             </Container>
-            {/* Bind our handler function to the onClick button property */}
-
         </div>
     );
 }

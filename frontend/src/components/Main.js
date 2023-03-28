@@ -345,7 +345,7 @@ class Main extends Component {
     };
 
 
-    const SettingPage = () => {
+    const SettingsPage = () => {
         return (
             <Settings
             user={this.props.user}
@@ -388,8 +388,7 @@ class Main extends Component {
 
                 </Route>
                 <Route path="/loginUser" element={<LoginUser />} />
-                {/*<Route exact path="/settings/:id" element={<Profile />} />*/}
-                <Route exact path="/settings/:id" element={<SettingPage />} />
+                <Route exact path="/settings/:id" element={<SettingsPage />} />
                 <Route path="/" element={<ShowAttendance />} />
                 <Route
                   path="*"

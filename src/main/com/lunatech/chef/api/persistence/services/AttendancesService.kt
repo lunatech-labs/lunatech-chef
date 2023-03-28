@@ -9,6 +9,7 @@ import java.util.UUID
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 class AttendancesService(val database: Database, val usersService: UsersService) {
     fun getAll(): List<Attendance> =
@@ -46,7 +47,7 @@ class AttendancesService(val database: Database, val usersService: UsersService)
     fun update(uuid: UUID, attendance: UpdatedAttendance): Int =
         database.update(Attendances) {
             set(it.isAttending, attendance.isAttending)
-            set(it.updatedAt, LocalDate.now())
+            set(it.updatedAt, LocalDateTime.now())
             where {
                 it.uuid eq uuid
             }

@@ -7,7 +7,7 @@ import com.lunatech.chef.api.persistence.schemas.Locations
 import com.lunatech.chef.api.persistence.schemas.Schedules
 import org.ktorm.database.Database
 import org.ktorm.dsl.and
-import org.ktorm.dsl.asc
+import org.ktorm.dsl.desc
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.from
 import org.ktorm.dsl.greaterEq
@@ -44,9 +44,9 @@ class AttendancesWithScheduleInfoService(
 
                 conditions.reduce { a, b -> a and b }
             }
-            .orderBy(Schedules.date.asc())
+            .orderBy(Attendances.createdAt.desc())
             .map { Attendances.createEntity(it) }
-            .distinctBy { it.uuid }
+            .distinctBy {  it.scheduleUuid }
             .flatMap { getAttendanceWithInfo(it) }
 
     private fun getAttendanceWithInfo(attendance: Attendance): List<AttendanceWithInfo> {

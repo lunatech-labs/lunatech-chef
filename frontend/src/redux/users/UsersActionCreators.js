@@ -66,17 +66,20 @@ export const removeExpiredSession = () => (dispatch) => {
     const chefSession = localStorage.getItem("chef_session");
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
     if (chefSession && userInfo) {
-        const ttl = parseInt(userInfo.ttl);
-        const ttlLimit = process.env.REACT_APP_TTL_LIMIT;
-        const now = new Date().getTime();
-        const duration = new Date(now - ttl).getMinutes();
-        if (duration < 0 || duration > ttlLimit) {
-            localStorage.removeItem("userUuid");
-            localStorage.removeItem("chef_session");
-            localStorage.removeItem("userInfo");
-            dispatch(userLoggedOut());
-        }
-
+        const emailAddress = userInfo.emailAddress;
+        configureAxios(chefSession);
+        axiosInstance
+            .get("/users/by-email/" + emailAddress)
+            .then((response) => response.data)
+            .catch(function (error) {
+                console.log("Failed getting User by email " + JSON.stringify(error?.response));
+                if(error?.response?.status === 401){
+                    localStorage.removeItem("userUuid");
+                    localStorage.removeItem("chef_session");
+                    localStorage.removeItem("userInfo");
+                }
+                dispatch(userLoggedOut());
+            });
     }
 }
 

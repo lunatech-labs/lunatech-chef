@@ -38,7 +38,7 @@
     "redux": "^4.2.1",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
-    "sass": "^1.57.1",
+    "sass": "^1.60.0",
     "sockjs": "0.3.24",
     "ssri": "10.0.1",
     "typescript": "^4.9.4",

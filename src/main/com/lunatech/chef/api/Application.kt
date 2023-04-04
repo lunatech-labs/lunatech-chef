@@ -61,7 +61,6 @@ import io.ktor.server.auth.session
 import io.ktor.server.http.content.*
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.cors.routing.CORS
-import io.ktor.server.plugins.defaultheaders.DefaultHeaders
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondFile
 import io.ktor.server.routing.get
@@ -143,11 +142,6 @@ fun Application.module() {
 //        }
 //    }
 
-    // This will add Date and Server headers to each HTTP response besides CHEF_SESSION header
-    install(DefaultHeaders) {
-        header(HttpHeaders.AccessControlExposeHeaders, chefSession)
-    }
-
     install(Sessions) {
         header<ChefSession>(chefSession) {
             val secretSignKey = authConfig.secretKey.encodeToByteArray()
@@ -170,7 +164,7 @@ fun Application.module() {
                 JWT
                     .require(Algorithm.HMAC256(jwtConfig.secretKey))
                     .withIssuer(jwtConfig.issuer)
-                    .build()
+                    .build(),
             )
             challenge { defaultScheme, realm ->
                 call.respond(HttpStatusCode.Unauthorized, "Token is not valid or has expired")
@@ -184,8 +178,6 @@ fun Application.module() {
             }
         }
     }
-
-
 
 //    install(RoleAuthorization) {
 //        validate { allowedRoles ->
@@ -222,7 +214,7 @@ fun Application.module() {
         recurrentSchedules(recurrentSchedulesService)
         recurrentSchedulesWithMenusInfo(recurrentSchedulesMenuWithInfoService)
         attendancesWithScheduleInfo(attendancesWithInfoService)
-        users(usersService,jwtConfig)
+        users(usersService, jwtConfig)
         attendances(attendancesService)
         reports(reportService, excelService)
 

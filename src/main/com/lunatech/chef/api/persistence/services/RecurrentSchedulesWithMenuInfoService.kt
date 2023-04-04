@@ -14,7 +14,7 @@ import org.ktorm.dsl.where
 import org.ktorm.schema.ColumnDeclaring
 import java.util.UUID
 
-class RecurrentSchedulesWithMenuInfo(
+class RecurrentSchedulesWithMenuInfoService(
     val database: Database,
     private val menusWithDishesService: MenusWithDishesNamesService,
 ) {

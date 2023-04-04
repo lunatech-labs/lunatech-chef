@@ -21,7 +21,7 @@ const Sidebar = (props) => {
                             <CDBSidebarMenuItem icon="hippo">Meals schedules</CDBSidebarMenuItem>
                         </NavLink>
                         <NavLink exact="true" to="/whoisjoining" activeclassname="activeClicked">
-                            <CDBSidebarMenuItem icon="question">Who is joining?</CDBSidebarMenuItem>
+                            <CDBSidebarMenuItem icon="user-friends">Who is joining?</CDBSidebarMenuItem>
                         </NavLink>
                         {props.isAdmin ? (
                             <div>
@@ -32,11 +32,15 @@ const Sidebar = (props) => {
                                     <CDBSidebarMenuItem icon="utensils">Dishes</CDBSidebarMenuItem>
                                 </NavLink>
                                 <NavLink exact="true" to="/allmenus" activeclassname="activeClicked">
-                                    <CDBSidebarMenuItem icon="folder">Menus</CDBSidebarMenuItem>
+                                    <CDBSidebarMenuItem icon="book">Menus</CDBSidebarMenuItem>
                                 </NavLink>
                                 <NavLink exact="true" to="/allschedules" activeclassname="activeClicked">
                                     <CDBSidebarMenuItem icon="calendar">Schedules</CDBSidebarMenuItem>
                                 </NavLink>
+                                <NavLink exact="true" to="/monthlyreports" activeclassname="activeClicked">
+                                    <CDBSidebarMenuItem icon="archive">Monthly Reports</CDBSidebarMenuItem>
+                                </NavLink>
+
                             </div>
                         ) : (
                             <div></div>

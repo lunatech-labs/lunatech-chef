@@ -16,14 +16,16 @@ import com.lunatech.chef.api.persistence.Database
 import com.lunatech.chef.api.persistence.services.AttendancesService
 import com.lunatech.chef.api.persistence.services.AttendancesWithScheduleInfoService
 import com.lunatech.chef.api.persistence.services.DishesService
+import com.lunatech.chef.api.persistence.services.ExcelService
 import com.lunatech.chef.api.persistence.services.LocationsService
 import com.lunatech.chef.api.persistence.services.MenusService
 import com.lunatech.chef.api.persistence.services.MenusWithDishesNamesService
 import com.lunatech.chef.api.persistence.services.RecurrentSchedulesService
-import com.lunatech.chef.api.persistence.services.RecurrentSchedulesWithMenuInfo
+import com.lunatech.chef.api.persistence.services.RecurrentSchedulesWithMenuInfoService
+import com.lunatech.chef.api.persistence.services.ReportService
 import com.lunatech.chef.api.persistence.services.SchedulesService
-import com.lunatech.chef.api.persistence.services.SchedulesWithAttendanceInfo
-import com.lunatech.chef.api.persistence.services.SchedulesWithMenuInfo
+import com.lunatech.chef.api.persistence.services.SchedulesWithAttendanceInfoService
+import com.lunatech.chef.api.persistence.services.SchedulesWithMenuInfoService
 import com.lunatech.chef.api.persistence.services.UsersService
 import com.lunatech.chef.api.routes.ChefSession
 import com.lunatech.chef.api.routes.attendances
@@ -36,12 +38,13 @@ import com.lunatech.chef.api.routes.menus
 import com.lunatech.chef.api.routes.menusWithDishesInfo
 import com.lunatech.chef.api.routes.recurrentSchedules
 import com.lunatech.chef.api.routes.recurrentSchedulesWithMenusInfo
+import com.lunatech.chef.api.routes.reports
 import com.lunatech.chef.api.routes.schedules
 import com.lunatech.chef.api.routes.schedulesWithAttendanceInfo
 import com.lunatech.chef.api.routes.schedulesWithMenusInfo
 import com.lunatech.chef.api.routes.users
 import com.lunatech.chef.api.routes.validateSession
-import com.lunatech.chef.api.schedulers.schedulerTrigger
+import com.lunatech.chef.api.schedulers.mealSchedulerTrigger
 import com.typesafe.config.ConfigFactory
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
@@ -58,7 +61,6 @@ import io.ktor.server.auth.session
 import io.ktor.server.http.content.*
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.cors.routing.CORS
-import io.ktor.server.plugins.defaultheaders.DefaultHeaders
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondFile
 import io.ktor.server.routing.get
@@ -100,16 +102,19 @@ fun Application.module() {
     val menusWithDishesService = MenusWithDishesNamesService(dbConnection)
     val schedulesService = SchedulesService(dbConnection)
     val recurrentSchedulesService = RecurrentSchedulesService(dbConnection)
-    val schedulesWithMenuInfoService = SchedulesWithMenuInfo(dbConnection, menusWithDishesService)
-    val recurrentSchedulesMenuWithInfoService = RecurrentSchedulesWithMenuInfo(dbConnection, menusWithDishesService)
-    val schedulesWithAttendanceInfoService = SchedulesWithAttendanceInfo(dbConnection, menusService)
+    val schedulesWithMenuInfoService = SchedulesWithMenuInfoService(dbConnection, menusWithDishesService)
+    val recurrentSchedulesMenuWithInfoService =
+        RecurrentSchedulesWithMenuInfoService(dbConnection, menusWithDishesService)
+    val schedulesWithAttendanceInfoService = SchedulesWithAttendanceInfoService(dbConnection, menusService)
     val usersService = UsersService(dbConnection)
     val attendancesService = AttendancesService(dbConnection, usersService)
     val attendancesWithInfoService =
         AttendancesWithScheduleInfoService(dbConnection, schedulesService, menusWithDishesService)
+    val reportService = ReportService(dbConnection)
+    val excelService = ExcelService()
 
     val scheduler = StdSchedulerFactory.getDefaultScheduler()
-    schedulerTrigger(scheduler, schedulesService, recurrentSchedulesService, attendancesService, cronString)
+    mealSchedulerTrigger(scheduler, schedulesService, recurrentSchedulesService, attendancesService, cronString)
 
     install(CORS) {
         allowMethod(HttpMethod.Post)
@@ -137,11 +142,6 @@ fun Application.module() {
 //        }
 //    }
 
-    // This will add Date and Server headers to each HTTP response besides CHEF_SESSION header
-    install(DefaultHeaders) {
-        header(HttpHeaders.AccessControlExposeHeaders, chefSession)
-    }
-
     install(Sessions) {
         header<ChefSession>(chefSession) {
             val secretSignKey = authConfig.secretKey.encodeToByteArray()
@@ -164,7 +164,7 @@ fun Application.module() {
                 JWT
                     .require(Algorithm.HMAC256(jwtConfig.secretKey))
                     .withIssuer(jwtConfig.issuer)
-                    .build()
+                    .build(),
             )
             challenge { defaultScheme, realm ->
                 call.respond(HttpStatusCode.Unauthorized, "Token is not valid or has expired")
@@ -178,8 +178,6 @@ fun Application.module() {
             }
         }
     }
-
-
 
 //    install(RoleAuthorization) {
 //        validate { allowedRoles ->
@@ -216,8 +214,9 @@ fun Application.module() {
         recurrentSchedules(recurrentSchedulesService)
         recurrentSchedulesWithMenusInfo(recurrentSchedulesMenuWithInfoService)
         attendancesWithScheduleInfo(attendancesWithInfoService)
-        users(usersService,jwtConfig)
+        users(usersService, jwtConfig)
         attendances(attendancesService)
+        reports(reportService, excelService)
 
         singlePageApplication {
             react("frontend/build")

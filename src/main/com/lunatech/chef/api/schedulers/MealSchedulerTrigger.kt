@@ -10,20 +10,20 @@ import org.quartz.JobDetail
 import org.quartz.Scheduler
 import org.quartz.TriggerBuilder.newTrigger
 
-fun schedulerTrigger(
+fun mealSchedulerTrigger(
     scheduler: Scheduler,
     schedulesService: SchedulesService,
     recurrentSchedulesService: RecurrentSchedulesService,
     attendancesService: AttendancesService,
     cronExpression: String,
 ) {
-    val job: JobDetail = newJob(SchedulerJob::class.java)
+    val job: JobDetail = newJob(MealSchedulerJob::class.java)
         .withIdentity("recurrentSchedules", "chefSchedules")
         .build()
 
-    job.jobDataMap[SchedulerJob.schedulesService] = schedulesService
-    job.jobDataMap[SchedulerJob.recurrentSchedulesService] = recurrentSchedulesService
-    job.jobDataMap[SchedulerJob.attendancesService] = attendancesService
+    job.jobDataMap[MealSchedulerJob.schedulesService] = schedulesService
+    job.jobDataMap[MealSchedulerJob.recurrentSchedulesService] = recurrentSchedulesService
+    job.jobDataMap[MealSchedulerJob.attendancesService] = attendancesService
 
     val trigger: CronTrigger = newTrigger()
         .withIdentity("weekSchedules", "weekSchedulesTrigger")

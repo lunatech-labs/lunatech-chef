@@ -25,6 +25,9 @@ fun Routing.attendances(attendancesService: AttendancesService) {
     val attendancesRoute = "/attendances"
     val uuidRoute = "/{uuid}"
     val uuidParam = "uuid"
+    val scheduleUuidParam = "scheduleUuid"
+    val attendanceByScheduleId = "/by-schedule/{scheduleUuid}"
+
 
     route(attendancesRoute) {
         authenticate("session-auth","auth-jwt") {
@@ -58,6 +61,21 @@ fun Routing.attendances(attendancesService: AttendancesService) {
                 val attendances = attendancesService.getUsersForUpcomingAttendance()
                 call.respond(OK, attendances)
             }
+            /**
+             * Get all the attendances for a given schedule
+             */
+            get(attendanceByScheduleId) {
+                val uuid = call.parameters[scheduleUuidParam]
+
+                if(uuid.isNullOrEmpty()) {
+                    call.respond(BadRequest, "Schedule UUID is required")
+                    return@get
+                }
+                val attendance = attendancesService.getAttendanceByScheduleUuid(UUID.fromString(uuid))
+                call.respond(OK, attendance.first())
+
+            }
+
 
             // }
         }

@@ -13,6 +13,12 @@ GET {{ host }}/attendances
 CHEF_SESSION: {{ session }}
 
 ###
+
+GET {{ host }}/attendances/by-schedule/4bde8985-a543-4f50-a33e-f7b0b487cd05
+Authorization: Bearer {{token}}
+###
+
+
 GET {{ host }}/attendances/upcoming
 CHEF_SESSION: {{ session }}
 ###

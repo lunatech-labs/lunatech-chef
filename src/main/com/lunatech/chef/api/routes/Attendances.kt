@@ -4,6 +4,7 @@ package com.lunatech.chef.api.routes
 import com.lunatech.chef.api.domain.Attendance
 import com.lunatech.chef.api.domain.NewAttendance
 import com.lunatech.chef.api.persistence.services.AttendancesService
+import io.ktor.http.*
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.InternalServerError
@@ -66,14 +67,20 @@ fun Routing.attendances(attendancesService: AttendancesService) {
              */
             get(attendanceByScheduleId) {
                 val uuid = call.parameters[scheduleUuidParam]
+                val email = call.request.queryParameters["email"] ?: ""
 
                 if(uuid.isNullOrEmpty()) {
                     call.respond(BadRequest, "Schedule UUID is required")
-                    return@get
                 }
-                val attendance = attendancesService.getAttendanceByScheduleUuid(UUID.fromString(uuid))
-                call.respond(OK, attendance.first())
-
+                if(email.isEmpty()) {
+                    call.respond(BadRequest, "Email is required")
+                }
+                val attendance = attendancesService.getAttendanceWithFiltered(UUID.fromString(uuid) , email)
+                if (attendance.isEmpty()) {
+                    call.respond(OK, emptyList<Attendance>())
+                } else {
+                    call.respond(OK, attendance)
+                }
             }
 
 

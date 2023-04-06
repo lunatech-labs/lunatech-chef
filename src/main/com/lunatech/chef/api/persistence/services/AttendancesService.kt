@@ -31,11 +31,11 @@ class AttendancesService(val database: Database, val usersService: UsersService)
             .flatten()
             .distinctBy { it.uuid }
 
-    fun getAttendanceByScheduleUuid(scheduleUuid: UUID): List<Attendance> =
+    fun getAttendanceWithFiltered(scheduleUuid: UUID, email: String): List<Attendance> =
         database.from(Attendances)
             .leftJoin(Users, Attendances.userUuid eq Users.uuid)
             .select()
-            .where {   (Attendances.scheduleUuid eq scheduleUuid ) }
+            .where {   (Attendances.scheduleUuid eq scheduleUuid ) and (Users.emailAddress eq email) }
             .map { Attendances.createEntity(it) }
 
 

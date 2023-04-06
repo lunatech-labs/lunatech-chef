@@ -4,7 +4,6 @@ package com.lunatech.chef.api.routes
 import com.lunatech.chef.api.domain.Attendance
 import com.lunatech.chef.api.domain.NewAttendance
 import com.lunatech.chef.api.persistence.services.AttendancesService
-import io.ktor.http.*
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.InternalServerError
@@ -13,10 +12,13 @@ import io.ktor.server.application.call
 import io.ktor.server.auth.authenticate
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
-import io.ktor.server.routing.*
+import io.ktor.server.routing.Routing
+import io.ktor.server.routing.get
+import io.ktor.server.routing.post
+import io.ktor.server.routing.put
+import io.ktor.server.routing.route
 import mu.KotlinLogging
 import java.util.UUID
-import kotlin.text.get
 
 private val logger = KotlinLogging.logger {}
 

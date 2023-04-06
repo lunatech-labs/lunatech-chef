@@ -35,8 +35,9 @@ repositories {
 
 dependencies {
     implementation "io.github.microutils:kotlin-logging-jvm:3.0.5"
-    implementation "ch.qos.logback:logback-classic:1.4.5"
+    implementation "ch.qos.logback:logback-classic:1.4.6"
     implementation "com.newrelic.logging:logback:2.6.0"
+    implementation "org.apache.logging.log4j:log4j-core:2.20.0"
 
     implementation "com.google.api-client:google-api-client:2.2.0"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.2"
@@ -48,20 +49,23 @@ dependencies {
     implementation "org.quartz-scheduler:quartz:2.3.2"
 
     implementation "io.ktor:ktor-server-status-pages:2.2.4"
-    implementation "io.ktor:ktor-server-default-headers:2.2.3"
-    implementation "io.ktor:ktor-server-cors:2.2.3"
+    implementation "io.ktor:ktor-server-default-headers:2.2.4"
+    implementation "io.ktor:ktor-server-cors:2.2.4"
     implementation "io.ktor:ktor-server-content-negotiation-jvm:2.2.4"
-    implementation "io.ktor:ktor-server-netty-jvm:2.2.3"
-    implementation "io.ktor:ktor-server-core-jvm:2.2.2"
-    implementation "io.ktor:ktor-server-host-common-jvm:2.2.3"
+    implementation "io.ktor:ktor-server-netty-jvm:2.2.4"
+    implementation "io.ktor:ktor-server-core-jvm:2.2.4"
+    implementation "io.ktor:ktor-server-host-common-jvm:2.2.4"
     implementation "io.ktor:ktor-server-auth-jvm:2.2.4"
     implementation("io.ktor:ktor-server-auth-jwt-jvm:2.2.4")
-    implementation "io.ktor:ktor-server-sessions-jvm:2.2.3"
-    implementation "io.ktor:ktor-serialization-jackson:2.2.2"
-    implementation "io.ktor:ktor-client-core-jvm:2.2.2"
-    implementation "io.ktor:ktor-client-core-jvm:2.2.2"
-    implementation "io.ktor:ktor-client-apache-jvm:2.2.3"
-    implementation "io.ktor:ktor-client-logging-jvm:2.2.3"
+    implementation "io.ktor:ktor-server-sessions-jvm:2.2.4"
+    implementation "io.ktor:ktor-serialization-jackson:2.2.4"
+    implementation "io.ktor:ktor-client-core-jvm:2.2.4"
+    implementation "io.ktor:ktor-client-core-jvm:2.2.4"
+    implementation "io.ktor:ktor-client-apache-jvm:2.2.4"
+    implementation "io.ktor:ktor-client-logging-jvm:2.2.4"
+
+    implementation "org.apache.poi:poi-ooxml:5.2.3"
+
     testImplementation "io.ktor:ktor-server-tests-jvm:2.2.4"
 }
 

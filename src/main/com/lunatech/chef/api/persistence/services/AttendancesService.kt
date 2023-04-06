@@ -7,7 +7,15 @@ import com.lunatech.chef.api.persistence.schemas.Users
 import com.lunatech.chef.api.routes.UpdatedAttendance
 import java.util.UUID
 import org.ktorm.database.Database
-import org.ktorm.dsl.*
+import org.ktorm.dsl.and
+import org.ktorm.dsl.eq
+import org.ktorm.dsl.from
+import org.ktorm.dsl.insert
+import org.ktorm.dsl.leftJoin
+import org.ktorm.dsl.map
+import org.ktorm.dsl.select
+import org.ktorm.dsl.update
+import org.ktorm.dsl.where
 
 class AttendancesService(val database: Database, val usersService: UsersService) {
     fun getAll(): List<Attendance> =
@@ -18,15 +26,12 @@ class AttendancesService(val database: Database, val usersService: UsersService)
         database.from(Attendances)
             .select()
             .where { Attendances.isAttending and Attendances.isDeleted eq false }
-
-            .map {attendance ->
+            .map { attendance ->
                 database.from(Attendances)
                     .leftJoin(Users, Attendances.userUuid eq Users.uuid)
                     .select()
-                    .where { Users.isDeleted eq false}
+                    .where { Users.isDeleted eq false }
                     .map { Users.createEntity(it) }
-
-
             }
             .flatten()
             .distinctBy { it.uuid }
@@ -52,8 +57,8 @@ class AttendancesService(val database: Database, val usersService: UsersService)
 
     fun getByScheduleId(scheduleUuid: UUID): List<Attendance> =
         database.from(Attendances).select()
-        .where { Attendances.scheduleUuid eq scheduleUuid and Attendances.isDeleted eq false }
-        .map { Attendances.createEntity(it) }
+            .where { Attendances.scheduleUuid eq scheduleUuid and Attendances.isDeleted eq false }
+            .map { Attendances.createEntity(it) }
 
     fun insert(attendance: Attendance): Int =
         database.insert(Attendances) {

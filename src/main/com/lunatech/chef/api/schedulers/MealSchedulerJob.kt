@@ -13,7 +13,7 @@ import java.time.LocalDate
 
 private val logger = KotlinLogging.logger {}
 
-class SchedulerJob() : Job {
+class MealSchedulerJob() : Job {
 
     companion object SchedulerJob {
         const val schedulesService: String = "schedulesService"

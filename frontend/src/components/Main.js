@@ -40,6 +40,9 @@ import {
   logout,
   saveUserProfile,
 } from "../redux/users/UsersActionCreators";
+import {
+  getReport,
+} from "../redux/reports/ReportsActionCreators";
 import { AddDish } from "./admin/dishes/AddDish";
 import { EditDish } from "./admin/dishes/EditDish";
 import { AddLocation } from "./admin/locations/AddLocation";
@@ -55,6 +58,7 @@ import ListDishes from "./admin/dishes/ListDishes";
 import ListMenus from "./admin/menus/ListMenus";
 import ListLocations from "./admin/locations/ListLocations";
 import ListSchedules from "./admin/schedules/ListSchedules";
+import MonthlyReports from "./admin/reports/MonthlyReports";
 import Login from "./auth/Login";
 import WhoIsJoining from "./WhoIsJoining";
 import ProtectedRoutes from "./auth/ProtectedRoutes";
@@ -148,6 +152,11 @@ const mapDispatchToProps = (dispatch) => ({
   },
   showNewAttendance: (attendance) => {
     dispatch(showNewAttendance(attendance));
+  },
+  //
+  // Reports
+  getReport: (parameters) => {
+    dispatch(getReport(parameters));
   },
   //
   // Users
@@ -321,6 +330,12 @@ class Main extends Component {
       );
     };
 
+    const Reports = () => {
+      return (<MonthlyReports
+        getReport={this.props.getReport} />);
+    };
+
+
     const LoginUser = () => {
       return <Login login={this.props.login} />;
     };
@@ -363,6 +378,7 @@ class Main extends Component {
                   <Route path="/allschedules" element={<AllSchedules />} />
                   <Route path="/newschedule" element={<AddNewSchedule />} />
                   <Route path="/editschedule" element={<EditExistingSchedule />} />
+                  <Route path="/monthlyreports" element={<Reports />} />
 
                 </Route>
                 <Route path="/loginUser" element={<LoginUser />} />

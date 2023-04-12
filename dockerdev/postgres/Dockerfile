@@ -1,7 +1,2 @@
-FROM postgres:14.3
-
-RUN apt-get update \
-      && apt-get install -y --no-install-recommends \
-      && rm -rf /var/lib/apt/lists/*
-
+FROM postgres:11
 ADD create_db.sh /docker-entrypoint-initdb.d/create_db.sh

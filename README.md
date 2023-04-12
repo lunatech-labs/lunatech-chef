@@ -16,14 +16,13 @@ come together properly.
 ### There's a docker container setup that runs the DB needed by the app
 
 ```commandline
-cd /dockerdev/postgres
-docker build -t lunatech-chef-api .
+docker build -t lunatech-chef-api dockerdev/postgres/.
 ```
 
 To run docker image and clean it on shutdown:
 
 ```commandline
-docker run -it -m 1024m --env POSTGRES_HOST_AUTH_METHOD=trust --name postgres -p 5432:5432 lunatech-chef-api
+docker run -it -m 1024m --env POSTGRES_HOST_AUTH_METHOD=trust --name postgres -p 5432:5432 lunatech-chef-api -c log_statement=all
 ```
 
 ### Setup ENV variables

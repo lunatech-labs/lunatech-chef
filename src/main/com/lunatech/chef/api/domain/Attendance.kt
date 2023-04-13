@@ -13,7 +13,7 @@ data class Attendance(
     val uuid: UUID,
     val scheduleUuid: UUID,
     val userUuid: UUID,
-    val isAttending: Boolean,
+    val isAttending: Boolean?,
     val isDeleted: Boolean = false,
 ) {
     companion object {

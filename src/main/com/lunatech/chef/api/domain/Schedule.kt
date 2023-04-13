@@ -34,7 +34,7 @@ data class ScheduleWithMenuInfo(
     val date: LocalDate,
     val location: Location,
     val isDeleted: Boolean = false,
-    val localDate : String,
+    val localDate: String,
 )
 
 data class ScheduleWithAttendanceInfo(

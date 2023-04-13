@@ -21,7 +21,7 @@ const Sidebar = (props) => {
                             <CDBSidebarMenuItem icon="hippo">Scheduled meals</CDBSidebarMenuItem>
                         </NavLink>
                         <NavLink exact="true" to="/whoisjoining" activeclassname="activeClicked">
-                            <CDBSidebarMenuItem icon="user-friends">Who is joining?</CDBSidebarMenuItem>
+                            <CDBSidebarMenuItem icon="user-friends">Who's joining?</CDBSidebarMenuItem>
                         </NavLink>
                         {props.isAdmin ? (
                             <div>

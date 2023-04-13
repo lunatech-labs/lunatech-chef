@@ -63,6 +63,7 @@ import io.ktor.server.auth.session
 import io.ktor.server.http.content.*
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.cors.routing.CORS
+import io.ktor.server.plugins.defaultheaders.DefaultHeaders
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondFile
 import io.ktor.server.routing.get
@@ -144,6 +145,12 @@ fun Application.module() {
 //            call.respondText(e.stackTraceToString(), ContentType.Text.Plain, HttpStatusCode.BadRequest)
 //        }
 //    }
+
+    // This will add Date and Server headers to each HTTP response besides CHEF_SESSION header
+    // it's needed when start BE and FE separately
+    install(DefaultHeaders) {
+        header(HttpHeaders.AccessControlExposeHeaders, chefSession)
+    }
 
     install(Sessions) {
         header<ChefSession>(chefSession) {

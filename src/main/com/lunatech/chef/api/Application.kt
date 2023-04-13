@@ -13,6 +13,7 @@ import com.lunatech.chef.api.config.FlywayConfig
 import com.lunatech.chef.api.config.JwtConfig
 import com.lunatech.chef.api.persistence.DBEvolution
 import com.lunatech.chef.api.persistence.Database
+import com.lunatech.chef.api.persistence.services.AttendancesForSlackbotService
 import com.lunatech.chef.api.persistence.services.AttendancesService
 import com.lunatech.chef.api.persistence.services.AttendancesWithScheduleInfoService
 import com.lunatech.chef.api.persistence.services.DishesService
@@ -29,6 +30,7 @@ import com.lunatech.chef.api.persistence.services.SchedulesWithMenuInfoService
 import com.lunatech.chef.api.persistence.services.UsersService
 import com.lunatech.chef.api.routes.ChefSession
 import com.lunatech.chef.api.routes.attendances
+import com.lunatech.chef.api.routes.attendancesForSlackbot
 import com.lunatech.chef.api.routes.attendancesWithScheduleInfo
 import com.lunatech.chef.api.routes.authorization
 import com.lunatech.chef.api.routes.dishes
@@ -110,6 +112,7 @@ fun Application.module() {
     val attendancesService = AttendancesService(dbConnection, usersService)
     val attendancesWithInfoService =
         AttendancesWithScheduleInfoService(dbConnection, schedulesService, menusWithDishesService)
+    val attendancesForSlackbotService = AttendancesForSlackbotService(dbConnection)
     val reportService = ReportService(dbConnection)
     val excelService = ExcelService()
 
@@ -216,6 +219,7 @@ fun Application.module() {
         attendancesWithScheduleInfo(attendancesWithInfoService)
         users(usersService, jwtConfig)
         attendances(attendancesService)
+        attendancesForSlackbot(attendancesForSlackbotService)
         reports(reportService, excelService)
 
         singlePageApplication {

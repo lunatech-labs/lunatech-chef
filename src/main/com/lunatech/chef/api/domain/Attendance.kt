@@ -37,3 +37,11 @@ data class AttendanceWithInfo(
     val location: Location,
     val isAttending: Boolean,
 )
+
+data class AttendanceForSlackbot(
+    val uuid: UUID,
+    val emailAddress: String,
+    val date: LocalDate,
+    val office: String,
+    val menuName: String,
+)

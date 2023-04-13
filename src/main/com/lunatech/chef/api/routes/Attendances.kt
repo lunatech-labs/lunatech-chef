@@ -27,7 +27,7 @@ fun Routing.attendances(attendancesService: AttendancesService) {
     val uuidParam = "uuid"
 
     route(attendancesRoute) {
-        authenticate("session-auth","auth-jwt") {
+        authenticate("session-auth", "auth-jwt") {
             // rolesAllowed(Role.ADMIN, Role.USER) {
             // create a new single attendance
             post {
@@ -54,11 +54,6 @@ fun Routing.attendances(attendancesService: AttendancesService) {
                     }
                 }
             }
-            get("/upcoming") {
-                val attendances = attendancesService.getUsersForUpcomingAttendance()
-                call.respond(OK, attendances)
-            }
-
             // }
         }
     }

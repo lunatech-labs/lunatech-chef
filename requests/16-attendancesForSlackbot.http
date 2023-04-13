@@ -1,0 +1,17 @@
+GET {{ host }}/attendancesforslackbot?fromdate=2023-04-10&untildate=2023-04-30
+CHEF_SESSION: {{ session }}
+
+###
+
+GET {{ host }}/attendancesforslackbot?fromdate=2023-04-10
+CHEF_SESSION: {{ session }}
+
+###
+
+GET {{ host }}/attendancesforslackbot?fromdate=2023-04-10&untildate=2023-04-01
+CHEF_SESSION: {{ session }}
+
+###
+
+
+

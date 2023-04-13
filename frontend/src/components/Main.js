@@ -49,7 +49,7 @@ import { AddOffice } from "./admin/offices/AddOffice";
 import { EditOffice } from "./admin/offices/EditOffice";
 import { AddMenu } from "./admin/menus/AddMenu";
 import { EditMenu } from "./admin/menus/EditMenu";
-import { MealsAttendance } from "./MealsSchedule";
+import { MealsAttendance } from "./ScheduledMeals";
 import { UserProfile } from "./UserProfile";
 import AddSchedule from "./admin/schedules/AddSchedule";
 import ErrorBoundary from "./shared/ErrorBoundary";

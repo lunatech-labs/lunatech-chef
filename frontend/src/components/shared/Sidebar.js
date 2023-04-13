@@ -18,7 +18,7 @@ const Sidebar = (props) => {
                 <CDBSidebarContent className="sidebar-content">
                     <CDBSidebarMenu>
                         <NavLink exact="true" to="/" activeclassname="activeClicked">
-                            <CDBSidebarMenuItem icon="hippo">Meals schedules</CDBSidebarMenuItem>
+                            <CDBSidebarMenuItem icon="hippo">Scheduled meals</CDBSidebarMenuItem>
                         </NavLink>
                         <NavLink exact="true" to="/whoisjoining" activeclassname="activeClicked">
                             <CDBSidebarMenuItem icon="user-friends">Who is joining?</CDBSidebarMenuItem>

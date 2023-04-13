@@ -10,7 +10,7 @@ import { ToMonth } from "./shared/Functions";
 
 export const MealsAttendance = (props) => {
   const [attendance, setAttendance] = React.useState(props.attendance);
-  const savedOffice = localStorage.getItem("filterOfficeMealSchedule");
+  const savedOffice = localStorage.getItem("filterOfficeScheduledMeals");
 
   const onSubmit = (values) => {
     const newAttendance = attendance.map((item) => {
@@ -33,7 +33,7 @@ export const MealsAttendance = (props) => {
     const chosenOffice =
       values.office === undefined ? "" : values.office;
 
-    localStorage.setItem("filterOfficeMealSchedule", chosenOffice);
+    localStorage.setItem("filterOfficeScheduledMeals", chosenOffice);
     props.filter(values.office);
   };
 
@@ -50,7 +50,7 @@ export const MealsAttendance = (props) => {
       return (
         <div>
           <h4>
-            An error occurred when fetching meal schedules from server: {error}
+            An error occurred when fetching scheduled meals from server: {error}
           </h4>
         </div>
       );

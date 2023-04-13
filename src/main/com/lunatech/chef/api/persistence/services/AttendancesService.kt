@@ -76,7 +76,7 @@ class AttendancesService(val database: Database, val usersService: UsersService)
         }
     }
 
-    fun insertAttendanceAllUsers(scheduleUuid: UUID, isAttending: Boolean): Int = usersService.getAll().map { user ->
+    fun insertAttendanceAllUsers(scheduleUuid: UUID, isAttending: Boolean?): Int = usersService.getAll().sumOf { user ->
         database.insert(Attendances) {
             set(it.uuid, UUID.randomUUID())
             set(it.scheduleUuid, scheduleUuid)
@@ -84,5 +84,5 @@ class AttendancesService(val database: Database, val usersService: UsersService)
             set(it.isAttending, isAttending)
             set(it.isDeleted, false)
         }
-    }.sum()
+    }
 }

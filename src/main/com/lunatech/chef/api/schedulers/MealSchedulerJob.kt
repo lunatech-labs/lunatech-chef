@@ -42,7 +42,7 @@ class MealSchedulerJob() : Job {
             val isInserted = schedulesService.insert(dbSchedule)
 
             if (isInserted == 1) {
-                attendancesService.insertAttendanceAllUsers(dbSchedule.uuid, isAttending = false)
+                attendancesService.insertAttendanceAllUsers(dbSchedule.uuid, isAttending = null)
                 val updatedRecSchedule = UpdatedRecurrentSchedule(
                     menuUuid = rec.menuUuid,
                     locationUuid = rec.locationUuid,

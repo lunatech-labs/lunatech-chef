@@ -62,7 +62,7 @@ class AttendancesWithScheduleInfoService(
                         menu = menu!!,
                         date = schedule.date,
                         location = location,
-                        isAttending = attendance.isAttending,
+                        isAttending = attendance.isAttending ?: false,
                     )
                 }
         }

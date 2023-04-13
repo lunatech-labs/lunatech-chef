@@ -52,7 +52,7 @@ fun Routing.schedules(schedulesService: SchedulesService, attendancesService: At
                     val insertedAttendance = if (insertedSchedule == 1) {
                         attendancesService.insertAttendanceAllUsers(
                             scheduleToInsert.uuid,
-                            isAttending = false,
+                            isAttending = null,
                         )
                     } else {
                         error

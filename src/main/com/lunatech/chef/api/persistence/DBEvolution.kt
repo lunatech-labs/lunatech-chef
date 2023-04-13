@@ -5,6 +5,6 @@ import org.flywaydb.core.Flyway
 
 object DBEvolution {
     fun runDBMigration(config: FlywayConfig) {
-        Flyway.configure().dataSource(config.url, config.user, config.password).load()
+        val flyway =  Flyway.configure().dataSource(config.url, config.user, config.password).load()
     }
 }

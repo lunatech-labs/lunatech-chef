@@ -5,7 +5,7 @@ import java.util.UUID
 
 data class NewRecurrentSchedule(
     val menuUuid: UUID,
-    val locationUuid: UUID,
+    val officeUuid: UUID,
     val repetitionDays: Int,
     val nextDate: LocalDate,
 )
@@ -13,7 +13,7 @@ data class NewRecurrentSchedule(
 data class RecurrentSchedule(
     val uuid: UUID,
     val menuUuid: UUID,
-    val locationUuid: UUID,
+    val officeUuid: UUID,
     val repetitionDays: Int,
     val nextDate: LocalDate,
     val isDeleted: Boolean = false,
@@ -23,7 +23,7 @@ data class RecurrentSchedule(
             return RecurrentSchedule(
                 uuid = UUID.randomUUID(),
                 menuUuid = newRecurrentSchedule.menuUuid,
-                locationUuid = newRecurrentSchedule.locationUuid,
+                officeUuid = newRecurrentSchedule.officeUuid,
                 repetitionDays = newRecurrentSchedule.repetitionDays,
                 nextDate = newRecurrentSchedule.nextDate,
             )
@@ -35,6 +35,6 @@ data class RecurrentScheduleWithMenuInfo(
     val uuid: UUID,
     val menu: MenuWithDishes,
     val nextDate: LocalDate,
-    val location: Location,
+    val office: Office,
     val repetitionDays: Int,
 )

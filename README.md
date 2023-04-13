@@ -4,8 +4,8 @@
 
 This project implements an API that allows the planning of meals at Lunatech offices.
 
-In order to plan a meal you need to create Locations, Dishes, Menus, add Dishes to a Menu and then associate a date and
-a Location to a Menu (creating a schedule).
+In order to plan a meal you need to create Offices, Dishes, Menus, add Dishes to a Menu and then associate a date and
+an Office to a Menu (creating a schedule).
 After that each user can choose if they wish to attend a scheduled meal or not.
 
 The `requests` folder contains examples (and tests) on how to use the API and what is the order needed for everything to

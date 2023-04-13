@@ -26,7 +26,7 @@ import java.util.UUID
 
 private val logger = KotlinLogging.logger {}
 
-data class UpdatedSchedule(val menuUuid: UUID, val date: LocalDate, val locationUuid: UUID)
+data class UpdatedSchedule(val menuUuid: UUID, val date: LocalDate, val officeUuid: UUID)
 
 fun Routing.schedules(schedulesService: SchedulesService, attendancesService: AttendancesService) {
     val schedulesRoute = "/schedules"

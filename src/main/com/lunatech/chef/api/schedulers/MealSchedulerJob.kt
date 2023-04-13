@@ -37,7 +37,7 @@ class MealSchedulerJob() : Job {
 
         logger.info("Found ${recSchedules.size} recurrent schedules to be created.")
         for (rec in recSchedules) {
-            val newSchedule = NewSchedule(menuUuid = rec.menuUuid, date = rec.nextDate, locationUuid = rec.locationUuid)
+            val newSchedule = NewSchedule(menuUuid = rec.menuUuid, date = rec.nextDate, officeUuid = rec.officeUuid)
             val dbSchedule = Schedule.fromNewSchedule(newSchedule)
             val isInserted = schedulesService.insert(dbSchedule)
 
@@ -45,7 +45,7 @@ class MealSchedulerJob() : Job {
                 attendancesService.insertAttendanceAllUsers(dbSchedule.uuid, isAttending = null)
                 val updatedRecSchedule = UpdatedRecurrentSchedule(
                     menuUuid = rec.menuUuid,
-                    locationUuid = rec.locationUuid,
+                    officeUuid = rec.officeUuid,
                     repetitionDays = rec.repetitionDays,
                     nextDate = rec.nextDate.plusDays(rec.repetitionDays.toLong()),
                 )

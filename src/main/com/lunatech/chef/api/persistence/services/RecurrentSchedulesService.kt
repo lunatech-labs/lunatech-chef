@@ -37,7 +37,7 @@ class RecurrentSchedulesService(val database: Database) {
         database.insert(RecurrentSchedules) {
             set(it.uuid, recurrentSchedule.uuid)
             set(it.menuUuid, recurrentSchedule.menuUuid)
-            set(it.locationUuid, recurrentSchedule.locationUuid)
+            set(it.officeUuid, recurrentSchedule.officeUuid)
             set(it.repetitionDays, recurrentSchedule.repetitionDays)
             set(it.nextDate, recurrentSchedule.nextDate)
             set(it.isDeleted, recurrentSchedule.isDeleted)
@@ -46,7 +46,7 @@ class RecurrentSchedulesService(val database: Database) {
     fun update(uuid: UUID, recurrentSchedule: UpdatedRecurrentSchedule): Int =
         database.update(RecurrentSchedules) {
             set(it.menuUuid, recurrentSchedule.menuUuid)
-            set(it.locationUuid, recurrentSchedule.locationUuid)
+            set(it.officeUuid, recurrentSchedule.officeUuid)
             set(it.repetitionDays, recurrentSchedule.repetitionDays)
             set(it.nextDate, recurrentSchedule.nextDate)
             where {

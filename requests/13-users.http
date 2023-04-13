@@ -4,7 +4,7 @@ CHEF_SESSION: {{ session }}
 
 { "name": "Maria do Carmo",
   "emailAddress": "maria.do.carmo@lunatech.nl",
-  "locationUuid": "4f3a4488-241b-42f7-8c4e-de50fe4d1f57",
+  "officeUuid": "4f3a4488-241b-42f7-8c4e-de50fe4d1f57",
   "isVegetarian": "false",
   "hasHalalRestriction": "false",
   "hasNutsRestriction": "false",
@@ -38,7 +38,7 @@ Content-Type: application/json
 CHEF_SESSION: {{ session }}
 
 {
-  "locationUuid": "3d13f21d-a96e-4fd2-a2a9-3077f2729caf",
+  "officeUuid": "3d13f21d-a96e-4fd2-a2a9-3077f2729caf",
   "isVegetarian": "false",
   "hasHalalRestriction": "true",
   "hasNutsRestriction": "false",

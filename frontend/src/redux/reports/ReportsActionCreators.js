@@ -33,9 +33,9 @@ export const getReport = (parameters) => (dispatch) => {
         .then(function (response) {
             const arrayBuffer = base64ToArrayBuffer(response.data);
             createAndDownloadBlobFile(arrayBuffer, "Lunatech-chef " + parameters.month + "-" + parameters.year + " report.xlsx");
-            console.log(JSON.stringify(response));
         })
         .catch(function (error) {
             console.log("Failed loading Schedules: " + error);
         });
+
 };

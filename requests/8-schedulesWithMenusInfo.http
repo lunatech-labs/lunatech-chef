@@ -1,10 +1,11 @@
-
 GET {{ host }}/schedulesWithMenusInfo
 Authorization: Bearer {{token}}
+
 ###
 
 GET {{ host }}/schedulesWithMenusInfo/107567ce-ad9d-4cd7-8a8a-5252ffb67fb6
 Authorization: Bearer {{token}}
+
 ###
 
 GET {{ host }}/schedulesWithMenusInfo?fromdate=2021-08-01
@@ -12,7 +13,7 @@ CHEF_SESSION: {{ session }}
 
 ###
 
-GET {{ host }}/schedulesWithMenusInfo?fromdate=2021-08-01&location=3915e475-9fb0-4d81-8664-55bcc9c8400b
+GET {{ host }}/schedulesWithMenusInfo?fromdate=2021-08-01&office=3915e475-9fb0-4d81-8664-55bcc9c8400b
 CHEF_SESSION: {{ session }}
 
 ###

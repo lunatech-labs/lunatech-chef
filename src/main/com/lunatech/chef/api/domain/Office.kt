@@ -2,23 +2,23 @@ package com.lunatech.chef.api.domain
 
 import java.util.UUID
 
-data class NewLocation(
+data class NewOffice(
     val city: String,
     val country: String,
 )
 
-data class Location(
+data class Office(
     val uuid: UUID,
     val city: String,
     val country: String,
     val isDeleted: Boolean = false,
 ) {
     companion object {
-        fun fromNewLocation(newLocation: NewLocation): Location {
-            return Location(
+        fun fromNewOffice(newOffice: NewOffice): Office {
+            return Office(
                 uuid = UUID.randomUUID(),
-                city = newLocation.city,
-                country = newLocation.country,
+                city = newOffice.city,
+                country = newOffice.country,
             )
         }
     }

@@ -3,7 +3,7 @@ Content-Type: application/json
 CHEF_SESSION: {{ session }}
 
 { "menuUuid":"36cb6be6-6ded-447a-8273-57636b3b3675",
-  "locationUuid":"8b06e81d-4065-4139-bb42-88ef31393227",
+  "officeUuid":"8b06e81d-4065-4139-bb42-88ef31393227",
   "repetitionDays":"07",
   "nextDate":"2022-07-30"
 }
@@ -21,7 +21,7 @@ Content-Type: application/json
 CHEF_SESSION: {{ session }}
 
 { "menuUuid":"36cb6be6-6ded-447a-8273-57636b3b3675",
-  "locationUuid":"8b06e81d-4065-4139-bb42-88ef31393227",
+  "officeUuid":"8b06e81d-4065-4139-bb42-88ef31393227",
   "repetitionDays":"14",
   "nextDate":"2022-07-30"
 }

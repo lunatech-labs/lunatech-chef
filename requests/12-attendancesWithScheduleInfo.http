@@ -7,7 +7,7 @@ GET {{ host }}/attendancesWithScheduleInfo/d4628d1f-98f5-42f7-ab53-4e5e1e089750?
 
 ###
 
-GET {{ host }}/attendancesWithScheduleInfo/d4628d1f-98f5-42f7-ab53-4e5e1e089750?fromdate=2022-02-01&location=44279b13-2308-4bc5-93fc-f0addee353f5
+GET {{ host }}/attendancesWithScheduleInfo/d4628d1f-98f5-42f7-ab53-4e5e1e089750?fromdate=2022-02-01&office=44279b13-2308-4bc5-93fc-f0addee353f5
 CHEF_SESSION: {{ session }}
 
 ###

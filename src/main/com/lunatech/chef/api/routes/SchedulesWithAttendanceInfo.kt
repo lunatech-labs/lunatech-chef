@@ -15,7 +15,7 @@ import java.util.UUID
 fun Routing.schedulesWithAttendanceInfo(schedulesWithAttendanceInfoService: SchedulesWithAttendanceInfoService) {
     val menusRoute = "/schedulesWithAttendanceInfo"
     val fromDateParam = "fromdate"
-    val locationParam = "location"
+    val officeParam = "office"
 
     route(menusRoute) {
         authenticate("session-auth") {
@@ -24,12 +24,12 @@ fun Routing.schedulesWithAttendanceInfo(schedulesWithAttendanceInfoService: Sche
             get {
                 // check for filter parameters
                 val maybeDateFrom = call.parameters[fromDateParam]
-                val maybeLocation = call.parameters[locationParam]
+                val maybeOffice = call.parameters[officeParam]
 
                 val dateFrom = if (maybeDateFrom != null) LocalDate.parse(maybeDateFrom) else null
-                val locationName = if (maybeLocation != null) UUID.fromString(maybeLocation) else null
+                val officeName = if (maybeOffice != null) UUID.fromString(maybeOffice) else null
 
-                val schedules = schedulesWithAttendanceInfoService.getFiltered(dateFrom, locationName)
+                val schedules = schedulesWithAttendanceInfoService.getFiltered(dateFrom, officeName)
 
                 call.respond(OK, schedules)
             }

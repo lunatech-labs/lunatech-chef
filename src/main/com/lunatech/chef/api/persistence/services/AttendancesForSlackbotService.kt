@@ -4,8 +4,8 @@ import com.lunatech.chef.api.domain.AttendanceForSlackbot
 import com.lunatech.chef.api.persistence.schemas.Attendances
 import com.lunatech.chef.api.persistence.schemas.DEFAULT_STRING
 import com.lunatech.chef.api.persistence.schemas.DEFAULT_UUID
-import com.lunatech.chef.api.persistence.schemas.Locations
 import com.lunatech.chef.api.persistence.schemas.MenuNames
+import com.lunatech.chef.api.persistence.schemas.Offices
 import com.lunatech.chef.api.persistence.schemas.Schedules
 import com.lunatech.chef.api.persistence.schemas.Users
 import org.ktorm.database.Database
@@ -30,8 +30,8 @@ class AttendancesForSlackbotService(val database: Database) {
             .leftJoin(Schedules, on = Schedules.uuid eq Attendances.scheduleUuid)
             .leftJoin(MenuNames, on = Schedules.menuUuid eq MenuNames.uuid)
             .leftJoin(Users, on = Attendances.userUuid eq Users.uuid)
-            .leftJoin(Locations, on = Schedules.locationUuid eq Locations.uuid)
-            .select(Attendances.uuid, Users.emailAddress, Schedules.date, Locations.city, MenuNames.name)
+            .leftJoin(Offices, on = Schedules.officeUuid eq Offices.uuid)
+            .select(Attendances.uuid, Users.emailAddress, Schedules.date, Offices.city, MenuNames.name)
             .where {
                 val conditions = ArrayList<ColumnDeclaring<Boolean>>()
 
@@ -52,7 +52,7 @@ class AttendancesForSlackbotService(val database: Database) {
                     row[Attendances.uuid] ?: DEFAULT_UUID,
                     row[Users.emailAddress] ?: DEFAULT_STRING,
                     row[Schedules.date] ?: LocalDate.now(),
-                    row[Locations.city] ?: DEFAULT_STRING,
+                    row[Offices.city] ?: DEFAULT_STRING,
                     row[MenuNames.name] ?: DEFAULT_STRING,
                 )
             }

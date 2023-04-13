@@ -3,7 +3,7 @@ CREATE TABLE users
     uuid                    UUID         NOT NULL,
     name                    VARCHAR(100) NOT NULL,
     email_address           VARCHAR(100) NOT NULL,
-    location_uuid           UUID,
+    office_uuid             UUID,
     is_vegetarian           BOOLEAN      NOT NULL DEFAULT FALSE,
     has_halal_restriction   BOOLEAN      NOT NULL DEFAULT FALSE,
     has_nuts_restriction    BOOLEAN      NOT NULL DEFAULT FALSE,
@@ -16,6 +16,6 @@ CREATE TABLE users
     is_inactive             BOOLEAN      NOT NULL DEFAULT FALSE,
     is_deleted              BOOLEAN      NOT NULL,
     CONSTRAINT users_pkey PRIMARY KEY (uuid),
-    CONSTRAINT users_locations FOREIGN KEY (location_uuid) REFERENCES locations (uuid) MATCH FULL
+    CONSTRAINT users_offices FOREIGN KEY (office_uuid) REFERENCES offices (uuid) MATCH FULL
 );
 

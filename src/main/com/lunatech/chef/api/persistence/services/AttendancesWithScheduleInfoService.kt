@@ -3,7 +3,7 @@ package com.lunatech.chef.api.persistence.services
 import com.lunatech.chef.api.domain.Attendance
 import com.lunatech.chef.api.domain.AttendanceWithInfo
 import com.lunatech.chef.api.persistence.schemas.Attendances
-import com.lunatech.chef.api.persistence.schemas.Locations
+import com.lunatech.chef.api.persistence.schemas.Offices
 import com.lunatech.chef.api.persistence.schemas.Schedules
 import org.ktorm.database.Database
 import org.ktorm.dsl.and
@@ -25,7 +25,7 @@ class AttendancesWithScheduleInfoService(
     private val schedulesService: SchedulesService,
     private val menusWithDishesService: MenusWithDishesNamesService,
 ) {
-    fun getByUserUuidFiltered(userUuid: UUID, fromDate: LocalDate?, location: UUID?): List<AttendanceWithInfo> =
+    fun getByUserUuidFiltered(userUuid: UUID, fromDate: LocalDate?, office: UUID?): List<AttendanceWithInfo> =
         database.from(Attendances)
             .leftJoin(Schedules, on = Schedules.uuid eq Attendances.scheduleUuid)
             .select()
@@ -38,8 +38,8 @@ class AttendancesWithScheduleInfoService(
                 if (fromDate != null) {
                     conditions += Schedules.date greaterEq fromDate
                 }
-                if (location != null) {
-                    conditions += Schedules.locationUuid eq location
+                if (office != null) {
+                    conditions += Schedules.officeUuid eq office
                 }
 
                 conditions.reduce { a, b -> a and b }
@@ -51,17 +51,17 @@ class AttendancesWithScheduleInfoService(
     private fun getAttendanceWithInfo(attendance: Attendance): List<AttendanceWithInfo> {
         return schedulesService.getByUuid(attendance.scheduleUuid).flatMap { schedule ->
             val menu = menusWithDishesService.getByUuid(schedule.menuUuid)
-            database.from(Locations).select()
-                .where { Locations.uuid eq schedule.locationUuid }
-                .map { Locations.createEntity(it) }
-                .map { location ->
+            database.from(Offices).select()
+                .where { Offices.uuid eq schedule.officeUuid }
+                .map { Offices.createEntity(it) }
+                .map { office ->
                     AttendanceWithInfo(
                         uuid = attendance.uuid,
                         userUuid = attendance.userUuid,
                         scheduleUuid = schedule.uuid,
                         menu = menu!!,
                         date = schedule.date,
-                        location = location,
+                        office = office,
                         isAttending = attendance.isAttending ?: false,
                     )
                 }

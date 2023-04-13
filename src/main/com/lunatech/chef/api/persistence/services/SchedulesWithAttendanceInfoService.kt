@@ -3,7 +3,7 @@ package com.lunatech.chef.api.persistence.services
 import com.lunatech.chef.api.domain.Schedule
 import com.lunatech.chef.api.domain.ScheduleWithAttendanceInfo
 import com.lunatech.chef.api.persistence.schemas.Attendances
-import com.lunatech.chef.api.persistence.schemas.Locations
+import com.lunatech.chef.api.persistence.schemas.Offices
 import com.lunatech.chef.api.persistence.schemas.Schedules
 import com.lunatech.chef.api.persistence.schemas.Users
 import org.ktorm.database.Database
@@ -25,7 +25,7 @@ class SchedulesWithAttendanceInfoService(
     val database: Database,
     private val menusService: MenusService,
 ) {
-    fun getFiltered(fromDate: LocalDate?, location: UUID?): List<ScheduleWithAttendanceInfo> =
+    fun getFiltered(fromDate: LocalDate?, office: UUID?): List<ScheduleWithAttendanceInfo> =
         database.from(Schedules).select()
             .where {
                 val conditions = ArrayList<ColumnDeclaring<Boolean>>()
@@ -35,8 +35,8 @@ class SchedulesWithAttendanceInfoService(
                 if (fromDate != null) {
                     conditions += Schedules.date greaterEq fromDate
                 }
-                if (location != null) {
-                    conditions += Schedules.locationUuid eq location
+                if (office != null) {
+                    conditions += Schedules.officeUuid eq office
                 }
 
                 conditions.reduce { a, b -> a and b }
@@ -47,9 +47,9 @@ class SchedulesWithAttendanceInfoService(
 
     private fun getScheduleWithAttendanceInfo(schedule: Schedule): ScheduleWithAttendanceInfo {
         val menu = menusService.getByUuid(schedule.menuUuid)
-        val location = database.from(Locations).select()
-            .where { Locations.uuid eq schedule.locationUuid }
-            .map { Locations.createEntity(it) }.firstOrNull()
+        val office = database.from(Offices).select()
+            .where { Offices.uuid eq schedule.officeUuid }
+            .map { Offices.createEntity(it) }.firstOrNull()
         val attendants =
             database.from(Users)
                 .leftJoin(Attendances, on = Attendances.userUuid eq Users.uuid)
@@ -62,6 +62,6 @@ class SchedulesWithAttendanceInfoService(
                 .where { (Attendances.scheduleUuid eq schedule.uuid) and (Attendances.isAttending eq true) and (Attendances.isDeleted eq false) }
                 .map { Users.createEntity(it) }
 
-        return ScheduleWithAttendanceInfo(schedule.uuid, menu!!.name, attendants, schedule.date, location!!)
+        return ScheduleWithAttendanceInfo(schedule.uuid, menu!!.name, attendants, schedule.date, office!!)
     }
 }

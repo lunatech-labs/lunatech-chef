@@ -6,14 +6,14 @@ import java.util.UUID
 data class NewSchedule(
     val menuUuid: UUID,
     val date: LocalDate,
-    val locationUuid: UUID,
+    val officeUuid: UUID,
 )
 
 data class Schedule(
     val uuid: UUID,
     val menuUuid: UUID,
     val date: LocalDate,
-    val locationUuid: UUID,
+    val officeUuid: UUID,
     val isDeleted: Boolean = false,
 ) {
     companion object {
@@ -22,7 +22,7 @@ data class Schedule(
                 uuid = UUID.randomUUID(),
                 menuUuid = newSchedule.menuUuid,
                 date = newSchedule.date,
-                locationUuid = newSchedule.locationUuid,
+                officeUuid = newSchedule.officeUuid,
             )
         }
     }
@@ -32,7 +32,7 @@ data class ScheduleWithMenuInfo(
     val uuid: UUID,
     val menu: MenuWithDishes,
     val date: LocalDate,
-    val location: Location,
+    val office: Office,
     val isDeleted: Boolean = false,
     val localDate: String,
 )
@@ -42,5 +42,5 @@ data class ScheduleWithAttendanceInfo(
     val menuName: String,
     val attendants: List<User>,
     val date: LocalDate,
-    val location: Location,
+    val office: Office,
 )

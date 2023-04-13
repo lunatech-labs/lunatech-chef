@@ -10,7 +10,7 @@ import { ToMonth } from "./shared/Functions";
 
 export const MealsAttendance = (props) => {
   const [attendance, setAttendance] = React.useState(props.attendance);
-  const savedLocation = localStorage.getItem("filterLocationMealSchedule");
+  const savedOffice = localStorage.getItem("filterOfficeMealSchedule");
 
   const onSubmit = (values) => {
     const newAttendance = attendance.map((item) => {
@@ -30,14 +30,14 @@ export const MealsAttendance = (props) => {
   };
 
   const handleFilter = (values) => {
-    const choosenLocation =
-      values.location === undefined ? "" : values.location;
+    const chosenOffice =
+      values.office === undefined ? "" : values.office;
 
-    localStorage.setItem("filterLocationMealSchedule", choosenLocation);
-    props.filter(values.location);
+    localStorage.setItem("filterOfficeMealSchedule", chosenOffice);
+    props.filter(values.office);
   };
 
-  function RenderData({ isLoading, error, attendance, locations }) {
+  function RenderData({ isLoading, error, attendance, offices }) {
     if (isLoading) {
       return (
         <Container>
@@ -50,7 +50,7 @@ export const MealsAttendance = (props) => {
       return (
         <div>
           <h4>
-            An error ocurred when fetching meal schedules from server: {error}
+            An error occurred when fetching meal schedules from server: {error}
           </h4>
         </div>
       );
@@ -61,23 +61,23 @@ export const MealsAttendance = (props) => {
             <Form
               onSubmit={handleFilter}
               initialValues={{
-                location: savedLocation,
+                office: savedOffice,
               }}
               render={({ handleSubmit, submitting }) => (
 
                 <form onSubmit={handleSubmit}>
                   <Row>
                     <Col lg="2">
-                      <label>Location:</label>
+                      <label>Office:</label>
                     </Col>
                     <Col lg="3">
                       <div className="select">
-                        <Field name="location" component="select" md="auto">
+                        <Field name="office" component="select" md="auto">
                           <option value="" key="" />
-                          {locations.map((location) => {
+                          {offices.map((office) => {
                             return (
-                              <option value={location.uuid} key={location.uuid}>
-                                {location.city}, {location.country}
+                              <option value={office.uuid} key={office.uuid}>
+                                {office.city}, {office.country}
                               </option>
                             );
                           })}
@@ -103,7 +103,7 @@ export const MealsAttendance = (props) => {
               <thead>
                 <tr>
                   <th>Attending?</th>
-                  <th>Location</th>
+                  <th>Office</th>
                   <th>Date</th>
                   <th>Menu</th>
                 </tr>
@@ -139,7 +139,7 @@ export const MealsAttendance = (props) => {
                           )}
                         ></Form>
                       </td>
-                      <td>{attendance.location.city}</td>
+                      <td>{attendance.office.city}</td>
                       <td>
                         {attendance.date[2]} {ToMonth(attendance.date[1])}{" "}
                         {attendance.date[0]}
@@ -175,7 +175,7 @@ export const MealsAttendance = (props) => {
           isLoading={props.isLoading}
           errorListing={props.errorListing}
           attendance={attendance}
-          locations={props.locations}
+          offices={props.offices}
         />
       </div>
     </div>

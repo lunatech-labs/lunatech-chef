@@ -25,8 +25,8 @@ const Sidebar = (props) => {
                         </NavLink>
                         {props.isAdmin ? (
                             <div>
-                                <NavLink exact="true" to="/alllocations" activeclassname="activeClicked">
-                                    <CDBSidebarMenuItem icon="map">Locations</CDBSidebarMenuItem>
+                                <NavLink exact="true" to="/alloffices" activeclassname="activeClicked">
+                                    <CDBSidebarMenuItem icon="map">Offices</CDBSidebarMenuItem>
                                 </NavLink>
                                 <NavLink exact="true" to="/alldishes" activeclassname="activeClicked">
                                     <CDBSidebarMenuItem icon="utensils">Dishes</CDBSidebarMenuItem>
@@ -56,7 +56,8 @@ const Sidebar = (props) => {
                 </CDBSidebarContent>
                 <CDBSidebarFooter>
                     {process.env.NODE_ENV === "production" ? (
-                        <img src={process.env.PUBLIC_URL + 'root/lunatech-logo.png'} alt="Lunatech logo" width="270px" />)
+                        <img src={process.env.PUBLIC_URL + 'root/lunatech-logo.png'} alt="Lunatech logo"
+                            width="270px" />)
                         : (
                             <img src={process.env.PUBLIC_URL + 'lunatech-logo.png'} alt="Lunatech logo" width="270px" />)
                     }

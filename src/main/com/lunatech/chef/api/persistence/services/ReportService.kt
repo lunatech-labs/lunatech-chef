@@ -2,7 +2,7 @@ package com.lunatech.chef.api.persistence.services
 
 import com.lunatech.chef.api.domain.ReportEntry
 import com.lunatech.chef.api.persistence.schemas.Attendances
-import com.lunatech.chef.api.persistence.schemas.Locations
+import com.lunatech.chef.api.persistence.schemas.Offices
 import com.lunatech.chef.api.persistence.schemas.Schedules
 import com.lunatech.chef.api.persistence.schemas.Users
 import org.ktorm.database.Database
@@ -28,8 +28,8 @@ class ReportService(val database: Database) {
             .from(Attendances)
             .leftJoin(Users, on = Attendances.userUuid eq Users.uuid)
             .leftJoin(Schedules, on = Attendances.scheduleUuid eq Schedules.uuid)
-            .leftJoin(Locations, on = Schedules.locationUuid eq Locations.uuid)
-            .select(Schedules.date, Users.name, Locations.city, Locations.country)
+            .leftJoin(Offices, on = Schedules.officeUuid eq Offices.uuid)
+            .select(Schedules.date, Users.name, Offices.city, Offices.country)
             .where {
                 val conditions = ArrayList<ColumnDeclaring<Boolean>>()
                 conditions += Schedules.date greater startDate
@@ -38,13 +38,13 @@ class ReportService(val database: Database) {
                 conditions += Attendances.isAttending eq true
                 conditions.reduce { a, b -> a and b }
             }
-            .orderBy(Schedules.date.asc(), Users.name.asc(), Locations.city.asc(), Locations.country.asc())
+            .orderBy(Schedules.date.asc(), Users.name.asc(), Offices.city.asc(), Offices.country.asc())
             .map { row ->
                 ReportEntry(
                     row[Schedules.date] ?: LocalDate.now(),
                     row[Users.name] ?: "",
-                    row[Locations.city] ?: "",
-                    row[Locations.country] ?: "",
+                    row[Offices.city] ?: "",
+                    row[Offices.country] ?: "",
                 )
             }
     }

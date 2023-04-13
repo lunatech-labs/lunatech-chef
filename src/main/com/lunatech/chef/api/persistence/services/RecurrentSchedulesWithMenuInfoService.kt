@@ -2,7 +2,7 @@ package com.lunatech.chef.api.persistence.services
 
 import com.lunatech.chef.api.domain.RecurrentSchedule
 import com.lunatech.chef.api.domain.RecurrentScheduleWithMenuInfo
-import com.lunatech.chef.api.persistence.schemas.Locations
+import com.lunatech.chef.api.persistence.schemas.Offices
 import com.lunatech.chef.api.persistence.schemas.RecurrentSchedules
 import org.ktorm.database.Database
 import org.ktorm.dsl.and
@@ -24,15 +24,15 @@ class RecurrentSchedulesWithMenuInfoService(
             .map { RecurrentSchedules.createEntity(it) }
             .map { getScheduleWithMenuInfo(it) }
 
-    fun getFiltered(location: UUID?): List<RecurrentScheduleWithMenuInfo> =
+    fun getFiltered(office: UUID?): List<RecurrentScheduleWithMenuInfo> =
         database.from(RecurrentSchedules).select()
             .where {
                 val conditions = ArrayList<ColumnDeclaring<Boolean>>()
 
                 conditions += RecurrentSchedules.isDeleted eq false
 
-                if (location != null) {
-                    conditions += RecurrentSchedules.locationUuid eq location
+                if (office != null) {
+                    conditions += RecurrentSchedules.officeUuid eq office
                 }
 
                 conditions.reduce { a, b -> a and b }
@@ -46,30 +46,30 @@ class RecurrentSchedulesWithMenuInfoService(
             .map { RecurrentSchedules.createEntity(it) }
             .map { recSchedule ->
                 val menu = menusWithDishesService.getByUuid(recSchedule.menuUuid)
-                val location = database.from(Locations).select()
-                    .where { Locations.uuid eq recSchedule.locationUuid }
-                    .map { Locations.createEntity(it) }.firstOrNull()
+                val office = database.from(Offices).select()
+                    .where { Offices.uuid eq recSchedule.officeUuid }
+                    .map { Offices.createEntity(it) }.firstOrNull()
 
                 RecurrentScheduleWithMenuInfo(
                     recSchedule.uuid,
                     menu!!,
                     recSchedule.nextDate,
-                    location!!,
+                    office!!,
                     recSchedule.repetitionDays,
                 )
             }
 
     private fun getScheduleWithMenuInfo(recSchedule: RecurrentSchedule): RecurrentScheduleWithMenuInfo {
         val menu = menusWithDishesService.getByUuid(recSchedule.menuUuid)
-        val location = database.from(Locations).select()
-            .where { Locations.uuid eq recSchedule.locationUuid }
-            .map { Locations.createEntity(it) }.firstOrNull()
+        val office = database.from(Offices).select()
+            .where { Offices.uuid eq recSchedule.officeUuid }
+            .map { Offices.createEntity(it) }.firstOrNull()
 
         return RecurrentScheduleWithMenuInfo(
             recSchedule.uuid,
             menu!!,
             recSchedule.nextDate,
-            location!!,
+            office!!,
             recSchedule.repetitionDays,
         )
     }

@@ -16,7 +16,7 @@ fun Routing.recurrentSchedulesWithMenusInfo(recurrentSchedulesWithInfoService: R
     val menusRoute = "/recurrentSchedulesWithMenusInfo"
     val uuidRoute = "/{uuid}"
     val uuidParam = "uuid"
-    val locationParam = "location"
+    val officeParam = "office"
 
     route(menusRoute) {
         authenticate("session-auth") {
@@ -24,10 +24,10 @@ fun Routing.recurrentSchedulesWithMenusInfo(recurrentSchedulesWithInfoService: R
             // get all menus with the complete data about the dishes
             get {
                 // check for filter parameters
-                val maybeLocation = call.parameters[locationParam]
-                val locationName = if (maybeLocation != null) UUID.fromString(maybeLocation) else null
+                val maybeOffice = call.parameters[officeParam]
+                val officeName = if (maybeOffice != null) UUID.fromString(maybeOffice) else null
 
-                val schedules = recurrentSchedulesWithInfoService.getFiltered(locationName)
+                val schedules = recurrentSchedulesWithInfoService.getFiltered(officeName)
 
                 call.respond(OK, schedules)
             }

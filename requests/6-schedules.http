@@ -3,7 +3,7 @@ Content-Type: application/json
 CHEF_SESSION: {{ session }}
 
 { "menuUuid":"d36bb3da-8a12-4d21-aa1b-72b04acdf965",
-  "locationUuid":"b515fe85-991d-450e-88e1-b1c88ce22e14",
+  "officeUuid":"b515fe85-991d-450e-88e1-b1c88ce22e14",
   "date":"2022-09-01"
 }
 
@@ -25,7 +25,7 @@ CHEF_SESSION: {{ session }}
 
 { "menuUuid": "bc868425-74c4-4c74-9cb0-ec789d8d474d",
   "date": "2020-04-25",
-  "locationUuid": "61edaf14-b018-4ffa-afba-dc5844426176"
+  "officeUuid": "61edaf14-b018-4ffa-afba-dc5844426176"
 }
 
 ###

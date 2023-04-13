@@ -2,7 +2,7 @@ package com.lunatech.chef.api.persistence.services
 
 import com.lunatech.chef.api.domain.Schedule
 import com.lunatech.chef.api.domain.ScheduleWithMenuInfo
-import com.lunatech.chef.api.persistence.schemas.Locations
+import com.lunatech.chef.api.persistence.schemas.Offices
 import com.lunatech.chef.api.persistence.schemas.Schedules
 import org.ktorm.database.Database
 import org.ktorm.dsl.and
@@ -29,7 +29,7 @@ class SchedulesWithMenuInfoService(
             .map { Schedules.createEntity(it) }
             .map { getScheduleWithMenuInfo(it) }
 
-    fun getFiltered(fromDate: LocalDate?, location: UUID?): List<ScheduleWithMenuInfo> =
+    fun getFiltered(fromDate: LocalDate?, office: UUID?): List<ScheduleWithMenuInfo> =
         database.from(Schedules).select()
             .where {
                 val conditions = ArrayList<ColumnDeclaring<Boolean>>()
@@ -39,8 +39,8 @@ class SchedulesWithMenuInfoService(
                 if (fromDate != null) {
                     conditions += Schedules.date greaterEq fromDate
                 }
-                if (location != null) {
-                    conditions += Schedules.locationUuid eq location
+                if (office != null) {
+                    conditions += Schedules.officeUuid eq office
                 }
 
                 conditions.reduce { a, b -> a and b }
@@ -55,19 +55,33 @@ class SchedulesWithMenuInfoService(
             .map { Schedules.createEntity(it) }
             .map { schedule ->
                 val menu = menusWithDishesService.getByUuid(schedule.menuUuid)
-                val location = database.from(Locations).select()
-                    .where { Locations.uuid eq schedule.locationUuid }
-                    .map { Locations.createEntity(it) }.firstOrNull()
+                val office = database.from(Offices).select()
+                    .where { Offices.uuid eq schedule.officeUuid }
+                    .map { Offices.createEntity(it) }.firstOrNull()
 
-                ScheduleWithMenuInfo(schedule.uuid, menu!!, schedule.date, location!!, schedule.isDeleted, schedule.date.toString())
+                ScheduleWithMenuInfo(
+                    schedule.uuid,
+                    menu!!,
+                    schedule.date,
+                    office!!,
+                    schedule.isDeleted,
+                    schedule.date.toString(),
+                )
             }
 
     private fun getScheduleWithMenuInfo(schedule: Schedule): ScheduleWithMenuInfo {
         val menu = menusWithDishesService.getByUuid(schedule.menuUuid)
-        val location = database.from(Locations).select()
-            .where { Locations.uuid eq schedule.locationUuid }
-            .map { Locations.createEntity(it) }.firstOrNull()
+        val office = database.from(Offices).select()
+            .where { Offices.uuid eq schedule.officeUuid }
+            .map { Offices.createEntity(it) }.firstOrNull()
 
-        return ScheduleWithMenuInfo(schedule.uuid, menu!!, schedule.date, location!!, schedule.isDeleted, schedule.date.toString())
+        return ScheduleWithMenuInfo(
+            schedule.uuid,
+            menu!!,
+            schedule.date,
+            office!!,
+            schedule.isDeleted,
+            schedule.date.toString(),
+        )
     }
 }

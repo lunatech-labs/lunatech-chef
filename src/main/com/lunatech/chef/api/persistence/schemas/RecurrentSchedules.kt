@@ -12,7 +12,7 @@ import java.time.LocalDate
 object RecurrentSchedules : BaseTable<RecurrentSchedule>("recurrent_schedules") {
     val uuid = uuid("uuid").primaryKey()
     val menuUuid = uuid("menu_uuid")
-    val locationUuid = uuid("location_uuid")
+    val officeUuid = uuid("office_uuid")
     val repetitionDays = int("repetition_days")
     val nextDate = date("next_date")
     val isDeleted = boolean("is_deleted")
@@ -20,7 +20,7 @@ object RecurrentSchedules : BaseTable<RecurrentSchedule>("recurrent_schedules") 
     override fun doCreateEntity(row: QueryRowSet, withReferences: Boolean) = RecurrentSchedule(
         uuid = row[uuid] ?: DEFAULT_UUID,
         menuUuid = row[menuUuid] ?: DEFAULT_UUID,
-        locationUuid = row[locationUuid] ?: DEFAULT_UUID,
+        officeUuid = row[officeUuid] ?: DEFAULT_UUID,
         repetitionDays = row[repetitionDays] ?: DEFAULT_RECURRENCY,
         nextDate = row[nextDate] ?: LocalDate.now(),
         isDeleted = row[isDeleted] ?: DEFAULT_FALSE,

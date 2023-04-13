@@ -8,12 +8,14 @@ import { Loading } from "../../shared/Loading";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
 
-export default function ListMenus(props) {
+export default function ListOffice(props) {
     function ShowError({ error, reason }) {
         if (error) {
             return (
                 <Row>
-                    An error occurred when {reason} a menu: {error}
+                    <h4>
+                        An error occurred when {reason} a office: {error}
+                    </h4>
                 </Row>
             );
         } else {
@@ -21,7 +23,7 @@ export default function ListMenus(props) {
         }
     }
 
-    function RenderData({ isLoading, error, menus }) {
+    function RenderData({ isLoading, error, offices }) {
         if (isLoading) {
             return (
                 <Row>
@@ -31,7 +33,7 @@ export default function ListMenus(props) {
         } else if (error) {
             return (
                 <Row>
-                    <h4>An error occurred when fetching Menus from server: {error}</h4>
+                    <h4>An error occurred when fetching Offices from server: {error}</h4>
                 </Row>
             );
         } else {
@@ -40,27 +42,23 @@ export default function ListMenus(props) {
                     <Table striped bordered hover>
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Dishes</th>
+                                <th>City</th>
+                                <th>Country</th>
                                 <th></th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            {menus.map((menu) => {
+                            {offices.map((loc) => {
                                 return (
-                                    <tr key={menu.uuid}>
-                                        <td>{menu.name}</td>
-                                        <td>
-                                            {menu.dishes.map((dish) => (
-                                                <p key={dish.uuid}>{dish.name}</p>
-                                            ))}
-                                        </td>
+                                    <tr key={loc.uuid}>
+                                        <td>{loc.city}</td>
+                                        <td>{loc.country}</td>
                                         <td>
                                             <Button
                                                 variant="primary"
-                                                value={menu.uuid}
-                                                onClick={() => handleEdit(menu)}
+                                                value={loc.uuid}
+                                                onClick={() => handleEdit(loc)}
                                             >
                                                 <FontAwesomeIcon icon={faEdit} />
                                             </Button>
@@ -68,8 +66,8 @@ export default function ListMenus(props) {
                                         <td>
                                             <Button
                                                 variant="danger"
-                                                value={menu.uuid}
-                                                onClick={() => handleRemove(menu.uuid)}
+                                                value={loc.uuid}
+                                                onClick={() => handleRemove(loc.uuid)}
                                             >
                                                 <FontAwesomeIcon icon={faMinus} />
                                             </Button>
@@ -84,27 +82,28 @@ export default function ListMenus(props) {
         }
     }
 
-    const navigate = useNavigate();
-    const handleEdit = (menu) => {
-        navigate("/editmenu", { state: menu });
-    }
 
     const handleRemove = (uuid) => {
-        props.deleteMenu(uuid);
+        props.deleteOffice(uuid);
+    }
+
+    const navigate = useNavigate();
+    const handleEdit = (office) => {
+        navigate("/editoffice", { state: office });
     }
 
     return (
         <Container>
             <Row>
-                <h3 className="mt-4">Management of Menus</h3>
+                <h3 className="mt-4">Management of Offices</h3>
             </Row>
             <Row>
-                <Link to="/newMenu">
+                <Link to="/newoffice">
                     <button type="button" className="btn btn-success">
                         <i>
                             <FontAwesomeIcon icon={faPlus} />
                         </i>{" "}
-                        New Menu
+                        New Office
                     </button>
                 </Link>
             </Row>
@@ -112,7 +111,7 @@ export default function ListMenus(props) {
             <RenderData
                 isLoading={props.isLoading}
                 error={props.errorListing}
-                menus={props.menus}
+                offices={props.offices}
             />
             <ShowError error={props.errorAdding} reason="adding" />
             <ShowError error={props.errorDeleting} reason="deleting" />
@@ -120,4 +119,3 @@ export default function ListMenus(props) {
         </Container>
     );
 }
-

@@ -27,7 +27,7 @@ private val logger = KotlinLogging.logger {}
 
 data class UpdatedRecurrentSchedule(
     val menuUuid: UUID,
-    val locationUuid: UUID,
+    val officeUuid: UUID,
     val repetitionDays: Int,
     val nextDate: LocalDate,
 )

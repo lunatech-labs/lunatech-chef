@@ -1,24 +1,25 @@
-POST {{ host }}/locations
+POST {{ host }}/offices
 Content-Type: application/json
 CHEF_SESSION: {{ session }}
 
-{ "city": "Rotterdam",
+{
+  "city": "Rotterdam",
   "country": "Netherlands"
 }
 
 ###
 
-GET {{ host }}/locations
+GET {{ host }}/offices
 CHEF_SESSION: {{ session }}
 
 ###
 
-GET {{ host }}/locations/82ea2b48-27d8-4b52-994b-9b4fdd377195
+GET {{ host }}/offices/82ea2b48-27d8-4b52-994b-9b4fdd377195
 CHEF_SESSION: {{ session }}
 
 ###
 
-PUT {{ host }}/locations/61edaf14-b018-4ffa-afba-dc5844426176
+PUT {{ host }}/offices/61edaf14-b018-4ffa-afba-dc5844426176
 Content-Type: application/json
 CHEF_SESSION: {{ session }}
 
@@ -29,7 +30,7 @@ CHEF_SESSION: {{ session }}
 
 ###
 
-DELETE {{ host }}/locations/61edaf14-b018-4ffa-afba-dc5844426176
+DELETE {{ host }}/offices/61edaf14-b018-4ffa-afba-dc5844426176
 CHEF_SESSION: {{ session }}
 
 ###

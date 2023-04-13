@@ -1,9 +1,9 @@
 package com.lunatech.chef.api.routes
 
 // import com.lunatech.chef.api.auth.rolesAllowed
-import com.lunatech.chef.api.domain.Location
-import com.lunatech.chef.api.domain.NewLocation
-import com.lunatech.chef.api.persistence.services.LocationsService
+import com.lunatech.chef.api.domain.NewOffice
+import com.lunatech.chef.api.domain.Office
+import com.lunatech.chef.api.persistence.services.OfficesService
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.InternalServerError
@@ -24,60 +24,60 @@ import java.util.UUID
 
 private val logger = KotlinLogging.logger {}
 
-data class UpdatedLocation(val city: String, val country: String)
+data class UpdatedOffice(val city: String, val country: String)
 
-fun Routing.locations(locationsService: LocationsService) {
-    val locationsRoute = "/locations"
+fun Routing.offices(officesService: OfficesService) {
+    val officesRoute = "/offices"
     val uuidRoute = "/{uuid}"
     val uuidParam = "uuid"
 
-    route(locationsRoute) {
+    route(officesRoute) {
         authenticate("session-auth") {
             // rolesAllowed(Role.ADMIN) {
-            // get all locations
+            // get all offices
             get {
-                val locations = locationsService.getAll()
-                call.respond(OK, locations)
+                val offices = officesService.getAll()
+                call.respond(OK, offices)
             }
-            // create a new single location
+            // create a new single office
             post {
                 try {
-                    val newLocation = call.receive<NewLocation>()
-                    val inserted = locationsService.insert(Location.fromNewLocation(newLocation))
+                    val newOffice = call.receive<NewOffice>()
+                    val inserted = officesService.insert(Office.fromNewOffice(newOffice))
                     if (inserted == 1) call.respond(Created) else call.respond(InternalServerError)
                 } catch (exception: Exception) {
-                    logger.error("Error creating a new Location :( ", exception)
+                    logger.error("Error creating a new Office :( ", exception)
                     call.respond(BadRequest, exception)
                 }
             }
 
             route(uuidRoute) {
-                // get single location
+                // get single office
                 get {
                     val uuid = call.parameters[uuidParam]
-                    val locations = locationsService.getByUuid(UUID.fromString(uuid))
-                    if (locations.isEmpty()) {
+                    val offices = officesService.getByUuid(UUID.fromString(uuid))
+                    if (offices.isEmpty()) {
                         call.respond(NotFound)
                     } else {
-                        call.respond(OK, locations.first())
+                        call.respond(OK, offices.first())
                     }
                 }
-                // modify existing location
+                // modify existing office
                 put {
                     try {
                         val uuid = call.parameters[uuidParam]
-                        val updatedLocation = call.receive<UpdatedLocation>()
-                        val result = locationsService.update(UUID.fromString(uuid), updatedLocation)
+                        val updatedOffice = call.receive<UpdatedOffice>()
+                        val result = officesService.update(UUID.fromString(uuid), updatedOffice)
                         if (result == 1) call.respond(OK) else call.respond(InternalServerError)
                     } catch (exception: Exception) {
-                        logger.error("Error updating a Location :( ", exception)
+                        logger.error("Error updating an office :( ", exception)
                         call.respond(BadRequest, exception.message ?: "")
                     }
                 }
-                // delete a single location
+                // delete a single office
                 delete {
                     val uuid = call.parameters[uuidParam]
-                    val result = locationsService.delete(UUID.fromString(uuid))
+                    val result = officesService.delete(UUID.fromString(uuid))
                     if (result == 1) call.respond(OK) else call.respond(InternalServerError)
                 }
             }

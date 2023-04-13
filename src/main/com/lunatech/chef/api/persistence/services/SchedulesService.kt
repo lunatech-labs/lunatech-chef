@@ -31,7 +31,7 @@ class SchedulesService(val database: Database) {
             set(it.uuid, schedule.uuid)
             set(it.menuUuid, schedule.menuUuid)
             set(it.date, schedule.date)
-            set(it.locationUuid, schedule.locationUuid)
+            set(it.officeUuid, schedule.officeUuid)
             set(it.isDeleted, schedule.isDeleted)
         }
 
@@ -39,7 +39,7 @@ class SchedulesService(val database: Database) {
         database.update(Schedules) {
             set(it.menuUuid, schedule.menuUuid)
             set(it.date, schedule.date)
-            set(it.locationUuid, schedule.locationUuid)
+            set(it.officeUuid, schedule.officeUuid)
             where {
                 it.uuid eq uuid
             }

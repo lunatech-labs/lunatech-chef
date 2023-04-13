@@ -29,9 +29,8 @@ import java.util.concurrent.TimeUnit
 
 private val logger = KotlinLogging.logger {}
 
-
 data class UpdatedUser(
-    val locationUuid: UUID?,
+    val officeUuid: UUID?,
     val isVegetarian: Boolean = false,
     val hasHalalRestriction: Boolean = false,
     val hasNutsRestriction: Boolean = false,
@@ -50,7 +49,6 @@ fun Routing.users(usersService: UsersService, jwtConfig: JwtConfig) {
     val uuidRoute = "/{uuid}"
     val uuidParam = "uuid"
     val tokenGeneration = "/token-generation"
-
 
     route(usersRoute) {
         authenticate("session-auth", "auth-jwt") {
@@ -101,7 +99,7 @@ fun Routing.users(usersService: UsersService, jwtConfig: JwtConfig) {
                                 .withClaim("username", user.emailAddress)
                                 .withExpiresAt(Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(jwtConfig.ttlLimit.toLong())))
                                 .sign(Algorithm.HMAC256(jwtConfig.secretKey))
-                            call.respond(OK,hashMapOf("token" to token))
+                            call.respond(OK, hashMapOf("token" to token))
                         }
                     } else {
                         call.respond(NotFound)

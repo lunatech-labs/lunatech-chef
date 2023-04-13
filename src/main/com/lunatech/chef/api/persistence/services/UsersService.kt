@@ -35,7 +35,7 @@ class UsersService(val database: Database) {
             set(it.uuid, user.uuid)
             set(it.name, user.name)
             set(it.emailAddress, user.emailAddress)
-            set(it.locationUuid, user.locationUuid)
+            set(it.officeUuid, user.officeUuid)
             set(it.isVegetarian, user.isVegetarian)
             set(it.hasHalalRestriction, user.hasHalalRestriction)
             set(it.hasNutsRestriction, user.hasNutsRestriction)
@@ -51,7 +51,7 @@ class UsersService(val database: Database) {
 
     fun update(uuid: UUID, user: UpdatedUser): Int =
         database.update(Users) {
-            set(it.locationUuid, user.locationUuid)
+            set(it.officeUuid, user.officeUuid)
             set(it.isVegetarian, user.isVegetarian)
             set(it.hasHalalRestriction, user.hasHalalRestriction)
             set(it.hasNutsRestriction, user.hasNutsRestriction)

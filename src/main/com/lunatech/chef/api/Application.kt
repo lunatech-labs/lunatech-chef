@@ -18,9 +18,9 @@ import com.lunatech.chef.api.persistence.services.AttendancesService
 import com.lunatech.chef.api.persistence.services.AttendancesWithScheduleInfoService
 import com.lunatech.chef.api.persistence.services.DishesService
 import com.lunatech.chef.api.persistence.services.ExcelService
-import com.lunatech.chef.api.persistence.services.LocationsService
 import com.lunatech.chef.api.persistence.services.MenusService
 import com.lunatech.chef.api.persistence.services.MenusWithDishesNamesService
+import com.lunatech.chef.api.persistence.services.OfficesService
 import com.lunatech.chef.api.persistence.services.RecurrentSchedulesService
 import com.lunatech.chef.api.persistence.services.RecurrentSchedulesWithMenuInfoService
 import com.lunatech.chef.api.persistence.services.ReportService
@@ -35,9 +35,9 @@ import com.lunatech.chef.api.routes.attendancesWithScheduleInfo
 import com.lunatech.chef.api.routes.authorization
 import com.lunatech.chef.api.routes.dishes
 import com.lunatech.chef.api.routes.healthCheck
-import com.lunatech.chef.api.routes.locations
 import com.lunatech.chef.api.routes.menus
 import com.lunatech.chef.api.routes.menusWithDishesInfo
+import com.lunatech.chef.api.routes.offices
 import com.lunatech.chef.api.routes.recurrentSchedules
 import com.lunatech.chef.api.routes.recurrentSchedulesWithMenusInfo
 import com.lunatech.chef.api.routes.reports
@@ -98,7 +98,7 @@ fun Application.module() {
     runDBEvolutions(dbConfig)
 
     val dbConnection = Database.connect(dbConfig)
-    val locationsService = LocationsService(dbConnection)
+    val officesService = OfficesService(dbConnection)
     val dishesService = DishesService(dbConnection)
     val menusService = MenusService(dbConnection)
     val menusWithDishesService = MenusWithDishesNamesService(dbConnection)
@@ -207,7 +207,7 @@ fun Application.module() {
         }
         authorization(usersService, verifier!!, authConfig.admins)
         healthCheck()
-        locations(locationsService)
+        offices(officesService)
         dishes(dishesService)
         menus(menusService)
         menusWithDishesInfo(menusWithDishesService)

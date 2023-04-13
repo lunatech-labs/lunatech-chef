@@ -18,7 +18,7 @@ fun Routing.schedulesWithMenusInfo(schedulesWithInfoService: SchedulesWithMenuIn
     val uuidRoute = "/{uuid}"
     val uuidParam = "uuid"
     val fromDateParam = "fromdate"
-    val locationParam = "location"
+    val officeParam = "office"
 
     route(menusRoute) {
         authenticate("session-auth", "auth-jwt") {
@@ -27,12 +27,12 @@ fun Routing.schedulesWithMenusInfo(schedulesWithInfoService: SchedulesWithMenuIn
             get {
                 // check for filter parameters
                 val maybeDateFrom = call.parameters[fromDateParam]
-                val maybeLocation = call.parameters[locationParam]
+                val maybeOffice = call.parameters[officeParam]
 
                 val dateFrom = if (maybeDateFrom != null) LocalDate.parse(maybeDateFrom) else null
-                val locationName = if (maybeLocation != null) UUID.fromString(maybeLocation) else null
+                val officeName = if (maybeOffice != null) UUID.fromString(maybeOffice) else null
 
-                val schedules = schedulesWithInfoService.getFiltered(dateFrom, locationName)
+                val schedules = schedulesWithInfoService.getFiltered(dateFrom, officeName)
 
                 call.respond(OK, schedules)
             }

@@ -6,5 +6,4 @@ const ProtectedRoutes = (isAdmin) => {
   )
 }
 
-
 export default ProtectedRoutes;

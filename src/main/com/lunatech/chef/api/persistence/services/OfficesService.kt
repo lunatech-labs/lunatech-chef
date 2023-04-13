@@ -1,10 +1,10 @@
 package com.lunatech.chef.api.persistence.services
 
-import com.lunatech.chef.api.domain.Location
+import com.lunatech.chef.api.domain.Office
 import com.lunatech.chef.api.persistence.schemas.Attendances
-import com.lunatech.chef.api.persistence.schemas.Locations
+import com.lunatech.chef.api.persistence.schemas.Offices
 import com.lunatech.chef.api.persistence.schemas.Schedules
-import com.lunatech.chef.api.routes.UpdatedLocation
+import com.lunatech.chef.api.routes.UpdatedOffice
 import org.ktorm.database.Database
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.from
@@ -15,31 +15,31 @@ import org.ktorm.dsl.update
 import org.ktorm.dsl.where
 import java.util.UUID
 
-class LocationsService(val database: Database) {
+class OfficesService(val database: Database) {
     fun getAll() =
-        database.from(Locations).select().where { Locations.isDeleted eq false }.map { Locations.createEntity(it) }
+        database.from(Offices).select().where { Offices.isDeleted eq false }.map { Offices.createEntity(it) }
 
-    fun getByUuid(uuid: UUID): List<Location> =
-        database.from(Locations).select().where { Locations.uuid eq uuid }.map { Locations.createEntity(it) }
+    fun getByUuid(uuid: UUID): List<Office> =
+        database.from(Offices).select().where { Offices.uuid eq uuid }.map { Offices.createEntity(it) }
 
-    fun insert(location: Location): Int =
-        database.insert(Locations) {
-            set(it.uuid, location.uuid)
-            set(it.city, location.city)
-            set(it.country, location.country)
-            set(it.isDeleted, location.isDeleted)
+    fun insert(office: Office): Int =
+        database.insert(Offices) {
+            set(it.uuid, office.uuid)
+            set(it.city, office.city)
+            set(it.country, office.country)
+            set(it.isDeleted, office.isDeleted)
         }
 
-    fun update(uuid: UUID, location: UpdatedLocation): Int =
-        database.update(Locations) {
-            set(it.city, location.city)
-            set(it.country, location.country)
+    fun update(uuid: UUID, office: UpdatedOffice): Int =
+        database.update(Offices) {
+            set(it.city, office.city)
+            set(it.country, office.country)
             where {
                 it.uuid eq uuid
             }
         }
 
-    fun delete(uuid: UUID): Int = database.update(Locations) {
+    fun delete(uuid: UUID): Int = database.update(Offices) {
         set(it.isDeleted, true)
         where {
             it.uuid eq uuid
@@ -49,13 +49,13 @@ class LocationsService(val database: Database) {
         val schedulesUuid = database
             .from(Schedules)
             .select()
-            .where { Schedules.locationUuid eq uuid }
+            .where { Schedules.officeUuid eq uuid }
             .map { sch -> Schedules.createEntity(sch) }
             .map { schedule -> schedule.uuid }
         database.update(Schedules) { sch ->
             set(sch.isDeleted, true)
             where {
-                sch.locationUuid eq uuid
+                sch.officeUuid eq uuid
             }
         }
         schedulesUuid.map { scheduleUuid ->

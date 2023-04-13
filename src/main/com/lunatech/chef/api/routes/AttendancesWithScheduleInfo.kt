@@ -17,7 +17,7 @@ fun Routing.attendancesWithScheduleInfo(attendancesWithScheduleInfoService: Atte
     val userUuidRoute = "/{useruuid}"
     val userUuidParam = "useruuid"
     val fromDateParam = "fromdate"
-    val locationParam = "location"
+    val officeParam = "office"
 
     route(menusRoute) {
         authenticate("session-auth") {
@@ -29,15 +29,15 @@ fun Routing.attendancesWithScheduleInfo(attendancesWithScheduleInfoService: Atte
 
                     // check for filter parameters
                     val maybeDateFrom = call.parameters[fromDateParam]
-                    val maybeLocation = call.parameters[locationParam]
+                    val maybeOffice = call.parameters[officeParam]
 
                     val dateFrom = if (maybeDateFrom != null) LocalDate.parse(maybeDateFrom) else null
-                    val locationName = if (maybeLocation != null) UUID.fromString(maybeLocation) else null
+                    val officeName = if (maybeOffice != null) UUID.fromString(maybeOffice) else null
 
                     val attendance = attendancesWithScheduleInfoService.getByUserUuidFiltered(
                         UUID.fromString(uuid),
                         dateFrom,
-                        locationName,
+                        officeName,
                     )
                     call.respond(OK, attendance)
                 }

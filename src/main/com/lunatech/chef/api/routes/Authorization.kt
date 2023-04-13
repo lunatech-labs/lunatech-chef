@@ -32,7 +32,7 @@ data class ChefSession(
     val uuid: UUID,
     val name: String,
     val emailAddress: String,
-    val locationUuid: UUID?,
+    val officeUuid: UUID?,
     val isVegetarian: Boolean = false,
     val hasHalalRestriction: Boolean = false,
     val hasNutsRestriction: Boolean = false,
@@ -83,7 +83,7 @@ fun addUserToDB(usersService: UsersService, token: GoogleIdToken): User {
     val name = getUserNameFromEmail(email)
 
     return if (user == null) {
-        val newUser = NewUser(name = name, emailAddress = email, locationUuid = null)
+        val newUser = NewUser(name = name, emailAddress = email, officeUuid = null)
         val userToInsert = User.fromNewUser(newUser)
         val inserted = usersService.insert(userToInsert)
 
@@ -111,7 +111,7 @@ fun buildChefSession(user: User, admins: List<String>): ChefSession {
         uuid = user.uuid,
         name = user.name,
         emailAddress = user.emailAddress,
-        locationUuid = user.locationUuid,
+        officeUuid = user.officeUuid,
         isVegetarian = user.isVegetarian,
         hasHalalRestriction = user.hasHalalRestriction,
         hasNutsRestriction = user.hasNutsRestriction,

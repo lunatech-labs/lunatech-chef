@@ -18,7 +18,7 @@ export default function ListSchedules(props) {
     if (error) {
       return (
         <Row>
-          An error ocurred when {reason} a schedule: {error}
+          An error occurred when {reason} a schedule: {error}
         </Row>
       );
     } else {
@@ -27,12 +27,12 @@ export default function ListSchedules(props) {
   }
 
   const savedDate = localStorage.getItem("filterDateSchedule");
-  const savedLocationSchedule = localStorage.getItem(
-    "filterLocationSchedule"
+  const savedOfficeSchedule = localStorage.getItem(
+    "filterOfficeSchedule"
   );
 
   const [startDateSchedule, setDateSchedule] = useState(savedDate === null ? new Date() : new Date(savedDate));
-  const [startLocationSchedule, _] = useState(savedLocationSchedule === null ? "" : savedLocationSchedule);
+  const [startOfficeSchedule, _] = useState(savedOfficeSchedule === null ? "" : savedOfficeSchedule);
 
   const handleDateChange = (date) => {
     setDateSchedule(date)
@@ -56,11 +56,11 @@ export default function ListSchedules(props) {
       .toISOString()
       .substring(0, 10);
 
-    const choosenLocation =
-      values.location === undefined ? "" : values.location;
+    const chosenOffice =
+      values.office === undefined ? "" : values.office;
 
     localStorage.setItem("filterDateSchedule", shortDate);
-    localStorage.setItem("filterLocationSchedule", choosenLocation);
+    localStorage.setItem("filterOfficeSchedule", chosenOffice);
     props.filterSchedules();
     props.filterRecurrentSchedules();
   };
@@ -84,7 +84,7 @@ export default function ListSchedules(props) {
         {props.errorListing ? (
           <Row>
             <h4>
-              An error ocurred when fetching Schedules from server:{" "}
+              An error occurred when fetching Schedules from server:{" "}
               {props.errorListing}
             </h4>
           </Row>
@@ -95,22 +95,22 @@ export default function ListSchedules(props) {
               <Form
                 onSubmit={handleFilter}
                 initialValues={{
-                  location: startLocationSchedule,
+                  office: startOfficeSchedule,
                   date: "", // not used, startDateSchedule used instead
                 }}
                 render={({ handleSubmit, submitting }) => (
                   <form onSubmit={handleSubmit}>
                     <Row>
-                      <Col lg="2">Location:
+                      <Col lg="2">Office:
                       </Col>
                       <Col lg="3">
                         <div className="select">
-                          <Field name="location" component="select" md="auto">
+                          <Field name="office" component="select" md="auto">
                             <option value="" key="" />
-                            {props.locations.map((location) => {
+                            {props.offices.map((office) => {
                               return (
-                                <option value={location.uuid} key={location.uuid}>
-                                  {location.city}, {location.country}
+                                <option value={office.uuid} key={office.uuid}>
+                                  {office.city}, {office.country}
                                 </option>
                               );
                             })}
@@ -123,15 +123,16 @@ export default function ListSchedules(props) {
                       <Col lg="2">Date:
                       </Col>
                       <Col lg="3">
-                        <Field name="date" component="input" >
+                        <Field name="date" component="input">
                           {({ input, meta }) => (
-                            <div className="datePicker" >
+                            <div className="datePicker">
                               <DatePicker
                                 selected={startDateSchedule}
                                 onChange={handleDateChange}
                                 dateFormat="dd-MM-yyyy"
                               />
-                              {meta.error && meta.touched && (<span className="text-danger">  {meta.error}</span>
+                              {meta.error && meta.touched && (
+                                <span className="text-danger">  {meta.error}</span>
                               )}
                             </div>
                           )}
@@ -166,7 +167,7 @@ export default function ListSchedules(props) {
                 <thead>
                   <tr>
                     <th>Menu</th>
-                    <th>Location</th>
+                    <th>Office</th>
                     <th>Date</th>
                     <th></th>
                     <th></th>
@@ -178,8 +179,8 @@ export default function ListSchedules(props) {
                       <tr key={schedule.uuid}>
                         <td>{schedule.menu.name}</td>
                         <td>
-                          {schedule.location.city},{" "}
-                          {schedule.location.country}
+                          {schedule.office.city},{" "}
+                          {schedule.office.country}
                         </td>
                         <td>
                           {schedule.date[2]} {ToMonth(schedule.date[1])}{" "}
@@ -235,7 +236,7 @@ export default function ListSchedules(props) {
             <thead>
               <tr>
                 <th>Menu</th>
-                <th>Location</th>
+                <th>Office</th>
                 <th>Recurrency (days)</th>
                 <th>Next date</th>
                 <th></th>
@@ -248,8 +249,8 @@ export default function ListSchedules(props) {
                   <tr key={recurrentSchedule.uuid}>
                     <td>{recurrentSchedule.menu.name}</td>
                     <td>
-                      {recurrentSchedule.location.city},{" "}
-                      {recurrentSchedule.location.country}
+                      {recurrentSchedule.office.city},{" "}
+                      {recurrentSchedule.office.country}
                     </td>
                     <td>{recurrentSchedule.repetitionDays}</td>
                     <td>

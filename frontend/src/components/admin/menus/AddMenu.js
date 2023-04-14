@@ -35,8 +35,8 @@ export function AddMenu(props) {
                   )}
                 </Field>
               </Col>
-              <Row> <Col lg="7"> <h6 className="mt-4">Add dishes to the menu:</h6></Col></Row>
             </Row>
+            <Row> <Col lg="7"> <h6 className="mt-4">Add dishes to the menu:</h6></Col></Row>
             {props.dishes.map((dish, index, arr) => {
               return (
                 <Row key={dish.uuid}>
@@ -52,7 +52,7 @@ export function AddMenu(props) {
                 </Row>
               );
             })}
-            <Row>
+            <Row className="mt-4">
               <Col lg="5">
                 <div className="d-grid">
                   <Button
@@ -74,7 +74,7 @@ export function AddMenu(props) {
   return (
     <div className="container">
       <div>
-        <h3 className="mt-4">New Menu</h3>
+        <h3 className="mt-4 mb-4">New Menu</h3>
       </div>
       <RenderData />
     </div>

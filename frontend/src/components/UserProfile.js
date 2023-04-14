@@ -108,7 +108,7 @@ export const UserProfile = (props) => {
                                     </div>
                                 </Col>
                             </Row>
-                            <Row>
+                            <Row className="mt-4">
                                 <Col lg="7">
                                     <div className="d-grid">
                                         <Button

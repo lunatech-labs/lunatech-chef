@@ -98,7 +98,7 @@ export default function ListMenus(props) {
             <Row>
                 <h3 className="mt-4">Management of Menus</h3>
             </Row>
-            <Row>
+            <Row className="mb-5">
                 <Link to="/newMenu">
                     <button type="button" className="btn btn-success">
                         <i>
@@ -108,7 +108,6 @@ export default function ListMenus(props) {
                     </button>
                 </Link>
             </Row>
-            <Row></Row>
             <RenderData
                 isLoading={props.isLoading}
                 error={props.errorListing}

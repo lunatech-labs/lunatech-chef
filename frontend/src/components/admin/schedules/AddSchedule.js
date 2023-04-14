@@ -120,7 +120,7 @@ export default function AddSchedule(props) {
                                 </div>
                             </Col>
                         </Row>
-                        <Row>
+                        <Row className="mt-4">
                             <Col lg="5">
                                 <div className="d-grid">
                                     <Button
@@ -142,7 +142,7 @@ export default function AddSchedule(props) {
     return (
         <div className="container">
             <div>
-                <h3 className="mt-4">New Schedule</h3>
+                <h3 className="mt-4 mb-4">New Schedule</h3>
             </div>
             <RenderData />
         </div>

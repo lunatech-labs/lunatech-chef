@@ -182,7 +182,7 @@ export default function ListDishes(props) {
             <Row>
                 <h3 className="mt-4">Management of Dishes</h3>
             </Row>
-            <Row>
+            <Row className="mb-5">
                 <Link to="/newdish">
                     <button type="button" className="btn btn-success">
                         <i>
@@ -192,7 +192,6 @@ export default function ListDishes(props) {
                     </button>
                 </Link>
             </Row>
-            <Row></Row>
             <RenderData
                 isLoading={props.isLoading}
                 error={props.errorListing}

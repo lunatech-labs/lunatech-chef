@@ -55,6 +55,7 @@ export function EditMenu(props) {
                                 </Field>
                             </Col>
                         </Row>
+                        <Row> <Col lg="7"> <h6 className="mt-4 ">Edit dishes in the menu:</h6></Col></Row>
                         {props.dishes.map((dish, index, arr) => {
                             return (
                                 <Row key={dish.uuid}>
@@ -70,7 +71,7 @@ export function EditMenu(props) {
                                 </Row>
                             );
                         })}
-                        <Row>
+                        <Row className="mt-4">
                             <Col lg="5">
                                 <div className="d-grid">
                                     <Button
@@ -92,7 +93,7 @@ export function EditMenu(props) {
     return (
         <div className="container">
             <div>
-                <h3 className="mt-4">Editing Menu</h3>
+                <h3 className="mt-4 mb-4">Editing Menu</h3>
             </div>
             <RenderData />
             <ShowError error={props.error} />

@@ -113,17 +113,19 @@ export default function EditSchedule(props) {
                         ) : (
                             <Row></Row>
                         )}
-                        <Col lg="5">
-                            <div className="d-grid">
-                                <Button
-                                    type="submit"
-                                    variant="success"
-                                    disabled={submitting}
-                                >
-                                    Save Schedule
-                                </Button>
-                            </div>
-                        </Col>
+                        <Row className="mt-4">
+                            <Col lg="5">
+                                <div className="d-grid">
+                                    <Button
+                                        type="submit"
+                                        variant="success"
+                                        disabled={submitting}
+                                    >
+                                        Save Schedule
+                                    </Button>
+                                </div>
+                            </Col>
+                        </Row>
                     </form>
                 )}
             ></Form>
@@ -172,7 +174,7 @@ export default function EditSchedule(props) {
     return (
         <div className="container">
             <div>
-                <h3 className="mt-4">Editing Schedule</h3>
+                <h3 className="mt-4 mb-4">Editing Schedule</h3>
             </div>
             <RenderData
                 isRecurrent={"repetitionDays" in schedule ? true : false}

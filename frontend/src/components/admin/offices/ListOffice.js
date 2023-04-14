@@ -97,7 +97,7 @@ export default function ListOffice(props) {
             <Row>
                 <h3 className="mt-4">Management of Offices</h3>
             </Row>
-            <Row>
+            <Row className="mb-5">
                 <Link to="/newoffice">
                     <button type="button" className="btn btn-success">
                         <i>
@@ -107,7 +107,6 @@ export default function ListOffice(props) {
                     </button>
                 </Link>
             </Row>
-            <Row></Row>
             <RenderData
                 isLoading={props.isLoading}
                 error={props.errorListing}

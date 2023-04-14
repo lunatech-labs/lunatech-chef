@@ -57,7 +57,7 @@ export function AddDish(props) {
                 </Field>
               </Col>
             </Row>
-            <Row>
+            <Row className="mt-4">
               <Col lg="4">Choose all that apply:</Col>
             </Row>
             <Row>
@@ -100,7 +100,7 @@ export function AddDish(props) {
                 <Field name="hasLactose" component="input" type="checkbox" ></Field><span> Contains lactose</span>
               </Col>
             </Row>
-            <Row>
+            <Row className="mt-4">
               <Col lg="5">
                 <div className="d-grid">
                   <Button
@@ -122,7 +122,7 @@ export function AddDish(props) {
   return (
     <div className="container">
       <div>
-        <h3 className="mt-4">New Dish</h3>
+        <h3 className="mt-4 mb-4">New Dish</h3>
       </div>
       <RenderData />
     </div>

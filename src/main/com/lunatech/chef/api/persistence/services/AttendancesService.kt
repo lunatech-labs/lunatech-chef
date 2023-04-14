@@ -4,7 +4,6 @@ import com.lunatech.chef.api.domain.Attendance
 import com.lunatech.chef.api.persistence.schemas.Attendances
 import com.lunatech.chef.api.routes.UpdatedAttendance
 import org.ktorm.database.Database
-import org.ktorm.dsl.and
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.from
 import org.ktorm.dsl.insert
@@ -19,21 +18,8 @@ class AttendancesService(val database: Database, val usersService: UsersService)
         database.from(Attendances).select().where { Attendances.isDeleted eq false }
             .map { Attendances.createEntity(it) }
 
-    fun getAllAttending(): List<Attendance> =
-        database.from(Attendances).select().where { Attendances.isAttending }.map { Attendances.createEntity(it) }
-
     fun getByUuid(uuid: UUID): List<Attendance> =
         database.from(Attendances).select().where { Attendances.uuid eq uuid }.map { Attendances.createEntity(it) }
-
-    fun getByUser(userUuid: UUID): List<Attendance> =
-        database.from(Attendances).select()
-            .where { Attendances.userUuid eq userUuid and Attendances.isDeleted eq false }
-            .map { Attendances.createEntity(it) }
-
-    fun getByScheduleId(scheduleUuid: UUID): List<Attendance> =
-        database.from(Attendances).select()
-            .where { Attendances.scheduleUuid eq scheduleUuid and Attendances.isDeleted eq false }
-            .map { Attendances.createEntity(it) }
 
     fun insert(attendance: Attendance): Int =
         database.insert(Attendances) {

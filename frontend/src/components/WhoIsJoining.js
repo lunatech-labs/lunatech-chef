@@ -180,7 +180,7 @@ export default function WhoIsJoining(props) {
     return (
         <Container>
             <Row>
-                <h3 className="mt-4">Who is joining?</h3>
+                <h3 className="mt-4">Who's joining?</h3>
             </Row>
             <RenderData
                 isLoading={props.isLoading}

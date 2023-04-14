@@ -35,6 +35,7 @@ export function AddMenu(props) {
                   )}
                 </Field>
               </Col>
+              <Row> <Col lg="7"> <h6 className="mt-4">Add dishes to the menu:</h6></Col></Row>
             </Row>
             {props.dishes.map((dish, index, arr) => {
               return (

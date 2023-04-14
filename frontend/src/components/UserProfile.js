@@ -43,7 +43,7 @@ export const UserProfile = (props) => {
                                     <div className="select">
                                         <Field name="officeUuid" component="select">
                                             <option value="" />
-                                            {props.offices.map((office, index, arr) => {
+                                            {props.offices.map((office) => {
                                                 return (
                                                     <option value={office.uuid} key={office.uuid}>
                                                         {office.city}, {office.country}
@@ -108,7 +108,7 @@ export const UserProfile = (props) => {
                                     </div>
                                 </Col>
                             </Row>
-                            <Row>
+                            <Row className="mt-4">
                                 <Col lg="7">
                                     <div className="d-grid">
                                         <Button

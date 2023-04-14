@@ -37,7 +37,7 @@ export function AddDish(props) {
                 <Field validate={required} name="name">
                   {({ input, meta }) => (
                     <div>
-                      <input {...input} type="text" placeholder="Name" />
+                      <input {...input} type="text" placeholder="Name" maxLength={50} />
                       {meta.error && meta.touched && <span className="text-danger">  {meta.error}</span>}
                     </div>
                   )}
@@ -50,14 +50,14 @@ export function AddDish(props) {
                 <Field validate={required} name="description">
                   {({ input, meta }) => (
                     <div>
-                      <input {...input} type="text" placeholder="Description" />
+                      <input {...input} type="text" placeholder="Description" maxLength={50} />
                       {meta.error && meta.touched && <span className="text-danger">  {meta.error}</span>}
                     </div>
                   )}
                 </Field>
               </Col>
             </Row>
-            <Row>
+            <Row className="mt-4">
               <Col lg="4">Choose all that apply:</Col>
             </Row>
             <Row>
@@ -100,7 +100,7 @@ export function AddDish(props) {
                 <Field name="hasLactose" component="input" type="checkbox" ></Field><span> Contains lactose</span>
               </Col>
             </Row>
-            <Row>
+            <Row className="mt-4">
               <Col lg="5">
                 <div className="d-grid">
                   <Button
@@ -122,7 +122,7 @@ export function AddDish(props) {
   return (
     <div className="container">
       <div>
-        <h3 className="mt-4">New Dish</h3>
+        <h3 className="mt-4 mb-4">New Dish</h3>
       </div>
       <RenderData />
     </div>

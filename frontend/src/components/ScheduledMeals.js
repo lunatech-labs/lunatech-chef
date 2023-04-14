@@ -10,7 +10,7 @@ import { ToMonth } from "./shared/Functions";
 
 export const MealsAttendance = (props) => {
   const [attendance, setAttendance] = React.useState(props.attendance);
-  const savedOffice = localStorage.getItem("filterOfficeMealSchedule");
+  const savedOffice = localStorage.getItem("filterOfficeScheduledMeals");
 
   const onSubmit = (values) => {
     const newAttendance = attendance.map((item) => {
@@ -33,7 +33,7 @@ export const MealsAttendance = (props) => {
     const chosenOffice =
       values.office === undefined ? "" : values.office;
 
-    localStorage.setItem("filterOfficeMealSchedule", chosenOffice);
+    localStorage.setItem("filterOfficeScheduledMeals", chosenOffice);
     props.filter(values.office);
   };
 
@@ -50,7 +50,7 @@ export const MealsAttendance = (props) => {
       return (
         <div>
           <h4>
-            An error occurred when fetching meal schedules from server: {error}
+            An error occurred when fetching scheduled meals from server: {error}
           </h4>
         </div>
       );
@@ -58,45 +58,47 @@ export const MealsAttendance = (props) => {
       return (
         <div className="container">
           <Row>
-            <Form
-              onSubmit={handleFilter}
-              initialValues={{
-                office: savedOffice,
-              }}
-              render={({ handleSubmit, submitting }) => (
+            <div className="shadow-sm p-3 mb-5 bg-white rounded">
+              <Form
+                onSubmit={handleFilter}
+                initialValues={{
+                  office: savedOffice,
+                }}
+                render={({ handleSubmit, submitting }) => (
 
-                <form onSubmit={handleSubmit}>
-                  <Row>
-                    <Col lg="2">
-                      <label>Office:</label>
-                    </Col>
-                    <Col lg="3">
-                      <div className="select">
-                        <Field name="office" component="select" md="auto">
-                          <option value="" key="" />
-                          {offices.map((office) => {
-                            return (
-                              <option value={office.uuid} key={office.uuid}>
-                                {office.city}, {office.country}
-                              </option>
-                            );
-                          })}
-                        </Field>
-                      </div>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col lg="5">
-                      <div className="d-grid">
-                        <Button variant="info" type="submit" disabled={submitting}>
-                          Filter
-                        </Button>
-                      </div>
-                    </Col>
-                  </Row>
-                </form>
-              )}
-            ></Form>
+                  <form onSubmit={handleSubmit}>
+                    <Row>
+                      <Col lg="1">
+                        <label>Office:</label>
+                      </Col>
+                      <Col lg="3">
+                        <div className="select">
+                          <Field name="office" component="select" md="auto">
+                            <option value="" key="" />
+                            {offices.map((office) => {
+                              return (
+                                <option value={office.uuid} key={office.uuid}>
+                                  {office.city}, {office.country}
+                                </option>
+                              );
+                            })}
+                          </Field>
+                        </div>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col lg="4">
+                        <div className="d-grid">
+                          <Button variant="info" type="submit" disabled={submitting}>
+                            Filter
+                          </Button>
+                        </div>
+                      </Col>
+                    </Row>
+                  </form>
+                )}
+              ></Form>
+            </div>
           </Row>
           <Row>
             <Table striped bordered hover>

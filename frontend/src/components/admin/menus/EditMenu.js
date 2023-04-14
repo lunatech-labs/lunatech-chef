@@ -48,14 +48,15 @@ export function EditMenu(props) {
                                 <Field validate={required} name="name">
                                     {({ input, meta }) => (
                                         <div>
-                                            <input {...input} type="text" placeholder="Name" />
+                                            <input {...input} type="text" placeholder="Name" maxLength={50} />
                                             {meta.error && meta.touched && <span>{meta.error}</span>}
                                         </div>
                                     )}
                                 </Field>
                             </Col>
                         </Row>
-                        {props.dishes.map((dish, index, arr) => {
+                        <Row> <Col lg="7"> <h6 className="mt-4 ">Edit dishes in the menu:</h6></Col></Row>
+                        {props.dishes.map((dish) => {
                             return (
                                 <Row key={dish.uuid}>
                                     <Col lg="2">{dish.name}</Col>
@@ -70,7 +71,7 @@ export function EditMenu(props) {
                                 </Row>
                             );
                         })}
-                        <Row>
+                        <Row className="mt-4">
                             <Col lg="5">
                                 <div className="d-grid">
                                     <Button
@@ -92,7 +93,7 @@ export function EditMenu(props) {
     return (
         <div className="container">
             <div>
-                <h3 className="mt-4">Editing Menu</h3>
+                <h3 className="mt-4 mb-4">Editing Menu</h3>
             </div>
             <RenderData />
             <ShowError error={props.error} />

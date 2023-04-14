@@ -26,7 +26,7 @@ export function AddOffice(props) {
                                 <Field validate={required} name="city">
                                     {({ input, meta }) => (
                                         <div>
-                                            <input {...input} type="text" placeholder="City" />
+                                            <input {...input} type="text" placeholder="City" maxLength={50} />
                                             {meta.error && meta.touched &&
                                                 <span className="text-danger">  {meta.error}</span>}
                                         </div>
@@ -41,7 +41,7 @@ export function AddOffice(props) {
                                     <Field validate={required} name="country">
                                         {({ input, meta }) => (
                                             <div>
-                                                <input {...input} type="text" placeholder="Country" />
+                                                <input {...input} type="text" placeholder="Country" maxLength={50} />
                                                 {meta.error && meta.touched &&
                                                     <span className="text-danger">  {meta.error}</span>}
                                             </div>
@@ -50,7 +50,7 @@ export function AddOffice(props) {
                                 </div>
                             </Col>
                         </Row>
-                        <Row>
+                        <Row className="mt-4">
                             <Col lg="5">
                                 <div className="d-grid">
                                     <Button
@@ -72,7 +72,7 @@ export function AddOffice(props) {
     return (
         <div className="container">
             <div>
-                <h3 className="mt-4">New Office</h3>
+                <h3 className="mt-4 mb-4">New Office</h3>
             </div>
             <RenderData />
         </div>

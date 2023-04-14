@@ -56,7 +56,7 @@ export function EditDish(props) {
                                 <Field validate={required} name="name">
                                     {({ input, meta }) => (
                                         <div>
-                                            <input {...input} type="text" placeholder="Name" />
+                                            <input {...input} type="text" placeholder="Name" maxLength={50} />
                                             {meta.error && meta.touched &&
                                                 <span className="text-danger">  {meta.error}</span>}
                                         </div>
@@ -70,7 +70,7 @@ export function EditDish(props) {
                                 <Field validate={required} name="description">
                                     {({ input, meta }) => (
                                         <div>
-                                            <input {...input} type="text" placeholder="Description" />
+                                            <input {...input} type="text" placeholder="Description" maxLength={50} />
                                             {meta.error && meta.touched &&
                                                 <span className="text-danger">  {meta.error}</span>}
                                         </div>
@@ -78,7 +78,7 @@ export function EditDish(props) {
                                 </Field>
                             </Col>
                         </Row>
-                        <Row>
+                        <Row className="mt-4">
                             <Col lg="4">Choose all that apply:</Col>
                         </Row>
                         <Row>
@@ -145,7 +145,7 @@ export function EditDish(props) {
                             </Col>
                             <Col lg="2">Contains lactose</Col>
                         </Row>
-                        <Row>
+                        <Row className="mt-4">
                             <Col lg="5">
                                 <div className="d-grid">
                                     <Button
@@ -167,7 +167,7 @@ export function EditDish(props) {
     return (
         <div className="container">
             <div>
-                <h3 className="mt-4">Editing Dish</h3>
+                <h3 className="mt-4 mb-4">Editing Dish</h3>
             </div>
             <RenderData />
             <ShowError error={props.error} />

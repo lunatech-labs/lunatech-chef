@@ -14,14 +14,14 @@ const Sidebar = (props) => {
     return (
         <div className="sidebar">
             <CDBSidebar textColor="#000" backgroundColor="#f0f0f0">
-                <CDBSidebarHeader prefix={<i className="fa fa-bars fa-large"></i>}>Lunatech Chef</CDBSidebarHeader>
+                <CDBSidebarHeader prefix={<i className="fa fa-bars fa-large"></i>}>Lunatech's Chef</CDBSidebarHeader>
                 <CDBSidebarContent className="sidebar-content">
                     <CDBSidebarMenu>
                         <NavLink exact="true" to="/" activeclassname="activeClicked">
-                            <CDBSidebarMenuItem icon="hippo">Meals schedules</CDBSidebarMenuItem>
+                            <CDBSidebarMenuItem icon="hippo">Scheduled meals</CDBSidebarMenuItem>
                         </NavLink>
                         <NavLink exact="true" to="/whoisjoining" activeclassname="activeClicked">
-                            <CDBSidebarMenuItem icon="user-friends">Who is joining?</CDBSidebarMenuItem>
+                            <CDBSidebarMenuItem icon="user-friends">Who's joining?</CDBSidebarMenuItem>
                         </NavLink>
                         {props.isAdmin ? (
                             <div>
@@ -55,12 +55,7 @@ const Sidebar = (props) => {
                     </CDBSidebarMenu>
                 </CDBSidebarContent>
                 <CDBSidebarFooter>
-                    {process.env.NODE_ENV === "production" ? (
-                        <img src={process.env.PUBLIC_URL + 'root/lunatech-logo.png'} alt="Lunatech logo"
-                            width="270px" />)
-                        : (
-                            <img src={process.env.PUBLIC_URL + 'lunatech-logo.png'} alt="Lunatech logo" width="270px" />)
-                    }
+                    <img src={process.env.PUBLIC_URL + 'lunatech-logo.png'} alt="Lunatech logo" width="270px" />
                 </CDBSidebarFooter>
             </CDBSidebar>
         </div>

@@ -43,11 +43,11 @@ export function EditOffice(props) {
                 render={({ handleSubmit, submitting }) => (
                     <form onSubmit={handleSubmit}>
                         <Row>
-                            <Col lg="2">City</Col>
+                            <Col lg="1">City</Col>
                             <Col lg="5">
                                 <Field validate={required} name="city">
                                     {({ input, meta }) => (
-                                        <div>
+                                        <div className="d-grid">
                                             <input {...input} type="text" placeholder="City" maxLength={50} />
                                             {meta.error && meta.touched &&
                                                 <span className="text-danger">  {meta.error}</span>}
@@ -57,23 +57,21 @@ export function EditOffice(props) {
                             </Col>
                         </Row>
                         <Row>
-                            <Col lg="2">Country</Col>
+                            <Col lg="1">Country</Col>
                             <Col lg="5">
-                                <div className="d-grid">
-                                    <Field validate={required} name="country">
-                                        {({ input, meta }) => (
-                                            <div>
-                                                <input {...input} type="text" placeholder="Country" maxLength={50} />
-                                                {meta.error && meta.touched &&
-                                                    <span className="text-danger">  {meta.error}</span>}
-                                            </div>
-                                        )}
-                                    </Field>
-                                </div>
+                                <Field validate={required} name="country">
+                                    {({ input, meta }) => (
+                                        <div className="d-grid">
+                                            <input {...input} type="text" placeholder="Country" maxLength={50} />
+                                            {meta.error && meta.touched &&
+                                                <span className="text-danger">  {meta.error}</span>}
+                                        </div>
+                                    )}
+                                </Field>
                             </Col>
                         </Row>
                         <Row className="mt-4">
-                            <Col lg="5">
+                            <Col lg="6">
                                 <div className="d-grid">
                                     <Button
                                         type="submit"

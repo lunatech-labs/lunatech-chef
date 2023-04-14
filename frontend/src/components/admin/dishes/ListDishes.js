@@ -49,14 +49,14 @@ export default function ListDishes(props) {
                         <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Description</th>
+                                <th>Details</th>
                                 <th>Vegetarian</th>
                                 <th>Halal</th>
                                 <th>Nuts</th>
                                 <th>Seafood</th>
                                 <th>Pork</th>
                                 <th>Beef</th>
-                                <th>GlutenFree</th>
+                                <th>Gluten free</th>
                                 <th>Lactose</th>
                                 <th></th>
                                 <th></th>

@@ -32,12 +32,12 @@ export function AddDish(props) {
         render={({ handleSubmit, submitting, pristine }) => (
           <form onSubmit={handleSubmit}>
             <Row>
-              <Col lg="2">Name</Col>
-              <Col lg="4">
+              <Col lg="1">Name</Col>
+              <Col lg="5">
                 <Field validate={required} name="name">
                   {({ input, meta }) => (
-                    <div>
-                      <input {...input} type="text" placeholder="Name" maxLength={50} />
+                    <div className="d-grid">
+                      <input {...input} placeholder="Name" maxLength={50} />
                       {meta.error && meta.touched && <span className="text-danger">  {meta.error}</span>}
                     </div>
                   )}
@@ -45,12 +45,12 @@ export function AddDish(props) {
               </Col>
             </Row>
             <Row>
-              <Col lg="2">Description</Col>
-              <Col lg="4">
+              <Col lg="1">Details</Col>
+              <Col lg="5">
                 <Field validate={required} name="description">
                   {({ input, meta }) => (
-                    <div>
-                      <input {...input} type="text" placeholder="Description" maxLength={50} />
+                    <div className="d-grid">
+                      <textarea {...input} placeholder="Description" maxLength={50} size="2" />
                       {meta.error && meta.touched && <span className="text-danger">  {meta.error}</span>}
                     </div>
                   )}
@@ -101,7 +101,7 @@ export function AddDish(props) {
               </Col>
             </Row>
             <Row className="mt-4">
-              <Col lg="5">
+              <Col lg="6">
                 <div className="d-grid">
                   <Button
                     type="submit"

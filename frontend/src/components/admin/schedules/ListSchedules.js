@@ -125,7 +125,7 @@ export default function ListSchedules(props) {
                         </Col>
                         <Col lg="3">
                           <Field name="date" component="input">
-                            {({ input, meta }) => (
+                            {({ meta }) => (
                               <div className="datePicker">
                                 <DatePicker
                                   selected={startDateSchedule}
@@ -164,16 +164,6 @@ export default function ListSchedules(props) {
                 ></Form>
               </div>
             </Row>
-            {/* <Row>
-              <Link to={`/newSchedule`}>
-                <button type="button" className="btn btn-success">
-                  <i>
-                    <FontAwesomeIcon icon={faPlus} />
-                  </i>{" "}
-                  New Schedule
-                </button>
-              </Link>
-            </Row> */}
             <Row>
               <Table striped bordered hover>
                 <thead>

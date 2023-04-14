@@ -84,7 +84,7 @@ export default function AddSchedule(props) {
                             <Col lg="2">Choose date:</Col>
                             <Col lg="3">
                                 <Field name="date" component="input">
-                                    {({ meta }) => (
+                                    {() => (
                                         <div className="datePicker">
                                             <DatePicker
                                                 selected={date}
@@ -120,6 +120,7 @@ export default function AddSchedule(props) {
                                 </div>
                             </Col>
                         </Row>
+
                         <Row className="mt-4">
                             <Col lg="5">
                                 <div className="d-grid">

@@ -37,7 +37,7 @@ export default function EditSchedule(props) {
                                 <div className="select">
                                     <Field validate={required} name="menuUuid" component="select">
                                         <option value="" />
-                                        {props.menus.map((menu, index, arr) => {
+                                        {props.menus.map((menu) => {
                                             return (
                                                 <option value={menu.uuid} key={menu.uuid}>
                                                     {menu.name}
@@ -54,7 +54,7 @@ export default function EditSchedule(props) {
                                 <div className="select">
                                     <Field validate={required} name="officeUuid" component="select">
                                         <option value="" />
-                                        {props.offices.map((office, index, arr) => {
+                                        {props.offices.map((office) => {
                                             return (
                                                 <option value={office.uuid} key={office.uuid}>
                                                     {office.city}, {office.country}

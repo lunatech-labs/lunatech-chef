@@ -56,7 +56,7 @@ export function EditMenu(props) {
                             </Col>
                         </Row>
                         <Row> <Col lg="7"> <h6 className="mt-4 ">Edit dishes in the menu:</h6></Col></Row>
-                        {props.dishes.map((dish, index, arr) => {
+                        {props.dishes.map((dish) => {
                             return (
                                 <Row key={dish.uuid}>
                                     <Col lg="2">{dish.name}</Col>

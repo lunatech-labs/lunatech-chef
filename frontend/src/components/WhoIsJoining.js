@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import Container from 'react-bootstrap/Container';
@@ -32,11 +31,6 @@ export default function WhoIsJoining(props) {
         localStorage.setItem("filterOfficeWhoIsJoining", chosenOffice);
         props.filter(shortDate, values.office);
     };
-
-    const navigate = useNavigate();
-    const handleDetails = (attendants) => {
-        navigate("/whoisjoininglisting", { state: attendants });
-    }
 
     function RenderData({
         isLoading,
@@ -126,7 +120,7 @@ export default function WhoIsJoining(props) {
                     <Row></Row>
                     <Table striped bordered className="table-whoisjoining">
                         <thead>
-                            <tr key="head">
+                            <tr>
                                 <td width={240}>Menu</td>
                                 <td width={230}>Office</td>
                                 <td width={230}>Date</td>
@@ -137,7 +131,7 @@ export default function WhoIsJoining(props) {
                     <Accordion>
                         {attendances.map((attendance) => {
                             return (
-                                <Accordion.Item eventKey={attendance.uuid}>
+                                <Accordion.Item eventKey={attendance.uuid} key={attendance.uuid}>
                                     <Accordion.Header>
                                         <Col>{attendance.menuName}</Col>
                                         <Col>{attendance.office.city}, {attendance.office.country}</Col>

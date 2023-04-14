@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { GoogleLogin } from '@react-oauth/google';
 
 class Login extends Component {
-  constructor(props) {
+  constructor() {
     super();
 
     this.handleLogin = this.handleLogin.bind(this);

@@ -6,7 +6,7 @@ import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import { Loading } from "../../shared/Loading";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMinus, faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 export default function ListMenus(props) {
     function ShowError({ error, reason }) {
@@ -61,18 +61,14 @@ export default function ListMenus(props) {
                                                 variant="primary"
                                                 value={menu.uuid}
                                                 onClick={() => handleEdit(menu)}
-                                            >
-                                                <FontAwesomeIcon icon={faEdit} />
-                                            </Button>
+                                            >Edit</Button>
                                         </td>
                                         <td>
                                             <Button
                                                 variant="danger"
                                                 value={menu.uuid}
                                                 onClick={() => handleRemove(menu.uuid)}
-                                            >
-                                                <FontAwesomeIcon icon={faMinus} />
-                                            </Button>
+                                            >Delete</Button>
                                         </td>
                                     </tr>
                                 );

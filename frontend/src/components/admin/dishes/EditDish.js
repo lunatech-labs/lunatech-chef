@@ -51,12 +51,12 @@ export function EditDish(props) {
                 render={({ handleSubmit, submitting }) => (
                     <form onSubmit={handleSubmit}>
                         <Row>
-                            <Col lg="2">Name</Col>
-                            <Col lg="4">
+                            <Col lg="1">Name</Col>
+                            <Col lg="5">
                                 <Field validate={required} name="name">
                                     {({ input, meta }) => (
-                                        <div>
-                                            <input {...input} type="text" placeholder="Name" maxLength={50} />
+                                        <div className="d-grid">
+                                            <input {...input} placeholder="Name" maxLength={50} />
                                             {meta.error && meta.touched &&
                                                 <span className="text-danger">  {meta.error}</span>}
                                         </div>
@@ -65,12 +65,12 @@ export function EditDish(props) {
                             </Col>
                         </Row>
                         <Row>
-                            <Col lg="2">Description</Col>
-                            <Col lg="4">
+                            <Col lg="1">Details</Col>
+                            <Col lg="5">
                                 <Field validate={required} name="description">
                                     {({ input, meta }) => (
-                                        <div>
-                                            <input {...input} type="text" placeholder="Description" maxLength={50} />
+                                        <div className="d-grid">
+                                            <textarea {...input} placeholder="Description" maxLength={50} size="2" />
                                             {meta.error && meta.touched &&
                                                 <span className="text-danger">  {meta.error}</span>}
                                         </div>

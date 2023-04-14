@@ -29,7 +29,7 @@ export function AddMenu(props) {
                 <Field validate={required} name="name">
                   {({ input, meta }) => (
                     <div>
-                      <input {...input} type="text" placeholder="Name" />
+                      <input {...input} type="text" placeholder="Name" maxLength={50} />
                       {meta.error && meta.touched && <span>{meta.error}</span>}
                     </div>
                   )}

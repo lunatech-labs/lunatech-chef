@@ -48,7 +48,7 @@ export function EditOffice(props) {
                                 <Field validate={required} name="city">
                                     {({ input, meta }) => (
                                         <div>
-                                            <input {...input} type="text" placeholder="City" />
+                                            <input {...input} type="text" placeholder="City" maxLength={50} />
                                             {meta.error && meta.touched &&
                                                 <span className="text-danger">  {meta.error}</span>}
                                         </div>
@@ -63,7 +63,7 @@ export function EditOffice(props) {
                                     <Field validate={required} name="country">
                                         {({ input, meta }) => (
                                             <div>
-                                                <input {...input} type="text" placeholder="Country" />
+                                                <input {...input} type="text" placeholder="Country" maxLength={50} />
                                                 {meta.error && meta.touched &&
                                                     <span className="text-danger">  {meta.error}</span>}
                                             </div>

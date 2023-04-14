@@ -56,7 +56,7 @@ export function EditDish(props) {
                                 <Field validate={required} name="name">
                                     {({ input, meta }) => (
                                         <div>
-                                            <input {...input} type="text" placeholder="Name" />
+                                            <input {...input} type="text" placeholder="Name" maxLength={50} />
                                             {meta.error && meta.touched &&
                                                 <span className="text-danger">  {meta.error}</span>}
                                         </div>
@@ -70,7 +70,7 @@ export function EditDish(props) {
                                 <Field validate={required} name="description">
                                     {({ input, meta }) => (
                                         <div>
-                                            <input {...input} type="text" placeholder="Description" />
+                                            <input {...input} type="text" placeholder="Description" maxLength={50} />
                                             {meta.error && meta.touched &&
                                                 <span className="text-danger">  {meta.error}</span>}
                                         </div>

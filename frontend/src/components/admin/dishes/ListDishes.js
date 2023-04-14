@@ -7,10 +7,7 @@ import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faMinus,
-    faPlus,
-    faEdit,
-    faCheck,
+    faPlus, faCheck,
 } from "@fortawesome/free-solid-svg-icons";
 
 export default function ListDishes(props) {
@@ -145,18 +142,14 @@ export default function ListDishes(props) {
                                                 variant="primary"
                                                 value={dish.uuid}
                                                 onClick={() => handleEdit(dish)}
-                                            >
-                                                <FontAwesomeIcon icon={faEdit} />
-                                            </Button>
+                                            >Edit</Button>
                                         </td>
                                         <td>
                                             <Button
                                                 variant="danger"
                                                 value={dish.uuid}
                                                 onClick={() => handleRemove(dish.uuid)}
-                                            >
-                                                <FontAwesomeIcon icon={faMinus} />
-                                            </Button>
+                                            > Delete</Button>
                                         </td>
                                     </tr>
                                 );

@@ -6,7 +6,7 @@ import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import { Loading } from "../../shared/Loading";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMinus, faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 export default function ListOffice(props) {
     function ShowError({ error, reason }) {
@@ -59,18 +59,14 @@ export default function ListOffice(props) {
                                                 variant="primary"
                                                 value={loc.uuid}
                                                 onClick={() => handleEdit(loc)}
-                                            >
-                                                <FontAwesomeIcon icon={faEdit} />
-                                            </Button>
+                                            >Edit</Button>
                                         </td>
                                         <td>
                                             <Button
                                                 variant="danger"
                                                 value={loc.uuid}
                                                 onClick={() => handleRemove(loc.uuid)}
-                                            >
-                                                <FontAwesomeIcon icon={faMinus} />
-                                            </Button>
+                                            >Delete</Button>
                                         </td>
                                     </tr>
                                 );

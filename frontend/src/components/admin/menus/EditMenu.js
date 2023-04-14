@@ -43,11 +43,11 @@ export function EditMenu(props) {
                 render={({ handleSubmit, submitting }) => (
                     <form onSubmit={handleSubmit}>
                         <Row>
-                            <Col lg="2">Name</Col>
+                            <Col lg="1">Name</Col>
                             <Col lg="5">
                                 <Field validate={required} name="name">
                                     {({ input, meta }) => (
-                                        <div>
+                                        <div className="d-grid">
                                             <input {...input} type="text" placeholder="Name" maxLength={50} />
                                             {meta.error && meta.touched && <span>{meta.error}</span>}
                                         </div>
@@ -55,24 +55,23 @@ export function EditMenu(props) {
                                 </Field>
                             </Col>
                         </Row>
-                        <Row> <Col lg="7"> <h6 className="mt-4 ">Edit dishes in the menu:</h6></Col></Row>
+                        <Row> <Col lg="6"> <h6 className="mt-4 ">Edit dishes in the menu:</h6></Col></Row>
                         {props.dishes.map((dish) => {
                             return (
                                 <Row key={dish.uuid}>
-                                    <Col lg="2">{dish.name}</Col>
-                                    <Col lg="1">
+                                    <Col lg="6">
                                         <Field
                                             name="dishesUuids"
                                             component="input"
                                             type="checkbox"
                                             value={dish.uuid}
-                                        ></Field>
+                                        ></Field> {dish.name}
                                     </Col>
                                 </Row>
                             );
                         })}
                         <Row className="mt-4">
-                            <Col lg="5">
+                            <Col lg="6">
                                 <div className="d-grid">
                                     <Button
                                         type="submit"

@@ -19,7 +19,7 @@
     "elliptic": "6.5.4",
     "final-form": "^4.20.9",
     "hosted-git-info": "6.1.1",
-    "ini": "3.0.1",
+    "ini": "4.1.0",
     "install": "^0.13.0",
     "jquery": "3.6.3",
     "node-notifier": "10.0.1",

@@ -224,7 +224,7 @@ fun Application.module() {
         recurrentSchedules(recurrentSchedulesService)
         recurrentSchedulesWithMenusInfo(recurrentSchedulesMenuWithInfoService)
         attendancesWithScheduleInfo(attendancesWithInfoService)
-        users(usersService, jwtConfig)
+        users(usersService)
         attendances(attendancesService)
         attendancesForSlackbot(attendancesForSlackbotService)
         reports(reportService, excelService)

@@ -33,8 +33,6 @@ data class ScheduleWithMenuInfo(
     val menu: MenuWithDishes,
     val date: LocalDate,
     val office: Office,
-    val isDeleted: Boolean = false,
-    val localDate: String,
 )
 
 data class ScheduleWithAttendanceInfo(

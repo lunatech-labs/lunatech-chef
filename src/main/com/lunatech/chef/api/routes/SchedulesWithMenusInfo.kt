@@ -21,7 +21,7 @@ fun Routing.schedulesWithMenusInfo(schedulesWithInfoService: SchedulesWithMenuIn
     val officeParam = "office"
 
     route(menusRoute) {
-        authenticate("session-auth", "auth-jwt") {
+        authenticate("session-auth") {
             // rolesAllowed(Role.ADMIN) {
             // get all menus with the complete data about the dishes
             get {

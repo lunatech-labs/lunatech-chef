@@ -232,17 +232,6 @@ fun Application.module() {
         singlePageApplication {
             react("frontend/build")
         }
-
-        // TODO add cancel buttons to add/edit panels to improve navigation
-        // TODO calling PUT with an uuid that does exist throws error
-
-        // TODO FE user profile updates is not showing possible errors
-        // TODO proper error when calling endpoint that does not exist
-        // TODO HTTPS
-        // TODO fix RoleAuthorization
-        // TODO swagger and clean routes that are not needed
-        // TODO integration with people API ?
-        // TODO integration with vacation app ?
     }
 }
 

@@ -1,7 +1,6 @@
 package com.lunatech.chef.api
 
-import com.auth0.jwt.JWT
-import com.auth0.jwt.algorithms.Algorithm
+import com.auth0.jwk.UrlJwkProvider
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
@@ -58,9 +57,11 @@ import io.ktor.server.application.ApplicationStopped
 import io.ktor.server.application.call
 import io.ktor.server.application.install
 import io.ktor.server.auth.Authentication
-import io.ktor.server.auth.jwt.*
+import io.ktor.server.auth.jwt.JWTPrincipal
+import io.ktor.server.auth.jwt.jwt
 import io.ktor.server.auth.session
-import io.ktor.server.http.content.*
+import io.ktor.server.http.content.react
+import io.ktor.server.http.content.singlePageApplication
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.cors.routing.CORS
 import io.ktor.server.plugins.defaultheaders.DefaultHeaders
@@ -74,7 +75,9 @@ import io.ktor.server.sessions.header
 import mu.KotlinLogging
 import org.quartz.impl.StdSchedulerFactory
 import java.io.File
+import java.net.URL
 import java.util.Collections
+import java.util.Date
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 private val logger = KotlinLogging.logger {}
@@ -88,6 +91,7 @@ fun Application.module() {
     val dbConfig = FlywayConfig.fromConfig(config.getConfig("database"))
     val authConfig = AuthConfig.fromConfig(config.getConfig("auth"))
     val jwtConfig = JwtConfig.fromConfig(config.getConfig("jwt"))
+    val jwkProvider = UrlJwkProvider(URL(jwtConfig.jwkProvider))
     val cronString = config.getString("recurrent-schedules-cron")
 
     val chefSession = "CHEF_SESSION"
@@ -165,22 +169,20 @@ fun Application.module() {
                 validateSession(chefSession, authConfig.ttlLimit)
             }
             challenge {
-                call.respond(HttpStatusCode.Unauthorized)
+                call.respond(HttpStatusCode.Unauthorized, "Token is not valid or has expired")
             }
         }
 
         jwt("auth-jwt") {
-            verifier(
-                JWT
-                    .require(Algorithm.HMAC256(jwtConfig.secretKey))
-                    .withIssuer(jwtConfig.issuer)
-                    .build(),
-            )
+            verifier(jwkProvider, jwtConfig.issuer)
             challenge { defaultScheme, realm ->
                 call.respond(HttpStatusCode.Unauthorized, "Token is not valid or has expired")
             }
             validate { credential ->
-                if (credential.payload.getClaim("username").asString() != "") {
+                if (credential.expiresAt?.after(Date()) == true &&
+                    credential.payload.getClaim("azp")
+                        .asString() != ""
+                ) {
                     JWTPrincipal(credential.payload)
                 } else {
                     null
@@ -188,7 +190,7 @@ fun Application.module() {
             }
         }
     }
-
+//
 //    install(RoleAuthorization) {
 //        validate { allowedRoles ->
 //            // need ChefSession and allowedRoles

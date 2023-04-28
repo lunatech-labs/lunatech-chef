@@ -64,8 +64,6 @@ class SchedulesWithMenuInfoService(
                     menu!!,
                     schedule.date,
                     office!!,
-                    schedule.isDeleted,
-                    schedule.date.toString(),
                 )
             }
 
@@ -80,8 +78,6 @@ class SchedulesWithMenuInfoService(
             menu!!,
             schedule.date,
             office!!,
-            schedule.isDeleted,
-            schedule.date.toString(),
         )
     }
 }

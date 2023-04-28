@@ -20,7 +20,7 @@ fun Routing.attendancesForSlackbot(attendancesForSlackbotService: AttendancesFor
     val untilDateParam = "untildate"
 
     route(attendancesRoute) {
-        authenticate("session-auth", "auth-jwt") {
+        authenticate("auth-jwt", "session-auth") {
             get {
                 val maybeDateFrom = call.parameters[fromDateParam]
                 val maybeDateUntil = call.parameters[untilDateParam]

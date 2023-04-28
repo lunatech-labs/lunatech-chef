@@ -1,9 +1,6 @@
 package com.lunatech.chef.api.routes
 
 // import com.lunatech.chef.api.auth.rolesAllowed
-import com.auth0.jwt.JWT
-import com.auth0.jwt.algorithms.Algorithm
-import com.lunatech.chef.api.config.JwtConfig
 import com.lunatech.chef.api.domain.NewUser
 import com.lunatech.chef.api.domain.User
 import com.lunatech.chef.api.persistence.services.UsersService
@@ -13,7 +10,7 @@ import io.ktor.http.HttpStatusCode.Companion.InternalServerError
 import io.ktor.http.HttpStatusCode.Companion.NotFound
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.server.application.call
-import io.ktor.server.auth.*
+import io.ktor.server.auth.authenticate
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Routing
@@ -22,10 +19,8 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.put
 import io.ktor.server.routing.route
-import io.ktor.server.sessions.*
 import mu.KotlinLogging
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 private val logger = KotlinLogging.logger {}
 
@@ -42,16 +37,13 @@ data class UpdatedUser(
     val otherRestrictions: String = "",
 )
 
-fun Routing.users(usersService: UsersService, jwtConfig: JwtConfig) {
+fun Routing.users(usersService: UsersService) {
     val usersRoute = "/users"
-    val byEmailRoute = "/by-email/{email}"
-    val emailParam = "email"
     val uuidRoute = "/{uuid}"
     val uuidParam = "uuid"
-    val tokenGeneration = "/token-generation"
 
     route(usersRoute) {
-        authenticate("session-auth", "auth-jwt") {
+        authenticate("session-auth") {
             // rolesAllowed(Role.ADMIN) {
             // get all users
             get {
@@ -67,43 +59,6 @@ fun Routing.users(usersService: UsersService, jwtConfig: JwtConfig) {
                 } catch (exception: Exception) {
                     logger.error("Error creating a new User :( ", exception)
                     call.respond(BadRequest, exception.message ?: "")
-                }
-            }
-            // get single user by email
-            route(byEmailRoute) {
-                get {
-                    val email = call.parameters[emailParam]
-                    val user = usersService.getByEmail(email as String)
-                    if (user.isEmpty()) {
-                        call.respond(NotFound)
-                    } else {
-                        call.respond(OK, user.first())
-                    }
-                }
-            }
-
-            // generate token for api usage
-            route(tokenGeneration) {
-                get {
-                    val chefSession = call.sessions.get<ChefSession>()
-                    val email = chefSession?.emailAddress
-
-                    if (email != null) {
-                        val dbUser = usersService.getByEmail(email)
-                        if (dbUser.isEmpty()) {
-                            call.respond(NotFound)
-                        } else {
-                            val user = dbUser.first()
-                            val token = JWT.create()
-                                .withIssuer(jwtConfig.issuer)
-                                .withClaim("username", user.emailAddress)
-                                .withExpiresAt(Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(jwtConfig.ttlLimit.toLong())))
-                                .sign(Algorithm.HMAC256(jwtConfig.secretKey))
-                            call.respond(OK, hashMapOf("token" to token))
-                        }
-                    } else {
-                        call.respond(NotFound)
-                    }
                 }
             }
 

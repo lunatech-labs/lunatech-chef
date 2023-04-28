@@ -2,7 +2,8 @@ POST {{ host }}/users
 Content-Type: application/json
 CHEF_SESSION: {{ session }}
 
-{ "name": "Maria do Carmo",
+{
+  "name": "Maria do Carmo",
   "emailAddress": "maria.do.carmo@lunatech.nl",
   "officeUuid": "4f3a4488-241b-42f7-8c4e-de50fe4d1f57",
   "isVegetarian": "false",
@@ -19,11 +20,6 @@ CHEF_SESSION: {{ session }}
 ###
 
 GET {{ host }}/users
-CHEF_SESSION: {{ session }}
-
-###
-
-GET {{ host }}/users/token-generation
 CHEF_SESSION: {{ session }}
 
 ###

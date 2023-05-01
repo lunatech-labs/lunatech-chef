@@ -39,7 +39,7 @@ data class AttendanceWithInfo(
 )
 
 data class AttendanceForSlackbot(
-    val uuid: UUID,
+    val attendanceUuid: UUID,
     val emailAddress: String,
     val date: LocalDate,
     val office: String,

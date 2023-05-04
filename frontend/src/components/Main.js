@@ -49,7 +49,7 @@ import { AddOffice } from "./admin/offices/AddOffice";
 import { EditOffice } from "./admin/offices/EditOffice";
 import { AddMenu } from "./admin/menus/AddMenu";
 import { EditMenu } from "./admin/menus/EditMenu";
-import { MealsAttendance } from "./ScheduledMeals";
+import { ListMealsForUser } from "./ListMealsForUser";
 import { UserProfile } from "./UserProfile";
 import AddSchedule from "./admin/schedules/AddSchedule";
 import ErrorBoundary from "./shared/ErrorBoundary";
@@ -316,9 +316,9 @@ class Main extends Component {
             );
         };
 
-        const ShowAttendance = () => {
+        const ListAllSchedules = () => {
             return (
-                <MealsAttendance
+                <ListMealsForUser
                     isLoading={this.props.attendance.isLoading}
                     attendance={this.props.attendance.attendance}
                     editAttendance={this.props.editAttendance}
@@ -383,7 +383,7 @@ class Main extends Component {
                                 </Route>
                                 <Route path="/loginUser" element={<LoginUser />} />
                                 <Route path="/userProfile" element={<Profile />} />
-                                <Route path="/" element={<ShowAttendance />} />
+                                <Route path="/" element={<ListAllSchedules />} />
                                 <Route
                                     path="*"
                                     element={<Navigate to="/" replace />}

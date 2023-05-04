@@ -8,7 +8,7 @@ import { Loading } from "./shared/Loading";
 import { Form, Field } from "react-final-form";
 import { ToMonth } from "./shared/Functions";
 
-export const MealsAttendance = (props) => {
+export const ListMealsForUser = (props) => {
   const [attendance, setAttendance] = React.useState(props.attendance);
   const savedOffice = localStorage.getItem("filterOfficeScheduledMeals");
 
@@ -34,7 +34,7 @@ export const MealsAttendance = (props) => {
       values.office === undefined ? "" : values.office;
 
     localStorage.setItem("filterOfficeScheduledMeals", chosenOffice);
-    props.filter(values.office);
+    props.filter();
   };
 
   function RenderData({ isLoading, error, attendance, offices }) {

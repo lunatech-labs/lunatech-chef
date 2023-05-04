@@ -50,7 +50,7 @@ export function AddDish(props) {
                 <Field validate={required} name="description">
                   {({ input, meta }) => (
                     <div className="d-grid">
-                      <textarea {...input} placeholder="Description" maxLength={50} size="2" />
+                      <textarea {...input} placeholder="Description for admins" maxLength={50} size="2" />
                       {meta.error && meta.touched && <span className="text-danger">  {meta.error}</span>}
                     </div>
                   )}

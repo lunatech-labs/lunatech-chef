@@ -146,13 +146,10 @@ export const ListMealsForUser = (props) => {
                         {attendance.date[2]} {ToMonth(attendance.date[1])}{" "}
                         {attendance.date[0]}
                       </td>
-                      <td>
+                      <td>{attendance.menu.name}:
                         {attendance.menu.dishes.map((dish) => {
                           return (
-                            <p key={dish.uuid}>
-                              {dish.name}{" "}
-                              {dish.description ? "- " + dish.description : ""}{" "}
-                            </p>
+                            <p style={{ margin: 5, padding: 0 }} key={dish.uuid}>• {dish.name}</p>
                           );
                         })}
                       </td>

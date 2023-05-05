@@ -1,4 +1,4 @@
-import { allDishesShown, allDishesLoading, allDishesLoadingFailed, dishAddedFailed, dishAEditedFailed, dishDeletedFailed } from "./DishesSlice";
+import { allDishesLoading, allDishesShown, allDishesLoadingFailed, dishAddedFailed, dishEditedFailed, dishDeletedFailed } from "./DishesSlice";
 import { axiosInstance } from "../Axios";
 import { fetchMenus } from "../menus/MenusActionCreators";
 import { fetchAttendanceUser } from "../attendance/AttendanceActionCreators";
@@ -66,7 +66,7 @@ export const editDish = (editedDish) => (dispatch) => {
     })
     .catch(function (error) {
       console.log("Failed editing Dish: " + error);
-      dispatch(dishAEditedFailed(error.message));
+      dispatch(dishEditedFailed(error.message));
     });
 };
 

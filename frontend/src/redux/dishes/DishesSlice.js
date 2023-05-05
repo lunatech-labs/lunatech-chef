@@ -28,7 +28,7 @@ const dishesSlice = createSlice({
         dishAddedFailed(state, action) {
             state.errorAdding = action.payload;
         },
-        dishAEditedFailed(state, action) {
+        dishEditedFailed(state, action) {
             state.errorEditing = action.payload;
         },
         dishDeletedFailed(state, action) {
@@ -37,6 +37,6 @@ const dishesSlice = createSlice({
     }
 })
 
-export const { allDishesShown, allDishesLoading, allDishesLoadingFailed, dishAddedFailed, dishAEditedFailed, dishDeletedFailed } = dishesSlice.actions
+export const { allDishesLoading, allDishesShown, allDishesLoadingFailed, dishAddedFailed, dishEditedFailed, dishDeletedFailed } = dishesSlice.actions
 
 export default dishesSlice.reducer

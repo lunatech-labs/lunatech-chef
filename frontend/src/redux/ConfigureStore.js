@@ -3,7 +3,7 @@ import dishesReducer from "./dishes/DishesSlice";
 import menusReducer from "./menus/MenusSlice";
 import officesReducer from "./offices/OfficesSlice";
 import schedulesReducer from "./schedules/SchedulesSlice";
-import { UsersReducer } from "./users/UsersReducer";
+import usersReducer from "./users/UsersSlice";
 import attendanceReducer from "./attendance/AttendanceSlice";
 
 export const ConfigureStore = () => {
@@ -13,7 +13,7 @@ export const ConfigureStore = () => {
             dishes: dishesReducer,
             menus: menusReducer,
             schedules: schedulesReducer,
-            user: UsersReducer,
+            user: usersReducer,
             attendance: attendanceReducer,
         },
         middleware: getDefaultMiddleware =>

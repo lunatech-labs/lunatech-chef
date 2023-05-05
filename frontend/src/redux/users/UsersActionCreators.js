@@ -1,4 +1,4 @@
-import * as ActionTypes from "./UsersActionTypes";
+import { userLoggedIn, userLoggedInFailed, userLoggedOut, userUpdatedProfile, userUpdatedProfileFailed } from "./UsersSlice";
 import { axiosInstance } from "../Axios";
 import { fetchDishes } from "../dishes/DishesActionCreators";
 import { fetchOffices } from "../offices/OfficesActionCreators";
@@ -23,7 +23,7 @@ export const login = (token) => (dispatch) => {
         })
         .catch(function (error) {
             console.log("Failed logging in user " + error);
-            dispatch(userLoginError(error));
+            dispatch(userLoggedInFailed(error));
         });
 };
 
@@ -59,11 +59,11 @@ export const saveUserProfile = (userUuid, userProfile) => (dispatch) => {
     axiosInstance
         .put("/users/" + userUuid, userProfileToSave)
         .then((response) => {
-            dispatch(userDataUpdayed(userProfileToSave));
+            dispatch(userUpdatedProfile(userProfileToSave));
         })
         .catch(function (error) {
             console.log("Failed saving user profile: " + error);
-            dispatch(userProfileSaveError(error.message));
+            dispatch(userUpdatedProfileFailed(error.message));
         });
 };
 
@@ -80,27 +80,3 @@ const getInitialData = (dispatch) => {
 export const logout = () => (dispatch) => {
     dispatch(userLoggedOut());
 };
-
-export const userLoggedIn = (data) => ({
-    type: ActionTypes.USER_LOGIN,
-    payload: data,
-});
-
-export const userDataUpdayed = (data) => ({
-    type: ActionTypes.UPDATE_USER_PROFILE,
-    payload: data,
-});
-
-export const userLoginError = (errmess) => ({
-    type: ActionTypes.USER_LOGIN_ERROR,
-    payload: errmess,
-});
-
-export const userLoggedOut = () => ({
-    type: ActionTypes.USER_LOGOUT,
-});
-
-export const userProfileSaveError = (errmess) => ({
-    type: ActionTypes.USER_PROFILE_SAVE_ERROR,
-    payload: errmess,
-});

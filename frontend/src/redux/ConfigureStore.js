@@ -4,7 +4,7 @@ import menusReducer from "./menus/MenusSlice";
 import officesReducer from "./offices/OfficesSlice";
 import schedulesReducer from "./schedules/SchedulesSlice";
 import { UsersReducer } from "./users/UsersReducer";
-import { AttendanceReducer } from "./attendance/AttendanceReducer";
+import attendanceReducer from "./attendance/AttendanceSlice";
 
 export const ConfigureStore = () => {
     const store = configureStore({
@@ -14,7 +14,7 @@ export const ConfigureStore = () => {
             menus: menusReducer,
             schedules: schedulesReducer,
             user: UsersReducer,
-            attendance: AttendanceReducer,
+            attendance: attendanceReducer,
         },
         middleware: getDefaultMiddleware =>
             getDefaultMiddleware({

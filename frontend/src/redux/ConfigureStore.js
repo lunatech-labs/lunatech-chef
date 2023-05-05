@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import dishesReducer from "./dishes/DishesSlice";
 import menusReducer from "./menus/MenusSlice";
-import { OfficesReducer } from "./offices/OfficesReducer";
+import officesReducer from "./offices/OfficesSlice";
 import { SchedulesReducer } from "./schedules/SchedulesReducer";
 import { UsersReducer } from "./users/UsersReducer";
 import { AttendanceReducer } from "./attendance/AttendanceReducer";
@@ -9,7 +9,7 @@ import { AttendanceReducer } from "./attendance/AttendanceReducer";
 export const ConfigureStore = () => {
     const store = configureStore({
         reducer: {
-            offices: OfficesReducer,
+            offices: officesReducer,
             dishes: dishesReducer,
             menus: menusReducer,
             schedules: SchedulesReducer,

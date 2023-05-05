@@ -1,4 +1,4 @@
-import * as ActionTypes from "./OfficesActionTypes";
+import { allOfficesLoading, allOfficesShown, allOfficesLoadingFailed, officeAddedFailed, officeEditedFailed, officeDeletedFailed } from "./OfficesSlice";
 import { axiosInstance } from "../Axios";
 import {
     fetchSchedules,
@@ -7,16 +7,16 @@ import {
 import { fetchAttendanceUser } from "../attendance/AttendanceActionCreators";
 
 export const fetchOffices = () => (dispatch) => {
-    dispatch(officesLoading(true));
+    dispatch(allOfficesLoading(true));
 
     axiosInstance
         .get("/offices")
         .then(function (response) {
-            dispatch(showAllOffices(response));
+            dispatch(allOfficesShown(response));
         })
         .catch(function (error) {
             console.log("Failed loading Offices: " + error);
-            dispatch(officesLoadingFailed(error.message));
+            dispatch(allOfficesLoadingFailed(error.message));
         });
 };
 
@@ -33,7 +33,7 @@ export const addNewOffice = (newOffice) => (dispatch) => {
         })
         .catch(function (error) {
             console.log("Failed adding Office: " + error);
-            dispatch(officeAddingFailed(error.message));
+            dispatch(officeAddedFailed(error.message));
         });
 };
 
@@ -54,7 +54,7 @@ export const editOffice = (editedOffice) => (dispatch) => {
         })
         .catch(function (error) {
             console.log("Failed editing Office: " + error);
-            dispatch(officeEditingFailed(error.message));
+            dispatch(officeEditedFailed(error.message));
         });
 };
 
@@ -71,35 +71,6 @@ export const deleteOffice = (officeUuid) => (dispatch) => {
         })
         .catch(function (error) {
             console.log("Failed removing Office: " + error);
-            dispatch(officeDeletingFailed(error.message));
+            dispatch(officeDeletedFailed(error.message));
         });
 };
-
-export const officesLoading = () => ({
-    type: ActionTypes.OFFICES_LOADING,
-});
-
-export const showAllOffices = (offices) => ({
-    type: ActionTypes.SHOW_ALL_OFFICES,
-    payload: offices.data,
-});
-
-export const officesLoadingFailed = (errmess) => ({
-    type: ActionTypes.OFFICES_LOADING_FAILED,
-    payload: errmess,
-});
-
-export const officeAddingFailed = (errmess) => ({
-    type: ActionTypes.ADD_NEW_OFFICE_FAILED,
-    payload: errmess,
-});
-
-export const officeEditingFailed = (errmess) => ({
-    type: ActionTypes.EDIT_OFFICE_FAILED,
-    payload: errmess,
-});
-
-export const officeDeletingFailed = (errmess) => ({
-    type: ActionTypes.DELETE_OFFICE_FAILED,
-    payload: errmess,
-});

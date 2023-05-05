@@ -1,19 +1,19 @@
-import * as ActionTypes from "./DishesActionTypes";
+import { allDishesLoading, allDishesShown, allDishesLoadingFailed, dishAddedFailed, dishEditedFailed, dishDeletedFailed } from "./DishesSlice";
 import { axiosInstance } from "../Axios";
 import { fetchMenus } from "../menus/MenusActionCreators";
 import { fetchAttendanceUser } from "../attendance/AttendanceActionCreators";
 
 export const fetchDishes = () => (dispatch) => {
-  dispatch(dishesLoading(true));
+  dispatch(allDishesLoading());
 
   axiosInstance
     .get("/dishes")
     .then(function (response) {
-      dispatch(showAllDishes(response));
+      dispatch(allDishesShown(response));
     })
     .catch(function (error) {
       console.log("Failed loading dishes: " + error);
-      dispatch(dishesLoadingFailed(error.message));
+      dispatch(allDishesLoadingFailed(error.message));
     });
 };
 
@@ -38,7 +38,7 @@ export const addNewDish = (newDish) => (dispatch) => {
     })
     .catch(function (error) {
       console.log("Failed adding dish: " + error);
-      dispatch(dishAddingFailed(error.message));
+      dispatch(dishAddedFailed(error.message));
     });
 };
 
@@ -66,7 +66,7 @@ export const editDish = (editedDish) => (dispatch) => {
     })
     .catch(function (error) {
       console.log("Failed editing Dish: " + error);
-      dispatch(dishEditingFailed(error.message));
+      dispatch(dishEditedFailed(error.message));
     });
 };
 
@@ -81,35 +81,6 @@ export const deleteDish = (dishUuid) => (dispatch) => {
     })
     .catch(function (error) {
       console.log("Failed removing dish: " + error);
-      dispatch(dishDeletingFailed(error.message));
+      dispatch(dishDeletedFailed(error.message));
     });
 };
-
-export const dishesLoading = () => ({
-  type: ActionTypes.DISHES_LOADING,
-});
-
-export const showAllDishes = (dishes) => ({
-  type: ActionTypes.SHOW_ALL_DISHES,
-  payload: dishes.data,
-});
-
-export const dishesLoadingFailed = (errmess) => ({
-  type: ActionTypes.DISHES_LOADING_FAILED,
-  payload: errmess,
-});
-
-export const dishAddingFailed = (errmess) => ({
-  type: ActionTypes.ADD_NEW_DISH_FAILED,
-  payload: errmess,
-});
-
-export const dishEditingFailed = (errmess) => ({
-  type: ActionTypes.EDIT_DISH_FAILED,
-  payload: errmess,
-});
-
-export const dishDeletingFailed = (errmess) => ({
-  type: ActionTypes.DELETE_DISH_FAILED,
-  payload: errmess,
-});

@@ -1,9 +1,9 @@
-import * as ActionTypes from "./SchedulesActionTypes";
+import { allSchedulesLoading, allSchedulesLoadingFailed, allSchedulesShown, scheduleAddedFailed, scheduleEditedFailed, scheduleDeletedFailed, allRecurrentSchedulesShown, allSchedulesAttendanceLoading, allSchedulesAttendanceLoadingFailed, allSchedulesAttendanceShown } from "./SchedulesSlice";
 import { axiosInstance } from "../Axios";
 import { fetchAttendanceUser } from "../attendance/AttendanceActionCreators";
 
 export const fetchSchedules = () => (dispatch) => {
-    dispatch(schedulesLoading(true));
+    dispatch(allSchedulesLoading(true));
 
     const savedDate = localStorage.getItem("filterDateSchedule");
     const date =
@@ -19,16 +19,16 @@ export const fetchSchedules = () => (dispatch) => {
     axiosInstance
         .get("/schedulesWithMenusInfo" + filter)
         .then(function (response) {
-            dispatch(showAllSchedules(response));
+            dispatch(allSchedulesShown(response));
         })
         .catch(function (error) {
             console.log("Failed loading Schedules: " + error);
-            dispatch(schedulesLoadingFailed(error.message));
+            dispatch(allSchedulesLoadingFailed(error.message));
         });
 };
 
 export const fetchRecurrentSchedules = () => (dispatch) => {
-    dispatch(schedulesLoading(true));
+    dispatch(allSchedulesLoading(true));
 
     const office = localStorage.getItem("filterOfficeSchedule");
 
@@ -38,16 +38,16 @@ export const fetchRecurrentSchedules = () => (dispatch) => {
     axiosInstance
         .get("/recurrentSchedulesWithMenusInfo" + filter)
         .then(function (response) {
-            dispatch(showAllRecurrentSchedules(response));
+            dispatch(allRecurrentSchedulesShown(response));
         })
         .catch(function (error) {
             console.log("Failed loading Recurrent Schedules: " + error);
-            dispatch(schedulesLoadingFailed(error.message));
+            dispatch(allSchedulesLoadingFailed(error.message));
         });
 };
 
 export const fetchSchedulesAttendance = () => (dispatch) => {
-    dispatch(schedulesAttendanceLoading(true));
+    dispatch(allSchedulesAttendanceLoading(true));
 
     const savedDate = localStorage.getItem("filterDateWhoIsJoining");
     const date =
@@ -63,11 +63,11 @@ export const fetchSchedulesAttendance = () => (dispatch) => {
     axiosInstance
         .get("/schedulesWithAttendanceInfo" + filter)
         .then(function (response) {
-            dispatch(showAllSchedulesAttendance(response));
+            dispatch(allSchedulesAttendanceShown(response));
         })
         .catch(function (error) {
             console.log("Failed loading Schedules: " + error);
-            dispatch(schedulesLoadingAttendanceFailed(error.message));
+            dispatch(allSchedulesAttendanceLoadingFailed(error.message));
         });
 };
 
@@ -93,7 +93,7 @@ export const addNewSchedule = (newSchedule) => (dispatch) => {
         })
         .catch(function (error) {
             console.log("Failed adding Schedule: " + error);
-            dispatch(scheduleAddingFailed(error.message));
+            dispatch(scheduleAddedFailed(error.message));
         });
 };
 
@@ -112,7 +112,7 @@ export const addNewRecurrentSchedule = (newRecurrentSchedule) => (dispatch) => {
         })
         .catch(function (error) {
             console.log("Failed adding Recurrent Schedule: " + error);
-            dispatch(scheduleAddingFailed(error.message));
+            dispatch(scheduleAddedFailed(error.message));
         });
 };
 
@@ -147,7 +147,7 @@ export const editSingleSchedule = (editedSchedule) => (dispatch) => {
         })
         .catch(function (error) {
             console.log("Failed editing Schedule: " + error);
-            dispatch(scheduleEditingFailed(error.message));
+            dispatch(scheduleEditedFailed(error.message));
         });
 };
 
@@ -170,7 +170,7 @@ export const editRecurrentSchedule = (editedSchedule) => (dispatch) => {
         })
         .catch(function (error) {
             console.log("Failed editing Recurrent Schedule: " + error);
-            dispatch(scheduleAddingFailed(error.message));
+            dispatch(scheduleEditedFailed(error.message));
         });
 };
 
@@ -185,7 +185,7 @@ export const deleteSchedule = (scheduleUuid) => (dispatch) => {
         })
         .catch(function (error) {
             console.log("Failed removing Schedule: " + error);
-            dispatch(scheduleDeletingFailed(error.message));
+            dispatch(scheduleDeletedFailed(error.message));
         });
 };
 
@@ -197,54 +197,6 @@ export const deleteRecurrentSchedule = (recScheduleUuid) => (dispatch) => {
         })
         .catch(function (error) {
             console.log("Failed removing Schedule: " + error);
-            dispatch(scheduleDeletingFailed(error.message));
+            dispatch(scheduleDeletedFailed(error.message));
         });
 };
-
-export const schedulesLoading = () => ({
-    type: ActionTypes.SCHEDULES_LOADING,
-});
-
-export const schedulesAttendanceLoading = () => ({
-    type: ActionTypes.SCHEDULES_ATTENDANCE_LOADING,
-});
-
-export const showAllSchedules = (schedules) => ({
-    type: ActionTypes.SHOW_ALL_SCHEDULES,
-    payload: schedules.data,
-});
-
-export const showAllRecurrentSchedules = (schedules) => ({
-    type: ActionTypes.SHOW_ALL_RECURRENT_SCHEDULES,
-    payload: schedules.data,
-});
-
-export const showAllSchedulesAttendance = (schedulesAttendance) => ({
-    type: ActionTypes.SHOW_ALL_SCHEDULES_ATTENDANCE,
-    payload: schedulesAttendance.data,
-});
-
-export const schedulesLoadingFailed = (errmess) => ({
-    type: ActionTypes.SCHEDULES_LOADING_FAILED,
-    payload: errmess,
-});
-
-export const schedulesLoadingAttendanceFailed = (errmess) => ({
-    type: ActionTypes.SCHEDULES_ATTENDANCE_LOADING_FAILED,
-    payload: errmess,
-});
-
-export const scheduleAddingFailed = (errmess) => ({
-    type: ActionTypes.ADD_NEW_SCHEDULE_FAILED,
-    payload: errmess,
-});
-
-export const scheduleEditingFailed = (errmess) => ({
-    type: ActionTypes.EDIT_SCHEDULE_FAILED,
-    payload: errmess,
-});
-
-export const scheduleDeletingFailed = (errmess) => ({
-    type: ActionTypes.DELETE_SCHEDULE_FAILED,
-    payload: errmess,
-});

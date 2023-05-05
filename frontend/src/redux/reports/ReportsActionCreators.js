@@ -1,6 +1,6 @@
 import { axiosInstance } from "../Axios";
 
-export const getReport = (parameters) => (dispatch) => {
+export const getReport = (parameters) => () => {
 
     function base64ToArrayBuffer(base64) {
         const binaryString = window.atob(base64);

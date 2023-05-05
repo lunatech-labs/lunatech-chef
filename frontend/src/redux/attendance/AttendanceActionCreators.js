@@ -1,9 +1,9 @@
-import * as ActionTypes from "./AttendanceActionTypes";
+import { allAttendancesLoading, allAttendancesLoadingFailed, allAttendancesShown, newAttendanceShown, attendanceEditedFailed } from "./AttendanceSlice";
 import { axiosInstance } from "../Axios";
 import { fetchSchedulesAttendance } from "../schedules/SchedulesActionCreators";
 
 export const fetchAttendanceUser = () => (dispatch) => {
-    dispatch(attendanceLoading(true));
+    dispatch(allAttendancesLoading(true));
 
     const userUuid = localStorage.getItem("userUuid");
     const office = localStorage.getItem("filterOfficeScheduledMeals");
@@ -17,11 +17,11 @@ export const fetchAttendanceUser = () => (dispatch) => {
     axiosInstance
         .get("/attendancesWithScheduleInfo/" + userUuid + filter)
         .then(function (response) {
-            dispatch(showAllAttendance(response));
+            dispatch(allAttendancesShown(response));
         })
         .catch(function (error) {
             console.log("Failed loading Attendance: " + error);
-            dispatch(attendanceLoadingFailed(error.message));
+            dispatch(allAttendancesLoadingFailed(error.message));
         });
 };
 
@@ -37,30 +37,11 @@ export const editAttendance = (attendance) => (dispatch) => {
         })
         .catch(function (error) {
             console.log("Failed adding Schedule attendance: " + error);
-            dispatch(attendanceEditingFailed(error.message));
+            dispatch(attendanceEditedFailed(error.message));
         });
 };
 
-export const attendanceLoading = () => ({
-    type: ActionTypes.ATTENDANCE_LOADING,
-});
+export const showNewAttendance = (attendance) => (dispatch) => {
+    dispatch(newAttendanceShown(attendance));
+};
 
-export const showAllAttendance = (attendance) => ({
-    type: ActionTypes.SHOW_ALL_ATTENDANCE,
-    payload: attendance.data,
-});
-
-export const showNewAttendance = (attendance) => ({
-    type: ActionTypes.SHOW_NEW_ATTENDANCE,
-    payload: attendance,
-});
-
-export const attendanceLoadingFailed = (errmess) => ({
-    type: ActionTypes.ATTENDANCE_LOADING_FAILED,
-    payload: errmess,
-});
-
-export const attendanceEditingFailed = (errmess) => ({
-    type: ActionTypes.EDIT_ATTENDANCE_FAILED,
-    payload: errmess,
-});

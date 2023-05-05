@@ -1,22 +1,19 @@
-import React, { Component } from "react";
+import React from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 import Container from 'react-bootstrap/Container';
 import Sidebar from "./shared/Sidebar";
-import { connect } from "react-redux";
+import { useSelector, useDispatch } from 'react-redux'
 import {
-    fetchDishes,
     addNewDish,
     editDish,
     deleteDish,
 } from "../redux/dishes/DishesActionCreators";
 import {
-    fetchOffices,
     addNewOffice,
     editOffice,
     deleteOffice,
 } from "../redux/offices/OfficesActionCreators";
 import {
-    fetchMenus,
     addNewMenu,
     editMenu,
     deleteMenu,
@@ -63,345 +60,331 @@ import Login from "./auth/Login";
 import WhoIsJoining from "./WhoIsJoining";
 import ProtectedRoutes from "./auth/ProtectedRoutes";
 
-const mapStateToProps = (state) => {
-    return {
-        user: state.user,
-        offices: state.offices,
-        dishes: state.dishes,
-        menus: state.menus,
-        schedules: state.schedules,
-        attendance: state.attendance,
-    };
-};
+function Main() {
 
-const mapDispatchToProps = (dispatch) => ({
+    const userState = useSelector(state => state.user)
+    const officesState = useSelector(state => state.offices)
+    const dishesState = useSelector(state => state.dishes)
+    const menusState = useSelector(state => state.menus)
+    const schedulesState = useSelector(state => state.schedules)
+    const attendanceState = useSelector(state => state.attendance)
+
+    // Create callback functions that dispatch as needed, with arguments
+    const dispatch = useDispatch()
     //
     // Offices
-    fetchOffices: () => {
-        dispatch(fetchOffices());
-    },
-    addNewOffice: (newOffice) => {
-        dispatch(addNewOffice(newOffice));
-    },
-    editOffice: (editedOffice) => {
-        dispatch(editOffice(editedOffice));
-    },
-    deleteOffice: (officeUuid) => {
-        dispatch(deleteOffice(officeUuid));
-    },
+    const handleAddNewOffice = (newOffice) => {
+        dispatch(addNewOffice(newOffice))
+    }
+    const handleEditOffice = (editedOffice) => {
+        dispatch(editOffice(editedOffice))
+    }
+    const handleDeleteOffice = (officeUuid) => {
+        dispatch(deleteOffice(officeUuid))
+    }
     //
     // Dishes
-    fetchDishes: () => {
-        dispatch(fetchDishes());
-    },
-    addNewDish: (newDish) => {
-        dispatch(addNewDish(newDish));
-    },
-    editDish: (editedDish) => {
-        dispatch(editDish(editedDish));
-    },
-    deleteDish: (dishUuid) => {
-        dispatch(deleteDish(dishUuid));
-    },
+    const handleAddNewDish = (newDish) => {
+        dispatch(addNewDish(newDish))
+    }
+    const handleEditDish = (editedDish) => {
+        dispatch(editDish(editedDish))
+    }
+    const handleDeleteDish = (dishUuid) => {
+        dispatch(deleteDish(dishUuid))
+    }
     //
     // Menus
-    fetchMenus: () => {
-        dispatch(fetchMenus());
-    },
-    addNewMenu: (newMenu) => {
-        dispatch(addNewMenu(newMenu));
-    },
-    editMenu: (editedMenu) => {
-        dispatch(editMenu(editedMenu));
-    },
-    deleteMenu: (menuUuid) => {
-        dispatch(deleteMenu(menuUuid));
-    },
+    const handleAddNewMenu = (newMenu) => {
+        dispatch(addNewMenu(newMenu))
+    }
+    const handleEditMenu = (editedMenu) => {
+        dispatch(editMenu(editedMenu))
+    }
+    const handleDeleteMenu = (menuUuid) => {
+        dispatch(deleteMenu(menuUuid))
+    }
     //
     // Schedules
-    fetchSchedules: () => {
-        dispatch(fetchSchedules());
-    },
-    addNewSchedule: (newSchedule) => {
-        dispatch(addNewSchedule(newSchedule));
-    },
-    editSchedule: (editedSchedule) => {
-        dispatch(editSchedule(editedSchedule));
-    },
-    deleteSchedule: (scheduleUuid) => {
-        dispatch(deleteSchedule(scheduleUuid));
-    },
+    const handleFetchSchedules = () => {
+        dispatch(fetchSchedules())
+    }
+    const handleAddNewSchedule = (newSchedule) => {
+        dispatch(addNewSchedule(newSchedule))
+    }
+    const handleEditSchedule = (editedSchedule) => {
+        dispatch(editSchedule(editedSchedule))
+    }
+    const handleDeleteSchedule = (scheduleUuid) => {
+        dispatch(deleteSchedule(scheduleUuid))
+    }
     //
     // Recurrent Schedules
-    fetchRecurrentSchedules: () => {
-        dispatch(fetchRecurrentSchedules());
-    },
-    deleteRecurrentSchedule: (scheduleUuid) => {
-        dispatch(deleteRecurrentSchedule(scheduleUuid));
-    },
+    const handleFetchRecurrentSchedules = () => {
+        dispatch(fetchRecurrentSchedules())
+    }
+    const handleDeleteRecurrentSchedule = (scheduleUuid) => {
+        dispatch(deleteRecurrentSchedule(scheduleUuid))
+    }
     //
     // Attendance
-    fetchAttendanceUser: () => {
-        dispatch(fetchAttendanceUser());
-    },
-    fetchSchedulesAttendance: () => {
-        dispatch(fetchSchedulesAttendance());
-    },
-    editAttendance: (attendance) => {
-        dispatch(editAttendance(attendance));
-    },
-    showNewAttendance: (attendance) => {
-        dispatch(showNewAttendance(attendance));
-    },
+    const handleFetchAttendanceUser = () => {
+        dispatch(fetchAttendanceUser())
+    }
+    const handleFetchSchedulesAttendance = () => {
+        dispatch(fetchSchedulesAttendance())
+    }
+    const handleEditAttendance = (attendance) => {
+        dispatch(editAttendance(attendance))
+    }
+    const handleShowNewAttendance = (attendance) => {
+        dispatch(showNewAttendance(attendance))
+    }
     //
     // Reports
-    getReport: (parameters) => {
-        dispatch(getReport(parameters));
-    },
+    const handleGetReport = (parameters) => {
+        dispatch(getReport(parameters))
+    }
     //
     // Users
-    login: (token) => {
-        dispatch(login(token));
-    },
-    logout: () => {
-        dispatch(logout());
-    },
-    saveUserProfile: (uuid, profile) => {
-        dispatch(saveUserProfile(uuid, profile));
-    },
-});
-
-class Main extends Component {
-    render() {
-        const WhoIsJoiningSchedule = () => {
-            return (
-                <WhoIsJoining
-                    isLoading={this.props.schedules.isLoadingAttendance}
-                    attendance={this.props.schedules.attendance}
-                    offices={this.props.offices.offices}
-                    errorListing={this.props.schedules.errorListingAttendance}
-                    filter={this.props.fetchSchedulesAttendance}
-                />
-            );
-        };
-
-        const AllDishes = () => {
-            return (
-                <ListDishes
-                    isLoading={this.props.dishes.isLoading}
-                    dishes={this.props.dishes.dishes}
-                    editDish={this.props.editDish}
-                    deleteDish={this.props.deleteDish}
-                    errorListing={this.props.dishes.errorListing}
-                    errorAdding={this.props.dishes.errorAdding}
-                    errorEditing={this.props.dishes.errorEditing}
-                    errorDeleting={this.props.dishes.errorDeleting}
-                />
-            );
-        };
-
-        const AddNewDish = () => {
-            return <AddDish addNewDish={this.props.addNewDish} />;
-        };
-
-        const EditExistingDish = () => {
-            return (
-                <EditDish
-                    editDish={this.props.editDish}
-                    error={this.props.dishes.errorEditing}
-                />
-            );
-        };
-
-        const AllOffices = () => {
-            return (
-                <ListOffice
-                    isLoading={this.props.offices.isLoading}
-                    offices={this.props.offices.offices}
-                    editOffice={this.props.editOffice}
-                    deleteOffice={this.props.deleteOffice}
-                    errorListing={this.props.offices.errorListing}
-                    errorAdding={this.props.offices.errorAdding}
-                    errorEditing={this.props.offices.errorEditing}
-                    errorDeleting={this.props.offices.errorDeleting}
-                />
-            );
-        };
-
-        const AddNewOffice = () => {
-            return <AddOffice addNewOffice={this.props.addNewOffice} />;
-        };
-
-        const EditExistingOffice = () => {
-            return (
-                <EditOffice
-                    editOffice={this.props.editOffice}
-                    error={this.props.offices.errorEditing}
-                />
-            );
-        };
-
-        const AllMenus = () => {
-            return (
-                <ListMenus
-                    isLoading={this.props.menus.isLoading}
-                    menus={this.props.menus.menus}
-                    deleteMenu={this.props.deleteMenu}
-                    errorListing={this.props.menus.errorListing}
-                    errorAdding={this.props.menus.errorAdding}
-                    errorEditing={this.props.menus.errorEditing}
-                    errorDeleting={this.props.menus.errorDeleting}
-                />
-            );
-        };
-
-        const AddNewMenu = () => {
-            return (
-                <AddMenu
-                    addNewMenu={this.props.addNewMenu}
-                    dishes={this.props.dishes.dishes}
-                    error={this.props.menus.errorAdding}
-                />
-            );
-        };
-
-        const EditExistingMenu = () => {
-            return (
-                <EditMenu
-                    editMenu={this.props.editMenu}
-                    dishes={this.props.dishes.dishes}
-                    error={this.props.menus.errorEditing}
-                />
-            );
-        };
-
-        const AllSchedules = () => {
-            return (
-                <ListSchedules
-                    isLoading={this.props.schedules.isLoading}
-                    schedules={this.props.schedules.schedules}
-                    recurrentSchedules={this.props.schedules.recurrentSchedules}
-                    offices={this.props.offices.offices}
-                    deleteSchedule={this.props.deleteSchedule}
-                    deleteRecurrentSchedule={this.props.deleteRecurrentSchedule}
-                    errorListing={this.props.schedules.errorListing}
-                    errorAdding={this.props.schedules.errorAdding}
-                    errorEditing={this.props.schedules.errorEditing}
-                    errorDeleting={this.props.schedules.errorDeleting}
-                    filterSchedules={this.props.fetchSchedules}
-                    filterRecurrentSchedules={this.props.fetchRecurrentSchedules}
-                />
-            );
-        };
-
-        const AddNewSchedule = () => {
-            return (
-                <AddSchedule
-                    addNewSchedule={this.props.addNewSchedule}
-                    menus={this.props.menus.menus}
-                    offices={this.props.offices.offices}
-                    error={this.props.schedules.errorAdding}
-                />
-            );
-        };
-
-        const EditExistingSchedule = () => {
-            return (
-                <EditSchedule
-                    editSchedule={this.props.editSchedule}
-                    menus={this.props.menus.menus}
-                    offices={this.props.offices.offices}
-                    error={this.props.menus.errorEditing}
-                />
-            );
-        };
-
-        const ListAllSchedules = () => {
-            return (
-                <ListMealsForUser
-                    isLoading={this.props.attendance.isLoading}
-                    attendance={this.props.attendance.attendance}
-                    editAttendance={this.props.editAttendance}
-                    showNewAttendance={this.props.showNewAttendance}
-                    errorListing={this.props.attendance.errorListing}
-                    offices={this.props.offices.offices}
-                    filter={this.props.fetchAttendanceUser}
-                />
-            );
-        };
-
-        const Reports = () => {
-            return (<MonthlyReports
-                getReport={this.props.getReport} />);
-        };
-
-
-        const LoginUser = () => {
-            return <Login login={this.props.login} />;
-        };
-
-        const Profile = () => {
-            return (
-                <UserProfile
-                    user={this.props.user}
-                    offices={this.props.offices.offices}
-                    saveUserProfile={this.props.saveUserProfile}
-                />
-            );
-        };
-
-        return (
-            <ErrorBoundary>
-                {this.props.user.isAuthenticated ? (
-                    <Container>
-                        <div className="d-flex" id="wrapper">
-                            <Sidebar logout={this.props.logout} isAdmin={this.props.user.isAdmin} />
-                            <Routes>
-                                {/* do not use the same routes as the ones available in the BE server */}
-                                <Route
-                                    path="/whoisjoining"
-                                    element={<WhoIsJoiningSchedule />}
-                                />
-                                <Route element={<ProtectedRoutes isAdmin={this.props.user.isAdmin} />}>
-                                    <Route path="/alloffices" element={<AllOffices />} />
-                                    <Route path="/newoffice" element={<AddNewOffice />} />
-                                    <Route path="/editoffice" element={<EditExistingOffice />} />
-
-                                    <Route path="/alldishes" element={<AllDishes />} />
-                                    <Route path="/newdish" element={<AddNewDish />} />
-                                    <Route path="/editdish" element={<EditExistingDish />} />
-
-                                    <Route path="/allmenus" element={<AllMenus />} />
-                                    <Route path="/newmenu" element={<AddNewMenu />} />
-                                    <Route path="/editmenu" element={<EditExistingMenu />} />
-
-                                    <Route path="/allschedules" element={<AllSchedules />} />
-                                    <Route path="/newschedule" element={<AddNewSchedule />} />
-                                    <Route path="/editschedule" element={<EditExistingSchedule />} />
-                                    <Route path="/monthlyreports" element={<Reports />} />
-
-                                </Route>
-                                <Route path="/loginUser" element={<LoginUser />} />
-                                <Route path="/userProfile" element={<Profile />} />
-                                <Route path="/" element={<ListAllSchedules />} />
-                                <Route
-                                    path="*"
-                                    element={<Navigate to="/" replace />}
-                                />
-                            </Routes>
-                        </div>
-                    </Container>
-                ) : (
-                    <Container>
-                        <div className="d-flex" id="wrapper">
-                            <LoginUser />
-                        </div>
-                    </Container>
-                )
-                }
-            </ErrorBoundary>
-        );
+    const handleLogin = (token) => {
+        dispatch(login(token))
     }
+    const handleLogout = () => {
+        dispatch(logout())
+    }
+    const handleSaveUserProfile = (uuid, profile) => {
+        dispatch(saveUserProfile(uuid, profile))
+    }
+
+
+    const WhoIsJoiningSchedule = () => {
+        return (
+            <WhoIsJoining
+                isLoading={schedulesState.isLoadingAttendance}
+                attendance={schedulesState.attendance}
+                offices={officesState.offices}
+                errorListing={schedulesState.errorListingAttendance}
+                filter={handleFetchSchedulesAttendance}
+            />
+        );
+    };
+
+    const AllDishes = () => {
+        return (
+            <ListDishes
+                isLoading={dishesState.isLoading}
+                dishes={dishesState.dishes}
+                editDish={handleEditDish}
+                deleteDish={handleDeleteDish}
+                errorListing={dishesState.errorListing}
+                errorAdding={dishesState.errorAdding}
+                errorEditing={dishesState.errorEditing}
+                errorDeleting={dishesState.errorDeleting}
+            />
+        );
+    };
+
+    const AddNewDish = () => {
+        return <AddDish addNewDish={handleAddNewDish} />;
+    };
+
+    const EditExistingDish = () => {
+        return (
+            <EditDish
+                editDish={handleEditDish}
+                error={dishesState.errorEditing}
+            />
+        );
+    };
+
+    const AllOffices = () => {
+        return (
+            <ListOffice
+                isLoading={officesState.isLoading}
+                offices={officesState.offices}
+                editOffice={handleEditOffice}
+                deleteOffice={handleDeleteOffice}
+                errorListing={officesState.errorListing}
+                errorAdding={officesState.errorAdding}
+                errorEditing={officesState.errorEditing}
+                errorDeleting={officesState.errorDeleting}
+            />
+        );
+    };
+
+    const AddNewOffice = () => {
+        return <AddOffice addNewOffice={handleAddNewOffice} />;
+    };
+
+    const EditExistingOffice = () => {
+        return (
+            <EditOffice
+                editOffice={handleEditOffice}
+                error={officesState.errorEditing}
+            />
+        );
+    };
+
+    const AllMenus = () => {
+        return (
+            <ListMenus
+                isLoading={menusState.isLoading}
+                menus={menusState.menus}
+                deleteMenu={handleDeleteMenu}
+                errorListing={menusState.errorListing}
+                errorAdding={menusState.errorAdding}
+                errorEditing={menusState.errorEditing}
+                errorDeleting={menusState.errorDeleting}
+            />
+        );
+    };
+
+    const AddNewMenu = () => {
+        return (
+            <AddMenu
+                addNewMenu={handleAddNewMenu}
+                dishes={dishesState.dishes}
+                error={menusState.errorAdding}
+            />
+        );
+    };
+
+    const EditExistingMenu = () => {
+        return (
+            <EditMenu
+                editMenu={handleEditMenu}
+                dishes={dishesState.dishes}
+                error={menusState.errorEditing}
+            />
+        );
+    };
+
+    const AllSchedules = () => {
+        return (
+            <ListSchedules
+                isLoading={schedulesState.isLoading}
+                schedules={schedulesState.schedules}
+                recurrentSchedules={schedulesState.recurrentSchedules}
+                offices={officesState.offices}
+                deleteSchedule={handleDeleteSchedule}
+                deleteRecurrentSchedule={handleDeleteRecurrentSchedule}
+                errorListing={schedulesState.errorListing}
+                errorAdding={schedulesState.errorAdding}
+                errorEditing={schedulesState.errorEditing}
+                errorDeleting={schedulesState.errorDeleting}
+                filterSchedules={handleFetchSchedules}
+                filterRecurrentSchedules={handleFetchRecurrentSchedules}
+            />
+        );
+    };
+
+    const AddNewSchedule = () => {
+        return (
+            <AddSchedule
+                addNewSchedule={handleAddNewSchedule}
+                menus={menusState.menus}
+                offices={officesState.offices}
+                error={schedulesState.errorAdding}
+            />
+        );
+    };
+
+    const EditExistingSchedule = () => {
+        return (
+            <EditSchedule
+                editSchedule={handleEditSchedule}
+                menus={menusState.menus}
+                offices={officesState.offices}
+                error={menusState.errorEditing}
+            />
+        );
+    };
+
+    const ListAllSchedules = () => {
+        return (
+            <ListMealsForUser
+                isLoading={attendanceState.isLoading}
+                attendance={attendanceState.attendance}
+                editAttendance={handleEditAttendance}
+                showNewAttendance={handleShowNewAttendance}
+                errorListing={attendanceState.errorListing}
+                offices={officesState.offices}
+                filter={handleFetchAttendanceUser}
+            />
+        );
+    };
+
+    const Reports = () => {
+        return (<MonthlyReports getReport={handleGetReport} />);
+    };
+
+
+    const LoginUser = () => {
+        return <Login login={handleLogin} />;
+    };
+
+    const Profile = () => {
+        return (
+            <UserProfile
+                user={userState}
+                offices={officesState.offices}
+                saveUserProfile={handleSaveUserProfile}
+            />
+        );
+    };
+
+    return (
+        <ErrorBoundary>
+            {userState.isAuthenticated ? (
+                <Container>
+                    <div className="d-flex" id="wrapper">
+                        <Sidebar logout={handleLogout} isAdmin={userState.isAdmin} />
+                        <Routes>
+                            {/* do not use the same routes as the ones available in the BE server */}
+                            <Route
+                                path="/whoisjoining"
+                                element={<WhoIsJoiningSchedule />}
+                            />
+                            <Route element={<ProtectedRoutes isAdmin={userState.isAdmin} />}>
+                                <Route path="/alloffices" element={<AllOffices />} />
+                                <Route path="/newoffice" element={<AddNewOffice />} />
+                                <Route path="/editoffice" element={<EditExistingOffice />} />
+
+                                <Route path="/alldishes" element={<AllDishes />} />
+                                <Route path="/newdish" element={<AddNewDish />} />
+                                <Route path="/editdish" element={<EditExistingDish />} />
+
+                                <Route path="/allmenus" element={<AllMenus />} />
+                                <Route path="/newmenu" element={<AddNewMenu />} />
+                                <Route path="/editmenu" element={<EditExistingMenu />} />
+
+                                <Route path="/allschedules" element={<AllSchedules />} />
+                                <Route path="/newschedule" element={<AddNewSchedule />} />
+                                <Route path="/editschedule" element={<EditExistingSchedule />} />
+                                <Route path="/monthlyreports" element={<Reports />} />
+
+                            </Route>
+                            <Route path="/loginUser" element={<LoginUser />} />
+                            <Route path="/userProfile" element={<Profile />} />
+                            <Route path="/" element={<ListAllSchedules />} />
+                            <Route
+                                path="*"
+                                element={<Navigate to="/" replace />}
+                            />
+                        </Routes>
+                    </div>
+                </Container>
+            ) : (
+                <Container>
+                    <div className="d-flex" id="wrapper">
+                        <LoginUser />
+                    </div>
+                </Container>
+            )
+            }
+        </ErrorBoundary>
+    );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Main);
+export default Main;

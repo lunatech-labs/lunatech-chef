@@ -1,4 +1,4 @@
-import * as ActionTypes from "./MenusActionTypes";
+import { allMenusLoading, allMenusShown, allMenusLoadingFailed, menuAddedFailed, menuEditedFailed, menuDeletedFailed } from "./MenusSlice";
 import { axiosInstance } from "../Axios";
 import {
   fetchSchedules,
@@ -7,16 +7,16 @@ import {
 import { fetchAttendanceUser } from "../attendance/AttendanceActionCreators";
 
 export const fetchMenus = () => (dispatch) => {
-  dispatch(menusLoading(true));
+  dispatch(allMenusLoading(true));
 
   axiosInstance
     .get("/menusWithDishesInfo")
     .then(function (response) {
-      dispatch(showAllMenus(response));
+      dispatch(allMenusShown(response));
     })
     .catch(function (error) {
       console.log("Failed loading Menus: " + error);
-      dispatch(menusLoadingFailed(error.message));
+      dispatch(allMenusLoadingFailed(error.message));
     });
 };
 
@@ -33,7 +33,7 @@ export const addNewMenu = (newMenu) => (dispatch) => {
     })
     .catch(function (error) {
       console.log("Failed adding Menu: " + error);
-      dispatch(menuAddingFailed(error.message));
+      dispatch(menuAddedFailed(error.message));
     });
 };
 
@@ -54,7 +54,7 @@ export const editMenu = (editedMenu) => (dispatch) => {
     })
     .catch(function (error) {
       console.log("Failed editing Menu: " + error);
-      dispatch(menuEditingFailed(error.message));
+      dispatch(menuEditedFailed(error.message));
     });
 };
 
@@ -70,35 +70,6 @@ export const deleteMenu = (menuUuid) => (dispatch) => {
     })
     .catch(function (error) {
       console.log("Failed removing Menu: " + error);
-      dispatch(menuDeletingFailed(error.message));
+      dispatch(menuDeletedFailed(error.message));
     });
 };
-
-export const menusLoading = () => ({
-  type: ActionTypes.MENUS_LOADING,
-});
-
-export const showAllMenus = (menus) => ({
-  type: ActionTypes.SHOW_ALL_MENUS,
-  payload: menus.data,
-});
-
-export const menusLoadingFailed = (errmess) => ({
-  type: ActionTypes.MENUS_LOADING_FAILED,
-  payload: errmess,
-});
-
-export const menuAddingFailed = (errmess) => ({
-  type: ActionTypes.ADD_NEW_MENU_FAILED,
-  payload: errmess,
-});
-
-export const menuEditingFailed = (errmess) => ({
-  type: ActionTypes.EDIT_MENU_FAILED,
-  payload: errmess,
-});
-
-export const menuDeletingFailed = (errmess) => ({
-  type: ActionTypes.DELETE_MENU_FAILED,
-  payload: errmess,
-});

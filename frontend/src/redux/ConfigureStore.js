@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { DishesReducer } from "./dishes/DishesReducer";
+import dishesReducer from "./dishes/DishesSlice";
 import { OfficesReducer } from "./offices/OfficesReducer";
 import { MenusReducer } from "./menus/MenusReducer";
 import { SchedulesReducer } from "./schedules/SchedulesReducer";
@@ -10,12 +10,16 @@ export const ConfigureStore = () => {
     const store = configureStore({
         reducer: {
             offices: OfficesReducer,
-            dishes: DishesReducer,
+            dishes: dishesReducer,
             menus: MenusReducer,
             schedules: SchedulesReducer,
             user: UsersReducer,
             attendance: AttendanceReducer,
-        }
+        },
+        middleware: getDefaultMiddleware =>
+            getDefaultMiddleware({
+                serializableCheck: false,
+            }),
     });
     return store;
 };

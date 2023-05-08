@@ -2,7 +2,8 @@ POST {{ host }}/dishes
 Content-Type: application/json
 CHEF_SESSION: {{ session }}
 
-{ "name": "Lasagna",
+{
+  "name": "Lasagna",
   "description": "Lasagna de ragu e espinafres",
   "isVegetarian": "false",
   "isHalal": "true",
@@ -11,7 +12,7 @@ CHEF_SESSION: {{ session }}
   "hasPork": "true",
   "hasBeef": "false",
   "isGlutenFree": "false",
-  "hasLactose": "false"
+  "isLactoseFree": "false"
 }
 
 ###
@@ -40,7 +41,7 @@ CHEF_SESSION: {{ session }}
   "hasPork": "false",
   "hasBeef": "true",
   "isGlutenFree": "false",
-  "hasLactose": "false"
+  "isLactoseFree": "false"
 }
 
 ###

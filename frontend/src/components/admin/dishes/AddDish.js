@@ -27,7 +27,7 @@ export function AddDish(props) {
           hasPork: false,
           hasBeef: false,
           isGlutenFree: false,
-          hasLactose: false,
+          isLactoseFree: false,
         }}
         render={({ handleSubmit, submitting, pristine }) => (
           <form onSubmit={handleSubmit}>
@@ -47,10 +47,10 @@ export function AddDish(props) {
             <Row>
               <Col lg="1">Details</Col>
               <Col lg="5">
-                <Field validate={required} name="description">
+                <Field name="description">
                   {({ input, meta }) => (
                     <div className="d-grid">
-                      <textarea {...input} placeholder="Description for admins" maxLength={50} size="2" />
+                      <textarea {...input} placeholder="Description just for admins" maxLength={50} size="2" />
                       {meta.error && meta.touched && <span className="text-danger">  {meta.error}</span>}
                     </div>
                   )}
@@ -97,7 +97,7 @@ export function AddDish(props) {
             </Row>
             <Row>
               <Col lg="4">
-                <Field name="hasLactose" component="input" type="checkbox" ></Field><span> Contains lactose</span>
+                <Field name="isLactoseFree" component="input" type="checkbox" ></Field><span> Is Lactose free</span>
               </Col>
             </Row>
             <Row className="mt-4">

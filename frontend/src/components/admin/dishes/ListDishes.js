@@ -54,7 +54,7 @@ export default function ListDishes(props) {
                                 <th>Pork</th>
                                 <th>Beef</th>
                                 <th>Gluten free</th>
-                                <th>Lactose</th>
+                                <th>Lactose free</th>
                                 <th></th>
                                 <th></th>
                             </tr>
@@ -129,7 +129,7 @@ export default function ListDishes(props) {
                                             )}
                                         </td>
                                         <td>
-                                            {dish.hasLactose ? (
+                                            {dish.isLactoseFree ? (
                                                 <span>
                                                     <FontAwesomeIcon icon={faCheck} />
                                                 </span>

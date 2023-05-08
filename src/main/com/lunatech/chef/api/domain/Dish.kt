@@ -12,7 +12,7 @@ data class NewDish(
     val hasPork: Boolean = false,
     val hasBeef: Boolean = false,
     val isGlutenFree: Boolean = false,
-    val hasLactose: Boolean = false,
+    val isLactoseFree: Boolean = false,
 )
 
 data class Dish(
@@ -26,7 +26,7 @@ data class Dish(
     val hasPork: Boolean = false,
     val hasBeef: Boolean = false,
     val isGlutenFree: Boolean = false,
-    val hasLactose: Boolean = false,
+    val isLactoseFree: Boolean = false,
     val isDeleted: Boolean = false,
 ) {
     companion object {
@@ -42,7 +42,7 @@ data class Dish(
                 hasPork = newDish.hasPork,
                 hasBeef = newDish.hasBeef,
                 isGlutenFree = newDish.isGlutenFree,
-                hasLactose = newDish.hasLactose,
+                isLactoseFree = newDish.isLactoseFree,
             )
         }
     }

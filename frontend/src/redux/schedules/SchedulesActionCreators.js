@@ -19,7 +19,7 @@ export const fetchSchedules = () => (dispatch) => {
     axiosInstance
         .get("/schedulesWithMenusInfo" + filter)
         .then(function (response) {
-            dispatch(allSchedulesShown(response));
+            dispatch(allSchedulesShown(response.data));
         })
         .catch(function (error) {
             console.log("Failed loading Schedules: " + error);
@@ -38,7 +38,7 @@ export const fetchRecurrentSchedules = () => (dispatch) => {
     axiosInstance
         .get("/recurrentSchedulesWithMenusInfo" + filter)
         .then(function (response) {
-            dispatch(allRecurrentSchedulesShown(response));
+            dispatch(allRecurrentSchedulesShown(response.data));
         })
         .catch(function (error) {
             console.log("Failed loading Recurrent Schedules: " + error);

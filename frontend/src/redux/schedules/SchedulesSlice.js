@@ -28,7 +28,7 @@ const schedulesSlice = createSlice({
         },
         allSchedulesShown(state, action) {
             state.isLoading = false;
-            state.schedules = action.payload.data
+            state.schedules = action.payload
         },
         scheduleAddedFailed(state, action) {
             state.errorAdding = action.payload;
@@ -43,7 +43,7 @@ const schedulesSlice = createSlice({
         // recurrent schedules
         allRecurrentSchedulesShown(state, action) {
             state.isLoading = false;
-            state.recurrentSchedules = action.payload.data
+            state.recurrentSchedules = action.payload
         },
 
         // schedules attendance

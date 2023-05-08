@@ -19,7 +19,7 @@ const dishesSlice = createSlice({
         },
         allDishesShown(state, action) {
             state.isLoading = false;
-            state.dishes = action.payload.data
+            state.dishes = action.payload
         },
         allDishesLoadingFailed(state, action) {
             state.isLoading = false;

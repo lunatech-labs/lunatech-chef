@@ -21,7 +21,7 @@ const attendancesSlice = createSlice({
         },
         allAttendancesShown(state, action) {
             state.isLoading = false;
-            state.attendance = action.payload.data
+            state.attendance = action.payload
         },
         newAttendanceShown(state, action) {
             state.isLoading = false;

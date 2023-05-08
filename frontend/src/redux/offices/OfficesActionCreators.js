@@ -12,7 +12,7 @@ export const fetchOffices = () => (dispatch) => {
     axiosInstance
         .get("/offices")
         .then(function (response) {
-            dispatch(allOfficesShown(response));
+            dispatch(allOfficesShown(response.data));
         })
         .catch(function (error) {
             console.log("Failed loading Offices: " + error);

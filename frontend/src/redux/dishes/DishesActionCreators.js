@@ -9,7 +9,7 @@ export const fetchDishes = () => (dispatch) => {
   axiosInstance
     .get("/dishes")
     .then(function (response) {
-      dispatch(allDishesShown(response));
+      dispatch(allDishesShown(response.data));
     })
     .catch(function (error) {
       console.log("Failed loading dishes: " + error);

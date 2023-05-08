@@ -28,7 +28,7 @@ export const addNewDish = (newDish) => (dispatch) => {
     hasPork: newDish.hasPork,
     hasBeef: newDish.hasBeef,
     isGlutenFree: newDish.isGlutenFree,
-    hasLactose: newDish.hasLactose,
+    isLactoseFree: newDish.isLactoseFree,
   };
 
   axiosInstance
@@ -53,7 +53,7 @@ export const editDish = (editedDish) => (dispatch) => {
     hasPork: editedDish.hasPork,
     hasBeef: editedDish.hasBeef,
     isGlutenFree: editedDish.isGlutenFree,
-    hasLactose: editedDish.hasLactose,
+    isLactoseFree: editedDish.isLactoseFree,
   };
 
   const userUuid = localStorage.getItem("userUuid");

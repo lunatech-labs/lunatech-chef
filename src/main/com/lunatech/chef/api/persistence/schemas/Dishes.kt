@@ -18,7 +18,7 @@ object Dishes : BaseTable<Dish>("dishes") {
     val hasPork = boolean("has_pork")
     val hasBeef = boolean("has_beef")
     val isGlutenFree = boolean("is_gluten_free")
-    val hasLactose = boolean("has_lactose")
+    val isLactoseFree = boolean("is_lactose_free")
     val isDeleted = boolean("is_deleted")
 
     override fun doCreateEntity(row: QueryRowSet, withReferences: Boolean) = Dish(
@@ -32,7 +32,7 @@ object Dishes : BaseTable<Dish>("dishes") {
         hasPork = row[hasPork] ?: DEFAULT_FALSE,
         hasBeef = row[hasBeef] ?: DEFAULT_FALSE,
         isGlutenFree = row[isGlutenFree] ?: DEFAULT_FALSE,
-        hasLactose = row[hasLactose] ?: DEFAULT_FALSE,
+        isLactoseFree = row[isLactoseFree] ?: DEFAULT_FALSE,
         isDeleted = row[isDeleted] ?: DEFAULT_FALSE,
     )
 }

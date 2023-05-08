@@ -34,7 +34,7 @@ data class UpdatedDish(
     val hasPork: Boolean = false,
     val hasBeef: Boolean = false,
     val isGlutenFree: Boolean = false,
-    val hasLactose: Boolean = false,
+    val isLactoseFree: Boolean = false,
 )
 
 fun Routing.dishes(dishesService: DishesService) {

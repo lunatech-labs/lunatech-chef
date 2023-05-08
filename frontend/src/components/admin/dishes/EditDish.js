@@ -46,7 +46,7 @@ export function EditDish(props) {
                     hasPork: dish.hasPork,
                     hasBeef: dish.hasBeef,
                     isGlutenFree: dish.isGlutenFree,
-                    hasLactose: dish.hasLactose,
+                    isLactoseFree: dish.isLactoseFree,
                 }}
                 render={({ handleSubmit, submitting }) => (
                     <form onSubmit={handleSubmit}>
@@ -67,10 +67,10 @@ export function EditDish(props) {
                         <Row>
                             <Col lg="1">Details</Col>
                             <Col lg="5">
-                                <Field validate={required} name="description">
+                                <Field name="description">
                                     {({ input, meta }) => (
                                         <div className="d-grid">
-                                            <textarea {...input} placeholder="Description" maxLength={50} size="2" />
+                                            <textarea {...input} placeholder="Description just for admins" maxLength={50} size="2" />
                                             {meta.error && meta.touched &&
                                                 <span className="text-danger">  {meta.error}</span>}
                                         </div>
@@ -138,12 +138,12 @@ export function EditDish(props) {
                         <Row>
                             <Col lg="1">
                                 <Field
-                                    name="hasLactose"
+                                    name="isLactoseFree"
                                     component="input"
                                     type="checkbox"
                                 ></Field>
                             </Col>
-                            <Col lg="2">Contains lactose</Col>
+                            <Col lg="2">Is lactose free</Col>
                         </Row>
                         <Row className="mt-4">
                             <Col lg="5">

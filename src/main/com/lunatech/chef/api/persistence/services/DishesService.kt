@@ -33,7 +33,7 @@ class DishesService(val database: Database) {
             set(it.hasPork, dish.hasPork)
             set(it.hasBeef, dish.hasBeef)
             set(it.isGlutenFree, dish.isGlutenFree)
-            set(it.hasLactose, dish.hasLactose)
+            set(it.isLactoseFree, dish.isLactoseFree)
             set(it.isDeleted, dish.isDeleted)
         }
 
@@ -48,7 +48,7 @@ class DishesService(val database: Database) {
             set(it.hasPork, dish.hasPork)
             set(it.hasBeef, dish.hasBeef)
             set(it.isGlutenFree, dish.isGlutenFree)
-            set(it.hasLactose, dish.hasLactose)
+            set(it.isLactoseFree, dish.isLactoseFree)
             where {
                 it.uuid eq uuid
             }

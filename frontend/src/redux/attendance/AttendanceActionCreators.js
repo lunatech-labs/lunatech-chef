@@ -17,7 +17,7 @@ export const fetchAttendanceUser = () => (dispatch) => {
     axiosInstance
         .get("/attendancesWithScheduleInfo/" + userUuid + filter)
         .then(function (response) {
-            dispatch(allAttendancesShown(response));
+            dispatch(allAttendancesShown(response.data));
         })
         .catch(function (error) {
             console.log("Failed loading Attendance: " + error);

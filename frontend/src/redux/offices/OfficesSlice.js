@@ -19,7 +19,7 @@ const officesSlice = createSlice({
         },
         allOfficesShown(state, action) {
             state.isLoading = false;
-            state.offices = action.payload.data
+            state.offices = action.payload
         },
         allOfficesLoadingFailed(state, action) {
             state.isLoading = false;

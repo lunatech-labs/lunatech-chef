@@ -19,7 +19,7 @@ const menusSlice = createSlice({
         },
         allMenusShown(state, action) {
             state.isLoading = false;
-            state.menus = action.payload.data
+            state.menus = action.payload
         },
         allMenusLoadingFailed(state, action) {
             state.isLoading = false;

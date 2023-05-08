@@ -12,7 +12,7 @@ export const fetchMenus = () => (dispatch) => {
   axiosInstance
     .get("/menusWithDishesInfo")
     .then(function (response) {
-      dispatch(allMenusShown(response));
+      dispatch(allMenusShown(response.data));
     })
     .catch(function (error) {
       console.log("Failed loading Menus: " + error);

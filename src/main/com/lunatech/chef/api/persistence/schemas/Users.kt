@@ -28,7 +28,7 @@ object Users : BaseTable<User>("users") {
         uuid = row[uuid] ?: DEFAULT_UUID,
         name = row[name] ?: DEFAULT_STRING,
         emailAddress = row[emailAddress] ?: DEFAULT_STRING,
-        officeUuid = row[officeUuid] ?: DEFAULT_UUID,
+        officeUuid = row[officeUuid],
         isVegetarian = row[isVegetarian] ?: DEFAULT_FALSE,
         hasHalalRestriction = row[hasHalalRestriction] ?: DEFAULT_FALSE,
         hasNutsRestriction = row[hasNutsRestriction] ?: DEFAULT_FALSE,

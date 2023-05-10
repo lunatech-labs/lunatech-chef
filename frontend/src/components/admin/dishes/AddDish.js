@@ -97,7 +97,7 @@ export function AddDish(props) {
             </Row>
             <Row>
               <Col lg="4">
-                <Field name="isLactoseFree" component="input" type="checkbox" ></Field><span> Is Lactose free</span>
+                <Field name="isLactoseFree" component="input" type="checkbox" ></Field><span> Is lactose free</span>
               </Col>
             </Row>
             <Row className="mt-4">

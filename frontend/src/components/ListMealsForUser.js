@@ -146,7 +146,7 @@ export const ListMealsForUser = (props) => {
                         {attendance.date[2]} {ToMonth(attendance.date[1])}{" "}
                         {attendance.date[0]}
                       </td>
-                      <td>{attendance.menu.name}:
+                      <td>{attendance.menu.name} {attendance.menu.dishes.length > 0 ? (":") : ("")}
                         {attendance.menu.dishes.map((dish) => {
                           return (
                             <p style={{ margin: 5, padding: 0 }} key={dish.uuid}>• {dish.name}</p>

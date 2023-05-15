@@ -1,4 +1,4 @@
-package com.lunatech.chef.api.schedulers
+package com.lunatech.chef.api.schedulers.recurrentschedules
 
 import com.lunatech.chef.api.domain.NewSchedule
 import com.lunatech.chef.api.domain.Schedule
@@ -13,25 +13,25 @@ import java.time.LocalDate
 
 private val logger = KotlinLogging.logger {}
 
-class MealSchedulerJob() : Job {
+class RSJob() : Job {
 
-    companion object SchedulerJob {
+    companion object {
         const val schedulesService: String = "schedulesService"
         const val recurrentSchedulesService: String = "recurrentSchedulesService"
         const val attendancesService: String = "attendancesService"
     }
 
     override fun execute(context: JobExecutionContext?) {
-        logger.info("Starting the job that updates recurrent schedules.")
+        logger.info("Starting job that updates recurrent schedules.")
         val today = LocalDate.now()
         val inAWeek = today.plusDays(7)
 
         val dataMap = context!!.jobDetail.jobDataMap
 
-        val schedulesService: SchedulesService = dataMap.get(schedulesService) as SchedulesService
+        val schedulesService: SchedulesService = dataMap[schedulesService] as SchedulesService
         val recurrentSchedulesService: RecurrentSchedulesService =
-            dataMap.get(recurrentSchedulesService) as RecurrentSchedulesService
-        val attendancesService: AttendancesService = dataMap.get(attendancesService) as AttendancesService
+            dataMap[recurrentSchedulesService] as RecurrentSchedulesService
+        val attendancesService: AttendancesService = dataMap[attendancesService] as AttendancesService
 
         val recSchedules = recurrentSchedulesService.getIntervalDate(today, inAWeek)
 

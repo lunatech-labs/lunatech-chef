@@ -45,7 +45,7 @@ import com.lunatech.chef.api.routes.schedulesWithAttendanceInfo
 import com.lunatech.chef.api.routes.schedulesWithMenusInfo
 import com.lunatech.chef.api.routes.users
 import com.lunatech.chef.api.routes.validateSession
-import com.lunatech.chef.api.schedulers.mealSchedulerTrigger
+import com.lunatech.chef.api.schedulers.recurrentschedules.rcSchedulerTrigger
 import com.typesafe.config.ConfigFactory
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
@@ -122,7 +122,7 @@ fun Application.module() {
     val excelService = ExcelService()
 
     val scheduler = StdSchedulerFactory.getDefaultScheduler()
-    mealSchedulerTrigger(scheduler, schedulesService, recurrentSchedulesService, attendancesService, cronString)
+    rcSchedulerTrigger(scheduler, schedulesService, recurrentSchedulesService, attendancesService, cronString)
 
     install(CORS) {
         allowMethod(HttpMethod.Post)

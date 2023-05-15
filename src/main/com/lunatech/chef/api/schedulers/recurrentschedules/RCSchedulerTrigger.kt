@@ -1,4 +1,4 @@
-package com.lunatech.chef.api.schedulers
+package com.lunatech.chef.api.schedulers.recurrentschedules
 
 import com.lunatech.chef.api.persistence.services.AttendancesService
 import com.lunatech.chef.api.persistence.services.RecurrentSchedulesService
@@ -10,20 +10,20 @@ import org.quartz.JobDetail
 import org.quartz.Scheduler
 import org.quartz.TriggerBuilder.newTrigger
 
-fun mealSchedulerTrigger(
+fun rcSchedulerTrigger(
     scheduler: Scheduler,
     schedulesService: SchedulesService,
     recurrentSchedulesService: RecurrentSchedulesService,
     attendancesService: AttendancesService,
     cronExpression: String,
 ) {
-    val job: JobDetail = newJob(MealSchedulerJob::class.java)
+    val job: JobDetail = newJob(RSJob::class.java)
         .withIdentity("recurrentSchedules", "chefSchedules")
         .build()
 
-    job.jobDataMap[MealSchedulerJob.schedulesService] = schedulesService
-    job.jobDataMap[MealSchedulerJob.recurrentSchedulesService] = recurrentSchedulesService
-    job.jobDataMap[MealSchedulerJob.attendancesService] = attendancesService
+    job.jobDataMap[RSJob.schedulesService] = schedulesService
+    job.jobDataMap[RSJob.recurrentSchedulesService] = recurrentSchedulesService
+    job.jobDataMap[RSJob.attendancesService] = attendancesService
 
     val trigger: CronTrigger = newTrigger()
         .withIdentity("weekSchedules", "weekSchedulesTrigger")

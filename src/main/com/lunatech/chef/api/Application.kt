@@ -10,6 +10,8 @@ import com.google.api.client.json.gson.GsonFactory
 import com.lunatech.chef.api.config.AuthConfig
 import com.lunatech.chef.api.config.FlywayConfig
 import com.lunatech.chef.api.config.JwtConfig
+import com.lunatech.chef.api.config.MailerConfig
+import com.lunatech.chef.api.config.MonthlyReportConfig
 import com.lunatech.chef.api.persistence.DBEvolution
 import com.lunatech.chef.api.persistence.Database
 import com.lunatech.chef.api.persistence.services.AttendancesForSlackbotService
@@ -45,6 +47,7 @@ import com.lunatech.chef.api.routes.schedulesWithAttendanceInfo
 import com.lunatech.chef.api.routes.schedulesWithMenusInfo
 import com.lunatech.chef.api.routes.users
 import com.lunatech.chef.api.routes.validateSession
+import com.lunatech.chef.api.schedulers.monthlyreports.mrSchedulerTrigger
 import com.lunatech.chef.api.schedulers.recurrentschedules.rcSchedulerTrigger
 import com.typesafe.config.ConfigFactory
 import io.ktor.http.HttpHeaders
@@ -91,8 +94,13 @@ fun Application.module() {
     val dbConfig = FlywayConfig.fromConfig(config.getConfig("database"))
     val authConfig = AuthConfig.fromConfig(config.getConfig("auth"))
     val jwtConfig = JwtConfig.fromConfig(config.getConfig("jwt"))
+
+    val monthlyReportConfig = MonthlyReportConfig.fromConfig(config.getConfig("monthly-report-email"))
+    val mailerConfig = MailerConfig.fromConfig(config.getConfig("mailer"))
+
     val jwkProvider = UrlJwkProvider(URL(jwtConfig.jwkProvider))
-    val cronString = config.getString("recurrent-schedules-cron")
+    val scCronString = config.getString("recurrent-schedules-cron")
+    val mrCronString = config.getString("monthly-reports-cron")
 
     val chefSession = "CHEF_SESSION"
 
@@ -122,7 +130,8 @@ fun Application.module() {
     val excelService = ExcelService()
 
     val scheduler = StdSchedulerFactory.getDefaultScheduler()
-    rcSchedulerTrigger(scheduler, schedulesService, recurrentSchedulesService, attendancesService, cronString)
+    rcSchedulerTrigger(scheduler, schedulesService, recurrentSchedulesService, attendancesService, scCronString)
+    mrSchedulerTrigger(scheduler, mrCronString, monthlyReportConfig, mailerConfig, reportService, excelService)
 
     install(CORS) {
         allowMethod(HttpMethod.Post)

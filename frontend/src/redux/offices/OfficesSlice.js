@@ -16,22 +16,45 @@ const officesSlice = createSlice({
     reducers: {
         allOfficesLoading(state, action) {
             state.isLoading = true
+            state.errorListing = null;
+            state.errorAdding = null;
+            state.errorEditing = null;
+            state.errorDeleting = null;
         },
         allOfficesShown(state, action) {
             state.isLoading = false;
+            state.errorListing = null;
+            state.errorAdding = null;
+            state.errorEditing = null;
+            state.errorDeleting = null;
             state.offices = action.payload
         },
         allOfficesLoadingFailed(state, action) {
             state.isLoading = false;
+            state.errorAdding = null;
+            state.errorEditing = null;
+            state.errorDeleting = null;
             state.errorListing = action.payload;
         },
         officeAddedFailed(state, action) {
+            state.isLoading = false;
+            state.errorListing = null;
+            state.errorEditing = null;
+            state.errorDeleting = null;
             state.errorAdding = action.payload;
         },
         officeEditedFailed(state, action) {
+            state.isLoading = false;
+            state.errorListing = null;
+            state.errorAdding = null;
+            state.errorDeleting = null;
             state.errorEditing = action.payload;
         },
         officeDeletedFailed(state, action) {
+            state.isLoading = false;
+            state.errorListing = null;
+            state.errorAdding = null;
+            state.errorEditing = null;
             state.errorDeleting = action.payload;
         },
     }

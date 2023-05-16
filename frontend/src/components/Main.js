@@ -301,7 +301,7 @@ function Main() {
         );
     };
 
-    const ListAllSchedules = () => {
+    const ListSchedulesForUser = () => {
         return (
             <ListMealsForUser
                 isLoading={attendanceState.isLoading}
@@ -367,7 +367,7 @@ function Main() {
                             </Route>
                             <Route path="/loginUser" element={<LoginUser />} />
                             <Route path="/userProfile" element={<Profile />} />
-                            <Route path="/" element={<ListAllSchedules />} />
+                            <Route path="/" element={<ListSchedulesForUser />} />
                             <Route
                                 path="*"
                                 element={<Navigate to="/" replace />}

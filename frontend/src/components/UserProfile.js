@@ -3,6 +3,7 @@ import { Form, Field } from "react-final-form";
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 
 export const UserProfile = (props) => {
@@ -134,6 +135,9 @@ export const UserProfile = (props) => {
             <Row>
                 <h3 className="mt-4">User Profile</h3>
             </Row>
+            {props.user.error ? <Alert key="danger" variant="danger">
+                An error occured when saving the profile: {props.user.error}
+            </Alert> : <div></div>}
             <RenderData />
         </Container>
     );

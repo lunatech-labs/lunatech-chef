@@ -4,6 +4,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
+import Alert from 'react-bootstrap/Alert';
 import { Loading } from "../../shared/Loading";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -12,14 +13,10 @@ export default function ListOffice(props) {
     function ShowError({ error, reason }) {
         if (error) {
             return (
-                <Row>
-                    <h4>
-                        An error occurred when {reason} a office: {error}
-                    </h4>
-                </Row>
+                <Alert key="danger" variant="danger">
+                    An error occured when {reason} an office: {error}
+                </Alert>
             );
-        } else {
-            return <div></div>;
         }
     }
 
@@ -32,9 +29,9 @@ export default function ListOffice(props) {
             );
         } else if (error) {
             return (
-                <Row>
-                    <h4>An error occurred when fetching Offices from server: {error}</h4>
-                </Row>
+                <Alert key="danger" variant="danger">
+                    An error occurred when feching Offices from server: {error}
+                </Alert>
             );
         } else {
             return (
@@ -103,14 +100,14 @@ export default function ListOffice(props) {
                     </button>
                 </Link>
             </Row>
+            {props.errorAdding ? <ShowError error={props.errorAdding} reason="adding" /> : <div></div>}
+            {props.errorDeleting ? <ShowError error={props.errorDeleting} reason="deleting" /> : <div></div>}
+            {props.errorEditing ? <ShowError error={props.errorEditing} reason="saving" /> : <div></div>}
             <RenderData
                 isLoading={props.isLoading}
                 error={props.errorListing}
                 offices={props.offices}
             />
-            <ShowError error={props.errorAdding} reason="adding" />
-            <ShowError error={props.errorDeleting} reason="deleting" />
-            <ShowError error={props.errorEditing} reason="saving" />
         </Container>
     );
 }

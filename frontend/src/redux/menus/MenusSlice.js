@@ -15,23 +15,47 @@ const menusSlice = createSlice({
     initialState: initState,
     reducers: {
         allMenusLoading(state, action) {
+            state.errorListing = null;
+            state.errorAdding = null;
+            state.errorEditing = null;
+            state.errorDeleting = null;
             state.isLoading = true
         },
         allMenusShown(state, action) {
             state.isLoading = false;
+            state.errorListing = null;
+            state.errorAdding = null;
+            state.errorEditing = null;
+            state.errorDeleting = null;
             state.menus = action.payload
         },
         allMenusLoadingFailed(state, action) {
             state.isLoading = false;
+            state.errorListing = null;
+            state.errorAdding = null;
+            state.errorEditing = null;
+            state.errorDeleting = null;
             state.errorListing = action.payload;
         },
         menuAddedFailed(state, action) {
+            state.isLoading = false;
+            state.errorListing = null;
+            state.errorEditing = null;
+            state.errorDeleting = null;
             state.errorAdding = action.payload;
         },
         menuEditedFailed(state, action) {
+            state.isLoading = false;
+            state.errorListing = null;
+            state.errorAdding = null;
+            state.errorDeleting = null;
             state.errorEditing = action.payload;
         },
         menuDeletedFailed(state, action) {
+            state.isLoading = false;
+            state.errorListing = null;
+            state.errorAdding = null;
+            state.errorEditing = null;
             state.errorDeleting = action.payload;
         },
     }

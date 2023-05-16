@@ -27,9 +27,9 @@ export default function ListMenus(props) {
             );
         } else if (error) {
             return (
-                <Row>
-                    <h4>An error occurred when fetching Menus from server: {error}</h4>
-                </Row>
+                <Alert key="danger" variant="danger">
+                    An error occurred when feching Menus from server: {error}
+                </Alert>
             );
         } else {
             return (

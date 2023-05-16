@@ -28,9 +28,9 @@ export default function ListDishes(props) {
             );
         } else if (error) {
             return (
-                <Row>
-                    <h4>An error occurred when feching Dishes from server: {error}</h4>
-                </Row>
+                <Alert key="danger" variant="danger">
+                    An error occurred when feching Dishes from server: {error}
+                </Alert>
             );
         } else {
             return (

@@ -5,25 +5,18 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
+import Alert from 'react-bootstrap/Alert';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faPlus, faCheck,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faCheck } from "@fortawesome/free-solid-svg-icons";
 
 export default function ListDishes(props) {
 
     function ShowError({ error, reason }) {
-        if (error) {
-            return (
-                <Row>
-                    <h4>
-                        An error occured when {reason} a dish: {error}
-                    </h4>
-                </Row>
-            );
-        } else {
-            return <div></div>;
-        }
+        return (
+            <Alert key="danger" variant="danger">
+                An error occured when {reason} a dish: {error}
+            </Alert>
+        );
     }
 
     function RenderData({ isLoading, error, dishes }) {
@@ -185,14 +178,15 @@ export default function ListDishes(props) {
                     </button>
                 </Link>
             </Row>
+            {props.errorAdding ? <ShowError error={props.errorAdding} reason="adding" /> : <div></div>}
+            {props.errorDeleting ? <ShowError error={props.errorDeleting} reason="deleting" /> : <div></div>}
+            {props.errorEditing ? <ShowError error={props.errorEditing} reason="saving" /> : <div></div>}
             <RenderData
                 isLoading={props.isLoading}
                 error={props.errorListing}
                 dishes={props.dishes}
             />
-            <ShowError error={props.errorAdding} reason="adding" />
-            <ShowError error={props.errorDeleting} reason="deleting" />
-            <ShowError error={props.errorEditing} reason="saving" />
+
         </Container>
     );
 }

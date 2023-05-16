@@ -15,23 +15,46 @@ const dishesSlice = createSlice({
     initialState: initState,
     reducers: {
         allDishesLoading(state, action) {
+            state.errorListing = null;
+            state.errorAdding = null;
+            state.errorEditing = null;
+            state.errorDeleting = null;
             state.isLoading = true
         },
         allDishesShown(state, action) {
             state.isLoading = false;
+            state.errorListing = null;
+            state.errorAdding = null;
+            state.errorEditing = null;
+            state.errorDeleting = null;
             state.dishes = action.payload
         },
         allDishesLoadingFailed(state, action) {
             state.isLoading = false;
+            state.errorAdding = null;
+            state.errorEditing = null;
+            state.errorDeleting = null;
             state.errorListing = action.payload;
         },
         dishAddedFailed(state, action) {
+            state.isLoading = false;
+            state.errorListing = null;
+            state.errorEditing = null;
+            state.errorDeleting = null;
             state.errorAdding = action.payload;
         },
         dishEditedFailed(state, action) {
+            state.isLoading = false;
+            state.errorAdding = null;
+            state.errorListing = null;
+            state.errorDeleting = null;
             state.errorEditing = action.payload;
         },
         dishDeletedFailed(state, action) {
+            state.isLoading = false;
+            state.errorAdding = null;
+            state.errorListing = null;
+            state.errorEditing = null;
             state.errorDeleting = action.payload;
         },
     }

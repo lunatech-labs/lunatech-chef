@@ -4,21 +4,18 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
+import Alert from 'react-bootstrap/Alert';
 import { Loading } from "../../shared/Loading";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 export default function ListMenus(props) {
     function ShowError({ error, reason }) {
-        if (error) {
-            return (
-                <Row>
-                    An error occurred when {reason} a menu: {error}
-                </Row>
-            );
-        } else {
-            return <div></div>;
-        }
+        return (
+            <Alert key="danger" variant="danger">
+                An error occured when {reason} a menu: {error}
+            </Alert>
+        );
     }
 
     function RenderData({ isLoading, error, menus }) {
@@ -104,14 +101,14 @@ export default function ListMenus(props) {
                     </button>
                 </Link>
             </Row>
+            {props.errorAdding ? <ShowError error={props.errorAdding} reason="adding" /> : <div></div>}
+            {props.errorDeleting ? <ShowError error={props.errorDeleting} reason="deleting" /> : <div></div>}
+            {props.errorEditing ? <ShowError error={props.errorEditing} reason="saving" /> : <div></div>}
             <RenderData
                 isLoading={props.isLoading}
                 error={props.errorListing}
                 menus={props.menus}
             />
-            <ShowError error={props.errorAdding} reason="adding" />
-            <ShowError error={props.errorDeleting} reason="deleting" />
-            <ShowError error={props.errorEditing} reason="saving" />
         </Container>
     );
 }

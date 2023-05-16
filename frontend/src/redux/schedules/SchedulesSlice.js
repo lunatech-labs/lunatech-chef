@@ -21,28 +21,55 @@ const schedulesSlice = createSlice({
         // schedules
         allSchedulesLoading(state, action) {
             state.isLoading = true
+            state.errorListing = false;
+            state.errorAdding = false;
+            state.errorEditing = false;
+            state.errorDeleting = false;
         },
         allSchedulesLoadingFailed(state, action) {
             state.isLoading = false;
+            state.errorAdding = false;
+            state.errorEditing = false;
+            state.errorDeleting = false;
             state.errorListing = action.payload;
         },
         allSchedulesShown(state, action) {
             state.isLoading = false;
+            state.errorListing = false;
+            state.errorAdding = false;
+            state.errorEditing = false;
+            state.errorDeleting = false;
             state.schedules = action.payload
         },
         scheduleAddedFailed(state, action) {
+            state.isLoading = false;
+            state.errorListing = false;
+            state.errorEditing = false;
+            state.errorDeleting = false;
             state.errorAdding = action.payload;
         },
         scheduleEditedFailed(state, action) {
+            state.isLoading = false;
+            state.errorListing = false;
+            state.errorEditing = false;
+            state.errorDeleting = false;
             state.errorEditing = action.payload;
         },
         scheduleDeletedFailed(state, action) {
+            state.isLoading = false;
+            state.errorListing = false;
+            state.errorAdding = false;
+            state.errorEditing = false;
             state.errorDeleting = action.payload;
         },
 
         // recurrent schedules
         allRecurrentSchedulesShown(state, action) {
             state.isLoading = false;
+            state.errorListing = false;
+            state.errorAdding = false;
+            state.errorEditing = false;
+            state.errorDeleting = false;
             state.recurrentSchedules = action.payload
         },
 

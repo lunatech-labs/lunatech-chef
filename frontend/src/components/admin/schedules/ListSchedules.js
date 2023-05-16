@@ -5,6 +5,7 @@ import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Alert from 'react-bootstrap/Alert';
 import { Loading } from "../../shared/Loading";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
@@ -15,15 +16,11 @@ import DatePicker from "react-datepicker";
 export default function ListSchedules(props) {
 
   function ShowError({ error, reason }) {
-    if (error) {
-      return (
-        <Row>
-          An error occurred when {reason} a schedule: {error}
-        </Row>
-      );
-    } else {
-      return <div></div>;
-    }
+    return (
+      <Alert key="danger" variant="danger">
+        An error occured when {reason} a schedule: {error}
+      </Alert>
+    );
   }
 
   const savedDate = localStorage.getItem("filterDateSchedule");
@@ -71,9 +68,9 @@ export default function ListSchedules(props) {
         <h3 className="mt-4">Management of Scheduled Menus</h3>
       </div>
       <div>
-        <ShowError error={props.errorAdding} reason="adding" />
-        <ShowError error={props.errorDeleting} reason="deleting" />
-        <ShowError error={props.errorEditing} reason="saving" />
+        {props.errorAdding ? <ShowError error={props.errorAdding} reason="adding" /> : <div></div>}
+        {props.errorDeleting ? <ShowError error={props.errorDeleting} reason="deleting" /> : <div></div>}
+        {props.errorEditing ? <ShowError error={props.errorEditing} reason="saving" /> : <div></div>}
         {props.isLoading ? (
           <Row>
             <Loading />
@@ -82,12 +79,9 @@ export default function ListSchedules(props) {
           <div></div>
         )}
         {props.errorListing ? (
-          <Row>
-            <h4>
-              An error occurred when fetching Schedules from server:{" "}
-              {props.errorListing}
-            </h4>
-          </Row>
+          <Alert key="danger" variant="danger">
+            An error occurred when feching Schedules from server:  {props.errorListing}
+          </Alert>
         ) : (
           <div>
 
@@ -223,16 +217,6 @@ export default function ListSchedules(props) {
         </h5>
       </div>
       <div>
-        <ShowError error={props.errorAdding} reason="adding" />
-        <ShowError error={props.errorDeleting} reason="deleting" />
-        <ShowError error={props.errorEditing} reason="saving" />
-        {props.isLoading ? (
-          <Row>
-            <Loading />
-          </Row>
-        ) : (
-          <div></div>
-        )}
         <Row>
           <Table striped bordered hover>
             <thead>

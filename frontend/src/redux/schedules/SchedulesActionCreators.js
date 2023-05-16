@@ -117,9 +117,6 @@ export const addNewRecurrentSchedule = (newRecurrentSchedule) => (dispatch) => {
 };
 
 export const editSchedule = (editedSchedule) => (dispatch) => {
-    console.log(
-        "editSchedule edited with recurrency" + editedSchedule.recurrency
-    );
     if (editedSchedule.recurrency > 0) {
         dispatch(editRecurrentSchedule(editedSchedule));
     } else {
@@ -128,9 +125,6 @@ export const editSchedule = (editedSchedule) => (dispatch) => {
 };
 
 export const editSingleSchedule = (editedSchedule) => (dispatch) => {
-    console.log(
-        "editSingleSchedule edited with recurrency" + editedSchedule.recurrency
-    );
     const sheduleToEdit = {
         menuUuid: editedSchedule.menuUuid,
         officeUuid: editedSchedule.officeUuid,
@@ -152,7 +146,6 @@ export const editSingleSchedule = (editedSchedule) => (dispatch) => {
 };
 
 export const editRecurrentSchedule = (editedSchedule) => (dispatch) => {
-    console.log("called editRecurrentSchedule ");
     const recScheduleToEdit = {
         menuUuid: editedSchedule.menuUuid,
         officeUuid: editedSchedule.officeUuid,

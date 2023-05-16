@@ -5,6 +5,7 @@ import Container from 'react-bootstrap/Container';
 import Accordion from 'react-bootstrap/Accordion';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Alert from 'react-bootstrap/Alert';
 import { Loading } from "./shared/Loading";
 import { ToMonth } from "./shared/Functions";
 import { Form, Field } from "react-final-form";
@@ -46,9 +47,9 @@ export default function WhoIsJoining(props) {
             );
         } else if (error) {
             return (
-                <Row>
-                    <h4>An error occurred when feching attendances from server: {error}</h4>
-                </Row>
+                <Alert key="danger" variant="danger">
+                    An error occurred when feching attendances from server: {error}
+                </Alert>
             );
         } else {
             return (

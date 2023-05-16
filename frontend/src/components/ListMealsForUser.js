@@ -4,6 +4,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
+import Alert from 'react-bootstrap/Alert';
 import { Loading } from "./shared/Loading";
 import { Form, Field } from "react-final-form";
 import { ToMonth } from "./shared/Functions";
@@ -48,11 +49,9 @@ export const ListMealsForUser = (props) => {
       );
     } else if (error) {
       return (
-        <div>
-          <h4>
-            An error occurred when fetching scheduled meals from server: {error}
-          </h4>
-        </div>
+        <Alert key="danger" variant="danger">
+          An error occurred when fetching scheduled meals from server: {error}
+        </Alert>
       );
     } else {
       return (

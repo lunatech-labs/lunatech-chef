@@ -48,6 +48,7 @@ const usersSlice = createSlice({
         },
         userLoggedOut(state, action) {
             state.isAuthenticated = false;
+            state.error = null;
         },
         userUpdatedProfile(state, action) {
             state.officeUuid = action.payload.officeUuid;
@@ -63,7 +64,6 @@ const usersSlice = createSlice({
             state.error = null;
         },
         userUpdatedProfileFailed(state, action) {
-            state.isAuthenticated = false;
             state.error = action.payload;
         },
     }

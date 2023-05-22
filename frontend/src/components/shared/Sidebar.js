@@ -18,21 +18,21 @@ const Sidebar = (props) => {
                 <CDBSidebarContent className="sidebar-content">
                     <CDBSidebarMenu>
                         <NavLink exact="true" to="/" activeclassname="activeClicked">
-                            <CDBSidebarMenuItem icon="hippo">Scheduled meals</CDBSidebarMenuItem>
+                            <CDBSidebarMenuItem icon="hippo">My lunches</CDBSidebarMenuItem>
                         </NavLink>
                         <NavLink exact="true" to="/whoisjoining" activeclassname="activeClicked">
                             <CDBSidebarMenuItem icon="user-friends">Who's joining?</CDBSidebarMenuItem>
                         </NavLink>
                         {props.isAdmin ? (
                             <div>
-                                <NavLink exact="true" to="/alloffices" activeclassname="activeClicked">
-                                    <CDBSidebarMenuItem icon="map">Offices</CDBSidebarMenuItem>
+                                <NavLink exact="true" to="/allmenus" activeclassname="activeClicked">
+                                    <CDBSidebarMenuItem icon="book">Menus</CDBSidebarMenuItem>
                                 </NavLink>
                                 <NavLink exact="true" to="/alldishes" activeclassname="activeClicked">
                                     <CDBSidebarMenuItem icon="utensils">Dishes</CDBSidebarMenuItem>
                                 </NavLink>
-                                <NavLink exact="true" to="/allmenus" activeclassname="activeClicked">
-                                    <CDBSidebarMenuItem icon="book">Menus</CDBSidebarMenuItem>
+                                <NavLink exact="true" to="/alloffices" activeclassname="activeClicked">
+                                    <CDBSidebarMenuItem icon="map">Offices</CDBSidebarMenuItem>
                                 </NavLink>
                                 <NavLink exact="true" to="/allschedules" activeclassname="activeClicked">
                                     <CDBSidebarMenuItem icon="calendar">Schedules</CDBSidebarMenuItem>

@@ -59,6 +59,7 @@ export const saveUserProfile = (userUuid, userProfile) => (dispatch) => {
     axiosInstance
         .put("/users/" + userUuid, userProfileToSave)
         .then((response) => {
+            dispatch(fetchSchedulesAttendance());
             dispatch(userUpdatedProfile(userProfileToSave));
         })
         .catch(function (error) {

@@ -166,7 +166,7 @@ export const ListMealsForUser = (props) => {
   return (
     <div className="container">
       <div>
-        <h3 className="mt-4">Meals scheduled for the Lunatechies</h3>
+        <h3 className="mt-4">Lunches I'm attending</h3>
       </div>
       <div>
         <RenderData

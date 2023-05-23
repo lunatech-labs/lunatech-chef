@@ -47,7 +47,7 @@ export const UserProfile = (props) => {
                                             {props.offices.map((office) => {
                                                 return (
                                                     <option value={office.uuid} key={office.uuid}>
-                                                        {office.city}, {office.country}
+                                                        {office.city}
                                                     </option>
                                                 );
                                             })}

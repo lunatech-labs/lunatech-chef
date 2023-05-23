@@ -75,7 +75,7 @@ export default function WhoIsJoining(props) {
                                                         {offices.map((office) => {
                                                             return (
                                                                 <option value={office.uuid} key={office.uuid}>
-                                                                    {office.city}, {office.country}
+                                                                    {office.city}
                                                                 </option>
                                                             );
                                                         })}
@@ -135,7 +135,7 @@ export default function WhoIsJoining(props) {
                                 <Accordion.Item eventKey={attendance.uuid} key={attendance.uuid}>
                                     <Accordion.Header>
                                         <Col>{attendance.menuName}</Col>
-                                        <Col>{attendance.office.city}, {attendance.office.country}</Col>
+                                        <Col>{attendance.office}</Col>
                                         <Col>{attendance.date[2]} {ToMonth(attendance.date[1])} {attendance.date[0]}</Col>
                                         <Col>{attendance.attendants.length}</Col>
                                     </Accordion.Header>

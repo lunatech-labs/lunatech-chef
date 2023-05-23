@@ -62,6 +62,6 @@ class SchedulesWithAttendanceInfoService(
                 .where { (Attendances.scheduleUuid eq schedule.uuid) and (Attendances.isAttending eq true) and (Attendances.isDeleted eq false) }
                 .map { Users.createEntity(it) }
 
-        return ScheduleWithAttendanceInfo(schedule.uuid, menu!!.name, attendants, schedule.date, office!!)
+        return ScheduleWithAttendanceInfo(schedule.uuid, menu!!.name, attendants, schedule.date, office?.city ?: "")
     }
 }

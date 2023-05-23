@@ -61,7 +61,7 @@ class AttendancesWithScheduleInfoService(
                         scheduleUuid = schedule.uuid,
                         menu = menu!!,
                         date = schedule.date,
-                        office = office,
+                        office = office.city,
                         isAttending = attendance.isAttending ?: false,
                     )
                 }

@@ -34,7 +34,7 @@ data class AttendanceWithInfo(
     val scheduleUuid: UUID,
     val menu: MenuWithDishes,
     val date: LocalDate,
-    val office: Office,
+    val office: String,
     val isAttending: Boolean,
 )
 

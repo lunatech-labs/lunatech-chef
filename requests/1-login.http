@@ -1,1 +1,6 @@
-GET http://{{ host }}/login/{{ token }}
+POST {{ host }}/login
+Content-Type: application/json
+
+{
+  "token": "{{ token }}"
+}

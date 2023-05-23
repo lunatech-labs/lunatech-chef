@@ -11,8 +11,11 @@ import {
 import { fetchAttendanceUser } from "../attendance/AttendanceActionCreators";
 
 export const login = (token) => (dispatch) => {
+    let userToken = {
+        token: token
+    }
     axiosInstance
-        .get("/login/" + token)
+        .post("/login", userToken)
         .then((response) => {
             configureAxios(response);
             dispatch(userLoggedIn(response.data));

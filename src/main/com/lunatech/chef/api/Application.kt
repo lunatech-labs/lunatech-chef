@@ -33,7 +33,7 @@ import com.lunatech.chef.api.routes.ChefSession
 import com.lunatech.chef.api.routes.attendances
 import com.lunatech.chef.api.routes.attendancesForSlackbot
 import com.lunatech.chef.api.routes.attendancesWithScheduleInfo
-import com.lunatech.chef.api.routes.authorization
+import com.lunatech.chef.api.routes.authentication
 import com.lunatech.chef.api.routes.dishes
 import com.lunatech.chef.api.routes.healthCheck
 import com.lunatech.chef.api.routes.menus
@@ -223,7 +223,7 @@ fun Application.module() {
         get("/") {
             call.respondFile(File("frontend/build/index.html"))
         }
-        authorization(usersService, verifier!!, authConfig.admins)
+        authentication(usersService, verifier!!, authConfig.admins)
         healthCheck()
         offices(officesService)
         dishes(dishesService)

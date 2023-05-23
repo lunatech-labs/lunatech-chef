@@ -10,15 +10,16 @@ import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.http.HttpStatusCode.Companion.Unauthorized
 import io.ktor.server.application.call
 import io.ktor.server.auth.Principal
+import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Routing
 import io.ktor.server.routing.get
+import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import io.ktor.server.sessions.sessions
 import io.ktor.server.sessions.set
 import mu.KotlinLogging
 import java.lang.Exception
-import java.lang.IllegalArgumentException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -46,18 +47,17 @@ data class ChefSession(
 
 data class AccountPrincipal(val email: String) : Principal
 
-fun Routing.authorization(usersService: UsersService, verifier: GoogleIdTokenVerifier, admins: List<String>) {
-    val loginRoute = "/login"
-    val tokenRoute = "/{id_token}"
-    val tokenParam = "id_token"
+data class UserToken(val token: String)
 
-    route("$loginRoute$tokenRoute") {
-        get {
-            val idToken =
-                call.parameters[tokenParam] ?: throw IllegalArgumentException("Error: $tokenParam was not found.")
+fun Routing.authentication(usersService: UsersService, verifier: GoogleIdTokenVerifier, admins: List<String>) {
+    val loginRoute = "/login"
+
+    route(loginRoute) {
+        post {
+            val userToken = call.receive<UserToken>()
 
             try {
-                val token = verifier.verify(idToken)
+                val token = verifier.verify(userToken.token)
                 if (token != null) {
                     val user = addUserToDB(usersService, token)
                     val session = buildChefSession(user, admins)

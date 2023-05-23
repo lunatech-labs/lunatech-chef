@@ -105,7 +105,7 @@ export default function ListSchedules(props) {
                               {props.offices.map((office) => {
                                 return (
                                   <option value={office.uuid} key={office.uuid}>
-                                    {office.city}, {office.country}
+                                    {office.city}
                                   </option>
                                 );
                               })}
@@ -175,8 +175,7 @@ export default function ListSchedules(props) {
                       <tr key={schedule.uuid}>
                         <td>{schedule.menu.name}</td>
                         <td>
-                          {schedule.office.city},{" "}
-                          {schedule.office.country}
+                          {schedule.office.city}
                         </td>
                         <td>
                           {schedule.date[2]} {ToMonth(schedule.date[1])}{" "}
@@ -235,8 +234,7 @@ export default function ListSchedules(props) {
                   <tr key={recurrentSchedule.uuid}>
                     <td>{recurrentSchedule.menu.name}</td>
                     <td>
-                      {recurrentSchedule.office.city},{" "}
-                      {recurrentSchedule.office.country}
+                      {recurrentSchedule.office.city}
                     </td>
                     <td>{recurrentSchedule.repetitionDays}</td>
                     <td>

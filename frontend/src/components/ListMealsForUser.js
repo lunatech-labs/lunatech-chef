@@ -77,7 +77,7 @@ export const ListMealsForUser = (props) => {
                             {offices.map((office) => {
                               return (
                                 <option value={office.uuid} key={office.uuid}>
-                                  {office.city}, {office.country}
+                                  {office.city}
                                 </option>
                               );
                             })}
@@ -140,7 +140,7 @@ export const ListMealsForUser = (props) => {
                           )}
                         ></Form>
                       </td>
-                      <td>{attendance.office.city}</td>
+                      <td>{attendance.office}</td>
                       <td>
                         {attendance.date[2]} {ToMonth(attendance.date[1])}{" "}
                         {attendance.date[0]}

@@ -40,5 +40,5 @@ data class ScheduleWithAttendanceInfo(
     val menuName: String,
     val attendants: List<User>,
     val date: LocalDate,
-    val office: Office,
+    val office: String,
 )

@@ -27,5 +27,5 @@ data class MenuWithDishesUuid(
 data class MenuWithDishes(
     val uuid: UUID,
     val name: String,
-    val dishes: List<Dish>,
+    val dishesNames: List<String>,
 )

@@ -37,7 +37,7 @@ export function AddDish(props) {
                 <Field validate={required} name="name">
                   {({ input, meta }) => (
                     <div className="d-grid">
-                      <input {...input} placeholder="Name" maxLength={50} />
+                      <input {...input} placeholder="Name" maxLength={60} />
                       {meta.error && meta.touched && <span className="text-danger">  {meta.error}</span>}
                     </div>
                   )}
@@ -50,7 +50,7 @@ export function AddDish(props) {
                 <Field name="description">
                   {({ input, meta }) => (
                     <div className="d-grid">
-                      <textarea {...input} placeholder="Description just for admins" maxLength={50} size="2" />
+                      <textarea {...input} placeholder="Description just for admins" maxLength={200} size="2" />
                       {meta.error && meta.touched && <span className="text-danger">  {meta.error}</span>}
                     </div>
                   )}

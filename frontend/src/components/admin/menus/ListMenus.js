@@ -49,8 +49,8 @@ export default function ListMenus(props) {
                                     <tr key={menu.uuid}>
                                         <td>{menu.name}</td>
                                         <td>
-                                            {menu.dishesNames.map((dish) => (
-                                                <p key={dish}>{dish}</p>
+                                            {menu.dishes.map((dish) => (
+                                                <p key={dish.uuid}>{dish.name}</p>
                                             ))}
                                         </td>
                                         <td>

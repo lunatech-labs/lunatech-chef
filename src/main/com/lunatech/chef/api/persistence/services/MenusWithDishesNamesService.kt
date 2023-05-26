@@ -27,7 +27,7 @@ class MenusWithDishesNamesService(val database: Database) {
                     .select()
                     .where { DishesOnMenus.menuUuid eq menu.uuid }
 
-                MenuNames.toMenuWithDishes(menu, dishes.map { Dishes.createEntity(it).name })
+                MenuNames.toMenuWithDishes(menu, dishes.map { Dishes.createEntity(it) })
             }
 
     fun getByUuid(uuid: UUID): MenuWithDishes? {
@@ -45,7 +45,7 @@ class MenusWithDishesNamesService(val database: Database) {
                     .leftJoin(Dishes, on = DishesOnMenus.dishUuid eq Dishes.uuid)
                     .select().where { DishesOnMenus.menuUuid eq it.uuid }
 
-            MenuNames.toMenuWithDishes(it, dishes.map { Dishes.createEntity(it).name })
+            MenuNames.toMenuWithDishes(it, dishes.map { Dishes.createEntity(it) })
         }
     }
 }

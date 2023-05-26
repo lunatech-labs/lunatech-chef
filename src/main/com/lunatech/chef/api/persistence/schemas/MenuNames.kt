@@ -1,5 +1,6 @@
 package com.lunatech.chef.api.persistence.schemas
 
+import com.lunatech.chef.api.domain.Dish
 import com.lunatech.chef.api.domain.MenuName
 import com.lunatech.chef.api.domain.MenuWithDishes
 import org.ktorm.dsl.QueryRowSet
@@ -19,9 +20,9 @@ object MenuNames : BaseTable<MenuName>("menus") {
         isDeleted = row[isDeleted] ?: DEFAULT_FALSE,
     )
 
-    fun toMenuWithDishes(menuName: MenuName, dishes: List<String>) = MenuWithDishes(
+    fun toMenuWithDishes(menuName: MenuName, dishes: List<Dish>) = MenuWithDishes(
         uuid = menuName.uuid,
         name = menuName.name,
-        dishesNames = dishes,
+        dishes = dishes,
     )
 }

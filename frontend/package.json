@@ -65,7 +65,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.21.0",
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.0",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.10",
     "@babel/preset-env": "^7.21.0"
   }
 }

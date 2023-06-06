@@ -33,7 +33,7 @@ fun Routing.reports(reportService: ReportService, excelService: ExcelService) {
                     if (year == null || month == null) {
                         call.respond(HttpStatusCode.BadRequest, "Both year and month parameters are mandatory!")
                     } else {
-                        val reportEntries = reportService.getReportForDate(year, month)
+                        val reportEntries = reportService.getReportByMonth(year, month)
                         val excelReport = excelService.exportToExcel(reportEntries)
                         val encodedReport = Base64.getEncoder().encode(excelReport)
 

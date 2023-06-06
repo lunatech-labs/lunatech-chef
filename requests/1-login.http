@@ -1,6 +1,3 @@
-POST {{ host }}/login
-Content-Type: application/json
+GET {{ host }}/login
+Authorization: BEARER {{ token }}
 
-{
-  "token": "{{ token }}"
-}

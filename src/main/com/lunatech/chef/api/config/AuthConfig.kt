@@ -7,7 +7,6 @@ data class AuthConfig(
     val secretKey: String,
     val clientId: String,
     val ttlLimit: Int,
-    val domains: List<String>,
     val admins: List<String>,
 ) {
     companion object {
@@ -15,10 +14,9 @@ data class AuthConfig(
             val secretKey: String by config
             val clientId: String by config
             val ttlLimit: Int by config
-            val domains: List<String> by config
             val admins: List<String> by config
 
-            return AuthConfig(secretKey, clientId, ttlLimit, domains, admins)
+            return AuthConfig(secretKey, clientId, ttlLimit, admins)
         }
     }
 }

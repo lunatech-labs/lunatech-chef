@@ -4,9 +4,6 @@ import com.auth0.jwk.UrlJwkProvider
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
-import com.google.api.client.http.javanet.NetHttpTransport
-import com.google.api.client.json.gson.GsonFactory
 import com.lunatech.chef.api.config.AuthConfig
 import com.lunatech.chef.api.config.FlywayConfig
 import com.lunatech.chef.api.config.JwtConfig
@@ -79,7 +76,6 @@ import mu.KotlinLogging
 import org.quartz.impl.StdSchedulerFactory
 import java.io.File
 import java.net.URL
-import java.util.Collections
 import java.util.Date
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
@@ -98,15 +94,12 @@ fun Application.module() {
     val monthlyReportConfig = MonthlyReportConfig.fromConfig(config.getConfig("monthly-report-email"))
     val mailerConfig = MailerConfig.fromConfig(config.getConfig("mailer"))
 
-    val jwkProvider = UrlJwkProvider(URL(jwtConfig.jwkProvider))
+    val keycloakProvider = UrlJwkProvider(URL(jwtConfig.jwkProvider))
+
     val scCronString = config.getString("recurrent-schedules-cron")
     val mrCronString = config.getString("monthly-reports-cron")
 
     val chefSession = "CHEF_SESSION"
-
-    val verifier = GoogleIdTokenVerifier.Builder(NetHttpTransport(), GsonFactory.getDefaultInstance())
-        .setAudience(Collections.singletonList(authConfig.clientId))
-        .build()
 
     runDBEvolutions(dbConfig)
 
@@ -153,12 +146,6 @@ fun Application.module() {
         }
     }
 
-//    install(StatusPages) {
-//        exception<Throwable> { e ->
-//            call.respondText(e.stackTraceToString(), ContentType.Text.Plain, HttpStatusCode.BadRequest)
-//        }
-//    }
-
     // This will add Date and Server headers to each HTTP response besides CHEF_SESSION header
     // it's needed when start BE and FE separately
     install(DefaultHeaders) {
@@ -178,12 +165,15 @@ fun Application.module() {
                 validateSession(chefSession, authConfig.ttlLimit)
             }
             challenge {
-                call.respond(HttpStatusCode.Unauthorized, "Token is not valid or has expired")
+                call.respond(HttpStatusCode.Unauthorized, "Session is not valid or has expired")
             }
         }
 
+        /***
+         * This validates tokens used by the slack bot to communicate with lunachef
+         */
         jwt("auth-jwt") {
-            verifier(jwkProvider, jwtConfig.issuer)
+            verifier(keycloakProvider, jwtConfig.issuer)
             challenge { _, _ ->
                 call.respond(HttpStatusCode.Unauthorized, "Token is not valid or has expired")
             }
@@ -198,15 +188,26 @@ fun Application.module() {
                 }
             }
         }
+
+        /***
+         * This validates the Google idToken obtained at login
+         */
+        jwt("idtoken") {
+            verifier(keycloakProvider, jwtConfig.issuer)
+            challenge { _, _ ->
+                call.respond(HttpStatusCode.Unauthorized, "IdToken is not valid or has expired")
+            }
+            validate { credential ->
+                if (credential.expiresAt?.after(Date()) == true &&
+                    credential.payload.getClaim("email_verified").asBoolean()
+                ) {
+                    JWTPrincipal(credential.payload)
+                } else {
+                    null
+                }
+            }
+        }
     }
-//
-//    install(RoleAuthorization) {
-//        validate { allowedRoles ->
-//            // need ChefSession and allowedRoles
-//            logger.info("*********** allowedRoles: {}", allowedRoles)
-//            true
-//        }
-//    }
 
     environment.monitor.subscribe(ApplicationStarted) {
         logger.info("The chef app is ready to roll")
@@ -214,16 +215,15 @@ fun Application.module() {
     }
     environment.monitor.subscribe(ApplicationStopped) {
         logger.info("Time to clean up")
-//        scheduler.shutdown() # the shutdown is problematic
     }
 
     logger.info { "Booting up!!" }
     routing {
-        // Route by default
+        // Default route
         get("/") {
             call.respondFile(File("frontend/build/index.html"))
         }
-        authentication(usersService, verifier!!, authConfig.admins)
+        authentication(usersService, authConfig.admins)
         healthCheck()
         offices(officesService)
         dishes(dishesService)

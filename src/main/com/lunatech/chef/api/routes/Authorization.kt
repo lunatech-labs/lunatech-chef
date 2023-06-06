@@ -1,20 +1,19 @@
 package com.lunatech.chef.api.routes
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
+import com.auth0.jwt.interfaces.Payload
 import com.lunatech.chef.api.domain.NewUser
 import com.lunatech.chef.api.domain.User
 import com.lunatech.chef.api.persistence.services.UsersService
-import io.ktor.http.HttpStatusCode.Companion.InternalServerError
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.http.HttpStatusCode.Companion.Unauthorized
 import io.ktor.server.application.call
 import io.ktor.server.auth.Principal
-import io.ktor.server.request.receive
+import io.ktor.server.auth.authenticate
+import io.ktor.server.auth.jwt.JWTPrincipal
+import io.ktor.server.auth.principal
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Routing
 import io.ktor.server.routing.get
-import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import io.ktor.server.sessions.sessions
 import io.ktor.server.sessions.set
@@ -47,19 +46,16 @@ data class ChefSession(
 
 data class AccountPrincipal(val email: String) : Principal
 
-data class UserToken(val token: String)
-
-fun Routing.authentication(usersService: UsersService, verifier: GoogleIdTokenVerifier, admins: List<String>) {
+fun Routing.authentication(usersService: UsersService, admins: List<String>) {
     val loginRoute = "/login"
 
     route(loginRoute) {
-        post {
-            val userToken = call.receive<UserToken>()
+        authenticate("idtoken") {
+            get {
+                val payload = call.principal<JWTPrincipal>()?.payload
 
-            try {
-                val token = verifier.verify(userToken.token)
-                if (token != null) {
-                    val user = addUserToDB(usersService, token)
+                if (payload != null) {
+                    val user = addUserToDB(usersService, payload)
                     val session = buildChefSession(user, admins)
 
                     call.sessions.set(session)
@@ -68,17 +64,16 @@ fun Routing.authentication(usersService: UsersService, verifier: GoogleIdTokenVe
                     logger.error("User unauthorized!")
                     call.respond(Unauthorized)
                 }
-            } catch (exception: Exception) {
-                logger.error("Exception occurred during user login {}", exception.toString())
-                call.respond(InternalServerError, exception.message ?: "")
             }
         }
     }
 }
 
-fun addUserToDB(usersService: UsersService, token: GoogleIdToken): User {
-    val payload = token.payload
-    val email = payload.email
+fun addUserToDB(usersService: UsersService, payload: Payload): User {
+    val email = payload.getClaim("email").asString()
+
+    logger.info("user {} logged in", email)
+
     val user = usersService.getByEmailAddress(email)
     val name = getUserNameFromEmail(email)
 

@@ -60,6 +60,7 @@ class SchedulesWithAttendanceInfoService(
                     Users.otherRestrictions, Users.isInactive, Users.isDeleted,
                 )
                 .where { (Attendances.scheduleUuid eq schedule.uuid) and (Attendances.isAttending eq true) and (Attendances.isDeleted eq false) }
+                .orderBy(Users.name.asc())
                 .map { Users.createEntity(it) }
 
         return ScheduleWithAttendanceInfo(schedule.uuid, menu!!.name, attendants, schedule.date, office?.city ?: "")

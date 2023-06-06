@@ -15,21 +15,21 @@ import org.ktorm.dsl.leftJoin
 import org.ktorm.dsl.less
 import org.ktorm.dsl.map
 import org.ktorm.dsl.orderBy
-import org.ktorm.dsl.select
+import org.ktorm.dsl.selectDistinct
 import org.ktorm.dsl.where
 import org.ktorm.schema.ColumnDeclaring
 import java.time.LocalDate
 
 class ReportService(val database: Database) {
 
-    fun getReportForDate(year: Int, month: Int): List<ReportEntry> {
+    fun getReportByMonth(year: Int, month: Int): List<ReportEntry> {
         val (startDate, endDate) = getTimeInterval(year, month)
         return database
             .from(Attendances)
             .leftJoin(Users, on = Attendances.userUuid eq Users.uuid)
             .leftJoin(Schedules, on = Attendances.scheduleUuid eq Schedules.uuid)
             .leftJoin(Offices, on = Schedules.officeUuid eq Offices.uuid)
-            .select(Schedules.date, Users.name, Offices.city, Offices.country)
+            .selectDistinct(Schedules.date, Users.name, Offices.city, Offices.country)
             .where {
                 val conditions = ArrayList<ColumnDeclaring<Boolean>>()
                 conditions += Schedules.date greater startDate

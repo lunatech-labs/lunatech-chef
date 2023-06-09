@@ -1,39 +1,43 @@
-import React, { Component } from "react";
-import { GoogleLogin } from '@react-oauth/google';
+import React from "react";
+import Button from "react-bootstrap/Button";
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import { useAuth } from "react-oidc-context";
 
-class Login extends Component {
-  constructor() {
-    super();
 
-    this.handleLogin = this.handleLogin.bind(this);
-    this.handleLoginFailure = this.handleLoginFailure.bind(this);
-  }
+export function Login() {
 
-  handleLogin(response) {
-    // console.log("tokenId: " + response.credential);
-    this.props.login(response.credential);
-  }
+  const auth = useAuth();
 
-  handleLoginFailure(response) {
-    console.log("Failed to login " + JSON.stringify(response));
-  }
+  const handleClick = () => {
+    auth.signinRedirect();
+  };
 
-  render() {
-    return (
-      <div className="container">
-        <h2>Lunatech Chef</h2>
+  return (
+    <div className="container">
+      <Row>
+        <h3>Lunatech Chef</h3>
+      </Row>
+      <Row>
         <p>
           You must be a Lunatech employee with a valid Google account to use
           this software.<br />
         </p>
-        <GoogleLogin
-          onSuccess={this.handleLogin}
-          onError={this.handleLoginFailure}
-          useOneTap
-        />
-      </div>
-    );
-  }
+      </Row>
+      <Row>
+        <Button
+          type="primary"
+          danger
+          onClick={() => {
+            handleClick();
+          }}
+        >
+          Sign in with Google
+        </Button>
+      </Row>
+    </div>
+  );
 }
 
 export default Login;
+

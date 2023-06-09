@@ -57,6 +57,7 @@ import ListOffice from "./admin/offices/ListOffice";
 import ListSchedules from "./admin/schedules/ListSchedules";
 import MonthlyReports from "./admin/reports/MonthlyReports";
 import Login from "./auth/Login";
+import Redirect from "./auth/Redirect";
 import WhoIsJoining from "./WhoIsJoining";
 import ProtectedRoutes from "./auth/ProtectedRoutes";
 
@@ -321,8 +322,10 @@ function Main() {
 
 
     const LoginUser = () => {
-        return <Login login={handleLogin} />;
+        return <Login />;
     };
+
+    const RedirectUser = () => { return <Redirect login={handleLogin} /> }
 
     const Profile = () => {
         return (
@@ -379,6 +382,9 @@ function Main() {
                 <Container>
                     <div className="d-flex" id="wrapper">
                         <LoginUser />
+                        <Routes>
+                            <Route path="/redirect" element={<RedirectUser />} />
+                        </Routes>
                     </div>
                 </Container>
             )

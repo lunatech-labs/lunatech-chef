@@ -1,10 +1,10 @@
 import App from "./App";
 import React from "react";
-import { GoogleOAuthProvider } from '@react-oauth/google';
 import { createRoot } from 'react-dom/client';
 import { ConfigureStore } from "./redux/ConfigureStore";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
+import { AuthProvider } from "react-oidc-context";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-datepicker/dist/react-datepicker.css";
 import "./css/index.css";
@@ -14,8 +14,14 @@ const store = ConfigureStore();
 const container = document.getElementById('root');
 const root = createRoot(container);
 
+const oidcConfig = {
+  authority: `${process.env.REACT_APP_REALMS_URL}`,
+  client_id: `${process.env.REACT_APP_CLIENT_ID}`,
+  redirect_uri: `${window.location.origin}/redirect`,
+};
+
 root.render(
-  <GoogleOAuthProvider clientId={process.env.REACT_APP_CLIENT_ID}>
+  <AuthProvider {...oidcConfig}>
     <Provider store={store}>
       <React.StrictMode>
         <BrowserRouter>
@@ -23,7 +29,7 @@ root.render(
         </BrowserRouter>
       </React.StrictMode>
     </Provider>
-  </GoogleOAuthProvider>
+  </AuthProvider>
 );
 
 

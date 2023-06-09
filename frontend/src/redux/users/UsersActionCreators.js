@@ -11,11 +11,14 @@ import {
 import { fetchAttendanceUser } from "../attendance/AttendanceActionCreators";
 
 export const login = (token) => (dispatch) => {
-    let userToken = {
-        token: token
-    }
+    const authHeader = {
+        headers: {
+            Authorization: "BEARER " + token,
+        }
+    };
+
     axiosInstance
-        .post("/login", userToken)
+        .get("/login", authHeader)
         .then((response) => {
             configureAxios(response);
             dispatch(userLoggedIn(response.data));

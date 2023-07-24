@@ -10,9 +10,9 @@ import org.ktorm.dsl.and
 import org.ktorm.dsl.asc
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.from
-import org.ktorm.dsl.greater
+import org.ktorm.dsl.greaterEq
 import org.ktorm.dsl.leftJoin
-import org.ktorm.dsl.less
+import org.ktorm.dsl.lessEq
 import org.ktorm.dsl.map
 import org.ktorm.dsl.orderBy
 import org.ktorm.dsl.selectDistinct
@@ -32,8 +32,8 @@ class ReportService(val database: Database) {
             .selectDistinct(Schedules.date, Users.name, Offices.city, Offices.country)
             .where {
                 val conditions = ArrayList<ColumnDeclaring<Boolean>>()
-                conditions += Schedules.date greater startDate
-                conditions += Schedules.date less endDate
+                conditions += Schedules.date greaterEq startDate
+                conditions += Schedules.date lessEq endDate
                 conditions += Attendances.isDeleted eq false
                 conditions += Attendances.isAttending eq true
                 conditions.reduce { a, b -> a and b }
@@ -53,6 +53,7 @@ class ReportService(val database: Database) {
         val baseDate = LocalDate.now().withMonth(month).withYear(year)
         val startDate = baseDate.withDayOfMonth(1)
         val endDate = startDate.plusMonths(1).minusDays(1)
+
         return Pair(startDate, endDate)
     }
 }

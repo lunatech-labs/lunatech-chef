@@ -65,6 +65,7 @@ import io.ktor.server.http.content.singlePageApplication
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.cors.routing.CORS
 import io.ktor.server.plugins.defaultheaders.DefaultHeaders
+import io.ktor.server.plugins.statuspages.StatusPages
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondFile
 import io.ktor.server.routing.get
@@ -76,6 +77,7 @@ import mu.KotlinLogging
 import org.quartz.impl.StdSchedulerFactory
 import java.io.File
 import java.net.URL
+import java.time.format.DateTimeParseException
 import java.util.Date
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
@@ -137,6 +139,20 @@ fun Application.module() {
         allowHeader(HttpHeaders.Authorization)
         allowHeader(chefSession)
         anyHost()
+    }
+
+    // handles exceptions
+    install(StatusPages) {
+        exception<Throwable> { call, throwable ->
+            when (throwable) {
+                is IllegalArgumentException, is DateTimeParseException -> {
+                    call.respond(
+                        HttpStatusCode.BadRequest,
+                        "${throwable.message}"
+                    )
+                }
+            }
+        }
     }
 
     install(ContentNegotiation) {

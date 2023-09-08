@@ -14,6 +14,7 @@ import org.ktorm.dsl.map
 import org.ktorm.dsl.select
 import org.ktorm.dsl.update
 import org.ktorm.dsl.where
+import org.ktorm.schema.ColumnDeclaring
 import java.time.LocalDate
 import java.util.UUID
 
@@ -24,8 +25,13 @@ class RecurrentSchedulesService(val database: Database) {
 
     fun getIntervalDate(fromDate: LocalDate, toDate: LocalDate): List<RecurrentSchedule> =
         database.from(RecurrentSchedules).select()
-            .where { (RecurrentSchedules.isDeleted eq false) }
-            .where { (RecurrentSchedules.nextDate greater fromDate) and (RecurrentSchedules.nextDate lessEq toDate) }
+            .where {
+                val conditions = ArrayList<ColumnDeclaring<Boolean>>()
+                conditions += RecurrentSchedules.isDeleted eq false
+                conditions += RecurrentSchedules.nextDate greater fromDate
+                conditions += RecurrentSchedules.nextDate lessEq toDate
+                conditions.reduce { a, b -> a and b }
+            }
             .map { RecurrentSchedules.createEntity(it) }
 
     fun getByUuid(uuid: UUID): List<RecurrentSchedule> =

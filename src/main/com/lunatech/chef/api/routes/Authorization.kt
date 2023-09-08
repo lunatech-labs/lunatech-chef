@@ -72,8 +72,6 @@ fun Routing.authentication(usersService: UsersService, admins: List<String>) {
 fun addUserToDB(usersService: UsersService, payload: Payload): User {
     val email = payload.getClaim("email").asString()
 
-    logger.info("user {} logged in", email)
-
     val user = usersService.getByEmailAddress(email)
     val name = getUserNameFromEmail(email)
 

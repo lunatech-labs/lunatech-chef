@@ -20,7 +20,7 @@
     "ini": "4.1.1",
     "install": "^0.13.0",
     "node-notifier": "10.0.1",
-    "npm": "^9.6.7",
+    "npm": "^10.1.0",
     "oidc-client-ts": "^2.2.4",
     "react": "^18.2.0",
     "react-bootstrap": "^2.8.0",

@@ -60,7 +60,7 @@ export default function WhoIsJoining(props) {
                                 onSubmit={handleFilter}
                                 initialValues={{
                                     office: startOffice,
-                                    date: "", // not used. used instead
+                                    date: "", // not used. startDate used instead
                                 }}
                                 render={({ handleSubmit, submitting }) => (
                                     <form onSubmit={handleSubmit}>

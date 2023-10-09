@@ -48,7 +48,7 @@ dependencies {
     implementation "org.postgresql:postgresql:42.6.0"
     implementation "org.quartz-scheduler:quartz:2.3.2"
 
-    implementation "io.ktor:ktor-server-status-pages:2.3.4"
+    implementation "io.ktor:ktor-server-status-pages:2.3.5"
     implementation "io.ktor:ktor-server-default-headers:2.3.4"
     implementation "io.ktor:ktor-server-cors:2.3.4"
     implementation "io.ktor:ktor-server-content-negotiation-jvm:2.3.5"

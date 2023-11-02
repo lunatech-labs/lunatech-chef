@@ -8,14 +8,18 @@ import com.lunatech.chef.api.persistence.schemas.MenuNames
 import com.lunatech.chef.api.persistence.schemas.Schedules
 import com.lunatech.chef.api.routes.UpdatedMenu
 import org.ktorm.database.Database
+import org.ktorm.dsl.and
 import org.ktorm.dsl.delete
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.from
+import org.ktorm.dsl.greater
 import org.ktorm.dsl.insert
 import org.ktorm.dsl.map
 import org.ktorm.dsl.select
 import org.ktorm.dsl.update
 import org.ktorm.dsl.where
+import org.ktorm.schema.ColumnDeclaring
+import java.time.LocalDate
 import java.util.UUID
 
 class MenusService(val database: Database) {
@@ -104,18 +108,27 @@ class MenusService(val database: Database) {
             }
         }
 
-        // delete related schedules and attendances
+        // delete related schedules and attendances (after current date)
+        val baseDate = LocalDate.now()
         val schedulesUuid = database
             .from(Schedules)
             .select()
-            .where { Schedules.menuUuid eq uuid }
+            .where {
+                val conditions = ArrayList<ColumnDeclaring<Boolean>>()
+                conditions += Schedules.menuUuid eq uuid
+                conditions += Schedules.date greater baseDate
+                conditions.reduce { a, b -> a and b }
+            }
             .map { sch -> Schedules.createEntity(sch) }
             .map { schedule -> schedule.uuid }
 
         database.update(Schedules) {
             set(it.isDeleted, true)
             where {
-                it.menuUuid eq uuid
+                val conditions = ArrayList<ColumnDeclaring<Boolean>>()
+                conditions += Schedules.menuUuid eq uuid
+                conditions += Schedules.date greater baseDate
+                conditions.reduce { a, b -> a and b }
             }
         }
         schedulesUuid.map { scheduleUuid ->

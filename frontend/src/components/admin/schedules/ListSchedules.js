@@ -8,7 +8,7 @@ import Col from 'react-bootstrap/Col';
 import Alert from 'react-bootstrap/Alert';
 import { Loading } from "../../shared/Loading";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMinus, faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { ToMonth } from "../../shared/Functions";
 import { Form, Field } from "react-final-form";
 import DatePicker from "react-datepicker";
@@ -186,9 +186,7 @@ export default function ListSchedules(props) {
                             variant="primary"
                             value={schedule.uuid}
                             onClick={() => handleEdit(schedule)}
-                          >
-                            <FontAwesomeIcon icon={faEdit} />
-                          </Button>
+                          >Edit</Button>
                         </td>
                         <td>
                           <Button
@@ -196,9 +194,7 @@ export default function ListSchedules(props) {
                             value={schedule.uuid}
                             onClick={() => handleRemoveSchedule(schedule.uuid)
                             }
-                          >
-                            <FontAwesomeIcon icon={faMinus} />
-                          </Button>
+                          >Delete</Button>
                         </td>
                       </tr>
                     );
@@ -248,18 +244,14 @@ export default function ListSchedules(props) {
                         variant="primary"
                         value={recurrentSchedule.uuid}
                         onClick={() => handleEdit(recurrentSchedule)}
-                      >
-                        <FontAwesomeIcon icon={faEdit} />
-                      </Button>
+                      >Edit</Button>
                     </td>
                     <td>
                       <Button
                         variant="danger"
                         value={recurrentSchedule.uuid}
                         onClick={() => handleRemoveRecurrentSchedule(recurrentSchedule.uuid)}
-                      >
-                        <FontAwesomeIcon icon={faMinus} />
-                      </Button>
+                      >Delete</Button>
                     </td>
                   </tr>
                 );

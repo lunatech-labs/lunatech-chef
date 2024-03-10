@@ -3,6 +3,8 @@ package com.lunatech.chef.api.routes
 import com.auth0.jwt.interfaces.Payload
 import com.lunatech.chef.api.domain.NewUser
 import com.lunatech.chef.api.domain.User
+import com.lunatech.chef.api.persistence.services.AttendancesService
+import com.lunatech.chef.api.persistence.services.SchedulesService
 import com.lunatech.chef.api.persistence.services.UsersService
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.http.HttpStatusCode.Companion.Unauthorized
@@ -20,6 +22,7 @@ import io.ktor.server.sessions.set
 import mu.KotlinLogging
 import java.lang.Exception
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -46,7 +49,12 @@ data class ChefSession(
 
 data class AccountPrincipal(val email: String) : Principal
 
-fun Routing.authentication(usersService: UsersService, admins: List<String>) {
+fun Routing.authentication(
+    schedulesService: SchedulesService,
+    attendancesService: AttendancesService,
+    usersService: UsersService,
+    admins: List<String>,
+) {
     val loginRoute = "/login"
 
     route(loginRoute) {
@@ -55,7 +63,7 @@ fun Routing.authentication(usersService: UsersService, admins: List<String>) {
                 val payload = call.principal<JWTPrincipal>()?.payload
 
                 if (payload != null) {
-                    val user = addUserToDB(usersService, payload)
+                    val user = addUserToDB(schedulesService, attendancesService, usersService, payload)
                     val session = buildChefSession(user, admins)
 
                     call.sessions.set(session)
@@ -69,22 +77,37 @@ fun Routing.authentication(usersService: UsersService, admins: List<String>) {
     }
 }
 
-fun addUserToDB(usersService: UsersService, payload: Payload): User {
+fun addUserToDB(
+    schedulesService: SchedulesService,
+    attendancesService: AttendancesService,
+    usersService: UsersService,
+    payload: Payload,
+): User {
     val email = payload.getClaim("email").asString()
-
     val user = usersService.getByEmailAddress(email)
-    val name = getUserNameFromEmail(email)
 
     return if (user == null) {
+        val name = getUserNameFromEmail(email)
         val newUser = NewUser(name = name, emailAddress = email, officeUuid = null)
         val userToInsert = User.fromNewUser(newUser)
         val inserted = usersService.insert(userToInsert)
+        addNewUserToSchedules(schedulesService, attendancesService, userToInsert.uuid)
 
         if (inserted == 0) logger.error("Error adding new user {}", newUser)
 
         userToInsert
     } else {
         user
+    }
+}
+
+fun addNewUserToSchedules(
+    schedulesService: SchedulesService,
+    attendancesService: AttendancesService,
+    userUuid: UUID,
+): List<Int> {
+    return schedulesService.getAfterDate(LocalDate.now()).map { schedule ->
+        attendancesService.insertAttendanceForUser(userUuid, schedule.uuid, null)
     }
 }
 

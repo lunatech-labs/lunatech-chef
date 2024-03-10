@@ -117,7 +117,7 @@ fun Application.module() {
         RecurrentSchedulesWithMenuInfoService(dbConnection, menusWithDishesService)
     val schedulesWithAttendanceInfoService = SchedulesWithAttendanceInfoService(dbConnection, menusService)
     val usersService = UsersService(dbConnection)
-    val attendancesService = AttendancesService(dbConnection, usersService)
+    val attendancesService = AttendancesService(dbConnection, usersService, schedulesService)
     val attendancesWithInfoService =
         AttendancesWithScheduleInfoService(dbConnection, schedulesService, menusWithDishesService)
     val attendancesForSlackbotService = AttendancesForSlackbotService(dbConnection)
@@ -239,7 +239,7 @@ fun Application.module() {
         get("/") {
             call.respondFile(File("frontend/build/index.html"))
         }
-        authentication(usersService, authConfig.admins)
+        authentication(schedulesService, attendancesService, usersService, authConfig.admins)
         healthCheck()
         offices(officesService)
         dishes(dishesService)

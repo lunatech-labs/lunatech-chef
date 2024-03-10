@@ -10,7 +10,11 @@ import org.ktorm.dsl.update
 import org.ktorm.dsl.where
 import java.util.UUID
 
-class AttendancesService(val database: Database, val usersService: UsersService) {
+class AttendancesService(
+    val database: Database,
+    val usersService: UsersService,
+    val schedulesService: SchedulesService,
+) {
     fun insert(attendance: Attendance): Int =
         database.insert(Attendances) {
             set(it.uuid, attendance.uuid)
@@ -37,4 +41,13 @@ class AttendancesService(val database: Database, val usersService: UsersService)
             set(it.isDeleted, false)
         }
     }
+
+    fun insertAttendanceForUser(userUuid: UUID, scheduleUuid: UUID, isAttending: Boolean?): Int =
+        schedulesService.database.insert(Attendances) {
+            set(it.uuid, UUID.randomUUID())
+            set(it.scheduleUuid, scheduleUuid)
+            set(it.userUuid, userUuid)
+            set(it.isAttending, isAttending)
+            set(it.isDeleted, false)
+        }
 }

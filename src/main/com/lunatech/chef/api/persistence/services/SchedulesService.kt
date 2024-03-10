@@ -7,6 +7,7 @@ import com.lunatech.chef.api.routes.UpdatedSchedule
 import org.ktorm.database.Database
 import org.ktorm.dsl.asc
 import org.ktorm.dsl.eq
+import org.ktorm.dsl.gte
 import org.ktorm.dsl.from
 import org.ktorm.dsl.insert
 import org.ktorm.dsl.map
@@ -14,6 +15,7 @@ import org.ktorm.dsl.orderBy
 import org.ktorm.dsl.select
 import org.ktorm.dsl.update
 import org.ktorm.dsl.where
+import java.time.LocalDate
 import java.util.UUID
 
 class SchedulesService(val database: Database) {
@@ -25,6 +27,9 @@ class SchedulesService(val database: Database) {
 
     fun getByUuid(uuid: UUID): List<Schedule> =
         database.from(Schedules).select().where { Schedules.uuid eq uuid }.map { Schedules.createEntity(it) }
+
+    fun getAfterDate(date: LocalDate): List<Schedule> =
+        database.from(Schedules).select().where { Schedules.date gte date }.map { Schedules.createEntity(it) }
 
     fun insert(schedule: Schedule): Int =
         database.insert(Schedules) {

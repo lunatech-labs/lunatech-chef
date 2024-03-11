@@ -45,7 +45,7 @@ dependencies {
     implementation "org.flywaydb:flyway-core:9.19.1"
     implementation "org.ktorm:ktorm-core:3.6.0"
     implementation "com.zaxxer:HikariCP:5.0.1"
-    implementation "org.postgresql:postgresql:42.6.0"
+    implementation "org.postgresql:postgresql:42.7.2"
     implementation "org.quartz-scheduler:quartz:2.3.2"
 
     implementation "io.ktor:ktor-server-status-pages:2.3.8"

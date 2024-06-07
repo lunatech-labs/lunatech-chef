@@ -23,7 +23,9 @@ import mu.KotlinLogging
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.time.LocalDate
-import java.util.*
+import java.util.Date
+import java.util.Locale
+import java.util.UUID
 import java.util.concurrent.TimeUnit
 
 private val logger = KotlinLogging.logger {}
@@ -117,7 +119,10 @@ fun getUserNameFromEmail(emailAddress: String): String =
         .split(".")
         .joinToString(" ") { name -> name.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() } }
 
-fun buildChefSession(user: User, admins: List<String>): ChefSession {
+fun buildChefSession(
+    user: User,
+    admins: List<String>,
+): ChefSession {
     val isAdmin = isAdmin(admins, user.emailAddress)
     val ttl = formatDate.format(Date()) ?: throw InternalError("Error adding ttl to ChefSession header.")
 
@@ -140,9 +145,15 @@ fun buildChefSession(user: User, admins: List<String>): ChefSession {
     )
 }
 
-fun isAdmin(admins: List<String>, email: String): Boolean = admins.contains(email)
+fun isAdmin(
+    admins: List<String>,
+    email: String,
+): Boolean = admins.contains(email)
 
-fun validateSession(session: ChefSession, ttlLimit: Int): AccountPrincipal? {
+fun validateSession(
+    session: ChefSession,
+    ttlLimit: Int,
+): AccountPrincipal? {
     return try {
         val formatDate = SimpleDateFormat("yyMMddHHmmss")
         val ttlClient: Date = formatDate.parse(session.ttl)!!

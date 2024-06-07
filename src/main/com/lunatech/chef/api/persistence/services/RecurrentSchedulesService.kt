@@ -19,11 +19,15 @@ import java.time.LocalDate
 import java.util.UUID
 
 class RecurrentSchedulesService(val database: Database) {
-    fun getAll() = database.from(RecurrentSchedules).select()
-        .where { RecurrentSchedules.isDeleted eq false }
-        .map { RecurrentSchedules.createEntity(it) }
+    fun getAll() =
+        database.from(RecurrentSchedules).select()
+            .where { RecurrentSchedules.isDeleted eq false }
+            .map { RecurrentSchedules.createEntity(it) }
 
-    fun getIntervalDate(fromDate: LocalDate, toDate: LocalDate): List<RecurrentSchedule> =
+    fun getIntervalDate(
+        fromDate: LocalDate,
+        toDate: LocalDate,
+    ): List<RecurrentSchedule> =
         database.from(RecurrentSchedules).select()
             .where {
                 val conditions = ArrayList<ColumnDeclaring<Boolean>>()
@@ -49,7 +53,10 @@ class RecurrentSchedulesService(val database: Database) {
             set(it.isDeleted, recurrentSchedule.isDeleted)
         }
 
-    fun update(uuid: UUID, recurrentSchedule: UpdatedRecurrentSchedule): Int =
+    fun update(
+        uuid: UUID,
+        recurrentSchedule: UpdatedRecurrentSchedule,
+    ): Int =
         database.update(RecurrentSchedules) {
             set(it.menuUuid, recurrentSchedule.menuUuid)
             set(it.officeUuid, recurrentSchedule.officeUuid)
@@ -61,12 +68,13 @@ class RecurrentSchedulesService(val database: Database) {
         }
 
     fun delete(uuid: UUID): Int {
-        val result = database.update(RecurrentSchedules) {
-            set(it.isDeleted, true)
-            where {
-                it.uuid eq uuid
+        val result =
+            database.update(RecurrentSchedules) {
+                set(it.isDeleted, true)
+                where {
+                    it.uuid eq uuid
+                }
             }
-        }
 
         return result
     }

@@ -78,13 +78,17 @@ class MenusService(val database: Database) {
         }.size
     }
 
-    fun update(uuid: UUID, menu: UpdatedMenu): Int {
-        val updatedName = database.update(MenuNames) {
-            set(it.name, menu.name)
-            where {
-                it.uuid eq uuid
+    fun update(
+        uuid: UUID,
+        menu: UpdatedMenu,
+    ): Int {
+        val updatedName =
+            database.update(MenuNames) {
+                set(it.name, menu.name)
+                where {
+                    it.uuid eq uuid
+                }
             }
-        }
 
         if (updatedName == 1) {
             // the update of dishes id done by removing all current dishes association
@@ -101,26 +105,28 @@ class MenusService(val database: Database) {
     }
 
     fun delete(uuid: UUID): Int {
-        val result = database.update(MenuNames) {
-            set(it.isDeleted, true)
-            where {
-                it.uuid eq uuid
+        val result =
+            database.update(MenuNames) {
+                set(it.isDeleted, true)
+                where {
+                    it.uuid eq uuid
+                }
             }
-        }
 
         // delete related schedules and attendances (after current date)
         val baseDate = LocalDate.now()
-        val schedulesUuid = database
-            .from(Schedules)
-            .select()
-            .where {
-                val conditions = ArrayList<ColumnDeclaring<Boolean>>()
-                conditions += Schedules.menuUuid eq uuid
-                conditions += Schedules.date greater baseDate
-                conditions.reduce { a, b -> a and b }
-            }
-            .map { sch -> Schedules.createEntity(sch) }
-            .map { schedule -> schedule.uuid }
+        val schedulesUuid =
+            database
+                .from(Schedules)
+                .select()
+                .where {
+                    val conditions = ArrayList<ColumnDeclaring<Boolean>>()
+                    conditions += Schedules.menuUuid eq uuid
+                    conditions += Schedules.date greater baseDate
+                    conditions.reduce { a, b -> a and b }
+                }
+                .map { sch -> Schedules.createEntity(sch) }
+                .map { schedule -> schedule.uuid }
 
         database.update(Schedules) {
             set(it.isDeleted, true)

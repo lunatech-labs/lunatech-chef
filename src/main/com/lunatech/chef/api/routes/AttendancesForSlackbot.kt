@@ -44,6 +44,9 @@ fun Routing.attendancesForSlackbot(attendancesForSlackbotService: AttendancesFor
     }
 }
 
-fun dateParametersAreValid(dateFrom: LocalDate?, dateUntil: LocalDate?): Boolean {
+fun dateParametersAreValid(
+    dateFrom: LocalDate?,
+    dateUntil: LocalDate?,
+): Boolean {
     return (dateFrom != null && dateUntil != null) && (dateUntil.isAfter(dateFrom) || dateUntil.isEqual(dateFrom))
 }

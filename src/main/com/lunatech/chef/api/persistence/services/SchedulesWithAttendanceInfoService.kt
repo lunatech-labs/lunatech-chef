@@ -25,7 +25,10 @@ class SchedulesWithAttendanceInfoService(
     val database: Database,
     private val menusService: MenusService,
 ) {
-    fun getFiltered(fromDate: LocalDate?, office: UUID?): List<ScheduleWithAttendanceInfo> =
+    fun getFiltered(
+        fromDate: LocalDate?,
+        office: UUID?,
+    ): List<ScheduleWithAttendanceInfo> =
         database.from(Schedules).select()
             .where {
                 val conditions = ArrayList<ColumnDeclaring<Boolean>>()
@@ -47,9 +50,10 @@ class SchedulesWithAttendanceInfoService(
 
     private fun getScheduleWithAttendanceInfo(schedule: Schedule): ScheduleWithAttendanceInfo {
         val menu = menusService.getByUuid(schedule.menuUuid)
-        val office = database.from(Offices).select()
-            .where { Offices.uuid eq schedule.officeUuid }
-            .map { Offices.createEntity(it) }.firstOrNull()
+        val office =
+            database.from(Offices).select()
+                .where { Offices.uuid eq schedule.officeUuid }
+                .map { Offices.createEntity(it) }.firstOrNull()
         val attendants =
             database.from(Users)
                 .leftJoin(Attendances, on = Attendances.userUuid eq Users.uuid)
@@ -59,7 +63,15 @@ class SchedulesWithAttendanceInfoService(
                     Users.hasBeefRestriction, Users.isGlutenIntolerant, Users.isLactoseIntolerant,
                     Users.otherRestrictions, Users.isInactive, Users.isDeleted,
                 )
-                .where { (Attendances.scheduleUuid eq schedule.uuid) and (Attendances.isAttending eq true) and (Attendances.isDeleted eq false) }
+                .where {
+                    (
+                        Attendances.scheduleUuid eq schedule.uuid
+                    ) and (
+                        Attendances.isAttending eq true
+                    ) and (
+                        Attendances.isDeleted eq false
+                    )
+                }
                 .orderBy(Users.name.asc())
                 .map { Users.createEntity(it) }
 

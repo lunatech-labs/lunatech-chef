@@ -13,7 +13,10 @@ object Offices : BaseTable<Office>("offices") {
     val country = varchar("country")
     val isDeleted = boolean("is_deleted")
 
-    override fun doCreateEntity(row: QueryRowSet, withReferences: Boolean) = Office(
+    override fun doCreateEntity(
+        row: QueryRowSet,
+        withReferences: Boolean,
+    ) = Office(
         uuid = row[uuid] ?: DEFAULT_UUID,
         city = row[city] ?: DEFAULT_STRING,
         country = row[country] ?: DEFAULT_STRING,

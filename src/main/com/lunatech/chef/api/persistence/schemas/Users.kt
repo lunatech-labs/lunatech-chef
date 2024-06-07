@@ -24,7 +24,10 @@ object Users : BaseTable<User>("users") {
     val isInactive = boolean("is_inactive")
     val isDeleted = boolean("is_deleted")
 
-    override fun doCreateEntity(row: QueryRowSet, withReferences: Boolean) = User(
+    override fun doCreateEntity(
+        row: QueryRowSet,
+        withReferences: Boolean,
+    ) = User(
         uuid = row[uuid] ?: DEFAULT_UUID,
         name = row[name] ?: DEFAULT_STRING,
         emailAddress = row[emailAddress] ?: DEFAULT_STRING,

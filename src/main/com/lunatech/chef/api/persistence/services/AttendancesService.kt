@@ -24,7 +24,10 @@ class AttendancesService(
             set(it.isDeleted, attendance.isDeleted)
         }
 
-    fun update(uuid: UUID, attendance: UpdatedAttendance): Int =
+    fun update(
+        uuid: UUID,
+        attendance: UpdatedAttendance,
+    ): Int =
         database.update(Attendances) {
             set(it.isAttending, attendance.isAttending)
             where {
@@ -32,17 +35,25 @@ class AttendancesService(
             }
         }
 
-    fun insertAttendanceAllUsers(scheduleUuid: UUID, isAttending: Boolean?): Int = usersService.getAll().sumOf { user ->
-        database.insert(Attendances) {
-            set(it.uuid, UUID.randomUUID())
-            set(it.scheduleUuid, scheduleUuid)
-            set(it.userUuid, user.uuid)
-            set(it.isAttending, isAttending)
-            set(it.isDeleted, false)
+    fun insertAttendanceAllUsers(
+        scheduleUuid: UUID,
+        isAttending: Boolean?,
+    ): Int =
+        usersService.getAll().sumOf { user ->
+            database.insert(Attendances) {
+                set(it.uuid, UUID.randomUUID())
+                set(it.scheduleUuid, scheduleUuid)
+                set(it.userUuid, user.uuid)
+                set(it.isAttending, isAttending)
+                set(it.isDeleted, false)
+            }
         }
-    }
 
-    fun insertAttendanceForUser(userUuid: UUID, scheduleUuid: UUID, isAttending: Boolean?): Int =
+    fun insertAttendanceForUser(
+        userUuid: UUID,
+        scheduleUuid: UUID,
+        isAttending: Boolean?,
+    ): Int =
         schedulesService.database.insert(Attendances) {
             set(it.uuid, UUID.randomUUID())
             set(it.scheduleUuid, scheduleUuid)

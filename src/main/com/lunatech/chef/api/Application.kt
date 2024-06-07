@@ -81,6 +81,7 @@ import java.time.format.DateTimeParseException
 import java.util.Date
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
+
 private val logger = KotlinLogging.logger {}
 
 @Suppress("unused") // Referenced in application.conf
@@ -148,7 +149,7 @@ fun Application.module() {
                 is IllegalArgumentException, is DateTimeParseException -> {
                     call.respond(
                         HttpStatusCode.BadRequest,
-                        "${throwable.message}"
+                        "${throwable.message}",
                     )
                 }
             }

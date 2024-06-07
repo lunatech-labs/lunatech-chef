@@ -18,7 +18,10 @@ import java.util.Base64
 
 private val logger = KotlinLogging.logger {}
 
-fun Routing.reports(reportService: ReportService, excelService: ExcelService) {
+fun Routing.reports(
+    reportService: ReportService,
+    excelService: ExcelService,
+) {
     val reportsRoute = "/reports"
     val yearParam = "year"
     val monthParam = "month"

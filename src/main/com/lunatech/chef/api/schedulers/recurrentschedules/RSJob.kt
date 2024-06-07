@@ -14,11 +14,10 @@ import java.time.LocalDate
 private val logger = KotlinLogging.logger {}
 
 class RSJob() : Job {
-
     companion object {
-        const val schedulesService: String = "schedulesService"
-        const val recurrentSchedulesService: String = "recurrentSchedulesService"
-        const val attendancesService: String = "attendancesService"
+        const val SCHEDULES_SERVICE: String = "schedulesService"
+        const val RECURRENT_SCHEDULES_SERVICE: String = "recurrentSchedulesService"
+        const val ATTENDANCES_SERVICE: String = "attendancesService"
     }
 
     override fun execute(context: JobExecutionContext?) {
@@ -28,10 +27,10 @@ class RSJob() : Job {
 
         val dataMap = context!!.jobDetail.jobDataMap
 
-        val schedulesService: SchedulesService = dataMap[schedulesService] as SchedulesService
+        val schedulesService: SchedulesService = dataMap[SCHEDULES_SERVICE] as SchedulesService
         val recurrentSchedulesService: RecurrentSchedulesService =
-            dataMap[recurrentSchedulesService] as RecurrentSchedulesService
-        val attendancesService: AttendancesService = dataMap[attendancesService] as AttendancesService
+            dataMap[RECURRENT_SCHEDULES_SERVICE] as RecurrentSchedulesService
+        val attendancesService: AttendancesService = dataMap[ATTENDANCES_SERVICE] as AttendancesService
 
         val recSchedules = recurrentSchedulesService.getIntervalDate(today, inAWeek)
 
@@ -43,12 +42,13 @@ class RSJob() : Job {
 
             if (isInserted == 1) {
                 attendancesService.insertAttendanceAllUsers(dbSchedule.uuid, isAttending = null)
-                val updatedRecSchedule = UpdatedRecurrentSchedule(
-                    menuUuid = rec.menuUuid,
-                    officeUuid = rec.officeUuid,
-                    repetitionDays = rec.repetitionDays,
-                    nextDate = rec.nextDate.plusDays(rec.repetitionDays.toLong()),
-                )
+                val updatedRecSchedule =
+                    UpdatedRecurrentSchedule(
+                        menuUuid = rec.menuUuid,
+                        officeUuid = rec.officeUuid,
+                        repetitionDays = rec.repetitionDays,
+                        nextDate = rec.nextDate.plusDays(rec.repetitionDays.toLong()),
+                    )
                 recurrentSchedulesService.update(rec.uuid, updatedRecSchedule)
             } else {
                 logger.error("Failed to create recurrent schedule for $rec")

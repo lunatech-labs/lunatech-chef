@@ -28,7 +28,10 @@ private val logger = KotlinLogging.logger {}
 
 data class UpdatedSchedule(val menuUuid: UUID, val date: LocalDate, val officeUuid: UUID)
 
-fun Routing.schedules(schedulesService: SchedulesService, attendancesService: AttendancesService) {
+fun Routing.schedules(
+    schedulesService: SchedulesService,
+    attendancesService: AttendancesService,
+) {
     val schedulesRoute = "/schedules"
     val uuidRoute = "/{uuid}"
     val uuidParam = "uuid"
@@ -49,14 +52,15 @@ fun Routing.schedules(schedulesService: SchedulesService, attendancesService: At
                     val scheduleToInsert = Schedule.fromNewSchedule(newSchedule)
                     val insertedSchedule = schedulesService.insert(scheduleToInsert)
 
-                    val insertedAttendance = if (insertedSchedule == 1) {
-                        attendancesService.insertAttendanceAllUsers(
-                            scheduleToInsert.uuid,
-                            isAttending = null,
-                        )
-                    } else {
-                        error
-                    }
+                    val insertedAttendance =
+                        if (insertedSchedule == 1) {
+                            attendancesService.insertAttendanceAllUsers(
+                                scheduleToInsert.uuid,
+                                isAttending = null,
+                            )
+                        } else {
+                            error
+                        }
                     if (insertedAttendance > 0) call.respond(Created) else call.respond(InternalServerError)
                 } catch (exception: Exception) {
                     logger.error("Error adding new Schedule :( ", exception)

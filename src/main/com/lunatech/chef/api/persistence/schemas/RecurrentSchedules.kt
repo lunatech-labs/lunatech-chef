@@ -17,7 +17,10 @@ object RecurrentSchedules : BaseTable<RecurrentSchedule>("recurrent_schedules") 
     val nextDate = date("next_date")
     val isDeleted = boolean("is_deleted")
 
-    override fun doCreateEntity(row: QueryRowSet, withReferences: Boolean) = RecurrentSchedule(
+    override fun doCreateEntity(
+        row: QueryRowSet,
+        withReferences: Boolean,
+    ) = RecurrentSchedule(
         uuid = row[uuid] ?: DEFAULT_UUID,
         menuUuid = row[menuUuid] ?: DEFAULT_UUID,
         officeUuid = row[officeUuid] ?: DEFAULT_UUID,

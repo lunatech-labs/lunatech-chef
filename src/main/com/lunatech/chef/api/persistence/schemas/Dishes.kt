@@ -21,7 +21,10 @@ object Dishes : BaseTable<Dish>("dishes") {
     val isLactoseFree = boolean("is_lactose_free")
     val isDeleted = boolean("is_deleted")
 
-    override fun doCreateEntity(row: QueryRowSet, withReferences: Boolean) = Dish(
+    override fun doCreateEntity(
+        row: QueryRowSet,
+        withReferences: Boolean,
+    ) = Dish(
         uuid = row[uuid] ?: DEFAULT_UUID,
         name = row[name] ?: DEFAULT_STRING,
         description = row[description] ?: DEFAULT_STRING,

@@ -20,8 +20,7 @@ import java.time.LocalDate
 import java.util.UUID
 
 class OfficesService(val database: Database) {
-    fun getAll() =
-        database.from(Offices).select().where { Offices.isDeleted eq false }.map { Offices.createEntity(it) }
+    fun getAll() = database.from(Offices).select().where { Offices.isDeleted eq false }.map { Offices.createEntity(it) }
 
     fun getByUuid(uuid: UUID): List<Office> =
         database.from(Offices).select().where { Offices.uuid eq uuid }.map { Offices.createEntity(it) }
@@ -34,7 +33,10 @@ class OfficesService(val database: Database) {
             set(it.isDeleted, office.isDeleted)
         }
 
-    fun update(uuid: UUID, office: UpdatedOffice): Int =
+    fun update(
+        uuid: UUID,
+        office: UpdatedOffice,
+    ): Int =
         database.update(Offices) {
             set(it.city, office.city)
             set(it.country, office.country)
@@ -43,42 +45,44 @@ class OfficesService(val database: Database) {
             }
         }
 
-    fun delete(uuid: UUID): Int = database.update(Offices) {
-        set(it.isDeleted, true)
-        where {
-            it.uuid eq uuid
-        }
-
-        // delete related schedules and attendances (after current date)
-        val baseDate = LocalDate.now()
-        val schedulesUuid = database
-            .from(Schedules)
-            .select()
-            .where {
-                val conditions = ArrayList<ColumnDeclaring<Boolean>>()
-                conditions += Schedules.officeUuid eq uuid
-                conditions += Schedules.date greater baseDate
-                conditions.reduce { a, b -> a and b }
-            }
-            .map { sch -> Schedules.createEntity(sch) }
-            .map { schedule -> schedule.uuid }
-
-        database.update(Schedules) {
+    fun delete(uuid: UUID): Int =
+        database.update(Offices) {
             set(it.isDeleted, true)
             where {
-                val conditions = ArrayList<ColumnDeclaring<Boolean>>()
-                conditions += Schedules.officeUuid eq uuid
-                conditions += Schedules.date greater baseDate
-                conditions.reduce { a, b -> a and b }
+                it.uuid eq uuid
             }
-        }
-        schedulesUuid.map { scheduleUuid ->
-            database.update(Attendances) { attendance ->
-                set(attendance.isDeleted, true)
+
+            // delete related schedules and attendances (after current date)
+            val baseDate = LocalDate.now()
+            val schedulesUuid =
+                database
+                    .from(Schedules)
+                    .select()
+                    .where {
+                        val conditions = ArrayList<ColumnDeclaring<Boolean>>()
+                        conditions += Schedules.officeUuid eq uuid
+                        conditions += Schedules.date greater baseDate
+                        conditions.reduce { a, b -> a and b }
+                    }
+                    .map { sch -> Schedules.createEntity(sch) }
+                    .map { schedule -> schedule.uuid }
+
+            database.update(Schedules) {
+                set(it.isDeleted, true)
                 where {
-                    attendance.scheduleUuid eq scheduleUuid
+                    val conditions = ArrayList<ColumnDeclaring<Boolean>>()
+                    conditions += Schedules.officeUuid eq uuid
+                    conditions += Schedules.date greater baseDate
+                    conditions.reduce { a, b -> a and b }
+                }
+            }
+            schedulesUuid.map { scheduleUuid ->
+                database.update(Attendances) { attendance ->
+                    set(attendance.isDeleted, true)
+                    where {
+                        attendance.scheduleUuid eq scheduleUuid
+                    }
                 }
             }
         }
-    }
 }

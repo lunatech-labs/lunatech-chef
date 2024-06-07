@@ -1,27 +1,16 @@
 // root-level build.gradle
-buildscript {
-    repositories {
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-    }
-    dependencies {
-        classpath "org.jlleitschuh.gradle:ktlint-gradle:11.3.2"
-    }
-}
-
 plugins {
-    id("org.jlleitschuh.gradle.ktlint-idea") version "11.6.1"
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
     id 'org.jetbrains.kotlin.jvm' version '1.9.10'
     id 'com.github.autostyle' version '3.2'
     id 'application'
 }
 
-group 'com.lunatech'
-version '0.0.1'
-mainClassName = "io.ktor.server.netty.EngineMain"
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+base {
+    group 'com.lunatech'
+    version '0.0.1'
+    mainClassName = "io.ktor.server.netty.EngineMain"
+}
 
 sourceSets {
     main.kotlin.srcDirs = main.java.srcDirs = ['src/main']

@@ -15,7 +15,10 @@ object Schedules : BaseTable<Schedule>("schedules") {
     val officeUuid = uuid("office_uuid")
     val isDeleted = boolean("is_deleted")
 
-    override fun doCreateEntity(row: QueryRowSet, withReferences: Boolean) = Schedule(
+    override fun doCreateEntity(
+        row: QueryRowSet,
+        withReferences: Boolean,
+    ) = Schedule(
         uuid = row[uuid] ?: DEFAULT_UUID,
         menuUuid = row[menuUuid] ?: DEFAULT_UUID,
         date = row[date] ?: LocalDate.now(),

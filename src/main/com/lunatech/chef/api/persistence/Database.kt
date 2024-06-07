@@ -7,12 +7,13 @@ import org.ktorm.database.Database
 
 object Database {
     fun connect(config: FlywayConfig): Database {
-        val hikariConfig = HikariConfig().apply {
-            jdbcUrl = config.url
-            username = config.user
-            password = config.password
-            maximumPoolSize = config.maxPoolSize
-        }
+        val hikariConfig =
+            HikariConfig().apply {
+                jdbcUrl = config.url
+                username = config.user
+                password = config.password
+                maximumPoolSize = config.maxPoolSize
+            }
         val dataSource = HikariDataSource(hikariConfig)
         return Database.connect(dataSource)
     }

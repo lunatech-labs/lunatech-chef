@@ -25,7 +25,11 @@ class AttendancesWithScheduleInfoService(
     private val schedulesService: SchedulesService,
     private val menusWithDishesService: MenusWithDishesNamesService,
 ) {
-    fun getByUserUuidFiltered(userUuid: UUID, fromDate: LocalDate?, office: UUID?): List<AttendanceWithInfo> =
+    fun getByUserUuidFiltered(
+        userUuid: UUID,
+        fromDate: LocalDate?,
+        office: UUID?,
+    ): List<AttendanceWithInfo> =
         database.from(Attendances)
             .leftJoin(Schedules, on = Schedules.uuid eq Attendances.scheduleUuid)
             .select()

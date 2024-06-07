@@ -29,7 +29,10 @@ class SchedulesWithMenuInfoService(
             .map { Schedules.createEntity(it) }
             .map { getScheduleWithMenuInfo(it) }
 
-    fun getFiltered(fromDate: LocalDate?, office: UUID?): List<ScheduleWithMenuInfo> =
+    fun getFiltered(
+        fromDate: LocalDate?,
+        office: UUID?,
+    ): List<ScheduleWithMenuInfo> =
         database.from(Schedules).select()
             .where {
                 val conditions = ArrayList<ColumnDeclaring<Boolean>>()
@@ -55,9 +58,10 @@ class SchedulesWithMenuInfoService(
             .map { Schedules.createEntity(it) }
             .map { schedule ->
                 val menu = menusWithDishesService.getByUuid(schedule.menuUuid)
-                val office = database.from(Offices).select()
-                    .where { Offices.uuid eq schedule.officeUuid }
-                    .map { Offices.createEntity(it) }.firstOrNull()
+                val office =
+                    database.from(Offices).select()
+                        .where { Offices.uuid eq schedule.officeUuid }
+                        .map { Offices.createEntity(it) }.firstOrNull()
 
                 ScheduleWithMenuInfo(
                     schedule.uuid,
@@ -69,9 +73,10 @@ class SchedulesWithMenuInfoService(
 
     private fun getScheduleWithMenuInfo(schedule: Schedule): ScheduleWithMenuInfo {
         val menu = menusWithDishesService.getByUuid(schedule.menuUuid)
-        val office = database.from(Offices).select()
-            .where { Offices.uuid eq schedule.officeUuid }
-            .map { Offices.createEntity(it) }.firstOrNull()
+        val office =
+            database.from(Offices).select()
+                .where { Offices.uuid eq schedule.officeUuid }
+                .map { Offices.createEntity(it) }.firstOrNull()
 
         return ScheduleWithMenuInfo(
             schedule.uuid,

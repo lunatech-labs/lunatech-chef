@@ -25,7 +25,10 @@ import org.ktorm.schema.ColumnDeclaring
 import java.time.LocalDate
 
 class AttendancesForSlackbotService(val database: Database) {
-    fun getMissingAttendances(fromDate: LocalDate, untilDate: LocalDate): List<AttendanceForSlackbot> {
+    fun getMissingAttendances(
+        fromDate: LocalDate,
+        untilDate: LocalDate,
+    ): List<AttendanceForSlackbot> {
         return database.from(Attendances)
             .leftJoin(Schedules, on = Schedules.uuid eq Attendances.scheduleUuid)
             .leftJoin(MenuNames, on = Schedules.menuUuid eq MenuNames.uuid)

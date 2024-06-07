@@ -18,8 +18,7 @@ import java.util.UUID
 class DishesService(val database: Database) {
     fun getAll() = database.from(Dishes).select().where { Dishes.isDeleted eq false }.map { Dishes.createEntity(it) }
 
-    fun getByUuid(uuid: UUID): List<Dish> =
-        database.from(Dishes).select().where { Dishes.uuid eq uuid }.map { Dishes.createEntity(it) }
+    fun getByUuid(uuid: UUID): List<Dish> = database.from(Dishes).select().where { Dishes.uuid eq uuid }.map { Dishes.createEntity(it) }
 
     fun insert(dish: Dish): Int =
         database.insert(Dishes) {
@@ -37,7 +36,10 @@ class DishesService(val database: Database) {
             set(it.isDeleted, dish.isDeleted)
         }
 
-    fun update(uuid: UUID, dish: UpdatedDish): Int =
+    fun update(
+        uuid: UUID,
+        dish: UpdatedDish,
+    ): Int =
         database.update(Dishes) {
             set(it.name, dish.name)
             set(it.description, dish.description)
@@ -54,13 +56,14 @@ class DishesService(val database: Database) {
             }
         }
 
-    fun delete(uuid: UUID): Int = database.update(Dishes) {
-        set(it.isDeleted, true)
-        where {
-            it.uuid eq uuid
-        }
+    fun delete(uuid: UUID): Int =
+        database.update(Dishes) {
+            set(it.isDeleted, true)
+            where {
+                it.uuid eq uuid
+            }
 
-        // delete dishes from DishesOnMenus tables
-        database.delete(DishesOnMenus) { dish -> dish.dishUuid eq uuid }
-    }
+            // delete dishes from DishesOnMenus tables
+            database.delete(DishesOnMenus) { dish -> dish.dishUuid eq uuid }
+        }
 }

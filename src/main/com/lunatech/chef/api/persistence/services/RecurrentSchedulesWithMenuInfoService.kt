@@ -46,9 +46,10 @@ class RecurrentSchedulesWithMenuInfoService(
             .map { RecurrentSchedules.createEntity(it) }
             .map { recSchedule ->
                 val menu = menusWithDishesService.getByUuid(recSchedule.menuUuid)
-                val office = database.from(Offices).select()
-                    .where { Offices.uuid eq recSchedule.officeUuid }
-                    .map { Offices.createEntity(it) }.firstOrNull()
+                val office =
+                    database.from(Offices).select()
+                        .where { Offices.uuid eq recSchedule.officeUuid }
+                        .map { Offices.createEntity(it) }.firstOrNull()
 
                 RecurrentScheduleWithMenuInfo(
                     recSchedule.uuid,
@@ -61,9 +62,10 @@ class RecurrentSchedulesWithMenuInfoService(
 
     private fun getScheduleWithMenuInfo(recSchedule: RecurrentSchedule): RecurrentScheduleWithMenuInfo {
         val menu = menusWithDishesService.getByUuid(recSchedule.menuUuid)
-        val office = database.from(Offices).select()
-            .where { Offices.uuid eq recSchedule.officeUuid }
-            .map { Offices.createEntity(it) }.firstOrNull()
+        val office =
+            database.from(Offices).select()
+                .where { Offices.uuid eq recSchedule.officeUuid }
+                .map { Offices.createEntity(it) }.firstOrNull()
 
         return RecurrentScheduleWithMenuInfo(
             recSchedule.uuid,

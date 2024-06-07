@@ -13,7 +13,10 @@ object Attendances : BaseTable<Attendance>("attendances") {
     val isAttending = boolean("is_attending")
     val isDeleted = boolean("is_deleted")
 
-    override fun doCreateEntity(row: QueryRowSet, withReferences: Boolean) = Attendance(
+    override fun doCreateEntity(
+        row: QueryRowSet,
+        withReferences: Boolean,
+    ) = Attendance(
         uuid = row[uuid] ?: DEFAULT_UUID,
         scheduleUuid = row[scheduleUuid] ?: DEFAULT_UUID,
         userUuid = row[userUuid] ?: DEFAULT_UUID,

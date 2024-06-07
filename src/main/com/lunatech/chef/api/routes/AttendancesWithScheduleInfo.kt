@@ -34,11 +34,12 @@ fun Routing.attendancesWithScheduleInfo(attendancesWithScheduleInfoService: Atte
                     val dateFrom = if (maybeDateFrom != null) LocalDate.parse(maybeDateFrom) else null
                     val officeName = if (maybeOffice != null) UUID.fromString(maybeOffice) else null
 
-                    val attendance = attendancesWithScheduleInfoService.getByUserUuidFiltered(
-                        UUID.fromString(uuid),
-                        dateFrom,
-                        officeName,
-                    )
+                    val attendance =
+                        attendancesWithScheduleInfoService.getByUserUuidFiltered(
+                            UUID.fromString(uuid),
+                            dateFrom,
+                            officeName,
+                        )
                     call.respond(OK, attendance)
                 }
             }

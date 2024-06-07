@@ -21,11 +21,12 @@ class MenusWithDishesNamesService(val database: Database) {
             .where { MenuNames.isDeleted eq false }
             .map { MenuNames.createEntity(it) }
             .map { menu ->
-                val dishes = database
-                    .from(DishesOnMenus)
-                    .leftJoin(Dishes, on = DishesOnMenus.dishUuid eq Dishes.uuid)
-                    .select()
-                    .where { DishesOnMenus.menuUuid eq menu.uuid }
+                val dishes =
+                    database
+                        .from(DishesOnMenus)
+                        .leftJoin(Dishes, on = DishesOnMenus.dishUuid eq Dishes.uuid)
+                        .select()
+                        .where { DishesOnMenus.menuUuid eq menu.uuid }
 
                 MenuNames.toMenuWithDishes(menu, dishes.map { Dishes.createEntity(it) })
             }

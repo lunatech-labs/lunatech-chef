@@ -15,11 +15,11 @@ import org.ktorm.dsl.where
 import java.util.UUID
 
 class UsersService(val database: Database) {
-    fun getAll(): List<User> = database.from(Users).select().where { Users.isDeleted eq false }
-        .map { Users.createEntity(it) }
+    fun getAll(): List<User> =
+        database.from(Users).select().where { Users.isDeleted eq false }
+            .map { Users.createEntity(it) }
 
-    fun getByUuid(uuid: UUID): List<User> =
-        database.from(Users).select().where { Users.uuid eq uuid }.map { Users.createEntity(it) }
+    fun getByUuid(uuid: UUID): List<User> = database.from(Users).select().where { Users.uuid eq uuid }.map { Users.createEntity(it) }
 
     fun getByEmailAddress(emailAddress: String): User? =
         database.from(Users).select()
@@ -46,7 +46,10 @@ class UsersService(val database: Database) {
             set(it.isDeleted, user.isDeleted)
         }
 
-    fun update(uuid: UUID, user: UpdatedUser): Int =
+    fun update(
+        uuid: UUID,
+        user: UpdatedUser,
+    ): Int =
         database.update(Users) {
             set(it.officeUuid, user.officeUuid)
             set(it.isVegetarian, user.isVegetarian)
@@ -64,12 +67,13 @@ class UsersService(val database: Database) {
         }
 
     fun delete(uuid: UUID): Int {
-        val result = database.update(Users) {
-            set(it.isDeleted, true)
-            where {
-                it.uuid eq uuid
+        val result =
+            database.update(Users) {
+                set(it.isDeleted, true)
+                where {
+                    it.uuid eq uuid
+                }
             }
-        }
         // delete related attendances
         database.update(Attendances) {
             set(it.isDeleted, true)

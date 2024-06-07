@@ -9,7 +9,10 @@ object DishesOnMenus : BaseTable<DishOnMenu>("dishes_on_menus") {
     val menuUuid = uuid("menu_uuid")
     val dishUuid = uuid("dish_uuid")
 
-    override fun doCreateEntity(row: QueryRowSet, withReferences: Boolean) = DishOnMenu(
+    override fun doCreateEntity(
+        row: QueryRowSet,
+        withReferences: Boolean,
+    ) = DishOnMenu(
         menuUuid = row[menuUuid] ?: DEFAULT_UUID,
         dishUuid = row[dishUuid] ?: DEFAULT_UUID,
     )

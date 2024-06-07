@@ -11,7 +11,6 @@ import java.time.temporal.WeekFields
 import java.util.Locale
 
 class ExcelService() {
-
     data class ReportEntryWeek(val weekNumber: Int, val name: String, val city: String, val country: String)
 
     private val startingRow = 2
@@ -22,9 +21,7 @@ class ExcelService() {
         return date.get(weekfields.weekOfWeekBasedYear())
     }
 
-    fun exportToExcel(
-        report: List<ReportEntry>,
-    ): ByteArray {
+    fun exportToExcel(report: List<ReportEntry>): ByteArray {
         val reportWithWeek =
             report.map { entry -> ReportEntryWeek(toWeekNumber(entry.date), entry.name, entry.city, entry.country) }
 

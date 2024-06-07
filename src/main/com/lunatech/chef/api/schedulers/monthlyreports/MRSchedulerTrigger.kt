@@ -19,18 +19,20 @@ fun mrSchedulerTrigger(
     reportService: ReportService,
     excelService: ExcelService,
 ) {
-    val job: JobDetail = JobBuilder.newJob(MRJob::class.java)
-        .withIdentity("monthlyReports", "chefSchedules")
-        .build()
+    val job: JobDetail =
+        JobBuilder.newJob(MRJob::class.java)
+            .withIdentity("monthlyReports", "chefSchedules")
+            .build()
 
-    job.jobDataMap[MRJob.reportService] = reportService
-    job.jobDataMap[MRJob.excelService] = excelService
-    job.jobDataMap[MRJob.monthlyReportConfig] = monthlyReportConfig
-    job.jobDataMap[MRJob.mailerConfig] = mailerConfig
+    job.jobDataMap[MRJob.REPORT_SERVICE] = reportService
+    job.jobDataMap[MRJob.EXCEL_SERVICE] = excelService
+    job.jobDataMap[MRJob.MONTHLY_REPORT_CONFIG] = monthlyReportConfig
+    job.jobDataMap[MRJob.MAILER_CONFIG] = mailerConfig
 
-    val trigger: CronTrigger = TriggerBuilder.newTrigger()
-        .withIdentity("monthlyReports", "monthlyReportsTrigger")
-        .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
-        .build()
+    val trigger: CronTrigger =
+        TriggerBuilder.newTrigger()
+            .withIdentity("monthlyReports", "monthlyReportsTrigger")
+            .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
+            .build()
     scheduler.scheduleJob(job, trigger)
 }

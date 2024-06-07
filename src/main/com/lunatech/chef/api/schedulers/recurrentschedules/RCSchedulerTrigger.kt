@@ -17,17 +17,19 @@ fun rcSchedulerTrigger(
     attendancesService: AttendancesService,
     cronExpression: String,
 ) {
-    val job: JobDetail = newJob(RSJob::class.java)
-        .withIdentity("recurrentSchedules", "chefSchedules")
-        .build()
+    val job: JobDetail =
+        newJob(RSJob::class.java)
+            .withIdentity("recurrentSchedules", "chefSchedules")
+            .build()
 
-    job.jobDataMap[RSJob.schedulesService] = schedulesService
-    job.jobDataMap[RSJob.recurrentSchedulesService] = recurrentSchedulesService
-    job.jobDataMap[RSJob.attendancesService] = attendancesService
+    job.jobDataMap[RSJob.SCHEDULES_SERVICE] = schedulesService
+    job.jobDataMap[RSJob.RECURRENT_SCHEDULES_SERVICE] = recurrentSchedulesService
+    job.jobDataMap[RSJob.ATTENDANCES_SERVICE] = attendancesService
 
-    val trigger: CronTrigger = newTrigger()
-        .withIdentity("weekSchedules", "weekSchedulesTrigger")
-        .withSchedule(cronSchedule(cronExpression))
-        .build()
+    val trigger: CronTrigger =
+        newTrigger()
+            .withIdentity("weekSchedules", "weekSchedulesTrigger")
+            .withSchedule(cronSchedule(cronExpression))
+            .build()
     scheduler.scheduleJob(job, trigger)
 }

@@ -7,8 +7,8 @@ import com.lunatech.chef.api.routes.UpdatedSchedule
 import org.ktorm.database.Database
 import org.ktorm.dsl.asc
 import org.ktorm.dsl.eq
-import org.ktorm.dsl.gte
 import org.ktorm.dsl.from
+import org.ktorm.dsl.gte
 import org.ktorm.dsl.insert
 import org.ktorm.dsl.map
 import org.ktorm.dsl.orderBy
@@ -40,7 +40,10 @@ class SchedulesService(val database: Database) {
             set(it.isDeleted, schedule.isDeleted)
         }
 
-    fun update(uuid: UUID, schedule: UpdatedSchedule): Int =
+    fun update(
+        uuid: UUID,
+        schedule: UpdatedSchedule,
+    ): Int =
         database.update(Schedules) {
             set(it.menuUuid, schedule.menuUuid)
             set(it.date, schedule.date)
@@ -51,12 +54,13 @@ class SchedulesService(val database: Database) {
         }
 
     fun delete(uuid: UUID): Int {
-        val result = database.update(Schedules) {
-            set(it.isDeleted, true)
-            where {
-                it.uuid eq uuid
+        val result =
+            database.update(Schedules) {
+                set(it.isDeleted, true)
+                where {
+                    it.uuid eq uuid
+                }
             }
-        }
         // delete related attendances
         database.update(Attendances) {
             set(it.isDeleted, true)

@@ -21,8 +21,10 @@ import org.ktorm.schema.ColumnDeclaring
 import java.time.LocalDate
 
 class ReportService(val database: Database) {
-
-    fun getReportByMonth(year: Int, month: Int): List<ReportEntry> {
+    fun getReportByMonth(
+        year: Int,
+        month: Int,
+    ): List<ReportEntry> {
         val (startDate, endDate) = getTimeInterval(year, month)
         return database
             .from(Attendances)
@@ -49,7 +51,10 @@ class ReportService(val database: Database) {
             }
     }
 
-    private fun getTimeInterval(year: Int, month: Int): Pair<LocalDate, LocalDate> {
+    private fun getTimeInterval(
+        year: Int,
+        month: Int,
+    ): Pair<LocalDate, LocalDate> {
         val baseDate = LocalDate.now().withMonth(month).withYear(year)
         val startDate = baseDate.withDayOfMonth(1)
         val endDate = startDate.plusMonths(1).minusDays(1)

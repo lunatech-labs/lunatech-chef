@@ -16,12 +16,11 @@ import java.time.LocalDate
 private val logger = KotlinLogging.logger {}
 
 class MRJob() : Job {
-
     companion object {
-        const val reportService: String = "reportService"
-        const val excelService: String = "excelService"
-        const val monthlyReportConfig: String = "monthlyReportConfig"
-        const val mailerConfig: String = "mailerConfig"
+        const val REPORT_SERVICE: String = "reportService"
+        const val EXCEL_SERVICE: String = "excelService"
+        const val MONTHLY_REPORT_CONFIG: String = "monthlyReportConfig"
+        const val MAILER_CONFIG: String = "mailerConfig"
     }
 
     override fun execute(context: JobExecutionContext?) {
@@ -29,10 +28,10 @@ class MRJob() : Job {
 
         val dataMap = context!!.jobDetail.jobDataMap
 
-        val reportService: ReportService = dataMap[reportService] as ReportService
-        val excelService: ExcelService = dataMap[excelService] as ExcelService
-        val monthlyReportConfig: MonthlyReportConfig = dataMap[monthlyReportConfig] as MonthlyReportConfig
-        val mailerConfig: MailerConfig = dataMap[mailerConfig] as MailerConfig
+        val reportService: ReportService = dataMap[REPORT_SERVICE] as ReportService
+        val excelService: ExcelService = dataMap[EXCEL_SERVICE] as ExcelService
+        val monthlyReportConfig: MonthlyReportConfig = dataMap[MONTHLY_REPORT_CONFIG] as MonthlyReportConfig
+        val mailerConfig: MailerConfig = dataMap[MAILER_CONFIG] as MailerConfig
 
         val lastMonthDate = LocalDate.now().minusMonths(1)
         val year = lastMonthDate.year
@@ -45,22 +44,24 @@ class MRJob() : Job {
         val reportEntries = reportService.getReportByMonth(year, month)
         val excelReport = excelService.exportToExcel(reportEntries)
 
-        val email: Email = EmailBuilder.startingBlank()
-            .from(monthlyReportConfig.from)
-            .to(monthlyReportConfig.to)
-            .withSubject(monthlyReportConfig.subject)
-            .withPlainText("Please find the lunch planner monthly report attached, for the month of $monthName")
-            .withAttachment("report.xls", excelReport, "application/vnd.ms-excel")
-            .buildEmail()
+        val email: Email =
+            EmailBuilder.startingBlank()
+                .from(monthlyReportConfig.from)
+                .to(monthlyReportConfig.to)
+                .withSubject(monthlyReportConfig.subject)
+                .withPlainText("Please find the lunch planner monthly report attached, for the month of $monthName")
+                .withAttachment("report.xls", excelReport, "application/vnd.ms-excel")
+                .buildEmail()
 
-        val mailer: Mailer = MailerBuilder
-            .withSMTPServer(
-                mailerConfig.host,
-                mailerConfig.port,
-                mailerConfig.user,
-                mailerConfig.password,
-            )
-            .buildMailer()
+        val mailer: Mailer =
+            MailerBuilder
+                .withSMTPServer(
+                    mailerConfig.host,
+                    mailerConfig.port,
+                    mailerConfig.user,
+                    mailerConfig.password,
+                )
+                .buildMailer()
 
         mailer.sendMail(email)
         logger.info("Monthly report for the month of $monthName sent to ${monthlyReportConfig.to}")

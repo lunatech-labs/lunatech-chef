@@ -1,16 +1,15 @@
 // root-level build.gradle
 plugins {
-    id 'org.jlleitschuh.gradle.ktlint' version "12.1.1"
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
     id 'org.jetbrains.kotlin.jvm' version '1.9.10'
     id 'com.github.autostyle' version '3.2'
     id 'application'
 }
 
-group = "com.lunatech" // A company name, for example, `org.jetbrains`
-version = "1.0.0" // Version to assign to the built artifact
-
-application {
-    mainClass = "io.ktor.server.netty.EngineMain"
+base {
+    group 'com.lunatech'
+    version '0.0.1'
+    mainClassName = "io.ktor.server.netty.EngineMain"
 }
 
 sourceSets {
@@ -61,8 +60,7 @@ dependencies {
     testImplementation "io.ktor:ktor-server-tests-jvm:2.3.7"
 }
 
-tasks.register('buildAll', Exec) {
-    dependsOn['buildFrontApp']
+task buildAll(type: Exec, dependsOn: ['buildFrontApp']) {
     group "Build All App"
     description 'Build All App'
     executable "./gradlew"
@@ -70,8 +68,7 @@ tasks.register('buildAll', Exec) {
 }
 
 //Build React App
-tasks.register('buildFrontApp', Exec) {
-    dependsOn['installReactApp']
+task buildFrontApp(type: Exec, dependsOn: ['installReactApp']) {
     group "Front App"
     description 'Build React App'
     executable "npm"
@@ -79,7 +76,7 @@ tasks.register('buildFrontApp', Exec) {
 }
 
 //Install package npm for front app (React)
-tasks.register('installReactApp', Exec) {
+task installReactApp(type: Exec) {
     group "Front App"
     description 'Build React App'
     executable "npm"

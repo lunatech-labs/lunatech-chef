@@ -57,7 +57,7 @@ dependencies {
 
     implementation "org.simplejavamail:simple-java-mail:8.11.1"
 
-    testImplementation "io.ktor:ktor-server-tests-jvm:2.3.7"
+    testImplementation "io.ktor:ktor-server-tests-jvm:2.3.12"
 }
 
 task buildAll(type: Exec, dependsOn: ['buildFrontApp']) {

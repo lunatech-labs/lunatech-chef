@@ -1,13 +1,13 @@
 # Contributing
 
 Everyone is welcome to contribute to the application or make suggestions, but you may want to check first with the
-project contact person Leonor Boga @LeonorLunatech.
+project contact person Leonor Boga @leo-bogastry.
 
 # Setup development environment
 
 In order to be able to run the lunatech-chef locally you need to have the following installed in your local machine:
 
-- [JDK 11](https://sdkman.io/install)
+- [JDK 17](https://sdkman.io/install)
 - [Gradle](https://gradle.org/install)
 - [Npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 - [Docker](https://www.docker.com/products/docker-desktop/)
@@ -28,13 +28,13 @@ already.
 Build to the docker image:
 
 ```commandline
-docker build -t lunatech-chef-api dockerdev/postgres/.
+postman build -t lunatech-chef-api dockerdev/postgres/.
 ```
 
 Run the docker image:
 
 ```commandline
-docker run -it -m 1024m --env POSTGRES_HOST_AUTH_METHOD=trust --name postgres -p 5432:5432 lunatech-chef-api -c log_statement=all
+postman run -it -m 1024m --env POSTGRES_HOST_AUTH_METHOD=trust --name postgres -p 5432:5432 lunatech-chef-api -c log_statement=all
 ```
 
 ## Setup environment variables

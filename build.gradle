@@ -40,7 +40,7 @@ dependencies {
 
     implementation "io.ktor:ktor-server-status-pages:2.3.12"
     implementation "io.ktor:ktor-server-default-headers:2.3.9"
-    implementation "io.ktor:ktor-server-cors:2.3.10"
+    implementation "io.ktor:ktor-server-cors:3.0.1"
     implementation "io.ktor:ktor-server-content-negotiation-jvm:2.3.12"
     implementation "io.ktor:ktor-server-netty-jvm:2.3.12"
     implementation "io.ktor:ktor-server-core-jvm:2.3.12"

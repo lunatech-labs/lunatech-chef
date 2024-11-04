@@ -29,7 +29,7 @@ dependencies {
     implementation "org.apache.logging.log4j:log4j-core:2.23.1"
 
     implementation "com.google.api-client:google-api-client:2.7.0"
-    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.1"
     implementation "io.github.config4k:config4k:0.7.0"
     implementation "org.flywaydb:flyway-core:10.18.0"
     implementation "org.flywaydb:flyway-database-postgresql:10.18.0"

@@ -28,13 +28,13 @@ already.
 Build to the docker image:
 
 ```commandline
-postman build -t lunatech-chef-api dockerdev/postgres/.
+podman build -t lunatech-chef-api dockerdev/postgres/.
 ```
 
 Run the docker image:
 
 ```commandline
-postman run -it -m 1024m --env POSTGRES_HOST_AUTH_METHOD=trust --name postgres -p 5432:5432 lunatech-chef-api -c log_statement=all
+podman run -it -m 1024m --env POSTGRES_HOST_AUTH_METHOD=trust --name postgres -p 5432:5432 lunatech-chef-api -c log_statement=all
 ```
 
 ## Setup environment variables

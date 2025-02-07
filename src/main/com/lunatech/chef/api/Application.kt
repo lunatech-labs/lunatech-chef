@@ -226,11 +226,11 @@ fun Application.module() {
         }
     }
 
-    environment.monitor.subscribe(ApplicationStarted) {
+    monitor.subscribe(ApplicationStarted) {
         logger.info("The chef app is ready to roll")
         scheduler.start()
     }
-    environment.monitor.subscribe(ApplicationStopped) {
+    monitor.subscribe(ApplicationStopped) {
         logger.info("Time to clean up")
     }
 

@@ -6,10 +6,9 @@ import com.lunatech.chef.api.domain.User
 import com.lunatech.chef.api.persistence.services.AttendancesService
 import com.lunatech.chef.api.persistence.services.SchedulesService
 import com.lunatech.chef.api.persistence.services.UsersService
+import com.lunatech.chef.api.serialization.UUIDSerializer
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.http.HttpStatusCode.Companion.Unauthorized
-import io.ktor.server.application.call
-import io.ktor.server.auth.Principal
 import io.ktor.server.auth.authenticate
 import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.principal
@@ -19,6 +18,7 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.route
 import io.ktor.server.sessions.sessions
 import io.ktor.server.sessions.set
+import kotlinx.serialization.Serializable
 import mu.KotlinLogging
 import java.lang.Exception
 import java.text.SimpleDateFormat
@@ -31,9 +31,11 @@ import java.util.concurrent.TimeUnit
 private val logger = KotlinLogging.logger {}
 private val formatDate = SimpleDateFormat("yyMMddHHmmss")
 
+@Serializable
 data class ChefSession(
     val ttl: String,
     val isAdmin: Boolean,
+    @Serializable(with = UUIDSerializer::class)
     val uuid: UUID,
     val name: String,
     val emailAddress: String,
@@ -49,7 +51,7 @@ data class ChefSession(
     val otherRestrictions: String = "",
 )
 
-data class AccountPrincipal(val email: String) : Principal
+data class AccountPrincipal(val email: String)
 
 fun Routing.authentication(
     schedulesService: SchedulesService,

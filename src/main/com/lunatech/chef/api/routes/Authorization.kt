@@ -13,6 +13,7 @@ import io.ktor.server.auth.authenticate
 import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.principal
 import io.ktor.server.response.respond
+import io.ktor.server.routing.Route
 import io.ktor.server.routing.Routing
 import io.ktor.server.routing.get
 import io.ktor.server.routing.route
@@ -53,7 +54,7 @@ data class ChefSession(
 
 data class AccountPrincipal(val email: String)
 
-fun Routing.authentication(
+fun Route.authentication(
     schedulesService: SchedulesService,
     attendancesService: AttendancesService,
     usersService: UsersService,

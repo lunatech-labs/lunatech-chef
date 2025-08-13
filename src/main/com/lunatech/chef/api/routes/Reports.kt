@@ -2,13 +2,17 @@ package com.lunatech.chef.api.routes
 
 import com.lunatech.chef.api.persistence.services.ExcelService
 import com.lunatech.chef.api.persistence.services.ReportService
-import io.ktor.http.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
+import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.response.respond
+import io.ktor.server.response.respondOutputStream
+import io.ktor.server.routing.Route
+import io.ktor.server.routing.get
+import io.ktor.server.routing.route
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import mu.KotlinLogging
-import java.util.*
+import java.util.Base64
 
 private val logger = KotlinLogging.logger {}
 

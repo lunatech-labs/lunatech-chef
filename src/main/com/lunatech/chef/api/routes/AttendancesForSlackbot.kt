@@ -3,8 +3,10 @@ package com.lunatech.chef.api.routes
 import com.lunatech.chef.api.persistence.services.AttendancesForSlackbotService
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.OK
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
+import io.ktor.server.response.respond
+import io.ktor.server.routing.Route
+import io.ktor.server.routing.get
+import io.ktor.server.routing.route
 import mu.KotlinLogging
 import java.time.LocalDate
 

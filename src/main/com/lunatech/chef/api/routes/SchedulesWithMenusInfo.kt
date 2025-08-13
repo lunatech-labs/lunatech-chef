@@ -1,13 +1,14 @@
 package com.lunatech.chef.api.routes
 
-// import com.lunatech.chef.api.auth.rolesAllowed
 import com.lunatech.chef.api.persistence.services.SchedulesWithMenuInfoService
 import io.ktor.http.HttpStatusCode.Companion.NotFound
 import io.ktor.http.HttpStatusCode.Companion.OK
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
+import io.ktor.server.response.respond
+import io.ktor.server.routing.Route
+import io.ktor.server.routing.get
+import io.ktor.server.routing.route
 import java.time.LocalDate
-import java.util.*
+import java.util.UUID
 
 fun Route.schedulesWithMenusInfo(schedulesWithInfoService: SchedulesWithMenuInfoService) {
     val menusRoute = "/schedulesWithMenusInfo"

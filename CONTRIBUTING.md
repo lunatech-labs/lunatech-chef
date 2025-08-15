@@ -39,7 +39,7 @@ podman run -it -m 1024m --env POSTGRES_HOST_AUTH_METHOD=trust --name postgres -p
 
 ## Setup environment variables
 
-In `src/main/resources/` folder create a file `.override.conf` providing values for the following variables:
+In `src/main/resources/` folder create a file `override.conf` providing values for the following variables:
 
 ```shell
 POSTGRESQL_ADDON_HOST = "localhost"

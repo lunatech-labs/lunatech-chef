@@ -54,9 +54,9 @@ import io.ktor.serialization.jackson.jackson
 import io.ktor.server.application.Application
 import io.ktor.server.application.ApplicationStarted
 import io.ktor.server.application.ApplicationStopped
-import io.ktor.server.application.call
 import io.ktor.server.application.install
 import io.ktor.server.auth.Authentication
+import io.ktor.server.auth.authenticate
 import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.jwt.jwt
 import io.ktor.server.auth.session
@@ -240,22 +240,25 @@ fun Application.module() {
         get("/") {
             call.respondFile(File("frontend/build/index.html"))
         }
-        authentication(schedulesService, attendancesService, usersService, authConfig.admins)
         healthCheck()
-        offices(officesService)
-        dishes(dishesService)
-        menus(menusService)
-        menusWithDishesInfo(menusWithDishesService)
-        schedules(schedulesService, attendancesService)
-        schedulesWithMenusInfo(schedulesWithMenuInfoService)
-        schedulesWithAttendanceInfo(schedulesWithAttendanceInfoService)
-        recurrentSchedules(recurrentSchedulesService)
-        recurrentSchedulesWithMenusInfo(recurrentSchedulesMenuWithInfoService)
-        attendancesWithScheduleInfo(attendancesWithInfoService)
-        users(usersService)
-        attendances(attendancesService)
-        attendancesForSlackbot(attendancesForSlackbotService)
-        reports(reportService, excelService)
+        authentication(schedulesService, attendancesService, usersService, authConfig.admins)
+
+        authenticate("session-auth", "auth-jwt") {
+            offices(officesService)
+            dishes(dishesService)
+            menus(menusService)
+            menusWithDishesInfo(menusWithDishesService)
+            schedules(schedulesService, attendancesService)
+            schedulesWithMenusInfo(schedulesWithMenuInfoService)
+            schedulesWithAttendanceInfo(schedulesWithAttendanceInfoService)
+            recurrentSchedules(recurrentSchedulesService)
+            recurrentSchedulesWithMenusInfo(recurrentSchedulesMenuWithInfoService)
+            attendancesWithScheduleInfo(attendancesWithInfoService)
+            users(usersService)
+            attendances(attendancesService)
+            attendancesForSlackbot(attendancesForSlackbotService)
+            reports(reportService, excelService)
+        }
 
         singlePageApplication {
             react("frontend/build")

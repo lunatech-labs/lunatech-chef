@@ -13,14 +13,13 @@ import io.ktor.server.auth.authenticate
 import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.principal
 import io.ktor.server.response.respond
-import io.ktor.server.routing.Routing
+import io.ktor.server.routing.Route
 import io.ktor.server.routing.get
 import io.ktor.server.routing.route
 import io.ktor.server.sessions.sessions
 import io.ktor.server.sessions.set
 import kotlinx.serialization.Serializable
 import mu.KotlinLogging
-import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.Date
@@ -53,7 +52,7 @@ data class ChefSession(
 
 data class AccountPrincipal(val email: String)
 
-fun Routing.authentication(
+fun Route.authentication(
     schedulesService: SchedulesService,
     attendancesService: AttendancesService,
     usersService: UsersService,

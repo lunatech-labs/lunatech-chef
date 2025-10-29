@@ -1,4 +1,5 @@
-// root-level build.gradle
+import com.github.gradle.node.npm.task.NpmTask
+
 plugins {
     id("com.github.node-gradle.node") version "7.1.0"
     id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
@@ -15,8 +16,12 @@ application {
 }
 
 sourceSets {
-    main.kotlin.srcDirs = main.java.srcDirs = ["src/main"]
-    test.kotlin.srcDirs = test.java.srcDirs = ["src/test"]
+    main {
+        java.srcDirs("src/main")
+    }
+    test {
+        java.srcDirs("src/test")
+    }
 }
 
 repositories {
@@ -63,14 +68,14 @@ dependencies {
 }
 
 tasks.register("buildAll") {
-    dependsOn("assemble", "buildFrontApp")
+    dependsOn(tasks.assemble, buildFrontApp)
 }
 
-tasks.register("buildFrontApp", NpmTask) {
-    dependsOn("installReactApp")
-    args = ["run", "build", "--prefix", "./frontend/"]
+val buildFrontApp by tasks.registering(NpmTask::class) {
+    dependsOn(installReactApp)
+    args = listOf("run", "build", "--prefix", "./frontend/")
 }
 
-tasks.register("installReactApp", NpmTask) {
-    args = ["install", "--prefix", "./frontend/"]
+val installReactApp by tasks.registering(NpmTask::class) {
+    args = listOf("install", "--prefix", "./frontend/")
 }

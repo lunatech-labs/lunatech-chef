@@ -8,10 +8,10 @@ plugins {
     id 'application'
 }
 
-base {
-    group 'com.lunatech'
-    version '0.0.1'
-    mainClassName = "io.ktor.server.netty.EngineMain"
+application {
+    group = 'com.lunatech'
+    version = '0.0.1'
+    mainClass = "io.ktor.server.netty.EngineMain"
 }
 
 sourceSets {

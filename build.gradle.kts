@@ -31,7 +31,7 @@ repositories {
 
 dependencies {
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
-    implementation("ch.qos.logback:logback-classic:1.5.15")
+    implementation("ch.qos.logback:logback-classic:1.5.20")
     implementation("com.newrelic.logging:logback:3.1.0")
     implementation("org.apache.logging.log4j:log4j-core:2.23.1")
 

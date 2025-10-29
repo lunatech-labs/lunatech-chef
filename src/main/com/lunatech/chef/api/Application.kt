@@ -76,7 +76,7 @@ import io.ktor.server.sessions.header
 import mu.KotlinLogging
 import org.quartz.impl.StdSchedulerFactory
 import java.io.File
-import java.net.URL
+import java.net.URI
 import java.time.format.DateTimeParseException
 import java.util.Date
 
@@ -97,7 +97,7 @@ fun Application.module() {
     val monthlyReportConfig = MonthlyReportConfig.fromConfig(config.getConfig("monthly-report-email"))
     val mailerConfig = MailerConfig.fromConfig(config.getConfig("mailer"))
 
-    val keycloakProvider = UrlJwkProvider(URL(jwtConfig.jwkProvider))
+    val keycloakProvider = UrlJwkProvider(URI(jwtConfig.jwkProvider).toURL())
 
     val scCronString = config.getString("recurrent-schedules-cron")
     val mrCronString = config.getString("monthly-reports-cron")

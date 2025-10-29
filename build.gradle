@@ -1,6 +1,7 @@
 // root-level build.gradle
 plugins {
-    id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
+    id "com.github.node-gradle.node" version "7.1.0"
+    id "org.jlleitschuh.gradle.ktlint" version "12.1.1"
     id 'org.jetbrains.kotlin.jvm' version '2.1.20'
     id "org.jetbrains.kotlin.plugin.serialization" version "2.2.21"
     id 'com.github.autostyle' version '4.0'
@@ -59,4 +60,17 @@ dependencies {
     implementation "org.simplejavamail:simple-java-mail:8.11.1"
 
     testImplementation "io.ktor:ktor-server-tests-jvm:3.0.3"
+}
+
+tasks.register("buildAll") {
+    dependsOn("assemble", "buildFrontApp")
+}
+
+tasks.register("buildFrontApp", NpmTask) {
+    dependsOn("installReactApp")
+    args = ["run", "build", "--prefix", "./frontend/"]
+}
+
+tasks.register("installReactApp", NpmTask) {
+    args = ["install", "--prefix", "./frontend/"]
 }

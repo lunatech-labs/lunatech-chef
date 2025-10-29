@@ -16,19 +16,11 @@ jobs:
         with:
           java-version: 21
           distribution: 'temurin'
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
-      - name: Build with Gradle
-        run: ./gradlew build
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: 24
-      - name: Install dependencies
-        working-directory: ./frontend
-        run: npm install
-      - name: Generate build
-        working-directory: ./frontend
-        run: npm run build
-        env:
-          CI: false
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+      - name: Build with Gradle
+        run: ./gradlew buildAll

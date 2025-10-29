@@ -16,7 +16,7 @@
     "bootstrap": "^5.3.3",
     "cdbreact": "^1.5.19",
     "dns-packet": "5.6.1",
-    "final-form": "^4.20.10",
+    "final-form": "^5.0.0",
     "ini": "6.0.0",
     "install": "^0.13.0",
     "node-notifier": "10.0.1",

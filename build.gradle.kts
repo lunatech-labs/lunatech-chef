@@ -3,7 +3,7 @@ import com.github.gradle.node.npm.task.NpmTask
 plugins {
     id("io.ktor.plugin") version "3.3.1"
     id("com.github.node-gradle.node") version "7.1.0"
-    id("org.jlleitschuh.gradle.ktlint") version "13.1.0"
+    id("org.jlleitschuh.gradle.ktlint") version "14.0.1"
     id("org.jetbrains.kotlin.jvm") version "2.2.21"
     id("org.jetbrains.kotlin.plugin.serialization") version "2.2.21"
     id("com.github.autostyle") version "4.0.1"

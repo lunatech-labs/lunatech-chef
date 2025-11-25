@@ -114,19 +114,21 @@ come together properly.
 
 Only authorized request are accepted. These are the steps:
 
-1. Update the token in `http-client.env.json`.
+1. Copy the [http-client.private.env.json.sample](http-client.private.env.json.sample) file to
+   `http-client.private.env.json` (and make sure not to commit these secrets)
 
-To get a new token you have to launch the application locally and login using the Google sign-in.
-After a successful login a token can be printed by adding a log statement in login.js `handleLogin` method.
-Copy and paste it into `http-client.env.json` in `token`.
+2. Update the token in `http-client.private.env.json`.
 
-2. Update the session in `http-client.env.json`.
+   To get a new token you have to launch the application locally and login using the Google sign-in.
+   After a successful login a token can be printed by adding a log statement in login.js `handleLogin` method.
+   Copy and paste it into `http-client.private.env.json` in `token`.
 
-Run the login request in `1-login.http`.
-Running this request will output a `CHEF_SESSION` string. Update the `session` in `http-client.env.json` with that
-string.
+3. Update the session in `http-client.private.env.json`.
 
-3. You are now ready to run the other requests.
+   Run the login request in `1-login.http`. Running this request will output a `CHEF_SESSION` string. Update the
+   `session` in `http-client.private.env.json` with that string.
+
+4. You are now ready to run the other requests.
 
 # Deploy Lunatech-chef
 

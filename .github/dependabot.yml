@@ -3,7 +3,7 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
       time: "07:00"
       timezone: "Europe/Amsterdam"
   - package-ecosystem: "npm"
@@ -11,12 +11,12 @@ updates:
     cooldown:
       default-days: 5
     schedule:
-      interval: "weekly"
+      interval: "monthly"
       time: "07:00"
       timezone: "Europe/Amsterdam"
   - package-ecosystem: "gradle"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
       time: "07:00"
       timezone: "Europe/Amsterdam"

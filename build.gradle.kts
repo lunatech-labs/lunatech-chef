@@ -43,7 +43,7 @@ dependencies {
     implementation("org.ktorm:ktorm-core:4.1.1")
     implementation("com.zaxxer:HikariCP:7.0.2")
     implementation("org.postgresql:postgresql:42.7.8")
-    implementation("org.quartz-scheduler:quartz:2.5.1")
+    implementation("org.quartz-scheduler:quartz:2.5.2")
 
     implementation("io.ktor:ktor-server-status-pages")
     implementation("io.ktor:ktor-server-default-headers")

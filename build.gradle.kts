@@ -77,5 +77,5 @@ val buildFrontApp by tasks.registering(NpmTask::class) {
 }
 
 val installReactApp by tasks.registering(NpmTask::class) {
-    args = listOf("install", "--prefix", "./frontend/")
+    args = listOf("ci", "--prefix", "./frontend/")
 }

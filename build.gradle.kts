@@ -36,7 +36,7 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-core:2.25.2")
 
     implementation("com.google.api-client:google-api-client:2.8.1")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.20.1")
     implementation("io.github.config4k:config4k:0.7.0")
     implementation("org.flywaydb:flyway-core:11.18.0")
     implementation("org.flywaydb:flyway-database-postgresql:11.18.0")

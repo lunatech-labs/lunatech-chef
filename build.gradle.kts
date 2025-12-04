@@ -58,7 +58,7 @@ dependencies {
     implementation("io.ktor:ktor-client-apache-jvm")
     implementation("io.ktor:ktor-serialization-jackson")
 
-    implementation("org.apache.poi:poi-ooxml:5.5.0")
+    implementation("org.apache.poi:poi-ooxml:5.5.1")
     implementation("io.ktor:ktor-client-core-jvm")
     implementation("io.ktor:ktor-client-logging-jvm")
 

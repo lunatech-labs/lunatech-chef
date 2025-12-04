@@ -16,7 +16,7 @@ export default function WhoIsJoining(props) {
     const savedOffice = localStorage.getItem("filterOfficeWhoIsJoining");
 
     const [startDate, setDateSchedule] = useState(savedDate === null ? new Date() : new Date(savedDate));
-    const [startOffice, _] = useState(savedOffice === null ? "" : savedOffice);
+    const [startOffice, ] = useState(savedOffice === null ? "" : savedOffice);
 
     const handleDateChange = (date) => {
         setDateSchedule(date)

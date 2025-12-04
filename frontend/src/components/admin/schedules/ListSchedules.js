@@ -29,7 +29,7 @@ export default function ListSchedules(props) {
   );
 
   const [startDateSchedule, setDateSchedule] = useState(savedDate === null ? new Date() : new Date(savedDate));
-  const [startOfficeSchedule, _] = useState(savedOfficeSchedule === null ? "" : savedOfficeSchedule);
+  const [startOfficeSchedule, ] = useState(savedOfficeSchedule === null ? "" : savedOfficeSchedule);
 
   const handleDateChange = (date) => {
     setDateSchedule(date)

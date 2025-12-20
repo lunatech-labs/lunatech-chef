@@ -33,7 +33,7 @@ dependencies {
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
     implementation("ch.qos.logback:logback-classic:1.5.21")
     implementation("com.newrelic.logging:logback:3.4.0")
-    implementation("org.apache.logging.log4j:log4j-core:2.25.2")
+    implementation("org.apache.logging.log4j:log4j-core:2.25.3")
 
     implementation("com.google.api-client:google-api-client:2.8.1")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.20.1")

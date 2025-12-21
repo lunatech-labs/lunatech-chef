@@ -65,6 +65,17 @@ dependencies {
     implementation("org.simplejavamail:simple-java-mail:8.12.6")
 
     testImplementation("io.ktor:ktor-server-test-host")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
+    testImplementation("org.testcontainers:testcontainers:1.20.4")
+    testImplementation("org.testcontainers:junit-jupiter:1.20.4")
+    testImplementation("org.testcontainers:postgresql:1.20.4")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+tasks.test {
+    useJUnitPlatform()
+    // Required for Testcontainers with Colima
+    environment("TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE", "/var/run/docker.sock")
 }
 
 tasks.register("buildAll") {

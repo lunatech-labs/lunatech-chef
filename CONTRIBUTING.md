@@ -7,7 +7,7 @@ project contact person Leonor Boga @leo-bogastry.
 
 In order to be able to run the lunatech-chef locally you need to have the following installed in your local machine:
 
-- [JDK 17](https://sdkman.io/install)
+- [JDK 21](https://sdkman.io/install)
 - [Gradle](https://gradle.org/install)
 - [Npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 - [Docker](https://www.docker.com/products/docker-desktop/)
@@ -52,6 +52,7 @@ AUTH_SESSION_CLIENT_ID = "" //ask a current developer or check clever-cloud conf
 AUTH_SESSION_SECRET_KEY = "" //ask a current developer or check clever-cloud configuration
 
 KTOR_ENV = dev
+MAILPACE_API_KEY = ""
 
 // you will need to setup these if you wish to test the specific funcionality:
 // - schedules being created automatically
@@ -61,9 +62,7 @@ KTOR_ENV = dev
 
 // MONTHLY_REPORTS_CRON = "0 */10 * ? * *" // every 10 minutes for example
 // EMAIL_RECIPIENTS = "<test with your email>"
-// SENDGRID_SMTP_HOST = "email-smtp.eu-west-1.amazonaws.com"
-// SENDGRID_USERNAME = "" //ask a current developer or check clever-cloud configuration
-// SENDGRID_PASSWORD = "" //ask a current developer or check clever-cloud configuration
+// MAILPACE_API_KEY = "" //ask a current developer or check clever-cloud configuration
 ```
 
 In `frontend/` create the files `.env.development` and `.env.production`. The one that is needed depends on the way the

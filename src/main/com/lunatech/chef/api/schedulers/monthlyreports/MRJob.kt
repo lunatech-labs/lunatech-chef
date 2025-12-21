@@ -15,7 +15,7 @@ import java.time.LocalDate
 
 private val logger = KotlinLogging.logger {}
 
-class MRJob() : Job {
+class MRJob : Job {
     companion object {
         const val REPORT_SERVICE: String = "reportService"
         const val EXCEL_SERVICE: String = "excelService"
@@ -45,12 +45,13 @@ class MRJob() : Job {
         val excelReport = excelService.exportToExcel(reportEntries)
 
         val email: Email =
-            EmailBuilder.startingBlank()
+            EmailBuilder
+                .startingBlank()
                 .from(monthlyReportConfig.from)
                 .to(monthlyReportConfig.to)
                 .withSubject(monthlyReportConfig.subject)
                 .withPlainText("Please find the lunch planner monthly report attached, for the month of $monthName")
-                .withAttachment("report.xls", excelReport, "application/vnd.ms-excel")
+                .withAttachment("report.xlsx", excelReport, "application/vnd.ms-excel")
                 .buildEmail()
 
         val mailer: Mailer =
@@ -60,8 +61,7 @@ class MRJob() : Job {
                     mailerConfig.port,
                     mailerConfig.user,
                     mailerConfig.password,
-                )
-                .buildMailer()
+                ).buildMailer()
 
         mailer.sendMail(email)
         logger.info("Monthly report for the month of $monthName sent to ${monthlyReportConfig.to}")

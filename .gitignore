@@ -1,5 +1,6 @@
 /.gradle
 /.idea
+/.claude
 /out
 /build
 *.iml

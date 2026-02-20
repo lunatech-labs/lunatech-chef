@@ -29,7 +29,7 @@ export function EditOffice(props) {
                 </div>
             );
         } else {
-            return <div></div>;
+            return null;
         }
     }
 

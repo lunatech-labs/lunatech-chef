@@ -4,12 +4,11 @@ import { useAuth, hasAuthParams } from "react-oidc-context";
 import { useNavigate } from "react-router-dom";
 import { User } from "oidc-client-ts";
 
-export function Redirect(props) {
+function Redirect(props) {
     const auth = useAuth();
     const navigate = useNavigate();
 
     const handleLogin = (token) => {
-        // console.log("tokenId: " + token);
         props.login(token);
     }
 

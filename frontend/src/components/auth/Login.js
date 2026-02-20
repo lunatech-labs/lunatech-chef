@@ -4,7 +4,7 @@ import Row from 'react-bootstrap/Row';
 import { useAuth } from "react-oidc-context";
 
 
-export function Login() {
+function Login() {
 
   const auth = useAuth();
 

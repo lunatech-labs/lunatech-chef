@@ -10,10 +10,11 @@ import { Loading } from "./shared/Loading";
 import { ToMonth } from "./shared/Functions";
 import { Form, Field } from "react-final-form";
 import DatePicker from "react-datepicker";
+import { STORAGE_FILTER_DATE_WHO_IS_JOINING, STORAGE_FILTER_OFFICE_WHO_IS_JOINING } from "../redux/LocalStorageKeys";
 
 export default function WhoIsJoining(props) {
-    const savedDate = localStorage.getItem("filterDateWhoIsJoining");
-    const savedOffice = localStorage.getItem("filterOfficeWhoIsJoining");
+    const savedDate = localStorage.getItem(STORAGE_FILTER_DATE_WHO_IS_JOINING);
+    const savedOffice = localStorage.getItem(STORAGE_FILTER_OFFICE_WHO_IS_JOINING);
 
     const [startDate, setDateSchedule] = useState(savedDate === null ? new Date() : new Date(savedDate));
     const [startOffice, ] = useState(savedOffice === null ? "" : savedOffice);
@@ -28,8 +29,8 @@ export default function WhoIsJoining(props) {
         const chosenOffice =
             values.office === undefined ? "" : values.office;
 
-        localStorage.setItem("filterDateWhoIsJoining", shortDate);
-        localStorage.setItem("filterOfficeWhoIsJoining", chosenOffice);
+        localStorage.setItem(STORAGE_FILTER_DATE_WHO_IS_JOINING, shortDate);
+        localStorage.setItem(STORAGE_FILTER_OFFICE_WHO_IS_JOINING, chosenOffice);
         props.filter(shortDate, values.office);
     };
 

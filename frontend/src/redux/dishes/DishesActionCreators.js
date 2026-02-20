@@ -2,6 +2,7 @@ import { allDishesLoading, allDishesShown, allDishesLoadingFailed, dishAddedFail
 import { axiosInstance } from "../Axios";
 import { fetchMenus } from "../menus/MenusActionCreators";
 import { fetchAttendanceUser } from "../attendance/AttendanceActionCreators";
+import { STORAGE_USER_UUID } from "../LocalStorageKeys";
 
 export const fetchDishes = () => (dispatch) => {
   dispatch(allDishesLoading());
@@ -33,7 +34,7 @@ export const addNewDish = (newDish) => (dispatch) => {
 
   axiosInstance
     .post("/dishes", dishToAdd)
-    .then((response) => {
+    .then(() => {
       dispatch(fetchDishes());
     })
     .catch(function (error) {
@@ -56,10 +57,10 @@ export const editDish = (editedDish) => (dispatch) => {
     isLactoseFree: editedDish.isLactoseFree,
   };
 
-  const userUuid = localStorage.getItem("userUuid");
+  const userUuid = localStorage.getItem(STORAGE_USER_UUID);
   axiosInstance
     .put("/dishes/" + editedDish.uuid, sishToEdit)
-    .then((response) => {
+    .then(() => {
       dispatch(fetchDishes());
       dispatch(fetchMenus());
       dispatch(fetchAttendanceUser(userUuid));
@@ -71,10 +72,10 @@ export const editDish = (editedDish) => (dispatch) => {
 };
 
 export const deleteDish = (dishUuid) => (dispatch) => {
-  const userUuid = localStorage.getItem("userUuid");
+  const userUuid = localStorage.getItem(STORAGE_USER_UUID);
   axiosInstance
     .delete("/dishes/" + dishUuid)
-    .then((response) => {
+    .then(() => {
       dispatch(fetchDishes());
       dispatch(fetchMenus());
       dispatch(fetchAttendanceUser(userUuid));

@@ -1,12 +1,13 @@
 import { allAttendancesLoading, allAttendancesLoadingFailed, allAttendancesShown, newAttendanceShown, attendanceEditedFailed } from "./AttendanceSlice";
 import { axiosInstance } from "../Axios";
 import { fetchSchedulesAttendance } from "../schedules/SchedulesActionCreators";
+import { STORAGE_USER_UUID, STORAGE_FILTER_OFFICE_MEALS } from "../LocalStorageKeys";
 
 export const fetchAttendanceUser = (userUuid) => (dispatch) => {
     dispatch(allAttendancesLoading(true));
 
-    const uuid = userUuid || localStorage.getItem("userUuid");
-    const office = localStorage.getItem("filterOfficeScheduledMeals");
+    const uuid = userUuid || localStorage.getItem(STORAGE_USER_UUID);
+    const office = localStorage.getItem(STORAGE_FILTER_OFFICE_MEALS);
     const date = new Date().toISOString().substring(0, 10);
 
     var filter =
@@ -32,7 +33,7 @@ export const editAttendance = (attendance) => (dispatch) => {
 
     axiosInstance
         .put("/attendances/" + attendance.uuid, attendanceToEdit)
-        .then(function (response) {
+        .then(function () {
             dispatch(fetchSchedulesAttendance());
         })
         .catch(function (error) {
@@ -44,4 +45,3 @@ export const editAttendance = (attendance) => (dispatch) => {
 export const showNewAttendance = (attendance) => (dispatch) => {
     dispatch(newAttendanceShown(attendance));
 };
-

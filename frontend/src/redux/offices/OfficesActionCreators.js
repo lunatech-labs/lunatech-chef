@@ -5,6 +5,7 @@ import {
     fetchSchedulesAttendance,
 } from "../schedules/SchedulesActionCreators";
 import { fetchAttendanceUser } from "../attendance/AttendanceActionCreators";
+import { STORAGE_USER_UUID } from "../LocalStorageKeys";
 
 export const fetchOffices = () => (dispatch) => {
     dispatch(allOfficesLoading(true));
@@ -28,7 +29,7 @@ export const addNewOffice = (newOffice) => (dispatch) => {
 
     axiosInstance
         .post("/offices", officeToAdd)
-        .then((response) => {
+        .then(() => {
             dispatch(fetchOffices());
         })
         .catch(function (error) {
@@ -43,10 +44,10 @@ export const editOffice = (editedOffice) => (dispatch) => {
         country: editedOffice.country,
     };
 
-    const userUuid = localStorage.getItem("userUuid");
+    const userUuid = localStorage.getItem(STORAGE_USER_UUID);
     axiosInstance
         .put("/offices/" + editedOffice.uuid, officeToEdit)
-        .then((response) => {
+        .then(() => {
             dispatch(fetchOffices());
             dispatch(fetchSchedules());
             dispatch(fetchSchedulesAttendance());
@@ -59,15 +60,14 @@ export const editOffice = (editedOffice) => (dispatch) => {
 };
 
 export const deleteOffice = (officeUuid) => (dispatch) => {
-    const userUuid = localStorage.getItem("userUuid");
+    const userUuid = localStorage.getItem(STORAGE_USER_UUID);
     axiosInstance
         .delete("/offices/" + officeUuid)
-        .then((response) => {
+        .then(() => {
             dispatch(fetchOffices());
             dispatch(fetchSchedules());
             dispatch(fetchSchedulesAttendance());
             dispatch(fetchAttendanceUser(userUuid));
-
         })
         .catch(function (error) {
             console.log("Failed removing Office: " + error);

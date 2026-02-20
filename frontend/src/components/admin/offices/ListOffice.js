@@ -2,6 +2,7 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import Alert from 'react-bootstrap/Alert';
@@ -91,18 +92,16 @@ export default function ListOffice(props) {
                 <h3 className="mt-4">Management of Offices</h3>
             </Row>
             <Row className="mb-5">
-                <Link to="/newoffice">
-                    <button type="button" className="btn btn-success">
-                        <i>
-                            <FontAwesomeIcon icon={faPlus} />
-                        </i>{" "}
+                <Col xs="auto">
+                    <Button as={Link} to="/newoffice" variant="success">
+                        <FontAwesomeIcon icon={faPlus} />{" "}
                         New Office
-                    </button>
-                </Link>
+                    </Button>
+                </Col>
             </Row>
-            {props.errorAdding ? <ShowError error={props.errorAdding} reason="adding" /> : <div></div>}
-            {props.errorDeleting ? <ShowError error={props.errorDeleting} reason="deleting" /> : <div></div>}
-            {props.errorEditing ? <ShowError error={props.errorEditing} reason="saving" /> : <div></div>}
+            {props.errorAdding ? <ShowError error={props.errorAdding} reason="adding" /> : null}
+            {props.errorDeleting ? <ShowError error={props.errorDeleting} reason="deleting" /> : null}
+            {props.errorEditing ? <ShowError error={props.errorEditing} reason="saving" /> : null}
             <RenderData
                 isLoading={props.isLoading}
                 error={props.errorListing}

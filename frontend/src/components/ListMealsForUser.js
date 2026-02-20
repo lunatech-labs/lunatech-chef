@@ -8,10 +8,11 @@ import Alert from 'react-bootstrap/Alert';
 import { Loading } from "./shared/Loading";
 import { Form, Field } from "react-final-form";
 import { ToMonth } from "./shared/Functions";
+import { STORAGE_FILTER_OFFICE_MEALS } from "../redux/LocalStorageKeys";
 
 export const ListMealsForUser = (props) => {
   const [attendance, setAttendance] = React.useState(props.attendance);
-  const savedOffice = localStorage.getItem("filterOfficeScheduledMeals");
+  const savedOffice = localStorage.getItem(STORAGE_FILTER_OFFICE_MEALS);
 
   const onSubmit = (values) => {
     const newAttendance = attendance.map((item) => {
@@ -34,7 +35,7 @@ export const ListMealsForUser = (props) => {
     const chosenOffice =
       values.office === undefined ? "" : values.office;
 
-    localStorage.setItem("filterOfficeScheduledMeals", chosenOffice);
+    localStorage.setItem(STORAGE_FILTER_OFFICE_MEALS, chosenOffice);
     props.filter();
   };
 
@@ -171,7 +172,7 @@ export const ListMealsForUser = (props) => {
       <div>
         <RenderData
           isLoading={props.isLoading}
-          errorListing={props.errorListing}
+          error={props.errorListing}
           attendance={attendance}
           offices={props.offices}
         />

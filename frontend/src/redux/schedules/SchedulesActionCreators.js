@@ -1,15 +1,22 @@
 import { allSchedulesLoading, allSchedulesLoadingFailed, allSchedulesShown, scheduleAddedFailed, scheduleEditedFailed, scheduleDeletedFailed, allRecurrentSchedulesShown, allSchedulesAttendanceLoading, allSchedulesAttendanceLoadingFailed, allSchedulesAttendanceShown } from "./SchedulesSlice";
 import { axiosInstance } from "../Axios";
 import { fetchAttendanceUser } from "../attendance/AttendanceActionCreators";
+import {
+    STORAGE_USER_UUID,
+    STORAGE_FILTER_DATE_SCHEDULE,
+    STORAGE_FILTER_OFFICE_SCHEDULE,
+    STORAGE_FILTER_DATE_WHO_IS_JOINING,
+    STORAGE_FILTER_OFFICE_WHO_IS_JOINING,
+} from "../LocalStorageKeys";
 
 export const fetchSchedules = () => (dispatch) => {
     dispatch(allSchedulesLoading(true));
 
-    const savedDate = localStorage.getItem("filterDateSchedule");
+    const savedDate = localStorage.getItem(STORAGE_FILTER_DATE_SCHEDULE);
     const date =
         savedDate === null ? new Date().toISOString().substring(0, 10) : savedDate;
 
-    const office = localStorage.getItem("filterOfficeSchedule");
+    const office = localStorage.getItem(STORAGE_FILTER_OFFICE_SCHEDULE);
 
     var filter =
         office === null || office === ""
@@ -30,7 +37,7 @@ export const fetchSchedules = () => (dispatch) => {
 export const fetchRecurrentSchedules = () => (dispatch) => {
     dispatch(allSchedulesLoading(true));
 
-    const office = localStorage.getItem("filterOfficeSchedule");
+    const office = localStorage.getItem(STORAGE_FILTER_OFFICE_SCHEDULE);
 
     var filter =
         office === null || office === "" ? "" : "?office=" + office;
@@ -49,11 +56,11 @@ export const fetchRecurrentSchedules = () => (dispatch) => {
 export const fetchSchedulesAttendance = () => (dispatch) => {
     dispatch(allSchedulesAttendanceLoading(true));
 
-    const savedDate = localStorage.getItem("filterDateWhoIsJoining");
+    const savedDate = localStorage.getItem(STORAGE_FILTER_DATE_WHO_IS_JOINING);
     const date =
         savedDate === null ? new Date().toISOString().substring(0, 10) : savedDate;
 
-    const office = localStorage.getItem("filterOfficeWhoIsJoining");
+    const office = localStorage.getItem(STORAGE_FILTER_OFFICE_WHO_IS_JOINING);
 
     var filter =
         office === null || office === ""
@@ -78,15 +85,15 @@ export const addNewSchedule = (newSchedule) => (dispatch) => {
         date: newSchedule.date,
     };
 
-    const userUuid = localStorage.getItem("userUuid");
+    const userUuid = localStorage.getItem(STORAGE_USER_UUID);
     axiosInstance
         .post("/schedules", scheduleToAdd)
-        .then((response) => {
+        .then(() => {
             if (newSchedule.recurrency > 0) {
                 dispatch(addNewRecurrentSchedule(newSchedule));
             }
         })
-        .then((response) => {
+        .then(() => {
             dispatch(fetchSchedules());
             dispatch(fetchSchedulesAttendance());
             dispatch(fetchAttendanceUser(userUuid));
@@ -107,7 +114,7 @@ export const addNewRecurrentSchedule = (newRecurrentSchedule) => (dispatch) => {
 
     axiosInstance
         .post("/recurrentschedules", scheduleToAdd)
-        .then((response) => {
+        .then(() => {
             dispatch(fetchRecurrentSchedules());
         })
         .catch(function (error) {
@@ -131,10 +138,10 @@ export const editSingleSchedule = (editedSchedule) => (dispatch) => {
         date: editedSchedule.date,
     };
 
-    const userUuid = localStorage.getItem("userUuid");
+    const userUuid = localStorage.getItem(STORAGE_USER_UUID);
     axiosInstance
         .put("/schedules/" + editedSchedule.uuid, sheduleToEdit)
-        .then((response) => {
+        .then(() => {
             dispatch(fetchSchedules());
             dispatch(fetchSchedulesAttendance());
             dispatch(fetchAttendanceUser(userUuid));
@@ -153,10 +160,10 @@ export const editRecurrentSchedule = (editedSchedule) => (dispatch) => {
         nextDate: editedSchedule.date,
     };
 
-    const userUuid = localStorage.getItem("userUuid");
+    const userUuid = localStorage.getItem(STORAGE_USER_UUID);
     axiosInstance
         .put("/recurrentschedules/" + editedSchedule.uuid, recScheduleToEdit)
-        .then((response) => {
+        .then(() => {
             dispatch(fetchRecurrentSchedules());
             dispatch(fetchSchedulesAttendance());
             dispatch(fetchAttendanceUser(userUuid));
@@ -168,10 +175,10 @@ export const editRecurrentSchedule = (editedSchedule) => (dispatch) => {
 };
 
 export const deleteSchedule = (scheduleUuid) => (dispatch) => {
-    const userUuid = localStorage.getItem("userUuid");
+    const userUuid = localStorage.getItem(STORAGE_USER_UUID);
     axiosInstance
         .delete("/schedules/" + scheduleUuid)
-        .then((response) => {
+        .then(() => {
             dispatch(fetchSchedules());
             dispatch(fetchSchedulesAttendance());
             dispatch(fetchAttendanceUser(userUuid));
@@ -185,7 +192,7 @@ export const deleteSchedule = (scheduleUuid) => (dispatch) => {
 export const deleteRecurrentSchedule = (recScheduleUuid) => (dispatch) => {
     axiosInstance
         .delete("/recurrentschedules/" + recScheduleUuid)
-        .then((response) => {
+        .then(() => {
             dispatch(fetchRecurrentSchedules());
         })
         .catch(function (error) {

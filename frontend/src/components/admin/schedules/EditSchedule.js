@@ -15,7 +15,7 @@ export default function EditSchedule(props) {
                 </div>
             );
         } else {
-            return <div></div>;
+            return null;
         }
     }
 

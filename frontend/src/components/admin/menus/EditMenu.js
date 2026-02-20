@@ -29,7 +29,7 @@ export function EditMenu(props) {
                 </div>
             );
         } else {
-            return <div></div>;
+            return null;
         }
     }
 

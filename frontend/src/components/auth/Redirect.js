@@ -8,10 +8,6 @@ function Redirect(props) {
     const auth = useAuth();
     const navigate = useNavigate();
 
-    const handleLogin = (token) => {
-        props.login(token);
-    }
-
     useEffect(() => {
         if (
             !hasAuthParams() &&
@@ -23,7 +19,6 @@ function Redirect(props) {
         }
 
         if (auth.isAuthenticated && !auth.activeNavigator && !auth.isLoading) {
-            // get the authentication token from session storage if it exists
             const oidcStorage =
                 sessionStorage.getItem(
                     `oidc.user:${process.env.REACT_APP_REALMS_URL}:${process.env.REACT_APP_CLIENT_ID}`
@@ -31,22 +26,12 @@ function Redirect(props) {
 
             const { id_token } = User.fromStorageString(oidcStorage);
 
-            handleLogin(id_token);
+            props.login(id_token);
             navigate("/");
         }
-    }, [auth.isAuthenticated, auth.activeNavigator, auth.isLoading]);
+    }, [auth.isAuthenticated, auth.activeNavigator, auth.isLoading, props.login, navigate]);
 
-    function ActiveNavigator() {
-        return (
-            (auth.activeNavigator) ? (
-                <div>Signing you in/out...</div>
-            ) : <div></div>
-        );
-    }
-
-
-    return (<ActiveNavigator />);
-
+    return auth.activeNavigator ? <div>Signing you in/out...</div> : null;
 }
 
 export default Redirect;

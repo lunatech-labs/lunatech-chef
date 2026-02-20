@@ -14,6 +14,10 @@ export const ListMealsForUser = (props) => {
   const [attendance, setAttendance] = React.useState(props.attendance);
   const savedOffice = localStorage.getItem(STORAGE_FILTER_OFFICE_MEALS);
 
+  React.useEffect(() => {
+    setAttendance(props.attendance);
+  }, [props.attendance]);
+
   const onSubmit = (values) => {
     const newAttendance = attendance.map((item) => {
       if (item.uuid === values.uuid) {
@@ -111,15 +115,15 @@ export const ListMealsForUser = (props) => {
                 </tr>
               </thead>
               <tbody>
-                {attendance.map((attendance) => {
+                {attendance.map((item) => {
                   return (
-                    <tr key={attendance.uuid}>
+                    <tr key={item.uuid}>
                       <td>
                         <Form
                           onSubmit={onSubmit}
                           initialValues={{
-                            uuid: attendance.uuid,
-                            isAttending: attendance.isAttending,
+                            uuid: item.uuid,
+                            isAttending: item.isAttending,
                           }}
                           render={({ handleSubmit }) => (
                             <form>
@@ -141,13 +145,13 @@ export const ListMealsForUser = (props) => {
                           )}
                         ></Form>
                       </td>
-                      <td>{attendance.office}</td>
+                      <td>{item.office}</td>
                       <td>
-                        {attendance.date[2]} {ToMonth(attendance.date[1])}{" "}
-                        {attendance.date[0]}
+                        {item.date[2]} {ToMonth(item.date[1])}{" "}
+                        {item.date[0]}
                       </td>
-                      <td>{attendance.menu.name} {attendance.menu.dishes.length > 0 ? (":") : ("")}
-                        {attendance.menu.dishes.map((dish) => {
+                      <td>{item.menu.name} {item.menu.dishes.length > 0 ? (":") : ("")}
+                        {item.menu.dishes.map((dish) => {
                           return (
                             <p style={{ margin: 5, padding: 0 }} key={dish.uuid}>• {dish.name}</p>
                           );

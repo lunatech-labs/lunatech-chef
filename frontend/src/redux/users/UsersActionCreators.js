@@ -30,7 +30,7 @@ export const login = (token) => (dispatch) => {
         })
         .catch(function (error) {
             console.log("Failed logging in user " + error);
-            dispatch(userLoggedInFailed(error));
+            dispatch(userLoggedInFailed(error.message));
         });
 };
 

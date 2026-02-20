@@ -44,7 +44,7 @@ export const addNewDish = (newDish) => (dispatch) => {
 };
 
 export const editDish = (editedDish) => (dispatch) => {
-  const sishToEdit = {
+  const dishToEdit = {
     name: editedDish.name,
     description: editedDish.description,
     isVegetarian: editedDish.isVegetarian,
@@ -59,7 +59,7 @@ export const editDish = (editedDish) => (dispatch) => {
 
   const userUuid = localStorage.getItem(STORAGE_USER_UUID);
   axiosInstance
-    .put("/dishes/" + editedDish.uuid, sishToEdit)
+    .put("/dishes/" + editedDish.uuid, dishToEdit)
     .then(() => {
       dispatch(fetchDishes());
       dispatch(fetchMenus());

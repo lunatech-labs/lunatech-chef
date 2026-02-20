@@ -15,7 +15,7 @@ const initState = {
     hasBeefRestriction: false,
     isGlutenIntolerant: false,
     isLactoseIntolerant: false,
-    otherRestrictions: false,
+    otherRestrictions: "",
     error: null,
 };
 

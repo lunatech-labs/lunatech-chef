@@ -10,8 +10,8 @@ export default function AddSchedule(props) {
     function RenderData() {
         const [date, setDate] = useState(new Date());
 
-        const handleChange = (date) => {
-            setDate(date)
+        const handleChange = (selectedDate) => {
+            setDate(selectedDate)
         };
 
         const navigate = useNavigate();

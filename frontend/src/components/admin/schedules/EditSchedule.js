@@ -137,17 +137,9 @@ export default function EditSchedule(props) {
     const getInitialDate = (schedule) => {
         if (!schedule) return new Date();
         if ("date" in schedule) {
-            return new Date().setFullYear(
-                schedule.date[0],
-                schedule.date[1] - 1,
-                schedule.date[2]
-            );
+            return new Date(schedule.date[0], schedule.date[1] - 1, schedule.date[2]);
         } else {
-            return new Date().setFullYear(
-                schedule.nextDate[0],
-                schedule.nextDate[1] - 1,
-                schedule.nextDate[2]
-            );
+            return new Date(schedule.nextDate[0], schedule.nextDate[1] - 1, schedule.nextDate[2]);
         }
     };
 
@@ -158,8 +150,8 @@ export default function EditSchedule(props) {
 
     if (!schedule) return <Navigate to="/allschedules" replace />;
 
-    const handleChange = (date) => {
-        setDate(date)
+    const handleChange = (selectedDate) => {
+        setDate(selectedDate)
     };
     const onSubmit = (values) => {
         let shortDate = date.toISOString().substring(0, 10);

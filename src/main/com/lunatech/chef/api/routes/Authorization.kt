@@ -20,15 +20,15 @@ import io.ktor.server.sessions.sessions
 import io.ktor.server.sessions.set
 import kotlinx.serialization.Serializable
 import mu.KotlinLogging
-import java.text.SimpleDateFormat
 import java.time.LocalDate
-import java.util.Date
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.Locale
 import java.util.UUID
-import java.util.concurrent.TimeUnit
 
 private val logger = KotlinLogging.logger {}
-private val formatDate = SimpleDateFormat("yyMMddHHmmss")
+private val sessionDateFormatter = DateTimeFormatter.ofPattern("yyMMddHHmmss")
 
 @Serializable
 data class ChefSession(
@@ -50,7 +50,9 @@ data class ChefSession(
     val otherRestrictions: String = "",
 )
 
-data class AccountPrincipal(val email: String)
+data class AccountPrincipal(
+    val email: String,
+)
 
 fun Route.authentication(
     schedulesService: SchedulesService,
@@ -108,11 +110,10 @@ fun addNewUserToSchedules(
     schedulesService: SchedulesService,
     attendancesService: AttendancesService,
     userUuid: UUID,
-): List<Int> {
-    return schedulesService.getAfterDate(LocalDate.now()).map { schedule ->
+): List<Int> =
+    schedulesService.getAfterDate(LocalDate.now()).map { schedule ->
         attendancesService.insertAttendanceForUser(userUuid, schedule.uuid, null)
     }
-}
 
 fun getUserNameFromEmail(emailAddress: String): String =
     emailAddress
@@ -125,7 +126,7 @@ fun buildChefSession(
     admins: List<String>,
 ): ChefSession {
     val isAdmin = isAdmin(admins, user.emailAddress)
-    val ttl = formatDate.format(Date()) ?: throw InternalError("Error adding ttl to ChefSession header.")
+    val ttl = LocalDateTime.now().format(sessionDateFormatter)
 
     return ChefSession(
         ttl = ttl,
@@ -154,11 +155,10 @@ fun isAdmin(
 fun validateSession(
     session: ChefSession,
     ttlLimit: Int,
-): AccountPrincipal? {
-    return try {
-        val formatDate = SimpleDateFormat("yyMMddHHmmss")
-        val ttlClient: Date = formatDate.parse(session.ttl)!!
-        val duration = TimeUnit.MILLISECONDS.toMinutes(Date().time - ttlClient.time)
+): AccountPrincipal? =
+    try {
+        val ttlClient = LocalDateTime.parse(session.ttl, sessionDateFormatter)
+        val duration = ChronoUnit.MINUTES.between(ttlClient, LocalDateTime.now())
 
         if (duration < 0 || duration > ttlLimit) {
             null
@@ -169,4 +169,3 @@ fun validateSession(
         logger.error("Exception during session validation {}", exception)
         null
     }
-}

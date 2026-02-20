@@ -13,7 +13,9 @@ import org.ktorm.dsl.select
 import org.ktorm.dsl.where
 import java.util.UUID
 
-class MenusWithDishesNamesService(val database: Database) {
+class MenusWithDishesNamesService(
+    val database: Database,
+) {
     fun getAll(): List<MenuWithDishes> =
         database
             .from(MenuNames)
@@ -35,7 +37,8 @@ class MenusWithDishesNamesService(val database: Database) {
         val menuName =
             database
                 .from(MenuNames)
-                .select().where { MenuNames.uuid eq uuid }
+                .select()
+                .where { MenuNames.uuid eq uuid }
                 .map { MenuNames.createEntity(it) }
                 .firstOrNull()
 
@@ -44,7 +47,8 @@ class MenusWithDishesNamesService(val database: Database) {
                 database
                     .from(DishesOnMenus)
                     .leftJoin(Dishes, on = DishesOnMenus.dishUuid eq Dishes.uuid)
-                    .select().where { DishesOnMenus.menuUuid eq it.uuid }
+                    .select()
+                    .where { DishesOnMenus.menuUuid eq it.uuid }
 
             MenuNames.toMenuWithDishes(it, dishes.map { Dishes.createEntity(it) })
         }

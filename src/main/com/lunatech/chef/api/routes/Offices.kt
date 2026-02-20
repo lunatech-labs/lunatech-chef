@@ -17,16 +17,16 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.put
 import io.ktor.server.routing.route
 import mu.KotlinLogging
-import java.util.UUID
 
 private val logger = KotlinLogging.logger {}
 
-data class UpdatedOffice(val city: String, val country: String)
+data class UpdatedOffice(
+    val city: String,
+    val country: String,
+)
 
 fun Route.offices(officesService: OfficesService) {
     val officesRoute = "/offices"
-    val uuidRoute = "/{uuid}"
-    val uuidParam = "uuid"
 
     route(officesRoute) {
         // get all offices
@@ -46,11 +46,11 @@ fun Route.offices(officesService: OfficesService) {
             }
         }
 
-        route(uuidRoute) {
+        route(UUID_ROUTE) {
             // get single office
             get {
-                val uuid = call.parameters[uuidParam]
-                val offices = officesService.getByUuid(UUID.fromString(uuid))
+                val uuid = call.parameters[UUID_PARAM].toUUIDOrNull() ?: return@get call.respond(BadRequest, "Invalid UUID")
+                val offices = officesService.getByUuid(uuid)
                 if (offices.isEmpty()) {
                     call.respond(NotFound)
                 } else {
@@ -60,9 +60,9 @@ fun Route.offices(officesService: OfficesService) {
             // modify existing office
             put {
                 try {
-                    val uuid = call.parameters[uuidParam]
+                    val uuid = call.parameters[UUID_PARAM].toUUIDOrNull() ?: return@put call.respond(BadRequest, "Invalid UUID")
                     val updatedOffice = call.receive<UpdatedOffice>()
-                    val result = officesService.update(UUID.fromString(uuid), updatedOffice)
+                    val result = officesService.update(uuid, updatedOffice)
                     if (result == 1) call.respond(OK) else call.respond(InternalServerError)
                 } catch (exception: Exception) {
                     logger.error("Error updating an office :( ", exception)
@@ -71,8 +71,8 @@ fun Route.offices(officesService: OfficesService) {
             }
             // delete a single office
             delete {
-                val uuid = call.parameters[uuidParam]
-                val result = officesService.delete(UUID.fromString(uuid))
+                val uuid = call.parameters[UUID_PARAM].toUUIDOrNull() ?: return@delete call.respond(BadRequest, "Invalid UUID")
+                val result = officesService.delete(uuid)
                 if (result == 1) call.respond(OK) else call.respond(InternalServerError)
             }
         }

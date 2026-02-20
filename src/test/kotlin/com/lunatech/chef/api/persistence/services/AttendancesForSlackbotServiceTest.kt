@@ -110,7 +110,8 @@ class AttendancesForSlackbotServiceTest {
 
         @Test
         fun `getMissingAttendances excludes deleted schedules`() {
-            val deletedSchedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(5), officeUuid = testOfficeUuid, isDeleted = true)
+            val deletedSchedule =
+                aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(5), officeUuid = testOfficeUuid, isDeleted = true)
             schedulesService.insert(deletedSchedule)
 
             val missingAttendance = anAttendance(scheduleUuid = deletedSchedule.uuid, userUuid = testUserUuid, isAttending = null)
@@ -126,7 +127,8 @@ class AttendancesForSlackbotServiceTest {
 
         @Test
         fun `getMissingAttendances excludes inactive users`() {
-            val inactiveUser = aUser(name = "Inactive User", emailAddress = uniqueEmail("inactive"), officeUuid = testOfficeUuid, isInactive = true)
+            val inactiveUser =
+                aUser(name = "Inactive User", emailAddress = uniqueEmail("inactive"), officeUuid = testOfficeUuid, isInactive = true)
             usersService.insert(inactiveUser)
 
             val missingAttendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = inactiveUser.uuid, isAttending = null)
@@ -142,7 +144,8 @@ class AttendancesForSlackbotServiceTest {
 
         @Test
         fun `getMissingAttendances excludes deleted users`() {
-            val deletedUser = aUser(name = "Deleted User", emailAddress = uniqueEmail("deleted"), officeUuid = testOfficeUuid, isDeleted = true)
+            val deletedUser =
+                aUser(name = "Deleted User", emailAddress = uniqueEmail("deleted"), officeUuid = testOfficeUuid, isDeleted = true)
             usersService.insert(deletedUser)
 
             val missingAttendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = deletedUser.uuid, isAttending = null)

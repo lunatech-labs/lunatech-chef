@@ -81,129 +81,141 @@ class SchedulesRoutesTest {
     @Nested
     inner class GetAllSchedules {
         @Test
-        fun `returns empty list when no schedules exist`() = testApplication {
-            setupSchedulesRoutes()
+        fun `returns empty list when no schedules exist`() =
+            testApplication {
+                setupSchedulesRoutes()
 
-            val response = client.get("/schedules")
+                val response = client.get("/schedules")
 
-            assertEquals(HttpStatusCode.OK, response.status)
-            assertEquals("[]", response.bodyAsText())
-        }
+                assertEquals(HttpStatusCode.OK, response.status)
+                assertEquals("[]", response.bodyAsText())
+            }
 
         @Test
-        fun `returns all non-deleted schedules`() = testApplication {
-            setupSchedulesRoutes()
-            val schedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
-            schedulesService.insert(schedule)
+        fun `returns all non-deleted schedules`() =
+            testApplication {
+                setupSchedulesRoutes()
+                val schedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
+                schedulesService.insert(schedule)
 
-            val response = client.get("/schedules")
+                val response = client.get("/schedules")
 
-            assertEquals(HttpStatusCode.OK, response.status)
-            assertTrue(response.bodyAsText().contains(testMenuUuid.toString()))
-        }
+                assertEquals(HttpStatusCode.OK, response.status)
+                assertTrue(response.bodyAsText().contains(testMenuUuid.toString()))
+            }
     }
 
     @Nested
     inner class GetScheduleByUuid {
         @Test
-        fun `returns schedule when it exists`() = testApplication {
-            setupSchedulesRoutes()
-            val schedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
-            schedulesService.insert(schedule)
+        fun `returns schedule when it exists`() =
+            testApplication {
+                setupSchedulesRoutes()
+                val schedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
+                schedulesService.insert(schedule)
 
-            val response = client.get("/schedules/${schedule.uuid}")
+                val response = client.get("/schedules/${schedule.uuid}")
 
-            assertEquals(HttpStatusCode.OK, response.status)
-            assertTrue(response.bodyAsText().contains(schedule.uuid.toString()))
-        }
+                assertEquals(HttpStatusCode.OK, response.status)
+                assertTrue(response.bodyAsText().contains(schedule.uuid.toString()))
+            }
 
         @Test
-        fun `returns NotFound for non-existent UUID`() = testApplication {
-            setupSchedulesRoutes()
+        fun `returns NotFound for non-existent UUID`() =
+            testApplication {
+                setupSchedulesRoutes()
 
-            val response = client.get("/schedules/${UUID.randomUUID()}")
+                val response = client.get("/schedules/${UUID.randomUUID()}")
 
-            assertEquals(HttpStatusCode.NotFound, response.status)
-        }
-
+                assertEquals(HttpStatusCode.NotFound, response.status)
+            }
     }
 
     @Nested
     inner class CreateSchedule {
         @Test
-        fun `creates new schedule with attendances`() = testApplication {
-            setupSchedulesRoutes()
-            val client = jsonClient()
-            val scheduleDate = LocalDate.now().plusDays(14)
+        fun `creates new schedule with attendances`() =
+            testApplication {
+                setupSchedulesRoutes()
+                val client = jsonClient()
+                val scheduleDate = LocalDate.now().plusDays(14)
 
-            val response = client.post("/schedules") {
-                contentType(RouteTestHelpers.jsonContentType)
-                setBody(mapOf(
-                    "menuUuid" to testMenuUuid.toString(),
-                    "date" to scheduleDate.toString(),
-                    "officeUuid" to testOfficeUuid.toString()
-                ))
+                val response =
+                    client.post("/schedules") {
+                        contentType(RouteTestHelpers.jsonContentType)
+                        setBody(
+                            mapOf(
+                                "menuUuid" to testMenuUuid.toString(),
+                                "date" to scheduleDate.toString(),
+                                "officeUuid" to testOfficeUuid.toString(),
+                            ),
+                        )
+                    }
+
+                assertEquals(HttpStatusCode.Created, response.status)
+                val schedules = schedulesService.getAll()
+                assertEquals(1, schedules.size)
             }
-
-            assertEquals(HttpStatusCode.Created, response.status)
-            val schedules = schedulesService.getAll()
-            assertEquals(1, schedules.size)
-        }
 
         @Test
-        fun `returns BadRequest for invalid JSON`() = testApplication {
-            setupSchedulesRoutes()
-            val client = jsonClient()
+        fun `returns BadRequest for invalid JSON`() =
+            testApplication {
+                setupSchedulesRoutes()
+                val client = jsonClient()
 
-            val response = client.post("/schedules") {
-                contentType(RouteTestHelpers.jsonContentType)
-                setBody("{ invalid json }")
+                val response =
+                    client.post("/schedules") {
+                        contentType(RouteTestHelpers.jsonContentType)
+                        setBody("{ invalid json }")
+                    }
+
+                assertEquals(HttpStatusCode.BadRequest, response.status)
             }
-
-            assertEquals(HttpStatusCode.BadRequest, response.status)
-        }
     }
 
     @Nested
     inner class UpdateSchedule {
         @Test
-        fun `updates existing schedule`() = testApplication {
-            setupSchedulesRoutes()
-            val client = jsonClient()
-            val schedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
-            schedulesService.insert(schedule)
-            val newDate = LocalDate.now().plusDays(14)
+        fun `updates existing schedule`() =
+            testApplication {
+                setupSchedulesRoutes()
+                val client = jsonClient()
+                val schedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
+                schedulesService.insert(schedule)
+                val newDate = LocalDate.now().plusDays(14)
 
-            val response = client.put("/schedules/${schedule.uuid}") {
-                contentType(RouteTestHelpers.jsonContentType)
-                setBody(mapOf(
-                    "menuUuid" to testMenuUuid.toString(),
-                    "date" to newDate.toString(),
-                    "officeUuid" to testOfficeUuid.toString()
-                ))
+                val response =
+                    client.put("/schedules/${schedule.uuid}") {
+                        contentType(RouteTestHelpers.jsonContentType)
+                        setBody(
+                            mapOf(
+                                "menuUuid" to testMenuUuid.toString(),
+                                "date" to newDate.toString(),
+                                "officeUuid" to testOfficeUuid.toString(),
+                            ),
+                        )
+                    }
+
+                assertEquals(HttpStatusCode.OK, response.status)
+                val updated = schedulesService.getByUuid(schedule.uuid)
+                assertEquals(newDate, updated[0].date)
             }
-
-            assertEquals(HttpStatusCode.OK, response.status)
-            val updated = schedulesService.getByUuid(schedule.uuid)
-            assertEquals(newDate, updated[0].date)
-        }
-
     }
 
     @Nested
     inner class DeleteSchedule {
         @Test
-        fun `soft deletes schedule`() = testApplication {
-            setupSchedulesRoutes()
-            val schedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
-            schedulesService.insert(schedule)
+        fun `soft deletes schedule`() =
+            testApplication {
+                setupSchedulesRoutes()
+                val schedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
+                schedulesService.insert(schedule)
 
-            val response = client.delete("/schedules/${schedule.uuid}")
+                val response = client.delete("/schedules/${schedule.uuid}")
 
-            assertEquals(HttpStatusCode.OK, response.status)
-            val schedules = schedulesService.getAll()
-            assertTrue(schedules.isEmpty(), "Deleted schedule should not appear in getAll")
-        }
-
+                assertEquals(HttpStatusCode.OK, response.status)
+                val schedules = schedulesService.getAll()
+                assertTrue(schedules.isEmpty(), "Deleted schedule should not appear in getAll")
+            }
     }
 }

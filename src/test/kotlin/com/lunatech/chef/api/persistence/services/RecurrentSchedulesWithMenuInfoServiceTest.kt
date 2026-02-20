@@ -59,12 +59,13 @@ class RecurrentSchedulesWithMenuInfoServiceTest {
     inner class GetAllOperations {
         @Test
         fun `getAll returns recurrent schedules with menu and office info`() {
-            val recurrentSchedule = aRecurrentSchedule(
-                menuUuid = testMenuUuid,
-                officeUuid = testOfficeUuid,
-                repetitionDays = 7,
-                nextDate = LocalDate.now().plusDays(7),
-            )
+            val recurrentSchedule =
+                aRecurrentSchedule(
+                    menuUuid = testMenuUuid,
+                    officeUuid = testOfficeUuid,
+                    repetitionDays = 7,
+                    nextDate = LocalDate.now().plusDays(7),
+                )
             recurrentSchedulesService.insert(recurrentSchedule)
 
             val allSchedules = recurrentSchedulesWithMenuInfoService.getAll()
@@ -83,7 +84,8 @@ class RecurrentSchedulesWithMenuInfoServiceTest {
         @Test
         fun `getAll returns only non-deleted recurrent schedules`() {
             val schedule1 = aRecurrentSchedule(menuUuid = testMenuUuid, officeUuid = testOfficeUuid, repetitionDays = 7)
-            val deletedSchedule = aRecurrentSchedule(menuUuid = testMenuUuid, officeUuid = testOfficeUuid, repetitionDays = 14, isDeleted = true)
+            val deletedSchedule =
+                aRecurrentSchedule(menuUuid = testMenuUuid, officeUuid = testOfficeUuid, repetitionDays = 14, isDeleted = true)
 
             recurrentSchedulesService.insert(schedule1)
             recurrentSchedulesService.insert(deletedSchedule)
@@ -134,7 +136,8 @@ class RecurrentSchedulesWithMenuInfoServiceTest {
         @Test
         fun `getFiltered excludes deleted recurrent schedules`() {
             val activeSchedule = aRecurrentSchedule(menuUuid = testMenuUuid, officeUuid = testOfficeUuid, repetitionDays = 7)
-            val deletedSchedule = aRecurrentSchedule(menuUuid = testMenuUuid, officeUuid = testOfficeUuid, repetitionDays = 14, isDeleted = true)
+            val deletedSchedule =
+                aRecurrentSchedule(menuUuid = testMenuUuid, officeUuid = testOfficeUuid, repetitionDays = 14, isDeleted = true)
 
             recurrentSchedulesService.insert(activeSchedule)
             recurrentSchedulesService.insert(deletedSchedule)
@@ -150,12 +153,13 @@ class RecurrentSchedulesWithMenuInfoServiceTest {
     inner class GetByUuidOperations {
         @Test
         fun `getByUuid returns recurrent schedule with menu and office info`() {
-            val recurrentSchedule = aRecurrentSchedule(
-                menuUuid = testMenuUuid,
-                officeUuid = testOfficeUuid,
-                repetitionDays = 14,
-                nextDate = LocalDate.now().plusDays(14),
-            )
+            val recurrentSchedule =
+                aRecurrentSchedule(
+                    menuUuid = testMenuUuid,
+                    officeUuid = testOfficeUuid,
+                    repetitionDays = 14,
+                    nextDate = LocalDate.now().plusDays(14),
+                )
             recurrentSchedulesService.insert(recurrentSchedule)
 
             val retrieved = recurrentSchedulesWithMenuInfoService.getByUuid(recurrentSchedule.uuid)

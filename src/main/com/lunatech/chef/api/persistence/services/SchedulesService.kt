@@ -18,18 +18,30 @@ import org.ktorm.dsl.where
 import java.time.LocalDate
 import java.util.UUID
 
-class SchedulesService(val database: Database) {
+class SchedulesService(
+    private val database: Database,
+) {
     fun getAll(): List<Schedule> =
-        database.from(Schedules).select()
+        database
+            .from(Schedules)
+            .select()
             .where { Schedules.isDeleted eq false }
             .orderBy(Schedules.date.asc())
             .map { Schedules.createEntity(it) }
 
     fun getByUuid(uuid: UUID): List<Schedule> =
-        database.from(Schedules).select().where { Schedules.uuid eq uuid }.map { Schedules.createEntity(it) }
+        database
+            .from(Schedules)
+            .select()
+            .where { Schedules.uuid eq uuid }
+            .map { Schedules.createEntity(it) }
 
     fun getAfterDate(date: LocalDate): List<Schedule> =
-        database.from(Schedules).select().where { Schedules.date gte date }.map { Schedules.createEntity(it) }
+        database
+            .from(Schedules)
+            .select()
+            .where { Schedules.date gte date }
+            .map { Schedules.createEntity(it) }
 
     fun insert(schedule: Schedule): Int =
         database.insert(Schedules) {

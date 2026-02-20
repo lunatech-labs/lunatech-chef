@@ -146,7 +146,8 @@ class AttendancesWithScheduleInfoServiceTest {
         @Test
         fun `getByUserUuidFiltered excludes deleted attendances`() {
             val activeAttendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = true)
-            val deletedAttendance = anAttendance(scheduleUuid = testSchedule2Uuid, userUuid = testUserUuid, isAttending = true, isDeleted = true)
+            val deletedAttendance =
+                anAttendance(scheduleUuid = testSchedule2Uuid, userUuid = testUserUuid, isAttending = true, isDeleted = true)
             attendancesService.insert(activeAttendance)
             attendancesService.insert(deletedAttendance)
 

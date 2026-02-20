@@ -36,11 +36,12 @@ class UsersServiceTest {
     inner class InsertOperations {
         @Test
         fun `insert returns 1 when user is successfully created`() {
-            val user = aUser(
-                name = "John Doe",
-                emailAddress = uniqueEmail("john"),
-                officeUuid = testOfficeUuid,
-            )
+            val user =
+                aUser(
+                    name = "John Doe",
+                    emailAddress = uniqueEmail("john"),
+                    officeUuid = testOfficeUuid,
+                )
 
             val insertResult = usersService.insert(user)
 
@@ -49,12 +50,13 @@ class UsersServiceTest {
 
         @Test
         fun `insert persists all user properties correctly`() {
-            val user = aUser(
-                name = "John Doe",
-                emailAddress = uniqueEmail("john"),
-                officeUuid = testOfficeUuid,
-                isVegetarian = true,
-            )
+            val user =
+                aUser(
+                    name = "John Doe",
+                    emailAddress = uniqueEmail("john"),
+                    officeUuid = testOfficeUuid,
+                    isVegetarian = true,
+                )
 
             usersService.insert(user)
             val retrieved = usersService.getByUuid(user.uuid)
@@ -68,11 +70,12 @@ class UsersServiceTest {
 
         @Test
         fun `insert user with null office succeeds`() {
-            val user = aUser(
-                name = "No Office User",
-                emailAddress = uniqueEmail("nooffice"),
-                officeUuid = null,
-            )
+            val user =
+                aUser(
+                    name = "No Office User",
+                    emailAddress = uniqueEmail("nooffice"),
+                    officeUuid = null,
+                )
 
             val insertResult = usersService.insert(user)
 
@@ -83,20 +86,21 @@ class UsersServiceTest {
 
         @Test
         fun `insert user with all dietary restrictions`() {
-            val user = aUser(
-                name = "Restricted User",
-                emailAddress = uniqueEmail("restricted"),
-                officeUuid = testOfficeUuid,
-                isVegetarian = true,
-                hasHalalRestriction = true,
-                hasNutsRestriction = true,
-                hasSeafoodRestriction = true,
-                hasPorkRestriction = true,
-                hasBeefRestriction = true,
-                isGlutenIntolerant = true,
-                isLactoseIntolerant = true,
-                otherRestrictions = "Many restrictions",
-            )
+            val user =
+                aUser(
+                    name = "Restricted User",
+                    emailAddress = uniqueEmail("restricted"),
+                    officeUuid = testOfficeUuid,
+                    isVegetarian = true,
+                    hasHalalRestriction = true,
+                    hasNutsRestriction = true,
+                    hasSeafoodRestriction = true,
+                    hasPorkRestriction = true,
+                    hasBeefRestriction = true,
+                    isGlutenIntolerant = true,
+                    isLactoseIntolerant = true,
+                    otherRestrictions = "Many restrictions",
+                )
 
             usersService.insert(user)
             val retrieved = usersService.getByUuid(user.uuid)[0]
@@ -114,11 +118,12 @@ class UsersServiceTest {
 
         @Test
         fun `insert user with default dietary restrictions as false`() {
-            val user = aUser(
-                name = "Default User",
-                emailAddress = uniqueEmail("default"),
-                officeUuid = testOfficeUuid,
-            )
+            val user =
+                aUser(
+                    name = "Default User",
+                    emailAddress = uniqueEmail("default"),
+                    officeUuid = testOfficeUuid,
+                )
 
             usersService.insert(user)
             val retrieved = usersService.getByUuid(user.uuid)[0]
@@ -181,7 +186,8 @@ class UsersServiceTest {
 
         @Test
         fun `getByUuid returns deleted user without filtering`() {
-            val deletedUser = aUser(name = "Deleted User", emailAddress = uniqueEmail("deleted"), officeUuid = testOfficeUuid, isDeleted = true)
+            val deletedUser =
+                aUser(name = "Deleted User", emailAddress = uniqueEmail("deleted"), officeUuid = testOfficeUuid, isDeleted = true)
             usersService.insert(deletedUser)
 
             val retrieved = usersService.getByUuid(deletedUser.uuid)
@@ -217,18 +223,19 @@ class UsersServiceTest {
             val user = aUser(name = "John Doe", emailAddress = uniqueEmail("john"), officeUuid = testOfficeUuid)
             usersService.insert(user)
 
-            val updatedUser = UpdatedUser(
-                officeUuid = testOfficeUuid,
-                isVegetarian = true,
-                hasHalalRestriction = false,
-                hasNutsRestriction = false,
-                hasSeafoodRestriction = false,
-                hasPorkRestriction = false,
-                hasBeefRestriction = false,
-                isGlutenIntolerant = false,
-                isLactoseIntolerant = false,
-                otherRestrictions = "",
-            )
+            val updatedUser =
+                UpdatedUser(
+                    officeUuid = testOfficeUuid,
+                    isVegetarian = true,
+                    hasHalalRestriction = false,
+                    hasNutsRestriction = false,
+                    hasSeafoodRestriction = false,
+                    hasPorkRestriction = false,
+                    hasBeefRestriction = false,
+                    isGlutenIntolerant = false,
+                    isLactoseIntolerant = false,
+                    otherRestrictions = "",
+                )
 
             val updateResult = usersService.update(user.uuid, updatedUser)
 
@@ -237,26 +244,28 @@ class UsersServiceTest {
 
         @Test
         fun `update modifies user dietary restrictions`() {
-            val user = aUser(
-                name = "John Doe",
-                emailAddress = uniqueEmail("john"),
-                officeUuid = testOfficeUuid,
-                isVegetarian = false,
-            )
+            val user =
+                aUser(
+                    name = "John Doe",
+                    emailAddress = uniqueEmail("john"),
+                    officeUuid = testOfficeUuid,
+                    isVegetarian = false,
+                )
             usersService.insert(user)
 
-            val updatedUser = UpdatedUser(
-                officeUuid = testOfficeUuid,
-                isVegetarian = true,
-                hasHalalRestriction = true,
-                hasNutsRestriction = true,
-                hasSeafoodRestriction = false,
-                hasPorkRestriction = false,
-                hasBeefRestriction = false,
-                isGlutenIntolerant = false,
-                isLactoseIntolerant = false,
-                otherRestrictions = "No spicy food",
-            )
+            val updatedUser =
+                UpdatedUser(
+                    officeUuid = testOfficeUuid,
+                    isVegetarian = true,
+                    hasHalalRestriction = true,
+                    hasNutsRestriction = true,
+                    hasSeafoodRestriction = false,
+                    hasPorkRestriction = false,
+                    hasBeefRestriction = false,
+                    isGlutenIntolerant = false,
+                    isLactoseIntolerant = false,
+                    otherRestrictions = "No spicy food",
+                )
             usersService.update(user.uuid, updatedUser)
 
             val retrieved = usersService.getByUuid(user.uuid)[0]
@@ -270,18 +279,19 @@ class UsersServiceTest {
         @Test
         fun `update returns 0 for non-existent user`() {
             val nonExistentUuid = UUID.randomUUID()
-            val updatedUser = UpdatedUser(
-                officeUuid = testOfficeUuid,
-                isVegetarian = false,
-                hasHalalRestriction = false,
-                hasNutsRestriction = false,
-                hasSeafoodRestriction = false,
-                hasPorkRestriction = false,
-                hasBeefRestriction = false,
-                isGlutenIntolerant = false,
-                isLactoseIntolerant = false,
-                otherRestrictions = "",
-            )
+            val updatedUser =
+                UpdatedUser(
+                    officeUuid = testOfficeUuid,
+                    isVegetarian = false,
+                    hasHalalRestriction = false,
+                    hasNutsRestriction = false,
+                    hasSeafoodRestriction = false,
+                    hasPorkRestriction = false,
+                    hasBeefRestriction = false,
+                    isGlutenIntolerant = false,
+                    isLactoseIntolerant = false,
+                    otherRestrictions = "",
+                )
 
             val updateResult = usersService.update(nonExistentUuid, updatedUser)
 

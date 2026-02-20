@@ -109,7 +109,8 @@ class SchedulesWithAttendanceInfoServiceTest {
         @Test
         fun `getFiltered excludes deleted attendances`() {
             val activeAttendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = true)
-            val deletedAttendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUser2Uuid, isAttending = true, isDeleted = true)
+            val deletedAttendance =
+                anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUser2Uuid, isAttending = true, isDeleted = true)
             attendancesService.insert(activeAttendance)
             attendancesService.insert(deletedAttendance)
 
@@ -157,7 +158,8 @@ class SchedulesWithAttendanceInfoServiceTest {
 
         @Test
         fun `getFiltered excludes deleted schedules`() {
-            val deletedSchedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(10), officeUuid = testOfficeUuid, isDeleted = true)
+            val deletedSchedule =
+                aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(10), officeUuid = testOfficeUuid, isDeleted = true)
             schedulesService.insert(deletedSchedule)
 
             val schedules = schedulesWithAttendanceInfoService.getFiltered(null, null)

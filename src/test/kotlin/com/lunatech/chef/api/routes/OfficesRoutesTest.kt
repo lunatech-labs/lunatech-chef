@@ -43,137 +43,146 @@ class OfficesRoutesTest {
     @Nested
     inner class GetAllOffices {
         @Test
-        fun `returns empty list when no offices exist`() = testApplication {
-            setupOfficesRoutes()
+        fun `returns empty list when no offices exist`() =
+            testApplication {
+                setupOfficesRoutes()
 
-            val response = client.get("/offices")
+                val response = client.get("/offices")
 
-            assertEquals(HttpStatusCode.OK, response.status)
-            assertEquals("[]", response.bodyAsText())
-        }
-
-        @Test
-        fun `returns all non-deleted offices`() = testApplication {
-            setupOfficesRoutes()
-            val office = anOffice(city = "Rotterdam", country = "Netherlands")
-            officesService.insert(office)
-
-            val response = client.get("/offices")
-
-            assertEquals(HttpStatusCode.OK, response.status)
-            assertTrue(response.bodyAsText().contains("Rotterdam"))
-            assertTrue(response.bodyAsText().contains("Netherlands"))
-        }
+                assertEquals(HttpStatusCode.OK, response.status)
+                assertEquals("[]", response.bodyAsText())
+            }
 
         @Test
-        fun `does not return deleted offices`() = testApplication {
-            setupOfficesRoutes()
-            val activeOffice = anOffice(city = "Rotterdam")
-            val deletedOffice = anOffice(city = "Deleted City", isDeleted = true)
-            officesService.insert(activeOffice)
-            officesService.insert(deletedOffice)
+        fun `returns all non-deleted offices`() =
+            testApplication {
+                setupOfficesRoutes()
+                val office = anOffice(city = "Rotterdam", country = "Netherlands")
+                officesService.insert(office)
 
-            val response = client.get("/offices")
+                val response = client.get("/offices")
 
-            assertEquals(HttpStatusCode.OK, response.status)
-            assertTrue(response.bodyAsText().contains("Rotterdam"))
-            assertFalse(response.bodyAsText().contains("Deleted City"))
-        }
+                assertEquals(HttpStatusCode.OK, response.status)
+                assertTrue(response.bodyAsText().contains("Rotterdam"))
+                assertTrue(response.bodyAsText().contains("Netherlands"))
+            }
+
+        @Test
+        fun `does not return deleted offices`() =
+            testApplication {
+                setupOfficesRoutes()
+                val activeOffice = anOffice(city = "Rotterdam")
+                val deletedOffice = anOffice(city = "Deleted City", isDeleted = true)
+                officesService.insert(activeOffice)
+                officesService.insert(deletedOffice)
+
+                val response = client.get("/offices")
+
+                assertEquals(HttpStatusCode.OK, response.status)
+                assertTrue(response.bodyAsText().contains("Rotterdam"))
+                assertFalse(response.bodyAsText().contains("Deleted City"))
+            }
     }
 
     @Nested
     inner class GetOfficeByUuid {
         @Test
-        fun `returns office when it exists`() = testApplication {
-            setupOfficesRoutes()
-            val office = anOffice(city = "Rotterdam", country = "Netherlands")
-            officesService.insert(office)
+        fun `returns office when it exists`() =
+            testApplication {
+                setupOfficesRoutes()
+                val office = anOffice(city = "Rotterdam", country = "Netherlands")
+                officesService.insert(office)
 
-            val response = client.get("/offices/${office.uuid}")
+                val response = client.get("/offices/${office.uuid}")
 
-            assertEquals(HttpStatusCode.OK, response.status)
-            assertTrue(response.bodyAsText().contains("Rotterdam"))
-        }
+                assertEquals(HttpStatusCode.OK, response.status)
+                assertTrue(response.bodyAsText().contains("Rotterdam"))
+            }
 
         @Test
-        fun `returns NotFound for non-existent UUID`() = testApplication {
-            setupOfficesRoutes()
+        fun `returns NotFound for non-existent UUID`() =
+            testApplication {
+                setupOfficesRoutes()
 
-            val response = client.get("/offices/${UUID.randomUUID()}")
+                val response = client.get("/offices/${UUID.randomUUID()}")
 
-            assertEquals(HttpStatusCode.NotFound, response.status)
-        }
-
+                assertEquals(HttpStatusCode.NotFound, response.status)
+            }
     }
 
     @Nested
     inner class CreateOffice {
         @Test
-        fun `creates new office`() = testApplication {
-            setupOfficesRoutes()
-            val client = jsonClient()
+        fun `creates new office`() =
+            testApplication {
+                setupOfficesRoutes()
+                val client = jsonClient()
 
-            val response = client.post("/offices") {
-                contentType(RouteTestHelpers.jsonContentType)
-                setBody(mapOf("city" to "Paris", "country" to "France"))
+                val response =
+                    client.post("/offices") {
+                        contentType(RouteTestHelpers.jsonContentType)
+                        setBody(mapOf("city" to "Paris", "country" to "France"))
+                    }
+
+                assertEquals(HttpStatusCode.Created, response.status)
+                val offices = officesService.getAll()
+                assertEquals(1, offices.size)
+                assertEquals("Paris", offices[0].city)
+                assertEquals("France", offices[0].country)
             }
-
-            assertEquals(HttpStatusCode.Created, response.status)
-            val offices = officesService.getAll()
-            assertEquals(1, offices.size)
-            assertEquals("Paris", offices[0].city)
-            assertEquals("France", offices[0].country)
-        }
 
         @Test
-        fun `returns BadRequest for invalid JSON`() = testApplication {
-            setupOfficesRoutes()
-            val client = jsonClient()
+        fun `returns BadRequest for invalid JSON`() =
+            testApplication {
+                setupOfficesRoutes()
+                val client = jsonClient()
 
-            val response = client.post("/offices") {
-                contentType(RouteTestHelpers.jsonContentType)
-                setBody("{ invalid json }")
+                val response =
+                    client.post("/offices") {
+                        contentType(RouteTestHelpers.jsonContentType)
+                        setBody("{ invalid json }")
+                    }
+
+                assertEquals(HttpStatusCode.BadRequest, response.status)
             }
-
-            assertEquals(HttpStatusCode.BadRequest, response.status)
-        }
     }
 
     @Nested
     inner class UpdateOffice {
         @Test
-        fun `updates existing office`() = testApplication {
-            setupOfficesRoutes()
-            val client = jsonClient()
-            val office = anOffice(city = "Rotterdam", country = "Netherlands")
-            officesService.insert(office)
+        fun `updates existing office`() =
+            testApplication {
+                setupOfficesRoutes()
+                val client = jsonClient()
+                val office = anOffice(city = "Rotterdam", country = "Netherlands")
+                officesService.insert(office)
 
-            val response = client.put("/offices/${office.uuid}") {
-                contentType(RouteTestHelpers.jsonContentType)
-                setBody(mapOf("city" to "Amsterdam", "country" to "Netherlands"))
+                val response =
+                    client.put("/offices/${office.uuid}") {
+                        contentType(RouteTestHelpers.jsonContentType)
+                        setBody(mapOf("city" to "Amsterdam", "country" to "Netherlands"))
+                    }
+
+                assertEquals(HttpStatusCode.OK, response.status)
+                val updated = officesService.getByUuid(office.uuid)
+                assertEquals("Amsterdam", updated[0].city)
             }
-
-            assertEquals(HttpStatusCode.OK, response.status)
-            val updated = officesService.getByUuid(office.uuid)
-            assertEquals("Amsterdam", updated[0].city)
-        }
-
     }
 
     @Nested
     inner class DeleteOffice {
         @Test
-        fun `soft deletes office`() = testApplication {
-            setupOfficesRoutes()
-            val office = anOffice(city = "Rotterdam", country = "Netherlands")
-            officesService.insert(office)
+        fun `soft deletes office`() =
+            testApplication {
+                setupOfficesRoutes()
+                val office = anOffice(city = "Rotterdam", country = "Netherlands")
+                officesService.insert(office)
 
-            val response = client.delete("/offices/${office.uuid}")
+                val response = client.delete("/offices/${office.uuid}")
 
-            assertEquals(HttpStatusCode.OK, response.status)
-            val offices = officesService.getAll()
-            assertTrue(offices.isEmpty(), "Deleted office should not appear in getAll")
-        }
-
+                assertEquals(HttpStatusCode.OK, response.status)
+                val offices = officesService.getAll()
+                assertTrue(offices.isEmpty(), "Deleted office should not appear in getAll")
+            }
     }
 }

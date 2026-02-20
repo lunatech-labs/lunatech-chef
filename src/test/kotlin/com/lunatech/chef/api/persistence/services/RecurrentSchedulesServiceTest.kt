@@ -57,12 +57,13 @@ class RecurrentSchedulesServiceTest {
     inner class InsertOperations {
         @Test
         fun `insert returns 1 when recurrent schedule is successfully created`() {
-            val recurrentSchedule = aRecurrentSchedule(
-                menuUuid = testMenuUuid,
-                officeUuid = testOfficeUuid,
-                repetitionDays = 7,
-                nextDate = LocalDate.now().plusDays(7),
-            )
+            val recurrentSchedule =
+                aRecurrentSchedule(
+                    menuUuid = testMenuUuid,
+                    officeUuid = testOfficeUuid,
+                    repetitionDays = 7,
+                    nextDate = LocalDate.now().plusDays(7),
+                )
 
             val insertResult = recurrentSchedulesService.insert(recurrentSchedule)
 
@@ -72,12 +73,13 @@ class RecurrentSchedulesServiceTest {
         @Test
         fun `insert persists all recurrent schedule properties correctly`() {
             val nextDate = LocalDate.now().plusDays(7)
-            val recurrentSchedule = aRecurrentSchedule(
-                menuUuid = testMenuUuid,
-                officeUuid = testOfficeUuid,
-                repetitionDays = 7,
-                nextDate = nextDate,
-            )
+            val recurrentSchedule =
+                aRecurrentSchedule(
+                    menuUuid = testMenuUuid,
+                    officeUuid = testOfficeUuid,
+                    repetitionDays = 7,
+                    nextDate = nextDate,
+                )
 
             recurrentSchedulesService.insert(recurrentSchedule)
             val retrieved = recurrentSchedulesService.getByUuid(recurrentSchedule.uuid)
@@ -91,11 +93,12 @@ class RecurrentSchedulesServiceTest {
 
         @Test
         fun `insert with different repetition days persists correctly`() {
-            val schedule14Days = aRecurrentSchedule(
-                menuUuid = testMenuUuid,
-                officeUuid = testOfficeUuid,
-                repetitionDays = 14,
-            )
+            val schedule14Days =
+                aRecurrentSchedule(
+                    menuUuid = testMenuUuid,
+                    officeUuid = testOfficeUuid,
+                    repetitionDays = 14,
+                )
 
             recurrentSchedulesService.insert(schedule14Days)
             val retrieved = recurrentSchedulesService.getByUuid(schedule14Days.uuid)
@@ -164,8 +167,10 @@ class RecurrentSchedulesServiceTest {
         fun `getIntervalDate returns schedules within date range`() {
             val baseDate = LocalDate.now()
             val scheduleInRange1 = aRecurrentSchedule(menuUuid = testMenuUuid, officeUuid = testOfficeUuid, nextDate = baseDate.plusDays(5))
-            val scheduleInRange2 = aRecurrentSchedule(menuUuid = testMenuUuid, officeUuid = testOfficeUuid, nextDate = baseDate.plusDays(10))
-            val scheduleOutOfRange = aRecurrentSchedule(menuUuid = testMenuUuid, officeUuid = testOfficeUuid, nextDate = baseDate.plusDays(20))
+            val scheduleInRange2 =
+                aRecurrentSchedule(menuUuid = testMenuUuid, officeUuid = testOfficeUuid, nextDate = baseDate.plusDays(10))
+            val scheduleOutOfRange =
+                aRecurrentSchedule(menuUuid = testMenuUuid, officeUuid = testOfficeUuid, nextDate = baseDate.plusDays(20))
 
             recurrentSchedulesService.insert(scheduleInRange1)
             recurrentSchedulesService.insert(scheduleInRange2)
@@ -182,7 +187,8 @@ class RecurrentSchedulesServiceTest {
         fun `getIntervalDate excludes deleted schedules`() {
             val baseDate = LocalDate.now()
             val activeSchedule = aRecurrentSchedule(menuUuid = testMenuUuid, officeUuid = testOfficeUuid, nextDate = baseDate.plusDays(5))
-            val deletedSchedule = aRecurrentSchedule(menuUuid = testMenuUuid, officeUuid = testOfficeUuid, nextDate = baseDate.plusDays(6), isDeleted = true)
+            val deletedSchedule =
+                aRecurrentSchedule(menuUuid = testMenuUuid, officeUuid = testOfficeUuid, nextDate = baseDate.plusDays(6), isDeleted = true)
 
             recurrentSchedulesService.insert(activeSchedule)
             recurrentSchedulesService.insert(deletedSchedule)
@@ -201,12 +207,13 @@ class RecurrentSchedulesServiceTest {
             val schedule = aRecurrentSchedule(menuUuid = testMenuUuid, officeUuid = testOfficeUuid, repetitionDays = 7)
             recurrentSchedulesService.insert(schedule)
 
-            val updatedSchedule = UpdatedRecurrentSchedule(
-                menuUuid = testMenu2Uuid,
-                officeUuid = testOffice2Uuid,
-                repetitionDays = 14,
-                nextDate = LocalDate.now().plusDays(14),
-            )
+            val updatedSchedule =
+                UpdatedRecurrentSchedule(
+                    menuUuid = testMenu2Uuid,
+                    officeUuid = testOffice2Uuid,
+                    repetitionDays = 14,
+                    nextDate = LocalDate.now().plusDays(14),
+                )
 
             val updateResult = recurrentSchedulesService.update(schedule.uuid, updatedSchedule)
 
@@ -219,12 +226,13 @@ class RecurrentSchedulesServiceTest {
             recurrentSchedulesService.insert(schedule)
 
             val newNextDate = LocalDate.now().plusDays(14)
-            val updatedSchedule = UpdatedRecurrentSchedule(
-                menuUuid = testMenu2Uuid,
-                officeUuid = testOffice2Uuid,
-                repetitionDays = 14,
-                nextDate = newNextDate,
-            )
+            val updatedSchedule =
+                UpdatedRecurrentSchedule(
+                    menuUuid = testMenu2Uuid,
+                    officeUuid = testOffice2Uuid,
+                    repetitionDays = 14,
+                    nextDate = newNextDate,
+                )
             recurrentSchedulesService.update(schedule.uuid, updatedSchedule)
 
             val retrieved = recurrentSchedulesService.getByUuid(schedule.uuid)[0]
@@ -238,12 +246,13 @@ class RecurrentSchedulesServiceTest {
         @Test
         fun `update returns 0 for non-existent schedule`() {
             val nonExistentUuid = UUID.randomUUID()
-            val updatedSchedule = UpdatedRecurrentSchedule(
-                menuUuid = testMenuUuid,
-                officeUuid = testOfficeUuid,
-                repetitionDays = 7,
-                nextDate = LocalDate.now().plusDays(7),
-            )
+            val updatedSchedule =
+                UpdatedRecurrentSchedule(
+                    menuUuid = testMenuUuid,
+                    officeUuid = testOfficeUuid,
+                    repetitionDays = 7,
+                    nextDate = LocalDate.now().plusDays(7),
+                )
 
             val updateResult = recurrentSchedulesService.update(nonExistentUuid, updatedSchedule)
 

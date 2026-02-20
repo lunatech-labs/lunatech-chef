@@ -84,114 +84,133 @@ class AttendancesRoutesTest {
     @Nested
     inner class CreateAttendance {
         @Test
-        fun `creates new attendance`() = testApplication {
-            setupAttendancesRoutes()
-            val client = jsonClient()
+        fun `creates new attendance`() =
+            testApplication {
+                setupAttendancesRoutes()
+                val client = jsonClient()
 
-            val response = client.post("/attendances") {
-                contentType(RouteTestHelpers.jsonContentType)
-                setBody(mapOf(
-                    "scheduleUuid" to testScheduleUuid.toString(),
-                    "userUuid" to testUserUuid.toString(),
-                    "isAttending" to true
-                ))
+                val response =
+                    client.post("/attendances") {
+                        contentType(RouteTestHelpers.jsonContentType)
+                        setBody(
+                            mapOf(
+                                "scheduleUuid" to testScheduleUuid.toString(),
+                                "userUuid" to testUserUuid.toString(),
+                                "isAttending" to true,
+                            ),
+                        )
+                    }
+
+                assertEquals(HttpStatusCode.Created, response.status)
             }
-
-            assertEquals(HttpStatusCode.Created, response.status)
-        }
 
         @Test
-        fun `creates attendance with false isAttending`() = testApplication {
-            setupAttendancesRoutes()
-            val client = jsonClient()
+        fun `creates attendance with false isAttending`() =
+            testApplication {
+                setupAttendancesRoutes()
+                val client = jsonClient()
 
-            val response = client.post("/attendances") {
-                contentType(RouteTestHelpers.jsonContentType)
-                setBody(mapOf(
-                    "scheduleUuid" to testScheduleUuid.toString(),
-                    "userUuid" to testUserUuid.toString(),
-                    "isAttending" to false
-                ))
+                val response =
+                    client.post("/attendances") {
+                        contentType(RouteTestHelpers.jsonContentType)
+                        setBody(
+                            mapOf(
+                                "scheduleUuid" to testScheduleUuid.toString(),
+                                "userUuid" to testUserUuid.toString(),
+                                "isAttending" to false,
+                            ),
+                        )
+                    }
+
+                assertEquals(HttpStatusCode.Created, response.status)
             }
-
-            assertEquals(HttpStatusCode.Created, response.status)
-        }
 
         @Test
-        fun `creates attendance with null isAttending for undecided`() = testApplication {
-            setupAttendancesRoutes()
-            val client = jsonClient()
+        fun `creates attendance with null isAttending for undecided`() =
+            testApplication {
+                setupAttendancesRoutes()
+                val client = jsonClient()
 
-            val response = client.post("/attendances") {
-                contentType(RouteTestHelpers.jsonContentType)
-                setBody(mapOf(
-                    "scheduleUuid" to testScheduleUuid.toString(),
-                    "userUuid" to testUserUuid.toString(),
-                    "isAttending" to null
-                ))
+                val response =
+                    client.post("/attendances") {
+                        contentType(RouteTestHelpers.jsonContentType)
+                        setBody(
+                            mapOf(
+                                "scheduleUuid" to testScheduleUuid.toString(),
+                                "userUuid" to testUserUuid.toString(),
+                                "isAttending" to null,
+                            ),
+                        )
+                    }
+
+                assertEquals(HttpStatusCode.Created, response.status)
             }
-
-            assertEquals(HttpStatusCode.Created, response.status)
-        }
 
         @Test
-        fun `returns BadRequest for invalid data`() = testApplication {
-            setupAttendancesRoutes()
-            val client = jsonClient()
+        fun `returns BadRequest for invalid data`() =
+            testApplication {
+                setupAttendancesRoutes()
+                val client = jsonClient()
 
-            val response = client.post("/attendances") {
-                contentType(RouteTestHelpers.jsonContentType)
-                setBody(mapOf("invalid" to "data"))
+                val response =
+                    client.post("/attendances") {
+                        contentType(RouteTestHelpers.jsonContentType)
+                        setBody(mapOf("invalid" to "data"))
+                    }
+
+                assertEquals(HttpStatusCode.BadRequest, response.status)
             }
-
-            assertEquals(HttpStatusCode.BadRequest, response.status)
-        }
 
         @Test
-        fun `returns BadRequest for invalid JSON`() = testApplication {
-            setupAttendancesRoutes()
-            val client = jsonClient()
+        fun `returns BadRequest for invalid JSON`() =
+            testApplication {
+                setupAttendancesRoutes()
+                val client = jsonClient()
 
-            val response = client.post("/attendances") {
-                contentType(RouteTestHelpers.jsonContentType)
-                setBody("{ invalid json }")
+                val response =
+                    client.post("/attendances") {
+                        contentType(RouteTestHelpers.jsonContentType)
+                        setBody("{ invalid json }")
+                    }
+
+                assertEquals(HttpStatusCode.BadRequest, response.status)
             }
-
-            assertEquals(HttpStatusCode.BadRequest, response.status)
-        }
     }
 
     @Nested
     inner class UpdateAttendance {
         @Test
-        fun `updates existing attendance`() = testApplication {
-            setupAttendancesRoutes()
-            val client = jsonClient()
-            val attendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = false)
-            attendancesService.insert(attendance)
+        fun `updates existing attendance`() =
+            testApplication {
+                setupAttendancesRoutes()
+                val client = jsonClient()
+                val attendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = false)
+                attendancesService.insert(attendance)
 
-            val response = client.put("/attendances/${attendance.uuid}") {
-                contentType(RouteTestHelpers.jsonContentType)
-                setBody(mapOf("isAttending" to true))
+                val response =
+                    client.put("/attendances/${attendance.uuid}") {
+                        contentType(RouteTestHelpers.jsonContentType)
+                        setBody(mapOf("isAttending" to true))
+                    }
+
+                assertEquals(HttpStatusCode.OK, response.status)
             }
-
-            assertEquals(HttpStatusCode.OK, response.status)
-        }
 
         @Test
-        fun `updates attendance from true to false`() = testApplication {
-            setupAttendancesRoutes()
-            val client = jsonClient()
-            val attendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = true)
-            attendancesService.insert(attendance)
+        fun `updates attendance from true to false`() =
+            testApplication {
+                setupAttendancesRoutes()
+                val client = jsonClient()
+                val attendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = true)
+                attendancesService.insert(attendance)
 
-            val response = client.put("/attendances/${attendance.uuid}") {
-                contentType(RouteTestHelpers.jsonContentType)
-                setBody(mapOf("isAttending" to false))
+                val response =
+                    client.put("/attendances/${attendance.uuid}") {
+                        contentType(RouteTestHelpers.jsonContentType)
+                        setBody(mapOf("isAttending" to false))
+                    }
+
+                assertEquals(HttpStatusCode.OK, response.status)
             }
-
-            assertEquals(HttpStatusCode.OK, response.status)
-        }
-
     }
 }

@@ -20,7 +20,9 @@ import org.ktorm.dsl.where
 import org.ktorm.schema.ColumnDeclaring
 import java.time.LocalDate
 
-class ReportService(val database: Database) {
+class ReportService(
+    val database: Database,
+) {
     fun getReportByMonth(
         year: Int,
         month: Int,
@@ -39,8 +41,7 @@ class ReportService(val database: Database) {
                 conditions += Attendances.isDeleted eq false
                 conditions += Attendances.isAttending eq true
                 conditions.reduce { a, b -> a and b }
-            }
-            .orderBy(Schedules.date.asc(), Users.name.asc(), Offices.city.asc(), Offices.country.asc())
+            }.orderBy(Schedules.date.asc(), Users.name.asc(), Offices.city.asc(), Offices.country.asc())
             .map { row ->
                 ReportEntry(
                     row[Schedules.date] ?: LocalDate.now(),

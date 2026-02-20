@@ -17,14 +17,13 @@ data class Attendance(
     val isDeleted: Boolean = false,
 ) {
     companion object {
-        fun fromNewAttendance(newAttendance: NewAttendance): Attendance {
-            return Attendance(
+        fun fromNewAttendance(newAttendance: NewAttendance): Attendance =
+            Attendance(
                 uuid = UUID.randomUUID(),
                 scheduleUuid = newAttendance.scheduleUuid,
                 userUuid = newAttendance.userUuid,
                 isAttending = newAttendance.isAttending,
             )
-        }
     }
 }
 

@@ -19,11 +19,22 @@ import org.ktorm.schema.ColumnDeclaring
 import java.time.LocalDate
 import java.util.UUID
 
-class OfficesService(val database: Database) {
-    fun getAll() = database.from(Offices).select().where { Offices.isDeleted eq false }.map { Offices.createEntity(it) }
+class OfficesService(
+    val database: Database,
+) {
+    fun getAll() =
+        database
+            .from(Offices)
+            .select()
+            .where { Offices.isDeleted eq false }
+            .map { Offices.createEntity(it) }
 
     fun getByUuid(uuid: UUID): List<Office> =
-        database.from(Offices).select().where { Offices.uuid eq uuid }.map { Offices.createEntity(it) }
+        database
+            .from(Offices)
+            .select()
+            .where { Offices.uuid eq uuid }
+            .map { Offices.createEntity(it) }
 
     fun insert(office: Office): Int =
         database.insert(Offices) {
@@ -63,8 +74,7 @@ class OfficesService(val database: Database) {
                         conditions += Schedules.officeUuid eq uuid
                         conditions += Schedules.date greater baseDate
                         conditions.reduce { a, b -> a and b }
-                    }
-                    .map { sch -> Schedules.createEntity(sch) }
+                    }.map { sch -> Schedules.createEntity(sch) }
                     .map { schedule -> schedule.uuid }
 
             database.update(Schedules) {

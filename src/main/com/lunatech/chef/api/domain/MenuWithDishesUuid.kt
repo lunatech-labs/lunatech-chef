@@ -14,13 +14,12 @@ data class MenuWithDishesUuid(
     val isDeleted: Boolean = false,
 ) {
     companion object {
-        fun fromNewMenuWithDishesUuid(newMenu: NewMenuWithDishesUuid): MenuWithDishesUuid {
-            return MenuWithDishesUuid(
+        fun fromNewMenuWithDishesUuid(newMenu: NewMenuWithDishesUuid): MenuWithDishesUuid =
+            MenuWithDishesUuid(
                 uuid = UUID.randomUUID(),
                 name = newMenu.name,
                 dishesUuids = newMenu.dishesUuids,
             )
-        }
     }
 }
 

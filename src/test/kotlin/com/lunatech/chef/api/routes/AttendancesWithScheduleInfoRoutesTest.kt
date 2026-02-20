@@ -89,54 +89,57 @@ class AttendancesWithScheduleInfoRoutesTest {
     @Nested
     inner class GetAttendancesWithScheduleInfo {
         @Test
-        fun `returns empty list when no attendances exist`() = testApplication {
-            setupAttendancesWithScheduleInfoRoutes()
+        fun `returns empty list when no attendances exist`() =
+            testApplication {
+                setupAttendancesWithScheduleInfoRoutes()
 
-            val response = client.get("/attendancesWithScheduleInfo/$testUserUuid")
+                val response = client.get("/attendancesWithScheduleInfo/$testUserUuid")
 
-            assertEquals(HttpStatusCode.OK, response.status)
-            assertEquals("[]", response.bodyAsText())
-        }
+                assertEquals(HttpStatusCode.OK, response.status)
+                assertEquals("[]", response.bodyAsText())
+            }
 
         @Test
-        fun `returns attendances with schedule info`() = testApplication {
-            setupAttendancesWithScheduleInfoRoutes()
-            val attendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = true)
-            attendancesService.insert(attendance)
+        fun `returns attendances with schedule info`() =
+            testApplication {
+                setupAttendancesWithScheduleInfoRoutes()
+                val attendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = true)
+                attendancesService.insert(attendance)
 
-            val response = client.get("/attendancesWithScheduleInfo/$testUserUuid")
+                val response = client.get("/attendancesWithScheduleInfo/$testUserUuid")
 
-            assertEquals(HttpStatusCode.OK, response.status)
-            assertTrue(response.bodyAsText().contains("Lunch Menu"))
-            assertTrue(response.bodyAsText().contains("Rotterdam"))
-        }
+                assertEquals(HttpStatusCode.OK, response.status)
+                assertTrue(response.bodyAsText().contains("Lunch Menu"))
+                assertTrue(response.bodyAsText().contains("Rotterdam"))
+            }
     }
 
     @Nested
     inner class FilteringAttendancesWithScheduleInfo {
         @Test
-        fun `filters by fromdate`() = testApplication {
-            setupAttendancesWithScheduleInfoRoutes()
-            val attendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = true)
-            attendancesService.insert(attendance)
+        fun `filters by fromdate`() =
+            testApplication {
+                setupAttendancesWithScheduleInfoRoutes()
+                val attendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = true)
+                attendancesService.insert(attendance)
 
-            val response = client.get("/attendancesWithScheduleInfo/$testUserUuid?fromdate=${LocalDate.now()}")
+                val response = client.get("/attendancesWithScheduleInfo/$testUserUuid?fromdate=${LocalDate.now()}")
 
-            assertEquals(HttpStatusCode.OK, response.status)
-            assertTrue(response.bodyAsText().contains(testScheduleUuid.toString()))
-        }
+                assertEquals(HttpStatusCode.OK, response.status)
+                assertTrue(response.bodyAsText().contains(testScheduleUuid.toString()))
+            }
 
         @Test
-        fun `filters by office`() = testApplication {
-            setupAttendancesWithScheduleInfoRoutes()
-            val attendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = true)
-            attendancesService.insert(attendance)
+        fun `filters by office`() =
+            testApplication {
+                setupAttendancesWithScheduleInfoRoutes()
+                val attendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = true)
+                attendancesService.insert(attendance)
 
-            val response = client.get("/attendancesWithScheduleInfo/$testUserUuid?office=$testOfficeUuid")
+                val response = client.get("/attendancesWithScheduleInfo/$testUserUuid?office=$testOfficeUuid")
 
-            assertEquals(HttpStatusCode.OK, response.status)
-            assertTrue(response.bodyAsText().contains("Rotterdam"))
-        }
+                assertEquals(HttpStatusCode.OK, response.status)
+                assertTrue(response.bodyAsText().contains("Rotterdam"))
+            }
     }
-
 }

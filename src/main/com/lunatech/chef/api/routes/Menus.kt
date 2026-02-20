@@ -21,12 +21,13 @@ import java.util.UUID
 
 private val logger = KotlinLogging.logger {}
 
-data class UpdatedMenu(val name: String, val dishesUuids: List<UUID>)
+data class UpdatedMenu(
+    val name: String,
+    val dishesUuids: List<UUID>,
+)
 
 fun Route.menus(menusService: MenusService) {
     val menusRoute = "/menus"
-    val uuidRoute = "/{uuid}"
-    val uuidParam = "uuid"
 
     route(menusRoute) {
         // get all menus
@@ -52,11 +53,11 @@ fun Route.menus(menusService: MenusService) {
             }
         }
 
-        route(uuidRoute) {
+        route(UUID_ROUTE) {
             // get single menu
             get {
-                val uuid = call.parameters[uuidParam]
-                val menu = menusService.getByUuid(UUID.fromString(uuid))
+                val uuid = call.parameters[UUID_PARAM].toUUIDOrNull() ?: return@get call.respond(BadRequest, "Invalid UUID")
+                val menu = menusService.getByUuid(uuid)
 
                 if (menu == null) {
                     call.respond(NotFound)
@@ -66,9 +67,9 @@ fun Route.menus(menusService: MenusService) {
             // modify existing menu
             put {
                 try {
-                    val uuid = call.parameters[uuidParam]
+                    val uuid = call.parameters[UUID_PARAM].toUUIDOrNull() ?: return@put call.respond(BadRequest, "Invalid UUID")
                     val updatedMenu = call.receive<UpdatedMenu>()
-                    val result = menusService.update(UUID.fromString(uuid), updatedMenu)
+                    val result = menusService.update(uuid, updatedMenu)
                     if (result == 1) call.respond(OK) else call.respond(InternalServerError)
                 } catch (exception: Exception) {
                     logger.error("Error updating a Menu :( ", exception)
@@ -77,8 +78,8 @@ fun Route.menus(menusService: MenusService) {
             }
             // delete a single menu
             delete {
-                val uuid = call.parameters[uuidParam]
-                val result = menusService.delete(UUID.fromString(uuid))
+                val uuid = call.parameters[UUID_PARAM].toUUIDOrNull() ?: return@delete call.respond(BadRequest, "Invalid UUID")
+                val result = menusService.delete(uuid)
                 if (result == 1) call.respond(OK) else call.respond(InternalServerError)
             }
         }

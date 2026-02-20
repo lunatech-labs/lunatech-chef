@@ -143,10 +143,11 @@ class MenusServiceTest {
             val menu = aMenu(name = "Original Menu", dishesUuids = listOf(testDish1Uuid))
             menusService.insert(menu)
 
-            val updatedMenu = UpdatedMenu(
-                name = "Updated Menu",
-                dishesUuids = listOf(testDish2Uuid),
-            )
+            val updatedMenu =
+                UpdatedMenu(
+                    name = "Updated Menu",
+                    dishesUuids = listOf(testDish2Uuid),
+                )
 
             val updateResult = menusService.update(menu.uuid, updatedMenu)
 
@@ -158,10 +159,11 @@ class MenusServiceTest {
             val menu = aMenu(name = "Original Menu", dishesUuids = listOf(testDish1Uuid))
             menusService.insert(menu)
 
-            val updatedMenu = UpdatedMenu(
-                name = "Updated Menu",
-                dishesUuids = listOf(testDish2Uuid),
-            )
+            val updatedMenu =
+                UpdatedMenu(
+                    name = "Updated Menu",
+                    dishesUuids = listOf(testDish2Uuid),
+                )
             menusService.update(menu.uuid, updatedMenu)
 
             val retrieved = menusService.getByUuid(menu.uuid)
@@ -176,10 +178,11 @@ class MenusServiceTest {
             val menu = aMenu(name = "Menu", dishesUuids = listOf(testDish1Uuid))
             menusService.insert(menu)
 
-            val updatedMenu = UpdatedMenu(
-                name = "Menu with more dishes",
-                dishesUuids = listOf(testDish1Uuid, testDish2Uuid),
-            )
+            val updatedMenu =
+                UpdatedMenu(
+                    name = "Menu with more dishes",
+                    dishesUuids = listOf(testDish1Uuid, testDish2Uuid),
+                )
             menusService.update(menu.uuid, updatedMenu)
 
             val retrieved = menusService.getByUuid(menu.uuid)
@@ -192,10 +195,11 @@ class MenusServiceTest {
             val menu = aMenu(name = "Menu", dishesUuids = listOf(testDish1Uuid, testDish2Uuid))
             menusService.insert(menu)
 
-            val updatedMenu = UpdatedMenu(
-                name = "Empty Menu",
-                dishesUuids = emptyList(),
-            )
+            val updatedMenu =
+                UpdatedMenu(
+                    name = "Empty Menu",
+                    dishesUuids = emptyList(),
+                )
             menusService.update(menu.uuid, updatedMenu)
 
             val retrieved = menusService.getByUuid(menu.uuid)
@@ -206,10 +210,11 @@ class MenusServiceTest {
         @Test
         fun `update returns 0 for non-existent menu`() {
             val nonExistentUuid = UUID.randomUUID()
-            val updatedMenu = UpdatedMenu(
-                name = "Updated Menu",
-                dishesUuids = emptyList(),
-            )
+            val updatedMenu =
+                UpdatedMenu(
+                    name = "Updated Menu",
+                    dishesUuids = emptyList(),
+                )
 
             val updateResult = menusService.update(nonExistentUuid, updatedMenu)
 

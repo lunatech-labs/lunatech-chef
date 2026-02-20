@@ -24,12 +24,15 @@ import org.ktorm.dsl.where
 import org.ktorm.schema.ColumnDeclaring
 import java.time.LocalDate
 
-class AttendancesForSlackbotService(val database: Database) {
+class AttendancesForSlackbotService(
+    val database: Database,
+) {
     fun getMissingAttendances(
         fromDate: LocalDate,
         untilDate: LocalDate,
-    ): List<AttendanceForSlackbot> {
-        return database.from(Attendances)
+    ): List<AttendanceForSlackbot> =
+        database
+            .from(Attendances)
             .leftJoin(Schedules, on = Schedules.uuid eq Attendances.scheduleUuid)
             .leftJoin(MenuNames, on = Schedules.menuUuid eq MenuNames.uuid)
             .leftJoin(Users, on = Attendances.userUuid eq Users.uuid)
@@ -48,8 +51,7 @@ class AttendancesForSlackbotService(val database: Database) {
                 conditions += Users.isDeleted eq false
 
                 conditions.reduce { a, b -> a and b }
-            }
-            .orderBy(Schedules.date.asc())
+            }.orderBy(Schedules.date.asc())
             .map { row ->
                 AttendanceForSlackbot(
                     row[Attendances.uuid] ?: DEFAULT_UUID,
@@ -59,5 +61,4 @@ class AttendancesForSlackbotService(val database: Database) {
                     row[MenuNames.name] ?: DEFAULT_STRING,
                 )
             }
-    }
 }

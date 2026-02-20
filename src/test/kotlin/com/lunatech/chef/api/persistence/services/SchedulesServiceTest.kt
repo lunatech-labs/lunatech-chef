@@ -54,11 +54,12 @@ class SchedulesServiceTest {
     inner class InsertOperations {
         @Test
         fun `insert returns 1 when schedule is successfully created`() {
-            val schedule = aSchedule(
-                menuUuid = testMenuUuid,
-                date = LocalDate.now().plusDays(7),
-                officeUuid = testOfficeUuid,
-            )
+            val schedule =
+                aSchedule(
+                    menuUuid = testMenuUuid,
+                    date = LocalDate.now().plusDays(7),
+                    officeUuid = testOfficeUuid,
+                )
 
             val insertResult = schedulesService.insert(schedule)
 
@@ -68,11 +69,12 @@ class SchedulesServiceTest {
         @Test
         fun `insert persists all schedule properties correctly`() {
             val scheduleDate = LocalDate.now().plusDays(7)
-            val schedule = aSchedule(
-                menuUuid = testMenuUuid,
-                date = scheduleDate,
-                officeUuid = testOfficeUuid,
-            )
+            val schedule =
+                aSchedule(
+                    menuUuid = testMenuUuid,
+                    date = scheduleDate,
+                    officeUuid = testOfficeUuid,
+                )
 
             schedulesService.insert(schedule)
             val retrieved = schedulesService.getByUuid(schedule.uuid)
@@ -90,7 +92,8 @@ class SchedulesServiceTest {
         fun `getAll returns only non-deleted schedules ordered by date`() {
             val schedule1 = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(10), officeUuid = testOfficeUuid)
             val schedule2 = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(5), officeUuid = testOfficeUuid)
-            val deletedSchedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(3), officeUuid = testOfficeUuid, isDeleted = true)
+            val deletedSchedule =
+                aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(3), officeUuid = testOfficeUuid, isDeleted = true)
 
             schedulesService.insert(schedule1)
             schedulesService.insert(schedule2)
@@ -134,7 +137,8 @@ class SchedulesServiceTest {
 
         @Test
         fun `getByUuid returns deleted schedule without filtering`() {
-            val deletedSchedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid, isDeleted = true)
+            val deletedSchedule =
+                aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid, isDeleted = true)
             schedulesService.insert(deletedSchedule)
 
             val retrieved = schedulesService.getByUuid(deletedSchedule.uuid)
@@ -164,7 +168,8 @@ class SchedulesServiceTest {
         fun `getAfterDate returns all schedules including deleted ones`() {
             // Note: getAfterDate does NOT filter by isDeleted - it returns all schedules >= date
             val activeSchedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(5), officeUuid = testOfficeUuid)
-            val deletedSchedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(6), officeUuid = testOfficeUuid, isDeleted = true)
+            val deletedSchedule =
+                aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(6), officeUuid = testOfficeUuid, isDeleted = true)
 
             schedulesService.insert(activeSchedule)
             schedulesService.insert(deletedSchedule)
@@ -182,11 +187,12 @@ class SchedulesServiceTest {
             val schedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
             schedulesService.insert(schedule)
 
-            val updatedSchedule = UpdatedSchedule(
-                menuUuid = testMenu2Uuid,
-                date = LocalDate.now().plusDays(14),
-                officeUuid = testOfficeUuid,
-            )
+            val updatedSchedule =
+                UpdatedSchedule(
+                    menuUuid = testMenu2Uuid,
+                    date = LocalDate.now().plusDays(14),
+                    officeUuid = testOfficeUuid,
+                )
 
             val updateResult = schedulesService.update(schedule.uuid, updatedSchedule)
 
@@ -199,11 +205,12 @@ class SchedulesServiceTest {
             schedulesService.insert(schedule)
 
             val newDate = LocalDate.now().plusDays(14)
-            val updatedSchedule = UpdatedSchedule(
-                menuUuid = testMenu2Uuid,
-                date = newDate,
-                officeUuid = testOfficeUuid,
-            )
+            val updatedSchedule =
+                UpdatedSchedule(
+                    menuUuid = testMenu2Uuid,
+                    date = newDate,
+                    officeUuid = testOfficeUuid,
+                )
             schedulesService.update(schedule.uuid, updatedSchedule)
 
             val retrieved = schedulesService.getByUuid(schedule.uuid)[0]
@@ -215,11 +222,12 @@ class SchedulesServiceTest {
         @Test
         fun `update returns 0 for non-existent schedule`() {
             val nonExistentUuid = UUID.randomUUID()
-            val updatedSchedule = UpdatedSchedule(
-                menuUuid = testMenuUuid,
-                date = LocalDate.now().plusDays(7),
-                officeUuid = testOfficeUuid,
-            )
+            val updatedSchedule =
+                UpdatedSchedule(
+                    menuUuid = testMenuUuid,
+                    date = LocalDate.now().plusDays(7),
+                    officeUuid = testOfficeUuid,
+                )
 
             val updateResult = schedulesService.update(nonExistentUuid, updatedSchedule)
 

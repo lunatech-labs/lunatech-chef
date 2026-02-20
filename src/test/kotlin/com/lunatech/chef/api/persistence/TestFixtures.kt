@@ -15,7 +15,6 @@ import java.util.UUID
  * All builders return domain objects without inserting them into the database.
  */
 object TestFixtures {
-
     // Office builder
     fun anOffice(
         uuid: UUID = UUID.randomUUID(),
@@ -38,32 +37,34 @@ object TestFixtures {
         isGlutenFree: Boolean = false,
         isLactoseFree: Boolean = false,
         isDeleted: Boolean = false,
-    ): Dish = Dish(
-        uuid = uuid,
-        name = name,
-        description = description,
-        isVegetarian = isVegetarian,
-        isHalal = isHalal,
-        hasNuts = hasNuts,
-        hasSeafood = hasSeafood,
-        hasPork = hasPork,
-        hasBeef = hasBeef,
-        isGlutenFree = isGlutenFree,
-        isLactoseFree = isLactoseFree,
-        isDeleted = isDeleted,
-    )
+    ): Dish =
+        Dish(
+            uuid = uuid,
+            name = name,
+            description = description,
+            isVegetarian = isVegetarian,
+            isHalal = isHalal,
+            hasNuts = hasNuts,
+            hasSeafood = hasSeafood,
+            hasPork = hasPork,
+            hasBeef = hasBeef,
+            isGlutenFree = isGlutenFree,
+            isLactoseFree = isLactoseFree,
+            isDeleted = isDeleted,
+        )
 
     // Vegetarian dish shortcut
     fun aVegetarianDish(
         uuid: UUID = UUID.randomUUID(),
         name: String = "Vegetarian Salad",
         description: String = "A fresh vegetarian dish",
-    ): Dish = aDish(
-        uuid = uuid,
-        name = name,
-        description = description,
-        isVegetarian = true,
-    )
+    ): Dish =
+        aDish(
+            uuid = uuid,
+            name = name,
+            description = description,
+            isVegetarian = true,
+        )
 
     // User builder
     fun aUser(
@@ -82,23 +83,24 @@ object TestFixtures {
         otherRestrictions: String = "",
         isInactive: Boolean = false,
         isDeleted: Boolean = false,
-    ): User = User(
-        uuid = uuid,
-        name = name,
-        emailAddress = emailAddress,
-        officeUuid = officeUuid,
-        isVegetarian = isVegetarian,
-        hasHalalRestriction = hasHalalRestriction,
-        hasNutsRestriction = hasNutsRestriction,
-        hasSeafoodRestriction = hasSeafoodRestriction,
-        hasPorkRestriction = hasPorkRestriction,
-        hasBeefRestriction = hasBeefRestriction,
-        isGlutenIntolerant = isGlutenIntolerant,
-        isLactoseIntolerant = isLactoseIntolerant,
-        otherRestrictions = otherRestrictions,
-        isInactive = isInactive,
-        isDeleted = isDeleted,
-    )
+    ): User =
+        User(
+            uuid = uuid,
+            name = name,
+            emailAddress = emailAddress,
+            officeUuid = officeUuid,
+            isVegetarian = isVegetarian,
+            hasHalalRestriction = hasHalalRestriction,
+            hasNutsRestriction = hasNutsRestriction,
+            hasSeafoodRestriction = hasSeafoodRestriction,
+            hasPorkRestriction = hasPorkRestriction,
+            hasBeefRestriction = hasBeefRestriction,
+            isGlutenIntolerant = isGlutenIntolerant,
+            isLactoseIntolerant = isLactoseIntolerant,
+            otherRestrictions = otherRestrictions,
+            isInactive = isInactive,
+            isDeleted = isDeleted,
+        )
 
     // Menu builder
     fun aMenu(

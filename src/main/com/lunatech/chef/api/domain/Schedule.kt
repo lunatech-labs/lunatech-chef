@@ -17,14 +17,13 @@ data class Schedule(
     val isDeleted: Boolean = false,
 ) {
     companion object {
-        fun fromNewSchedule(newSchedule: NewSchedule): Schedule {
-            return Schedule(
+        fun fromNewSchedule(newSchedule: NewSchedule): Schedule =
+            Schedule(
                 uuid = UUID.randomUUID(),
                 menuUuid = newSchedule.menuUuid,
                 date = newSchedule.date,
                 officeUuid = newSchedule.officeUuid,
             )
-        }
     }
 }
 

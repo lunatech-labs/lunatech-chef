@@ -88,90 +88,97 @@ class AttendancesForSlackbotRoutesTest {
     @Nested
     inner class ParameterValidation {
         @Test
-        fun `returns BadRequest without date params`() = testApplication {
-            setupAttendancesForSlackbotRoutes()
+        fun `returns BadRequest without date params`() =
+            testApplication {
+                setupAttendancesForSlackbotRoutes()
 
-            val response = client.get("/attendancesforslackbot")
+                val response = client.get("/attendancesforslackbot")
 
-            assertEquals(HttpStatusCode.BadRequest, response.status)
-        }
-
-        @Test
-        fun `returns BadRequest without untildate param`() = testApplication {
-            setupAttendancesForSlackbotRoutes()
-
-            val response = client.get("/attendancesforslackbot?fromdate=${LocalDate.now()}")
-
-            assertEquals(HttpStatusCode.BadRequest, response.status)
-        }
+                assertEquals(HttpStatusCode.BadRequest, response.status)
+            }
 
         @Test
-        fun `returns BadRequest when untildate before fromdate`() = testApplication {
-            setupAttendancesForSlackbotRoutes()
-            val fromDate = LocalDate.now().plusDays(5)
-            val untilDate = LocalDate.now()
+        fun `returns BadRequest without untildate param`() =
+            testApplication {
+                setupAttendancesForSlackbotRoutes()
 
-            val response = client.get("/attendancesforslackbot?fromdate=$fromDate&untildate=$untilDate")
+                val response = client.get("/attendancesforslackbot?fromdate=${LocalDate.now()}")
 
-            assertEquals(HttpStatusCode.BadRequest, response.status)
-        }
+                assertEquals(HttpStatusCode.BadRequest, response.status)
+            }
 
         @Test
-        fun `accepts same fromdate and untildate`() = testApplication {
-            setupAttendancesForSlackbotRoutes()
-            val date = LocalDate.now().plusDays(3)
+        fun `returns BadRequest when untildate before fromdate`() =
+            testApplication {
+                setupAttendancesForSlackbotRoutes()
+                val fromDate = LocalDate.now().plusDays(5)
+                val untilDate = LocalDate.now()
 
-            val response = client.get("/attendancesforslackbot?fromdate=$date&untildate=$date")
+                val response = client.get("/attendancesforslackbot?fromdate=$fromDate&untildate=$untilDate")
 
-            assertEquals(HttpStatusCode.OK, response.status)
-        }
+                assertEquals(HttpStatusCode.BadRequest, response.status)
+            }
+
+        @Test
+        fun `accepts same fromdate and untildate`() =
+            testApplication {
+                setupAttendancesForSlackbotRoutes()
+                val date = LocalDate.now().plusDays(3)
+
+                val response = client.get("/attendancesforslackbot?fromdate=$date&untildate=$date")
+
+                assertEquals(HttpStatusCode.OK, response.status)
+            }
     }
 
     @Nested
     inner class MissingAttendancesRetrieval {
         @Test
-        fun `returns missing attendances when user has null isAttending`() = testApplication {
-            setupAttendancesForSlackbotRoutes()
-            val missingAttendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = null)
-            attendancesService.insert(missingAttendance)
+        fun `returns missing attendances when user has null isAttending`() =
+            testApplication {
+                setupAttendancesForSlackbotRoutes()
+                val missingAttendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = null)
+                attendancesService.insert(missingAttendance)
 
-            val fromDate = LocalDate.now()
-            val untilDate = LocalDate.now().plusDays(7)
+                val fromDate = LocalDate.now()
+                val untilDate = LocalDate.now().plusDays(7)
 
-            val response = client.get("/attendancesforslackbot?fromdate=$fromDate&untildate=$untilDate")
+                val response = client.get("/attendancesforslackbot?fromdate=$fromDate&untildate=$untilDate")
 
-            assertEquals(HttpStatusCode.OK, response.status)
-            assertTrue(response.bodyAsText().contains(testUserEmail))
-        }
-
-        @Test
-        fun `returns empty list when no missing attendances`() = testApplication {
-            setupAttendancesForSlackbotRoutes()
-            val answeredAttendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = true)
-            attendancesService.insert(answeredAttendance)
-
-            val fromDate = LocalDate.now()
-            val untilDate = LocalDate.now().plusDays(7)
-
-            val response = client.get("/attendancesforslackbot?fromdate=$fromDate&untildate=$untilDate")
-
-            assertEquals(HttpStatusCode.OK, response.status)
-            assertEquals("[]", response.bodyAsText())
-        }
+                assertEquals(HttpStatusCode.OK, response.status)
+                assertTrue(response.bodyAsText().contains(testUserEmail))
+            }
 
         @Test
-        fun `returns empty list when user declined attendance`() = testApplication {
-            setupAttendancesForSlackbotRoutes()
-            val declinedAttendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = false)
-            attendancesService.insert(declinedAttendance)
+        fun `returns empty list when no missing attendances`() =
+            testApplication {
+                setupAttendancesForSlackbotRoutes()
+                val answeredAttendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = true)
+                attendancesService.insert(answeredAttendance)
 
-            val fromDate = LocalDate.now()
-            val untilDate = LocalDate.now().plusDays(7)
+                val fromDate = LocalDate.now()
+                val untilDate = LocalDate.now().plusDays(7)
 
-            val response = client.get("/attendancesforslackbot?fromdate=$fromDate&untildate=$untilDate")
+                val response = client.get("/attendancesforslackbot?fromdate=$fromDate&untildate=$untilDate")
 
-            assertEquals(HttpStatusCode.OK, response.status)
-            assertEquals("[]", response.bodyAsText())
-        }
+                assertEquals(HttpStatusCode.OK, response.status)
+                assertEquals("[]", response.bodyAsText())
+            }
+
+        @Test
+        fun `returns empty list when user declined attendance`() =
+            testApplication {
+                setupAttendancesForSlackbotRoutes()
+                val declinedAttendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = false)
+                attendancesService.insert(declinedAttendance)
+
+                val fromDate = LocalDate.now()
+                val untilDate = LocalDate.now().plusDays(7)
+
+                val response = client.get("/attendancesforslackbot?fromdate=$fromDate&untildate=$untilDate")
+
+                assertEquals(HttpStatusCode.OK, response.status)
+                assertEquals("[]", response.bodyAsText())
+            }
     }
 }

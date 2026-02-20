@@ -29,7 +29,9 @@ class SchedulesWithAttendanceInfoService(
         fromDate: LocalDate?,
         office: UUID?,
     ): List<ScheduleWithAttendanceInfo> =
-        database.from(Schedules).select()
+        database
+            .from(Schedules)
+            .select()
             .where {
                 val conditions = ArrayList<ColumnDeclaring<Boolean>>()
 
@@ -43,27 +45,39 @@ class SchedulesWithAttendanceInfoService(
                 }
 
                 conditions.reduce { a, b -> a and b }
-            }
-            .orderBy(Schedules.date.asc())
+            }.orderBy(Schedules.date.asc())
             .map { Schedules.createEntity(it) }
             .map { getScheduleWithAttendanceInfo(it) }
 
     private fun getScheduleWithAttendanceInfo(schedule: Schedule): ScheduleWithAttendanceInfo {
         val menu = menusService.getByUuid(schedule.menuUuid)
         val office =
-            database.from(Offices).select()
+            database
+                .from(Offices)
+                .select()
                 .where { Offices.uuid eq schedule.officeUuid }
-                .map { Offices.createEntity(it) }.firstOrNull()
+                .map { Offices.createEntity(it) }
+                .firstOrNull()
         val attendants =
-            database.from(Users)
+            database
+                .from(Users)
                 .leftJoin(Attendances, on = Attendances.userUuid eq Users.uuid)
                 .select(
-                    Users.uuid, Users.name, Users.emailAddress, Users.isVegetarian, Users.hasHalalRestriction,
-                    Users.hasNutsRestriction, Users.hasSeafoodRestriction, Users.hasPorkRestriction,
-                    Users.hasBeefRestriction, Users.isGlutenIntolerant, Users.isLactoseIntolerant,
-                    Users.otherRestrictions, Users.isInactive, Users.isDeleted,
-                )
-                .where {
+                    Users.uuid,
+                    Users.name,
+                    Users.emailAddress,
+                    Users.isVegetarian,
+                    Users.hasHalalRestriction,
+                    Users.hasNutsRestriction,
+                    Users.hasSeafoodRestriction,
+                    Users.hasPorkRestriction,
+                    Users.hasBeefRestriction,
+                    Users.isGlutenIntolerant,
+                    Users.isLactoseIntolerant,
+                    Users.otherRestrictions,
+                    Users.isInactive,
+                    Users.isDeleted,
+                ).where {
                     (
                         Attendances.scheduleUuid eq schedule.uuid
                     ) and (
@@ -71,8 +85,7 @@ class SchedulesWithAttendanceInfoService(
                     ) and (
                         Attendances.isDeleted eq false
                     )
-                }
-                .orderBy(Users.name.asc())
+                }.orderBy(Users.name.asc())
                 .map { Users.createEntity(it) }
 
         return ScheduleWithAttendanceInfo(schedule.uuid, menu!!.name, attendants, schedule.date, office?.city ?: "")

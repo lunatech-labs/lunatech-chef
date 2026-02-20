@@ -74,68 +74,78 @@ class RecurrentSchedulesWithMenusInfoRoutesTest {
     @Nested
     inner class GetAllRecurrentSchedulesWithMenusInfo {
         @Test
-        fun `returns empty list when no schedules exist`() = testApplication {
-            setupRecurrentSchedulesWithMenusInfoRoutes()
+        fun `returns empty list when no schedules exist`() =
+            testApplication {
+                setupRecurrentSchedulesWithMenusInfoRoutes()
 
-            val response = client.get("/recurrentSchedulesWithMenusInfo")
+                val response = client.get("/recurrentSchedulesWithMenusInfo")
 
-            assertEquals(HttpStatusCode.OK, response.status)
-            assertEquals("[]", response.bodyAsText())
-        }
+                assertEquals(HttpStatusCode.OK, response.status)
+                assertEquals("[]", response.bodyAsText())
+            }
 
         @Test
-        fun `returns schedules with menu and office info`() = testApplication {
-            setupRecurrentSchedulesWithMenusInfoRoutes()
-            val schedule = aRecurrentSchedule(menuUuid = testMenuUuid, officeUuid = testOfficeUuid, repetitionDays = 7)
-            recurrentSchedulesService.insert(schedule)
+        fun `returns schedules with menu and office info`() =
+            testApplication {
+                setupRecurrentSchedulesWithMenusInfoRoutes()
+                val schedule = aRecurrentSchedule(menuUuid = testMenuUuid, officeUuid = testOfficeUuid, repetitionDays = 7)
+                recurrentSchedulesService.insert(schedule)
 
-            val response = client.get("/recurrentSchedulesWithMenusInfo")
+                val response = client.get("/recurrentSchedulesWithMenusInfo")
 
-            assertEquals(HttpStatusCode.OK, response.status)
-            assertTrue(response.bodyAsText().contains("Weekly Lunch"))
-            assertTrue(response.bodyAsText().contains("Rotterdam"))
-        }
+                assertEquals(HttpStatusCode.OK, response.status)
+                assertTrue(response.bodyAsText().contains("Weekly Lunch"))
+                assertTrue(response.bodyAsText().contains("Rotterdam"))
+            }
     }
 
     @Nested
     inner class FilteringRecurrentSchedules {
         @Test
-        fun `filters by office`() = testApplication {
-            setupRecurrentSchedulesWithMenusInfoRoutes()
-            val schedule1 = aRecurrentSchedule(menuUuid = testMenuUuid, officeUuid = testOfficeUuid, repetitionDays = 7)
-            val schedule2 = aRecurrentSchedule(menuUuid = testMenuUuid, officeUuid = testOffice2Uuid, repetitionDays = 7)
-            recurrentSchedulesService.insert(schedule1)
-            recurrentSchedulesService.insert(schedule2)
+        fun `filters by office`() =
+            testApplication {
+                setupRecurrentSchedulesWithMenusInfoRoutes()
+                val schedule1 = aRecurrentSchedule(menuUuid = testMenuUuid, officeUuid = testOfficeUuid, repetitionDays = 7)
+                val schedule2 = aRecurrentSchedule(menuUuid = testMenuUuid, officeUuid = testOffice2Uuid, repetitionDays = 7)
+                recurrentSchedulesService.insert(schedule1)
+                recurrentSchedulesService.insert(schedule2)
 
-            val response = client.get("/recurrentSchedulesWithMenusInfo?office=$testOfficeUuid")
+                val response = client.get("/recurrentSchedulesWithMenusInfo?office=$testOfficeUuid")
 
-            assertEquals(HttpStatusCode.OK, response.status)
-            assertTrue(response.bodyAsText().contains("Rotterdam"))
-        }
+                assertEquals(HttpStatusCode.OK, response.status)
+                assertTrue(response.bodyAsText().contains("Rotterdam"))
+            }
     }
 
     @Nested
     inner class GetRecurrentScheduleWithMenusInfoByUuid {
         @Test
-        fun `returns schedule with info`() = testApplication {
-            setupRecurrentSchedulesWithMenusInfoRoutes()
-            val schedule = aRecurrentSchedule(menuUuid = testMenuUuid, officeUuid = testOfficeUuid, repetitionDays = 14, nextDate = LocalDate.now().plusDays(14))
-            recurrentSchedulesService.insert(schedule)
+        fun `returns schedule with info`() =
+            testApplication {
+                setupRecurrentSchedulesWithMenusInfoRoutes()
+                val schedule =
+                    aRecurrentSchedule(
+                        menuUuid = testMenuUuid,
+                        officeUuid = testOfficeUuid,
+                        repetitionDays = 14,
+                        nextDate = LocalDate.now().plusDays(14),
+                    )
+                recurrentSchedulesService.insert(schedule)
 
-            val response = client.get("/recurrentSchedulesWithMenusInfo/${schedule.uuid}")
+                val response = client.get("/recurrentSchedulesWithMenusInfo/${schedule.uuid}")
 
-            assertEquals(HttpStatusCode.OK, response.status)
-            assertTrue(response.bodyAsText().contains("Weekly Lunch"))
-        }
+                assertEquals(HttpStatusCode.OK, response.status)
+                assertTrue(response.bodyAsText().contains("Weekly Lunch"))
+            }
 
         @Test
-        fun `returns NotFound for non-existent schedule`() = testApplication {
-            setupRecurrentSchedulesWithMenusInfoRoutes()
+        fun `returns NotFound for non-existent schedule`() =
+            testApplication {
+                setupRecurrentSchedulesWithMenusInfoRoutes()
 
-            val response = client.get("/recurrentSchedulesWithMenusInfo/${UUID.randomUUID()}")
+                val response = client.get("/recurrentSchedulesWithMenusInfo/${UUID.randomUUID()}")
 
-            assertEquals(HttpStatusCode.NotFound, response.status)
-        }
-
+                assertEquals(HttpStatusCode.NotFound, response.status)
+            }
     }
 }

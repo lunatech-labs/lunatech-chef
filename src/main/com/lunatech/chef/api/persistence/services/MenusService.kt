@@ -22,7 +22,9 @@ import org.ktorm.schema.ColumnDeclaring
 import java.time.LocalDate
 import java.util.UUID
 
-class MenusService(val database: Database) {
+class MenusService(
+    val database: Database,
+) {
     fun getAll(): List<MenuWithDishesUuid> =
         database
             .from(MenuNames)
@@ -33,7 +35,8 @@ class MenusService(val database: Database) {
                 val dishes =
                     database
                         .from(DishesOnMenus)
-                        .select().where { DishesOnMenus.menuUuid eq menuName.uuid }
+                        .select()
+                        .where { DishesOnMenus.menuUuid eq menuName.uuid }
                         .map { DishesOnMenus.createEntity(it) }
                         .map { it.dishUuid }
 
@@ -44,7 +47,8 @@ class MenusService(val database: Database) {
         val menuName =
             database
                 .from(MenuNames)
-                .select().where { MenuNames.uuid eq uuid }
+                .select()
+                .where { MenuNames.uuid eq uuid }
                 .map { MenuNames.createEntity(it) }
                 .firstOrNull()
 
@@ -52,7 +56,8 @@ class MenusService(val database: Database) {
             val dishes =
                 database
                     .from(DishesOnMenus)
-                    .select().where { DishesOnMenus.menuUuid eq it.uuid }
+                    .select()
+                    .where { DishesOnMenus.menuUuid eq it.uuid }
                     .map { DishesOnMenus.createEntity(it) }
                     .map { it.dishUuid }
 
@@ -69,13 +74,14 @@ class MenusService(val database: Database) {
         }
 
         // second associate the dishes with the new menu
-        return menu.dishesUuids.map {
-            val dishOnMenu = DishOnMenu(menuUuid = menu.uuid, dishUuid = it)
-            database.insert(DishesOnMenus) {
-                set(it.menuUuid, dishOnMenu.menuUuid)
-                set(it.dishUuid, dishOnMenu.dishUuid)
-            }
-        }.size
+        return menu.dishesUuids
+            .map {
+                val dishOnMenu = DishOnMenu(menuUuid = menu.uuid, dishUuid = it)
+                database.insert(DishesOnMenus) {
+                    set(it.menuUuid, dishOnMenu.menuUuid)
+                    set(it.dishUuid, dishOnMenu.dishUuid)
+                }
+            }.size
     }
 
     fun update(
@@ -124,8 +130,7 @@ class MenusService(val database: Database) {
                     conditions += Schedules.menuUuid eq uuid
                     conditions += Schedules.date greater baseDate
                     conditions.reduce { a, b -> a and b }
-                }
-                .map { sch -> Schedules.createEntity(sch) }
+                }.map { sch -> Schedules.createEntity(sch) }
                 .map { schedule -> schedule.uuid }
 
         database.update(Schedules) {

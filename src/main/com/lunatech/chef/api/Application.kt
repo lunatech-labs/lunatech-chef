@@ -77,10 +77,12 @@ import mu.KotlinLogging
 import org.quartz.impl.StdSchedulerFactory
 import java.io.File
 import java.net.URI
+import java.time.Instant
 import java.time.format.DateTimeParseException
-import java.util.Date
 
-fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
+fun main(args: Array<String>): Unit =
+    io.ktor.server.netty.EngineMain
+        .main(args)
 
 private val logger = KotlinLogging.logger {}
 
@@ -195,8 +197,9 @@ fun Application.module() {
                 call.respond(HttpStatusCode.Unauthorized, "Token is not valid or has expired")
             }
             validate { credential ->
-                if (credential.expiresAt?.after(Date()) == true &&
-                    credential.payload.getClaim("azp")
+                if (credential.expiresAt?.toInstant()?.isAfter(Instant.now()) == true &&
+                    credential.payload
+                        .getClaim("azp")
                         .asString() != ""
                 ) {
                     JWTPrincipal(credential.payload)
@@ -215,7 +218,7 @@ fun Application.module() {
                 call.respond(HttpStatusCode.Unauthorized, "IdToken is not valid or has expired")
             }
             validate { credential ->
-                if (credential.expiresAt?.after(Date()) == true &&
+                if (credential.expiresAt?.toInstant()?.isAfter(Instant.now()) == true &&
                     credential.payload.getClaim("email_verified").asBoolean()
                 ) {
                     JWTPrincipal(credential.payload)

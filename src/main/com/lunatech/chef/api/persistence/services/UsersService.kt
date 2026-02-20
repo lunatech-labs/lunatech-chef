@@ -14,16 +14,28 @@ import org.ktorm.dsl.update
 import org.ktorm.dsl.where
 import java.util.UUID
 
-class UsersService(val database: Database) {
+class UsersService(
+    private val database: Database,
+) {
     fun getAll(): List<User> =
-        database.from(Users).select().where { Users.isDeleted eq false }
+        database
+            .from(Users)
+            .select()
+            .where { Users.isDeleted eq false }
             .map { Users.createEntity(it) }
 
-    fun getByUuid(uuid: UUID): List<User> = database.from(Users).select().where { Users.uuid eq uuid }.map { Users.createEntity(it) }
+    fun getByUuid(uuid: UUID): List<User> =
+        database
+            .from(Users)
+            .select()
+            .where { Users.uuid eq uuid }
+            .map { Users.createEntity(it) }
 
     fun getByEmailAddress(emailAddress: String): User? =
-        database.from(Users).select()
-            .where { -> Users.emailAddress eq emailAddress }
+        database
+            .from(Users)
+            .select()
+            .where { Users.emailAddress eq emailAddress }
             .map { Users.createEntity(it) }
             .firstOrNull()
 

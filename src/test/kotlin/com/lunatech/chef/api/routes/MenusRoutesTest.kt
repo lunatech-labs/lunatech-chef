@@ -56,157 +56,174 @@ class MenusRoutesTest {
     @Nested
     inner class GetAllMenus {
         @Test
-        fun `returns empty list when no menus exist`() = testApplication {
-            setupMenusRoutes()
+        fun `returns empty list when no menus exist`() =
+            testApplication {
+                setupMenusRoutes()
 
-            val response = client.get("/menus")
+                val response = client.get("/menus")
 
-            assertEquals(HttpStatusCode.OK, response.status)
-            assertEquals("[]", response.bodyAsText())
-        }
-
-        @Test
-        fun `returns all non-deleted menus`() = testApplication {
-            setupMenusRoutes()
-            val menu = aMenu(name = "Lunch Menu", dishesUuids = listOf(testDish1Uuid))
-            menusService.insert(menu)
-
-            val response = client.get("/menus")
-
-            assertEquals(HttpStatusCode.OK, response.status)
-            assertTrue(response.bodyAsText().contains("Lunch Menu"))
-        }
+                assertEquals(HttpStatusCode.OK, response.status)
+                assertEquals("[]", response.bodyAsText())
+            }
 
         @Test
-        fun `does not return deleted menus`() = testApplication {
-            setupMenusRoutes()
-            val activeMenu = aMenu(name = "Active Menu", dishesUuids = listOf(testDish1Uuid))
-            val deletedMenu = aMenu(name = "Deleted Menu", dishesUuids = listOf(testDish1Uuid), isDeleted = true)
-            menusService.insert(activeMenu)
-            menusService.insert(deletedMenu)
+        fun `returns all non-deleted menus`() =
+            testApplication {
+                setupMenusRoutes()
+                val menu = aMenu(name = "Lunch Menu", dishesUuids = listOf(testDish1Uuid))
+                menusService.insert(menu)
 
-            val response = client.get("/menus")
+                val response = client.get("/menus")
 
-            assertEquals(HttpStatusCode.OK, response.status)
-            assertTrue(response.bodyAsText().contains("Active Menu"))
-            assertFalse(response.bodyAsText().contains("Deleted Menu"))
-        }
+                assertEquals(HttpStatusCode.OK, response.status)
+                assertTrue(response.bodyAsText().contains("Lunch Menu"))
+            }
+
+        @Test
+        fun `does not return deleted menus`() =
+            testApplication {
+                setupMenusRoutes()
+                val activeMenu = aMenu(name = "Active Menu", dishesUuids = listOf(testDish1Uuid))
+                val deletedMenu = aMenu(name = "Deleted Menu", dishesUuids = listOf(testDish1Uuid), isDeleted = true)
+                menusService.insert(activeMenu)
+                menusService.insert(deletedMenu)
+
+                val response = client.get("/menus")
+
+                assertEquals(HttpStatusCode.OK, response.status)
+                assertTrue(response.bodyAsText().contains("Active Menu"))
+                assertFalse(response.bodyAsText().contains("Deleted Menu"))
+            }
     }
 
     @Nested
     inner class GetMenuByUuid {
         @Test
-        fun `returns menu when it exists`() = testApplication {
-            setupMenusRoutes()
-            val menu = aMenu(name = "Lunch Menu", dishesUuids = listOf(testDish1Uuid))
-            menusService.insert(menu)
+        fun `returns menu when it exists`() =
+            testApplication {
+                setupMenusRoutes()
+                val menu = aMenu(name = "Lunch Menu", dishesUuids = listOf(testDish1Uuid))
+                menusService.insert(menu)
 
-            val response = client.get("/menus/${menu.uuid}")
+                val response = client.get("/menus/${menu.uuid}")
 
-            assertEquals(HttpStatusCode.OK, response.status)
-            assertTrue(response.bodyAsText().contains("Lunch Menu"))
-        }
+                assertEquals(HttpStatusCode.OK, response.status)
+                assertTrue(response.bodyAsText().contains("Lunch Menu"))
+            }
 
         @Test
-        fun `returns NotFound for non-existent UUID`() = testApplication {
-            setupMenusRoutes()
+        fun `returns NotFound for non-existent UUID`() =
+            testApplication {
+                setupMenusRoutes()
 
-            val response = client.get("/menus/${UUID.randomUUID()}")
+                val response = client.get("/menus/${UUID.randomUUID()}")
 
-            assertEquals(HttpStatusCode.NotFound, response.status)
-        }
-
+                assertEquals(HttpStatusCode.NotFound, response.status)
+            }
     }
 
     @Nested
     inner class CreateMenu {
         @Test
-        fun `creates new menu with dishes`() = testApplication {
-            setupMenusRoutes()
-            val client = jsonClient()
+        fun `creates new menu with dishes`() =
+            testApplication {
+                setupMenusRoutes()
+                val client = jsonClient()
 
-            val response = client.post("/menus") {
-                contentType(RouteTestHelpers.jsonContentType)
-                setBody(mapOf(
-                    "name" to "Dinner Menu",
-                    "dishesUuids" to listOf(testDish1Uuid.toString(), testDish2Uuid.toString())
-                ))
+                val response =
+                    client.post("/menus") {
+                        contentType(RouteTestHelpers.jsonContentType)
+                        setBody(
+                            mapOf(
+                                "name" to "Dinner Menu",
+                                "dishesUuids" to listOf(testDish1Uuid.toString(), testDish2Uuid.toString()),
+                            ),
+                        )
+                    }
+
+                assertEquals(HttpStatusCode.Created, response.status)
+                val menus = menusService.getAll()
+                assertEquals(1, menus.size)
+                assertEquals("Dinner Menu", menus[0].name)
             }
-
-            assertEquals(HttpStatusCode.Created, response.status)
-            val menus = menusService.getAll()
-            assertEquals(1, menus.size)
-            assertEquals("Dinner Menu", menus[0].name)
-        }
 
         @Test
-        fun `creates menu with empty dishes`() = testApplication {
-            setupMenusRoutes()
-            val client = jsonClient()
+        fun `creates menu with empty dishes`() =
+            testApplication {
+                setupMenusRoutes()
+                val client = jsonClient()
 
-            val response = client.post("/menus") {
-                contentType(RouteTestHelpers.jsonContentType)
-                setBody(mapOf(
-                    "name" to "Empty Menu",
-                    "dishesUuids" to emptyList<String>()
-                ))
+                val response =
+                    client.post("/menus") {
+                        contentType(RouteTestHelpers.jsonContentType)
+                        setBody(
+                            mapOf(
+                                "name" to "Empty Menu",
+                                "dishesUuids" to emptyList<String>(),
+                            ),
+                        )
+                    }
+
+                assertEquals(HttpStatusCode.Created, response.status)
             }
-
-            assertEquals(HttpStatusCode.Created, response.status)
-        }
 
         @Test
-        fun `returns BadRequest for invalid JSON`() = testApplication {
-            setupMenusRoutes()
-            val client = jsonClient()
+        fun `returns BadRequest for invalid JSON`() =
+            testApplication {
+                setupMenusRoutes()
+                val client = jsonClient()
 
-            val response = client.post("/menus") {
-                contentType(RouteTestHelpers.jsonContentType)
-                setBody("{ invalid json }")
+                val response =
+                    client.post("/menus") {
+                        contentType(RouteTestHelpers.jsonContentType)
+                        setBody("{ invalid json }")
+                    }
+
+                assertEquals(HttpStatusCode.BadRequest, response.status)
             }
-
-            assertEquals(HttpStatusCode.BadRequest, response.status)
-        }
     }
 
     @Nested
     inner class UpdateMenu {
         @Test
-        fun `updates existing menu`() = testApplication {
-            setupMenusRoutes()
-            val client = jsonClient()
-            val menu = aMenu(name = "Original Menu", dishesUuids = listOf(testDish1Uuid))
-            menusService.insert(menu)
+        fun `updates existing menu`() =
+            testApplication {
+                setupMenusRoutes()
+                val client = jsonClient()
+                val menu = aMenu(name = "Original Menu", dishesUuids = listOf(testDish1Uuid))
+                menusService.insert(menu)
 
-            val response = client.put("/menus/${menu.uuid}") {
-                contentType(RouteTestHelpers.jsonContentType)
-                setBody(mapOf(
-                    "name" to "Updated Menu",
-                    "dishesUuids" to listOf(testDish2Uuid.toString())
-                ))
+                val response =
+                    client.put("/menus/${menu.uuid}") {
+                        contentType(RouteTestHelpers.jsonContentType)
+                        setBody(
+                            mapOf(
+                                "name" to "Updated Menu",
+                                "dishesUuids" to listOf(testDish2Uuid.toString()),
+                            ),
+                        )
+                    }
+
+                assertEquals(HttpStatusCode.OK, response.status)
+                val updated = menusService.getByUuid(menu.uuid)
+                assertEquals("Updated Menu", updated?.name)
             }
-
-            assertEquals(HttpStatusCode.OK, response.status)
-            val updated = menusService.getByUuid(menu.uuid)
-            assertEquals("Updated Menu", updated?.name)
-        }
-
     }
 
     @Nested
     inner class DeleteMenu {
         @Test
-        fun `soft deletes menu`() = testApplication {
-            setupMenusRoutes()
-            val menu = aMenu(name = "Menu to delete", dishesUuids = listOf(testDish1Uuid))
-            menusService.insert(menu)
+        fun `soft deletes menu`() =
+            testApplication {
+                setupMenusRoutes()
+                val menu = aMenu(name = "Menu to delete", dishesUuids = listOf(testDish1Uuid))
+                menusService.insert(menu)
 
-            val response = client.delete("/menus/${menu.uuid}")
+                val response = client.delete("/menus/${menu.uuid}")
 
-            assertEquals(HttpStatusCode.OK, response.status)
-            val menus = menusService.getAll()
-            assertTrue(menus.isEmpty(), "Deleted menu should not appear in getAll")
-        }
-
+                assertEquals(HttpStatusCode.OK, response.status)
+                val menus = menusService.getAll()
+                assertTrue(menus.isEmpty(), "Deleted menu should not appear in getAll")
+            }
     }
 }

@@ -69,150 +69,166 @@ class RecurrentSchedulesRoutesTest {
     @Nested
     inner class GetAllRecurrentSchedules {
         @Test
-        fun `returns empty list when no schedules exist`() = testApplication {
-            setupRecurrentSchedulesRoutes()
+        fun `returns empty list when no schedules exist`() =
+            testApplication {
+                setupRecurrentSchedulesRoutes()
 
-            val response = client.get("/recurrentschedules")
+                val response = client.get("/recurrentschedules")
 
-            assertEquals(HttpStatusCode.OK, response.status)
-            assertEquals("[]", response.bodyAsText())
-        }
+                assertEquals(HttpStatusCode.OK, response.status)
+                assertEquals("[]", response.bodyAsText())
+            }
 
         @Test
-        fun `returns all non-deleted recurrent schedules`() = testApplication {
-            setupRecurrentSchedulesRoutes()
-            val schedule = aRecurrentSchedule(menuUuid = testMenuUuid, officeUuid = testOfficeUuid, repetitionDays = 7)
-            recurrentSchedulesService.insert(schedule)
+        fun `returns all non-deleted recurrent schedules`() =
+            testApplication {
+                setupRecurrentSchedulesRoutes()
+                val schedule = aRecurrentSchedule(menuUuid = testMenuUuid, officeUuid = testOfficeUuid, repetitionDays = 7)
+                recurrentSchedulesService.insert(schedule)
 
-            val response = client.get("/recurrentschedules")
+                val response = client.get("/recurrentschedules")
 
-            assertEquals(HttpStatusCode.OK, response.status)
-            assertTrue(response.bodyAsText().contains(testMenuUuid.toString()))
-        }
+                assertEquals(HttpStatusCode.OK, response.status)
+                assertTrue(response.bodyAsText().contains(testMenuUuid.toString()))
+            }
     }
 
     @Nested
     inner class GetRecurrentScheduleByUuid {
         @Test
-        fun `returns recurrent schedule when it exists`() = testApplication {
-            setupRecurrentSchedulesRoutes()
-            val schedule = aRecurrentSchedule(menuUuid = testMenuUuid, officeUuid = testOfficeUuid, repetitionDays = 7)
-            recurrentSchedulesService.insert(schedule)
+        fun `returns recurrent schedule when it exists`() =
+            testApplication {
+                setupRecurrentSchedulesRoutes()
+                val schedule = aRecurrentSchedule(menuUuid = testMenuUuid, officeUuid = testOfficeUuid, repetitionDays = 7)
+                recurrentSchedulesService.insert(schedule)
 
-            val response = client.get("/recurrentschedules/${schedule.uuid}")
+                val response = client.get("/recurrentschedules/${schedule.uuid}")
 
-            assertEquals(HttpStatusCode.OK, response.status)
-            assertTrue(response.bodyAsText().contains(schedule.uuid.toString()))
-        }
+                assertEquals(HttpStatusCode.OK, response.status)
+                assertTrue(response.bodyAsText().contains(schedule.uuid.toString()))
+            }
 
         @Test
-        fun `returns NotFound for non-existent UUID`() = testApplication {
-            setupRecurrentSchedulesRoutes()
+        fun `returns NotFound for non-existent UUID`() =
+            testApplication {
+                setupRecurrentSchedulesRoutes()
 
-            val response = client.get("/recurrentschedules/${UUID.randomUUID()}")
+                val response = client.get("/recurrentschedules/${UUID.randomUUID()}")
 
-            assertEquals(HttpStatusCode.NotFound, response.status)
-        }
-
+                assertEquals(HttpStatusCode.NotFound, response.status)
+            }
     }
 
     @Nested
     inner class CreateRecurrentSchedule {
         @Test
-        fun `creates new recurrent schedule`() = testApplication {
-            setupRecurrentSchedulesRoutes()
-            val client = jsonClient()
-            val nextDate = LocalDate.now().plusDays(7)
+        fun `creates new recurrent schedule`() =
+            testApplication {
+                setupRecurrentSchedulesRoutes()
+                val client = jsonClient()
+                val nextDate = LocalDate.now().plusDays(7)
 
-            val response = client.post("/recurrentschedules") {
-                contentType(RouteTestHelpers.jsonContentType)
-                setBody(mapOf(
-                    "menuUuid" to testMenuUuid.toString(),
-                    "officeUuid" to testOfficeUuid.toString(),
-                    "repetitionDays" to 7,
-                    "nextDate" to nextDate.toString()
-                ))
+                val response =
+                    client.post("/recurrentschedules") {
+                        contentType(RouteTestHelpers.jsonContentType)
+                        setBody(
+                            mapOf(
+                                "menuUuid" to testMenuUuid.toString(),
+                                "officeUuid" to testOfficeUuid.toString(),
+                                "repetitionDays" to 7,
+                                "nextDate" to nextDate.toString(),
+                            ),
+                        )
+                    }
+
+                assertEquals(HttpStatusCode.Created, response.status)
+                val schedules = recurrentSchedulesService.getAll()
+                assertEquals(1, schedules.size)
             }
-
-            assertEquals(HttpStatusCode.Created, response.status)
-            val schedules = recurrentSchedulesService.getAll()
-            assertEquals(1, schedules.size)
-        }
 
         @Test
-        fun `creates recurrent schedule with biweekly repetition`() = testApplication {
-            setupRecurrentSchedulesRoutes()
-            val client = jsonClient()
-            val nextDate = LocalDate.now().plusDays(14)
+        fun `creates recurrent schedule with biweekly repetition`() =
+            testApplication {
+                setupRecurrentSchedulesRoutes()
+                val client = jsonClient()
+                val nextDate = LocalDate.now().plusDays(14)
 
-            val response = client.post("/recurrentschedules") {
-                contentType(RouteTestHelpers.jsonContentType)
-                setBody(mapOf(
-                    "menuUuid" to testMenuUuid.toString(),
-                    "officeUuid" to testOfficeUuid.toString(),
-                    "repetitionDays" to 14,
-                    "nextDate" to nextDate.toString()
-                ))
+                val response =
+                    client.post("/recurrentschedules") {
+                        contentType(RouteTestHelpers.jsonContentType)
+                        setBody(
+                            mapOf(
+                                "menuUuid" to testMenuUuid.toString(),
+                                "officeUuid" to testOfficeUuid.toString(),
+                                "repetitionDays" to 14,
+                                "nextDate" to nextDate.toString(),
+                            ),
+                        )
+                    }
+
+                assertEquals(HttpStatusCode.Created, response.status)
             }
-
-            assertEquals(HttpStatusCode.Created, response.status)
-        }
 
         @Test
-        fun `returns BadRequest for invalid JSON`() = testApplication {
-            setupRecurrentSchedulesRoutes()
-            val client = jsonClient()
+        fun `returns BadRequest for invalid JSON`() =
+            testApplication {
+                setupRecurrentSchedulesRoutes()
+                val client = jsonClient()
 
-            val response = client.post("/recurrentschedules") {
-                contentType(RouteTestHelpers.jsonContentType)
-                setBody("{ invalid json }")
+                val response =
+                    client.post("/recurrentschedules") {
+                        contentType(RouteTestHelpers.jsonContentType)
+                        setBody("{ invalid json }")
+                    }
+
+                assertEquals(HttpStatusCode.BadRequest, response.status)
             }
-
-            assertEquals(HttpStatusCode.BadRequest, response.status)
-        }
     }
 
     @Nested
     inner class UpdateRecurrentSchedule {
         @Test
-        fun `updates existing recurrent schedule`() = testApplication {
-            setupRecurrentSchedulesRoutes()
-            val client = jsonClient()
-            val schedule = aRecurrentSchedule(menuUuid = testMenuUuid, officeUuid = testOfficeUuid, repetitionDays = 7)
-            recurrentSchedulesService.insert(schedule)
-            val newDate = LocalDate.now().plusDays(14)
+        fun `updates existing recurrent schedule`() =
+            testApplication {
+                setupRecurrentSchedulesRoutes()
+                val client = jsonClient()
+                val schedule = aRecurrentSchedule(menuUuid = testMenuUuid, officeUuid = testOfficeUuid, repetitionDays = 7)
+                recurrentSchedulesService.insert(schedule)
+                val newDate = LocalDate.now().plusDays(14)
 
-            val response = client.put("/recurrentschedules/${schedule.uuid}") {
-                contentType(RouteTestHelpers.jsonContentType)
-                setBody(mapOf(
-                    "menuUuid" to testMenuUuid.toString(),
-                    "officeUuid" to testOfficeUuid.toString(),
-                    "repetitionDays" to 14,
-                    "nextDate" to newDate.toString()
-                ))
+                val response =
+                    client.put("/recurrentschedules/${schedule.uuid}") {
+                        contentType(RouteTestHelpers.jsonContentType)
+                        setBody(
+                            mapOf(
+                                "menuUuid" to testMenuUuid.toString(),
+                                "officeUuid" to testOfficeUuid.toString(),
+                                "repetitionDays" to 14,
+                                "nextDate" to newDate.toString(),
+                            ),
+                        )
+                    }
+
+                assertEquals(HttpStatusCode.OK, response.status)
+                val updated = recurrentSchedulesService.getByUuid(schedule.uuid)
+                assertEquals(14, updated[0].repetitionDays)
             }
-
-            assertEquals(HttpStatusCode.OK, response.status)
-            val updated = recurrentSchedulesService.getByUuid(schedule.uuid)
-            assertEquals(14, updated[0].repetitionDays)
-        }
-
     }
 
     @Nested
     inner class DeleteRecurrentSchedule {
         @Test
-        fun `soft deletes recurrent schedule`() = testApplication {
-            setupRecurrentSchedulesRoutes()
-            val schedule = aRecurrentSchedule(menuUuid = testMenuUuid, officeUuid = testOfficeUuid, repetitionDays = 7)
-            recurrentSchedulesService.insert(schedule)
+        fun `soft deletes recurrent schedule`() =
+            testApplication {
+                setupRecurrentSchedulesRoutes()
+                val schedule = aRecurrentSchedule(menuUuid = testMenuUuid, officeUuid = testOfficeUuid, repetitionDays = 7)
+                recurrentSchedulesService.insert(schedule)
 
-            val response = client.delete("/recurrentschedules/${schedule.uuid}")
+                val response = client.delete("/recurrentschedules/${schedule.uuid}")
 
-            assertEquals(HttpStatusCode.OK, response.status)
-            val schedules = recurrentSchedulesService.getAll()
-            assertTrue(schedules.isEmpty(), "Deleted schedule should not appear in getAll")
-        }
-
+                assertEquals(HttpStatusCode.OK, response.status)
+                val schedules = recurrentSchedulesService.getAll()
+                assertTrue(schedules.isEmpty(), "Deleted schedule should not appear in getAll")
+            }
     }
 }

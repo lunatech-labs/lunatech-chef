@@ -58,11 +58,12 @@ class SchedulesWithMenuInfoServiceTest {
     inner class GetAllOperations {
         @Test
         fun `getAll returns schedules with menu and office info`() {
-            val schedule = aSchedule(
-                menuUuid = testMenuUuid,
-                date = LocalDate.now().plusDays(7),
-                officeUuid = testOfficeUuid,
-            )
+            val schedule =
+                aSchedule(
+                    menuUuid = testMenuUuid,
+                    date = LocalDate.now().plusDays(7),
+                    officeUuid = testOfficeUuid,
+                )
             schedulesService.insert(schedule)
 
             val allSchedules = schedulesWithMenuInfoService.getAll()
@@ -81,7 +82,8 @@ class SchedulesWithMenuInfoServiceTest {
         fun `getAll returns only non-deleted schedules ordered by date`() {
             val schedule1 = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(10), officeUuid = testOfficeUuid)
             val schedule2 = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(5), officeUuid = testOfficeUuid)
-            val deletedSchedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(3), officeUuid = testOfficeUuid, isDeleted = true)
+            val deletedSchedule =
+                aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(3), officeUuid = testOfficeUuid, isDeleted = true)
 
             schedulesService.insert(schedule1)
             schedulesService.insert(schedule2)
@@ -155,11 +157,12 @@ class SchedulesWithMenuInfoServiceTest {
     inner class GetByUuidOperations {
         @Test
         fun `getByUuid returns schedule with menu and office info`() {
-            val schedule = aSchedule(
-                menuUuid = testMenuUuid,
-                date = LocalDate.now().plusDays(7),
-                officeUuid = testOfficeUuid,
-            )
+            val schedule =
+                aSchedule(
+                    menuUuid = testMenuUuid,
+                    date = LocalDate.now().plusDays(7),
+                    officeUuid = testOfficeUuid,
+                )
             schedulesService.insert(schedule)
 
             val retrieved = schedulesWithMenuInfoService.getByUuid(schedule.uuid)

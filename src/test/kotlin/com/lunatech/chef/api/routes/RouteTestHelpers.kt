@@ -16,15 +16,15 @@ import io.ktor.server.testing.ApplicationTestBuilder
  * Provides consistent Jackson configuration and helper functions.
  */
 object RouteTestHelpers {
-
     /**
      * Creates a configured ObjectMapper with JavaTimeModule and KotlinModule.
      */
-    fun configuredObjectMapper(): ObjectMapper = ObjectMapper().apply {
-        registerModule(JavaTimeModule())
-        registerModule(KotlinModule.Builder().build())
-        disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-    }
+    fun configuredObjectMapper(): ObjectMapper =
+        ObjectMapper().apply {
+            registerModule(JavaTimeModule())
+            registerModule(KotlinModule.Builder().build())
+            disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+        }
 
     /**
      * Creates a configured Jackson converter for use in server ContentNegotiation.
@@ -42,12 +42,13 @@ object RouteTestHelpers {
  * Creates an HTTP client configured with Jackson for JSON serialization.
  * Use this for POST/PUT requests that need to serialize request bodies.
  */
-fun ApplicationTestBuilder.jsonClient(): HttpClient = createClient {
-    install(ContentNegotiation) {
-        jackson {
-            registerModule(JavaTimeModule())
-            registerModule(KotlinModule.Builder().build())
-            disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+fun ApplicationTestBuilder.jsonClient(): HttpClient =
+    createClient {
+        install(ContentNegotiation) {
+            jackson {
+                registerModule(JavaTimeModule())
+                registerModule(KotlinModule.Builder().build())
+                disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+            }
         }
     }
-}

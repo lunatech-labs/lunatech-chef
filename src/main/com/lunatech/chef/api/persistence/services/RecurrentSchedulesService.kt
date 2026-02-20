@@ -18,9 +18,13 @@ import org.ktorm.schema.ColumnDeclaring
 import java.time.LocalDate
 import java.util.UUID
 
-class RecurrentSchedulesService(val database: Database) {
+class RecurrentSchedulesService(
+    val database: Database,
+) {
     fun getAll() =
-        database.from(RecurrentSchedules).select()
+        database
+            .from(RecurrentSchedules)
+            .select()
             .where { RecurrentSchedules.isDeleted eq false }
             .map { RecurrentSchedules.createEntity(it) }
 
@@ -28,18 +32,21 @@ class RecurrentSchedulesService(val database: Database) {
         fromDate: LocalDate,
         toDate: LocalDate,
     ): List<RecurrentSchedule> =
-        database.from(RecurrentSchedules).select()
+        database
+            .from(RecurrentSchedules)
+            .select()
             .where {
                 val conditions = ArrayList<ColumnDeclaring<Boolean>>()
                 conditions += RecurrentSchedules.isDeleted eq false
                 conditions += RecurrentSchedules.nextDate greater fromDate
                 conditions += RecurrentSchedules.nextDate lessEq toDate
                 conditions.reduce { a, b -> a and b }
-            }
-            .map { RecurrentSchedules.createEntity(it) }
+            }.map { RecurrentSchedules.createEntity(it) }
 
     fun getByUuid(uuid: UUID): List<RecurrentSchedule> =
-        database.from(RecurrentSchedules).select()
+        database
+            .from(RecurrentSchedules)
+            .select()
             .where { RecurrentSchedules.uuid eq uuid }
             .map { RecurrentSchedules.createEntity(it) }
 

@@ -74,82 +74,87 @@ class SchedulesWithMenusInfoRoutesTest {
     @Nested
     inner class GetAllSchedulesWithMenusInfo {
         @Test
-        fun `returns empty list when no schedules exist`() = testApplication {
-            setupSchedulesWithMenusInfoRoutes()
+        fun `returns empty list when no schedules exist`() =
+            testApplication {
+                setupSchedulesWithMenusInfoRoutes()
 
-            val response = client.get("/schedulesWithMenusInfo")
+                val response = client.get("/schedulesWithMenusInfo")
 
-            assertEquals(HttpStatusCode.OK, response.status)
-            assertEquals("[]", response.bodyAsText())
-        }
+                assertEquals(HttpStatusCode.OK, response.status)
+                assertEquals("[]", response.bodyAsText())
+            }
 
         @Test
-        fun `returns schedules with menu and office info`() = testApplication {
-            setupSchedulesWithMenusInfoRoutes()
-            val schedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
-            schedulesService.insert(schedule)
+        fun `returns schedules with menu and office info`() =
+            testApplication {
+                setupSchedulesWithMenusInfoRoutes()
+                val schedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
+                schedulesService.insert(schedule)
 
-            val response = client.get("/schedulesWithMenusInfo")
+                val response = client.get("/schedulesWithMenusInfo")
 
-            assertEquals(HttpStatusCode.OK, response.status)
-            assertTrue(response.bodyAsText().contains("Lunch Menu"))
-            assertTrue(response.bodyAsText().contains("Rotterdam"))
-        }
+                assertEquals(HttpStatusCode.OK, response.status)
+                assertTrue(response.bodyAsText().contains("Lunch Menu"))
+                assertTrue(response.bodyAsText().contains("Rotterdam"))
+            }
     }
 
     @Nested
     inner class FilteringSchedules {
         @Test
-        fun `filters by fromdate`() = testApplication {
-            setupSchedulesWithMenusInfoRoutes()
-            val pastSchedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().minusDays(5), officeUuid = testOfficeUuid)
-            val futureSchedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(5), officeUuid = testOfficeUuid)
-            schedulesService.insert(pastSchedule)
-            schedulesService.insert(futureSchedule)
+        fun `filters by fromdate`() =
+            testApplication {
+                setupSchedulesWithMenusInfoRoutes()
+                val pastSchedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().minusDays(5), officeUuid = testOfficeUuid)
+                val futureSchedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(5), officeUuid = testOfficeUuid)
+                schedulesService.insert(pastSchedule)
+                schedulesService.insert(futureSchedule)
 
-            val response = client.get("/schedulesWithMenusInfo?fromdate=${LocalDate.now()}")
+                val response = client.get("/schedulesWithMenusInfo?fromdate=${LocalDate.now()}")
 
-            assertEquals(HttpStatusCode.OK, response.status)
-            assertTrue(response.bodyAsText().contains(futureSchedule.uuid.toString()))
-        }
+                assertEquals(HttpStatusCode.OK, response.status)
+                assertTrue(response.bodyAsText().contains(futureSchedule.uuid.toString()))
+            }
 
         @Test
-        fun `filters by office`() = testApplication {
-            setupSchedulesWithMenusInfoRoutes()
-            val schedule1 = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
-            val schedule2 = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(8), officeUuid = testOffice2Uuid)
-            schedulesService.insert(schedule1)
-            schedulesService.insert(schedule2)
+        fun `filters by office`() =
+            testApplication {
+                setupSchedulesWithMenusInfoRoutes()
+                val schedule1 = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
+                val schedule2 = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(8), officeUuid = testOffice2Uuid)
+                schedulesService.insert(schedule1)
+                schedulesService.insert(schedule2)
 
-            val response = client.get("/schedulesWithMenusInfo?office=$testOfficeUuid")
+                val response = client.get("/schedulesWithMenusInfo?office=$testOfficeUuid")
 
-            assertEquals(HttpStatusCode.OK, response.status)
-            assertTrue(response.bodyAsText().contains("Rotterdam"))
-        }
+                assertEquals(HttpStatusCode.OK, response.status)
+                assertTrue(response.bodyAsText().contains("Rotterdam"))
+            }
     }
 
     @Nested
     inner class GetScheduleWithMenusInfoByUuid {
         @Test
-        fun `returns schedule with info`() = testApplication {
-            setupSchedulesWithMenusInfoRoutes()
-            val schedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
-            schedulesService.insert(schedule)
+        fun `returns schedule with info`() =
+            testApplication {
+                setupSchedulesWithMenusInfoRoutes()
+                val schedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
+                schedulesService.insert(schedule)
 
-            val response = client.get("/schedulesWithMenusInfo/${schedule.uuid}")
+                val response = client.get("/schedulesWithMenusInfo/${schedule.uuid}")
 
-            assertEquals(HttpStatusCode.OK, response.status)
-            assertTrue(response.bodyAsText().contains("Lunch Menu"))
-        }
+                assertEquals(HttpStatusCode.OK, response.status)
+                assertTrue(response.bodyAsText().contains("Lunch Menu"))
+            }
 
         @Test
-        fun `returns NotFound for non-existent schedule`() = testApplication {
-            setupSchedulesWithMenusInfoRoutes()
+        fun `returns NotFound for non-existent schedule`() =
+            testApplication {
+                setupSchedulesWithMenusInfoRoutes()
 
-            val response = client.get("/schedulesWithMenusInfo/${UUID.randomUUID()}")
+                val response = client.get("/schedulesWithMenusInfo/${UUID.randomUUID()}")
 
-            assertEquals(HttpStatusCode.NotFound, response.status)
-        }
-
+                assertEquals(HttpStatusCode.NotFound, response.status)
+            }
     }
 }

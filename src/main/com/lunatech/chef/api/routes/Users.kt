@@ -36,8 +36,6 @@ data class UpdatedUser(
 
 fun Route.users(usersService: UsersService) {
     val usersRoute = "/users"
-    val uuidRoute = "/{uuid}"
-    val uuidParam = "uuid"
 
     route(usersRoute) {
         // get all users
@@ -57,11 +55,11 @@ fun Route.users(usersService: UsersService) {
             }
         }
 
-        route(uuidRoute) {
+        route(UUID_ROUTE) {
             // get single user
             get {
-                val uuid = call.parameters[uuidParam]
-                val user = usersService.getByUuid(UUID.fromString(uuid))
+                val uuid = call.parameters[UUID_PARAM].toUUIDOrNull() ?: return@get call.respond(BadRequest, "Invalid UUID")
+                val user = usersService.getByUuid(uuid)
                 if (user.isEmpty()) {
                     call.respond(NotFound)
                 } else {
@@ -71,9 +69,9 @@ fun Route.users(usersService: UsersService) {
             // modify existing user
             put {
                 try {
-                    val uuid = call.parameters[uuidParam]
+                    val uuid = call.parameters[UUID_PARAM].toUUIDOrNull() ?: return@put call.respond(BadRequest, "Invalid UUID")
                     val updatedUser = call.receive<UpdatedUser>()
-                    val result = usersService.update(UUID.fromString(uuid), updatedUser)
+                    val result = usersService.update(uuid, updatedUser)
                     if (result == 1) call.respond(OK) else call.respond(InternalServerError)
                 } catch (exception: Exception) {
                     logger.error("Error updating an User :( ", exception)
@@ -82,8 +80,8 @@ fun Route.users(usersService: UsersService) {
             }
             // delete a single user
             delete {
-                val uuid = call.parameters[uuidParam]
-                val result = usersService.delete(UUID.fromString(uuid))
+                val uuid = call.parameters[UUID_PARAM].toUUIDOrNull() ?: return@delete call.respond(BadRequest, "Invalid UUID")
+                val result = usersService.delete(uuid)
                 if (result == 1) call.respond(OK) else call.respond(InternalServerError)
             }
         }

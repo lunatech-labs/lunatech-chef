@@ -84,87 +84,95 @@ class ReportsRoutesTest {
     @Nested
     inner class ParameterValidation {
         @Test
-        fun `returns BadRequest without year and month params`() = testApplication {
-            setupReportsRoutes()
+        fun `returns BadRequest without year and month params`() =
+            testApplication {
+                setupReportsRoutes()
 
-            val response = client.get("/reports")
+                val response = client.get("/reports")
 
-            assertEquals(HttpStatusCode.BadRequest, response.status)
-        }
-
-        @Test
-        fun `returns BadRequest without month param`() = testApplication {
-            setupReportsRoutes()
-
-            val response = client.get("/reports?year=2024")
-
-            assertEquals(HttpStatusCode.BadRequest, response.status)
-        }
+                assertEquals(HttpStatusCode.BadRequest, response.status)
+            }
 
         @Test
-        fun `returns BadRequest without year param`() = testApplication {
-            setupReportsRoutes()
+        fun `returns BadRequest without month param`() =
+            testApplication {
+                setupReportsRoutes()
 
-            val response = client.get("/reports?month=6")
+                val response = client.get("/reports?year=2024")
 
-            assertEquals(HttpStatusCode.BadRequest, response.status)
-        }
-
-        @Test
-        fun `returns BadRequest for invalid year format`() = testApplication {
-            setupReportsRoutes()
-
-            val response = client.get("/reports?year=invalid&month=6")
-
-            assertEquals(HttpStatusCode.BadRequest, response.status)
-        }
+                assertEquals(HttpStatusCode.BadRequest, response.status)
+            }
 
         @Test
-        fun `returns BadRequest for invalid month format`() = testApplication {
-            setupReportsRoutes()
+        fun `returns BadRequest without year param`() =
+            testApplication {
+                setupReportsRoutes()
 
-            val response = client.get("/reports?year=2024&month=invalid")
+                val response = client.get("/reports?month=6")
 
-            assertEquals(HttpStatusCode.BadRequest, response.status)
-        }
+                assertEquals(HttpStatusCode.BadRequest, response.status)
+            }
+
+        @Test
+        fun `returns BadRequest for invalid year format`() =
+            testApplication {
+                setupReportsRoutes()
+
+                val response = client.get("/reports?year=invalid&month=6")
+
+                assertEquals(HttpStatusCode.BadRequest, response.status)
+            }
+
+        @Test
+        fun `returns BadRequest for invalid month format`() =
+            testApplication {
+                setupReportsRoutes()
+
+                val response = client.get("/reports?year=2024&month=invalid")
+
+                assertEquals(HttpStatusCode.BadRequest, response.status)
+            }
     }
 
     @Nested
     inner class ReportGeneration {
         @Test
-        fun `returns OK with year and month params`() = testApplication {
-            setupReportsRoutes()
-            val today = LocalDate.now()
-            val scheduleDate = today.withDayOfMonth(15)
-            val schedule = aSchedule(menuUuid = testMenuUuid, date = scheduleDate, officeUuid = testOfficeUuid)
-            schedulesService.insert(schedule)
+        fun `returns OK with year and month params`() =
+            testApplication {
+                setupReportsRoutes()
+                val today = LocalDate.now()
+                val scheduleDate = today.withDayOfMonth(15)
+                val schedule = aSchedule(menuUuid = testMenuUuid, date = scheduleDate, officeUuid = testOfficeUuid)
+                schedulesService.insert(schedule)
 
-            val attendance = anAttendance(scheduleUuid = schedule.uuid, userUuid = testUserUuid, isAttending = true)
-            attendancesService.insert(attendance)
+                val attendance = anAttendance(scheduleUuid = schedule.uuid, userUuid = testUserUuid, isAttending = true)
+                attendancesService.insert(attendance)
 
-            val response = client.get("/reports?year=${today.year}&month=${today.monthValue}")
+                val response = client.get("/reports?year=${today.year}&month=${today.monthValue}")
 
-            assertEquals(HttpStatusCode.OK, response.status)
-            assertTrue(response.headers[HttpHeaders.ContentType]?.contains("spreadsheet") == true)
-        }
-
-        @Test
-        fun `returns OK for month with no data`() = testApplication {
-            setupReportsRoutes()
-
-            val response = client.get("/reports?year=2020&month=1")
-
-            assertEquals(HttpStatusCode.OK, response.status)
-        }
+                assertEquals(HttpStatusCode.OK, response.status)
+                assertTrue(response.headers[HttpHeaders.ContentType]?.contains("spreadsheet") == true)
+            }
 
         @Test
-        fun `returns spreadsheet content type`() = testApplication {
-            setupReportsRoutes()
-            val today = LocalDate.now()
+        fun `returns OK for month with no data`() =
+            testApplication {
+                setupReportsRoutes()
 
-            val response = client.get("/reports?year=${today.year}&month=${today.monthValue}")
+                val response = client.get("/reports?year=2020&month=1")
 
-            assertEquals(HttpStatusCode.OK, response.status)
-        }
+                assertEquals(HttpStatusCode.OK, response.status)
+            }
+
+        @Test
+        fun `returns spreadsheet content type`() =
+            testApplication {
+                setupReportsRoutes()
+                val today = LocalDate.now()
+
+                val response = client.get("/reports?year=${today.year}&month=${today.monthValue}")
+
+                assertEquals(HttpStatusCode.OK, response.status)
+            }
     }
 }

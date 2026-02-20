@@ -116,7 +116,8 @@ class ReportServiceTest {
             schedulesService.insert(schedule)
 
             val activeAttendance = anAttendance(scheduleUuid = schedule.uuid, userUuid = testUserUuid, isAttending = true)
-            val deletedAttendance = anAttendance(scheduleUuid = schedule.uuid, userUuid = testUser2Uuid, isAttending = true, isDeleted = true)
+            val deletedAttendance =
+                anAttendance(scheduleUuid = schedule.uuid, userUuid = testUser2Uuid, isAttending = true, isDeleted = true)
             attendancesService.insert(activeAttendance)
             attendancesService.insert(deletedAttendance)
 

@@ -14,16 +14,15 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.put
 import io.ktor.server.routing.route
 import mu.KotlinLogging
-import java.util.UUID
 
 private val logger = KotlinLogging.logger {}
 
-data class UpdatedAttendance(val isAttending: Boolean)
+data class UpdatedAttendance(
+    val isAttending: Boolean,
+)
 
 fun Route.attendances(attendancesService: AttendancesService) {
     val attendancesRoute = "/attendances"
-    val uuidRoute = "/{uuid}"
-    val uuidParam = "uuid"
 
     route(attendancesRoute) {
         // create a new single attendance
@@ -37,13 +36,13 @@ fun Route.attendances(attendancesService: AttendancesService) {
                 call.respond(BadRequest, exception.message ?: "")
             }
         }
-        route(uuidRoute) {
+        route(UUID_ROUTE) {
             // modify existing schedule
             put {
                 try {
-                    val uuid = call.parameters[uuidParam]
+                    val uuid = call.parameters[UUID_PARAM].toUUIDOrNull() ?: return@put call.respond(BadRequest, "Invalid UUID")
                     val updatedAttendance = call.receive<UpdatedAttendance>()
-                    val result = attendancesService.update(UUID.fromString(uuid), updatedAttendance)
+                    val result = attendancesService.update(uuid, updatedAttendance)
                     if (result == 1) call.respond(OK) else call.respond(InternalServerError)
                 } catch (exception: Exception) {
                     logger.error("Error updating an attendance :( ", exception)

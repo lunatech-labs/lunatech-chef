@@ -34,11 +34,12 @@ class DishesServiceTest {
 
         @Test
         fun `insert persists all dish properties correctly`() {
-            val dish = aDish(
-                name = "Pasta Carbonara",
-                description = "Classic Italian pasta",
-                hasPork = true,
-            )
+            val dish =
+                aDish(
+                    name = "Pasta Carbonara",
+                    description = "Classic Italian pasta",
+                    hasPork = true,
+                )
 
             dishesService.insert(dish)
             val retrieved = dishesService.getByUuid(dish.uuid)
@@ -51,18 +52,19 @@ class DishesServiceTest {
 
         @Test
         fun `insert persists dish with all dietary flags set to true`() {
-            val dish = aDish(
-                name = "Special Dish",
-                description = "All flags set",
-                isVegetarian = true,
-                isHalal = true,
-                hasNuts = true,
-                hasSeafood = true,
-                hasPork = true,
-                hasBeef = true,
-                isGlutenFree = true,
-                isLactoseFree = true,
-            )
+            val dish =
+                aDish(
+                    name = "Special Dish",
+                    description = "All flags set",
+                    isVegetarian = true,
+                    isHalal = true,
+                    hasNuts = true,
+                    hasSeafood = true,
+                    hasPork = true,
+                    hasBeef = true,
+                    isGlutenFree = true,
+                    isLactoseFree = true,
+                )
 
             dishesService.insert(dish)
             val retrieved = dishesService.getByUuid(dish.uuid)[0]
@@ -159,18 +161,19 @@ class DishesServiceTest {
             val dish = aDish(name = "Salad", isVegetarian = true)
             dishesService.insert(dish)
 
-            val updatedDish = UpdatedDish(
-                name = "Caesar Salad",
-                description = "With croutons",
-                isVegetarian = false,
-                isHalal = false,
-                hasNuts = false,
-                hasSeafood = false,
-                hasPork = false,
-                hasBeef = false,
-                isGlutenFree = false,
-                isLactoseFree = false,
-            )
+            val updatedDish =
+                UpdatedDish(
+                    name = "Caesar Salad",
+                    description = "With croutons",
+                    isVegetarian = false,
+                    isHalal = false,
+                    hasNuts = false,
+                    hasSeafood = false,
+                    hasPork = false,
+                    hasBeef = false,
+                    isGlutenFree = false,
+                    isLactoseFree = false,
+                )
 
             val updateResult = dishesService.update(dish.uuid, updatedDish)
 
@@ -182,18 +185,19 @@ class DishesServiceTest {
             val dish = aDish(name = "Salad", description = "Original description", isVegetarian = true)
             dishesService.insert(dish)
 
-            val updatedDish = UpdatedDish(
-                name = "Caesar Salad",
-                description = "With croutons",
-                isVegetarian = false,
-                isHalal = true,
-                hasNuts = true,
-                hasSeafood = false,
-                hasPork = false,
-                hasBeef = false,
-                isGlutenFree = false,
-                isLactoseFree = false,
-            )
+            val updatedDish =
+                UpdatedDish(
+                    name = "Caesar Salad",
+                    description = "With croutons",
+                    isVegetarian = false,
+                    isHalal = true,
+                    hasNuts = true,
+                    hasSeafood = false,
+                    hasPork = false,
+                    hasBeef = false,
+                    isGlutenFree = false,
+                    isLactoseFree = false,
+                )
             dishesService.update(dish.uuid, updatedDish)
 
             val retrieved = dishesService.getByUuid(dish.uuid)[0]
@@ -208,18 +212,19 @@ class DishesServiceTest {
         @Test
         fun `update returns 0 for non-existent dish`() {
             val nonExistentUuid = UUID.randomUUID()
-            val updatedDish = UpdatedDish(
-                name = "Updated Name",
-                description = "Updated description",
-                isVegetarian = false,
-                isHalal = false,
-                hasNuts = false,
-                hasSeafood = false,
-                hasPork = false,
-                hasBeef = false,
-                isGlutenFree = false,
-                isLactoseFree = false,
-            )
+            val updatedDish =
+                UpdatedDish(
+                    name = "Updated Name",
+                    description = "Updated description",
+                    isVegetarian = false,
+                    isHalal = false,
+                    hasNuts = false,
+                    hasSeafood = false,
+                    hasPork = false,
+                    hasBeef = false,
+                    isGlutenFree = false,
+                    isLactoseFree = false,
+                )
 
             val updateResult = dishesService.update(nonExistentUuid, updatedDish)
 

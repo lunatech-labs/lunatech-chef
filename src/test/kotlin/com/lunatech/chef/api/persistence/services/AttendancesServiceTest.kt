@@ -71,11 +71,12 @@ class AttendancesServiceTest {
         menusService.insert(testMenu)
 
         // Create test schedule
-        val testSchedule = aSchedule(
-            menuUuid = testMenu.uuid,
-            date = LocalDate.now().plusDays(7),
-            officeUuid = testOfficeUuid,
-        )
+        val testSchedule =
+            aSchedule(
+                menuUuid = testMenu.uuid,
+                date = LocalDate.now().plusDays(7),
+                officeUuid = testOfficeUuid,
+            )
         schedulesService.insert(testSchedule)
         testScheduleUuid = testSchedule.uuid
     }
@@ -83,7 +84,8 @@ class AttendancesServiceTest {
     // Helper to retrieve attendance directly from database for testing
     private fun getAttendanceByUuid(uuid: UUID): Attendance? {
         val database = TestDatabase.getDatabase()
-        return database.from(Attendances)
+        return database
+            .from(Attendances)
             .select()
             .where { Attendances.uuid eq uuid }
             .map { row ->
@@ -94,14 +96,14 @@ class AttendancesServiceTest {
                     isAttending = row[Attendances.isAttending],
                     isDeleted = row[Attendances.isDeleted]!!,
                 )
-            }
-            .firstOrNull()
+            }.firstOrNull()
     }
 
     // Helper to get all attendances for a schedule
     private fun getAttendancesBySchedule(scheduleUuid: UUID): List<Attendance> {
         val database = TestDatabase.getDatabase()
-        return database.from(Attendances)
+        return database
+            .from(Attendances)
             .select()
             .where { Attendances.scheduleUuid eq scheduleUuid }
             .map { row ->
@@ -119,11 +121,12 @@ class AttendancesServiceTest {
     inner class InsertOperations {
         @Test
         fun `insert returns 1 when attendance is successfully created`() {
-            val attendance = anAttendance(
-                scheduleUuid = testScheduleUuid,
-                userUuid = testUserUuid,
-                isAttending = true,
-            )
+            val attendance =
+                anAttendance(
+                    scheduleUuid = testScheduleUuid,
+                    userUuid = testUserUuid,
+                    isAttending = true,
+                )
 
             val insertResult = attendancesService.insert(attendance)
 
@@ -132,11 +135,12 @@ class AttendancesServiceTest {
 
         @Test
         fun `insert persists attendance with isAttending true`() {
-            val attendance = anAttendance(
-                scheduleUuid = testScheduleUuid,
-                userUuid = testUserUuid,
-                isAttending = true,
-            )
+            val attendance =
+                anAttendance(
+                    scheduleUuid = testScheduleUuid,
+                    userUuid = testUserUuid,
+                    isAttending = true,
+                )
 
             attendancesService.insert(attendance)
             val retrieved = getAttendanceByUuid(attendance.uuid)
@@ -148,11 +152,12 @@ class AttendancesServiceTest {
 
         @Test
         fun `insert persists attendance with isAttending false`() {
-            val attendance = anAttendance(
-                scheduleUuid = testScheduleUuid,
-                userUuid = testUserUuid,
-                isAttending = false,
-            )
+            val attendance =
+                anAttendance(
+                    scheduleUuid = testScheduleUuid,
+                    userUuid = testUserUuid,
+                    isAttending = false,
+                )
 
             attendancesService.insert(attendance)
             val retrieved = getAttendanceByUuid(attendance.uuid)
@@ -162,11 +167,12 @@ class AttendancesServiceTest {
 
         @Test
         fun `insert persists attendance with null isAttending for undecided`() {
-            val attendance = anAttendance(
-                scheduleUuid = testScheduleUuid,
-                userUuid = testUserUuid,
-                isAttending = null,
-            )
+            val attendance =
+                anAttendance(
+                    scheduleUuid = testScheduleUuid,
+                    userUuid = testUserUuid,
+                    isAttending = null,
+                )
 
             val insertResult = attendancesService.insert(attendance)
 
@@ -180,11 +186,12 @@ class AttendancesServiceTest {
     inner class UpdateOperations {
         @Test
         fun `update returns 1 when attendance is successfully updated`() {
-            val attendance = anAttendance(
-                scheduleUuid = testScheduleUuid,
-                userUuid = testUserUuid,
-                isAttending = false,
-            )
+            val attendance =
+                anAttendance(
+                    scheduleUuid = testScheduleUuid,
+                    userUuid = testUserUuid,
+                    isAttending = false,
+                )
             attendancesService.insert(attendance)
 
             val updatedAttendance = UpdatedAttendance(isAttending = true)
@@ -196,11 +203,12 @@ class AttendancesServiceTest {
 
         @Test
         fun `update changes isAttending from false to true`() {
-            val attendance = anAttendance(
-                scheduleUuid = testScheduleUuid,
-                userUuid = testUserUuid,
-                isAttending = false,
-            )
+            val attendance =
+                anAttendance(
+                    scheduleUuid = testScheduleUuid,
+                    userUuid = testUserUuid,
+                    isAttending = false,
+                )
             attendancesService.insert(attendance)
 
             val updatedAttendance = UpdatedAttendance(isAttending = true)
@@ -212,11 +220,12 @@ class AttendancesServiceTest {
 
         @Test
         fun `update changes isAttending from true to false`() {
-            val attendance = anAttendance(
-                scheduleUuid = testScheduleUuid,
-                userUuid = testUserUuid,
-                isAttending = true,
-            )
+            val attendance =
+                anAttendance(
+                    scheduleUuid = testScheduleUuid,
+                    userUuid = testUserUuid,
+                    isAttending = true,
+                )
             attendancesService.insert(attendance)
 
             val updatedAttendance = UpdatedAttendance(isAttending = false)

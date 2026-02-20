@@ -20,7 +20,8 @@ fun mrSchedulerTrigger(
     excelService: ExcelService,
 ) {
     val job: JobDetail =
-        JobBuilder.newJob(MRJob::class.java)
+        JobBuilder
+            .newJob(MRJob::class.java)
             .withIdentity("monthlyReports", "chefSchedules")
             .build()
 
@@ -30,7 +31,8 @@ fun mrSchedulerTrigger(
     job.jobDataMap[MRJob.MAILER_CONFIG] = mailerConfig
 
     val trigger: CronTrigger =
-        TriggerBuilder.newTrigger()
+        TriggerBuilder
+            .newTrigger()
             .withIdentity("monthlyReports", "monthlyReportsTrigger")
             .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
             .build()

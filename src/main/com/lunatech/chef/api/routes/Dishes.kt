@@ -17,7 +17,6 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.put
 import io.ktor.server.routing.route
 import mu.KotlinLogging
-import java.util.UUID
 
 private val logger = KotlinLogging.logger {}
 
@@ -36,8 +35,6 @@ data class UpdatedDish(
 
 fun Route.dishes(dishesService: DishesService) {
     val dishRoute = "/dishes"
-    val uuidRoute = "/{uuid}"
-    val uuidParam = "uuid"
 
     route(dishRoute) {
         // get all dishes
@@ -57,11 +54,11 @@ fun Route.dishes(dishesService: DishesService) {
             }
         }
 
-        route(uuidRoute) {
+        route(UUID_ROUTE) {
             // get single dish
             get {
-                val uuid = call.parameters[uuidParam]
-                val dish = dishesService.getByUuid(UUID.fromString(uuid))
+                val uuid = call.parameters[UUID_PARAM].toUUIDOrNull() ?: return@get call.respond(BadRequest, "Invalid UUID")
+                val dish = dishesService.getByUuid(uuid)
                 if (dish.isEmpty()) {
                     call.respond(NotFound)
                 } else {
@@ -71,9 +68,9 @@ fun Route.dishes(dishesService: DishesService) {
             // modify existing dish
             put {
                 try {
-                    val uuid = call.parameters[uuidParam]
+                    val uuid = call.parameters[UUID_PARAM].toUUIDOrNull() ?: return@put call.respond(BadRequest, "Invalid UUID")
                     val updatedDish = call.receive<UpdatedDish>()
-                    val result = dishesService.update(UUID.fromString(uuid), updatedDish)
+                    val result = dishesService.update(uuid, updatedDish)
                     if (result == 1) call.respond(OK) else call.respond(InternalServerError)
                 } catch (exception: Exception) {
                     logger.error("Error updating a Dish :( ", exception)
@@ -82,8 +79,8 @@ fun Route.dishes(dishesService: DishesService) {
             }
             // delete a single dish
             delete {
-                val uuid = call.parameters[uuidParam]
-                val result = dishesService.delete(UUID.fromString(uuid))
+                val uuid = call.parameters[UUID_PARAM].toUUIDOrNull() ?: return@delete call.respond(BadRequest, "Invalid UUID")
+                val result = dishesService.delete(uuid)
                 if (result == 1) call.respond(OK) else call.respond(InternalServerError)
             }
         }

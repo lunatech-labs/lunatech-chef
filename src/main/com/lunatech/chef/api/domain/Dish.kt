@@ -30,8 +30,8 @@ data class Dish(
     val isDeleted: Boolean = false,
 ) {
     companion object {
-        fun fromNewDish(newDish: NewDish): Dish {
-            return Dish(
+        fun fromNewDish(newDish: NewDish): Dish =
+            Dish(
                 uuid = UUID.randomUUID(),
                 name = newDish.name,
                 description = newDish.description,
@@ -44,6 +44,5 @@ data class Dish(
                 isGlutenFree = newDish.isGlutenFree,
                 isLactoseFree = newDish.isLactoseFree,
             )
-        }
     }
 }

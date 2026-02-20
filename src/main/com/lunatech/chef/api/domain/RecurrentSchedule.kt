@@ -19,15 +19,14 @@ data class RecurrentSchedule(
     val isDeleted: Boolean = false,
 ) {
     companion object {
-        fun fromNewRecurrentSchedule(newRecurrentSchedule: NewRecurrentSchedule): RecurrentSchedule {
-            return RecurrentSchedule(
+        fun fromNewRecurrentSchedule(newRecurrentSchedule: NewRecurrentSchedule): RecurrentSchedule =
+            RecurrentSchedule(
                 uuid = UUID.randomUUID(),
                 menuUuid = newRecurrentSchedule.menuUuid,
                 officeUuid = newRecurrentSchedule.officeUuid,
                 repetitionDays = newRecurrentSchedule.repetitionDays,
                 nextDate = newRecurrentSchedule.nextDate,
             )
-        }
     }
 }
 

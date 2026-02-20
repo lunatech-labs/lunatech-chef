@@ -35,8 +35,8 @@ data class User(
     val isDeleted: Boolean = false,
 ) {
     companion object {
-        fun fromNewUser(newUser: NewUser): User {
-            return User(
+        fun fromNewUser(newUser: NewUser): User =
+            User(
                 uuid = UUID.randomUUID(),
                 name = newUser.name,
                 emailAddress = newUser.emailAddress,
@@ -51,6 +51,5 @@ data class User(
                 isLactoseIntolerant = newUser.isLactoseIntolerant,
                 otherRestrictions = newUser.otherRestrictions,
             )
-        }
     }
 }

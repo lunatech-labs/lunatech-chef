@@ -23,16 +23,17 @@ import java.util.UUID
 
 private val logger = KotlinLogging.logger {}
 
-data class UpdatedSchedule(val menuUuid: UUID, val date: LocalDate, val officeUuid: UUID)
+data class UpdatedSchedule(
+    val menuUuid: UUID,
+    val date: LocalDate,
+    val officeUuid: UUID,
+)
 
 fun Route.schedules(
     schedulesService: SchedulesService,
     attendancesService: AttendancesService,
 ) {
     val schedulesRoute = "/schedules"
-    val uuidRoute = "/{uuid}"
-    val uuidParam = "uuid"
-    val error = -1
 
     route(schedulesRoute) {
         // get all schedules
@@ -54,7 +55,7 @@ fun Route.schedules(
                             isAttending = null,
                         )
                     } else {
-                        error
+                        0
                     }
                 if (insertedAttendance > 0) call.respond(Created) else call.respond(InternalServerError)
             } catch (exception: Exception) {
@@ -63,11 +64,11 @@ fun Route.schedules(
             }
         }
 
-        route(uuidRoute) {
+        route(UUID_ROUTE) {
             // get single schedule
             get {
-                val uuid = call.parameters[uuidParam]
-                val schedule = schedulesService.getByUuid(UUID.fromString(uuid))
+                val uuid = call.parameters[UUID_PARAM].toUUIDOrNull() ?: return@get call.respond(BadRequest, "Invalid UUID")
+                val schedule = schedulesService.getByUuid(uuid)
                 if (schedule.isEmpty()) {
                     call.respond(NotFound)
                 } else {
@@ -77,9 +78,9 @@ fun Route.schedules(
             // modify existing schedule
             put {
                 try {
-                    val uuid = call.parameters[uuidParam]
+                    val uuid = call.parameters[UUID_PARAM].toUUIDOrNull() ?: return@put call.respond(BadRequest, "Invalid UUID")
                     val updatedSchedule = call.receive<UpdatedSchedule>()
-                    val result = schedulesService.update(UUID.fromString(uuid), updatedSchedule)
+                    val result = schedulesService.update(uuid, updatedSchedule)
                     if (result == 1) call.respond(OK) else call.respond(InternalServerError)
                 } catch (exception: Exception) {
                     logger.error("Error updating a Schedule :( ", exception)
@@ -88,8 +89,8 @@ fun Route.schedules(
             }
             // delete a single schedule
             delete {
-                val uuid = call.parameters[uuidParam]
-                val result = schedulesService.delete(UUID.fromString(uuid))
+                val uuid = call.parameters[UUID_PARAM].toUUIDOrNull() ?: return@delete call.respond(BadRequest, "Invalid UUID")
+                val result = schedulesService.delete(uuid)
 
                 // TODO delete all related attendance
 

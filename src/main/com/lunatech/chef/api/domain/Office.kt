@@ -14,12 +14,11 @@ data class Office(
     val isDeleted: Boolean = false,
 ) {
     companion object {
-        fun fromNewOffice(newOffice: NewOffice): Office {
-            return Office(
+        fun fromNewOffice(newOffice: NewOffice): Office =
+            Office(
                 uuid = UUID.randomUUID(),
                 city = newOffice.city,
                 country = newOffice.country,
             )
-        }
     }
 }

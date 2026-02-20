@@ -31,8 +31,6 @@ data class UpdatedRecurrentSchedule(
 
 fun Route.recurrentSchedules(recurrentSchedulesService: RecurrentSchedulesService) {
     val recurrentSchedulesRoute = "/recurrentschedules"
-    val uuidRoute = "/{uuid}"
-    val uuidParam = "uuid"
 
     route(recurrentSchedulesRoute) {
         // get all recurrent schedules
@@ -51,11 +49,11 @@ fun Route.recurrentSchedules(recurrentSchedulesService: RecurrentSchedulesServic
                 call.respond(BadRequest, exception.message ?: "")
             }
         }
-        route(uuidRoute) {
+        route(UUID_ROUTE) {
             // get single recurrent schedule
             get {
-                val uuid = call.parameters[uuidParam]
-                val schedule = recurrentSchedulesService.getByUuid(UUID.fromString(uuid))
+                val uuid = call.parameters[UUID_PARAM].toUUIDOrNull() ?: return@get call.respond(BadRequest, "Invalid UUID")
+                val schedule = recurrentSchedulesService.getByUuid(uuid)
                 if (schedule.isEmpty()) {
                     call.respond(NotFound)
                 } else {
@@ -65,9 +63,9 @@ fun Route.recurrentSchedules(recurrentSchedulesService: RecurrentSchedulesServic
             // modify an existing recurrent schedule
             put {
                 try {
-                    val uuid = call.parameters[uuidParam]
+                    val uuid = call.parameters[UUID_PARAM].toUUIDOrNull() ?: return@put call.respond(BadRequest, "Invalid UUID")
                     val updatedRecurrentSchedule = call.receive<UpdatedRecurrentSchedule>()
-                    val result = recurrentSchedulesService.update(UUID.fromString(uuid), updatedRecurrentSchedule)
+                    val result = recurrentSchedulesService.update(uuid, updatedRecurrentSchedule)
                     if (result == 1) call.respond(OK) else call.respond(InternalServerError)
                 } catch (exception: Exception) {
                     logger.error("Error updating a RecurrentSchedule :( ", exception)
@@ -76,8 +74,8 @@ fun Route.recurrentSchedules(recurrentSchedulesService: RecurrentSchedulesServic
             }
             // delete a single recurrent schedule
             delete {
-                val uuid = call.parameters[uuidParam]
-                val result = recurrentSchedulesService.delete(UUID.fromString(uuid))
+                val uuid = call.parameters[UUID_PARAM].toUUIDOrNull() ?: return@delete call.respond(BadRequest, "Invalid UUID")
+                val result = recurrentSchedulesService.delete(uuid)
 
                 if (result == 1) call.respond(OK) else call.respond(InternalServerError)
             }

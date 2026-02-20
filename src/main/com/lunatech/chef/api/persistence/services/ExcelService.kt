@@ -10,8 +10,13 @@ import java.time.LocalDate
 import java.time.temporal.WeekFields
 import java.util.Locale
 
-class ExcelService() {
-    data class ReportEntryWeek(val weekNumber: Int, val name: String, val city: String, val country: String)
+class ExcelService {
+    data class ReportEntryWeek(
+        val weekNumber: Int,
+        val name: String,
+        val city: String,
+        val country: String,
+    )
 
     private val startingRow = 2
     private val defaultColumnWidth = 30

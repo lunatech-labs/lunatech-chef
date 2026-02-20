@@ -30,7 +30,8 @@ class AttendancesWithScheduleInfoService(
         fromDate: LocalDate?,
         office: UUID?,
     ): List<AttendanceWithInfo> =
-        database.from(Attendances)
+        database
+            .from(Attendances)
             .leftJoin(Schedules, on = Schedules.uuid eq Attendances.scheduleUuid)
             .select()
             .where {
@@ -47,15 +48,16 @@ class AttendancesWithScheduleInfoService(
                 }
 
                 conditions.reduce { a, b -> a and b }
-            }
-            .orderBy(Schedules.date.asc())
+            }.orderBy(Schedules.date.asc())
             .map { Attendances.createEntity(it) }
             .flatMap { getAttendanceWithInfo(it) }
 
-    private fun getAttendanceWithInfo(attendance: Attendance): List<AttendanceWithInfo> {
-        return schedulesService.getByUuid(attendance.scheduleUuid).flatMap { schedule ->
+    private fun getAttendanceWithInfo(attendance: Attendance): List<AttendanceWithInfo> =
+        schedulesService.getByUuid(attendance.scheduleUuid).flatMap { schedule ->
             val menu = menusWithDishesService.getByUuid(schedule.menuUuid)
-            database.from(Offices).select()
+            database
+                .from(Offices)
+                .select()
                 .where { Offices.uuid eq schedule.officeUuid }
                 .map { Offices.createEntity(it) }
                 .map { office ->
@@ -70,5 +72,4 @@ class AttendancesWithScheduleInfoService(
                     )
                 }
         }
-    }
 }

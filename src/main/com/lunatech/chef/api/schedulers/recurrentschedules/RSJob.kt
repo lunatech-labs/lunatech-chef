@@ -13,7 +13,7 @@ import java.time.LocalDate
 
 private val logger = KotlinLogging.logger {}
 
-class RSJob() : Job {
+class RSJob : Job {
     companion object {
         const val SCHEDULES_SERVICE: String = "schedulesService"
         const val RECURRENT_SCHEDULES_SERVICE: String = "recurrentSchedulesService"

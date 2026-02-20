@@ -12,6 +12,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { ToMonth } from "../../shared/Functions";
 import { Form, Field } from "react-final-form";
 import DatePicker from "react-datepicker";
+import { STORAGE_FILTER_DATE_SCHEDULE, STORAGE_FILTER_OFFICE_SCHEDULE } from "../../../redux/LocalStorageKeys";
 
 export default function ListSchedules(props) {
 
@@ -23,10 +24,8 @@ export default function ListSchedules(props) {
     );
   }
 
-  const savedDate = localStorage.getItem("filterDateSchedule");
-  const savedOfficeSchedule = localStorage.getItem(
-    "filterOfficeSchedule"
-  );
+  const savedDate = localStorage.getItem(STORAGE_FILTER_DATE_SCHEDULE);
+  const savedOfficeSchedule = localStorage.getItem(STORAGE_FILTER_OFFICE_SCHEDULE);
 
   const [startDateSchedule, setDateSchedule] = useState(savedDate === null ? new Date() : new Date(savedDate));
   const [startOfficeSchedule, ] = useState(savedOfficeSchedule === null ? "" : savedOfficeSchedule);
@@ -56,8 +55,8 @@ export default function ListSchedules(props) {
     const chosenOffice =
       values.office === undefined ? "" : values.office;
 
-    localStorage.setItem("filterDateSchedule", shortDate);
-    localStorage.setItem("filterOfficeSchedule", chosenOffice);
+    localStorage.setItem(STORAGE_FILTER_DATE_SCHEDULE, shortDate);
+    localStorage.setItem(STORAGE_FILTER_OFFICE_SCHEDULE, chosenOffice);
     props.filterSchedules();
     props.filterRecurrentSchedules();
   };
@@ -68,15 +67,15 @@ export default function ListSchedules(props) {
         <h3 className="mt-4">Management of Scheduled Menus</h3>
       </div>
       <div>
-        {props.errorAdding ? <ShowError error={props.errorAdding} reason="adding" /> : <div></div>}
-        {props.errorDeleting ? <ShowError error={props.errorDeleting} reason="deleting" /> : <div></div>}
-        {props.errorEditing ? <ShowError error={props.errorEditing} reason="saving" /> : <div></div>}
+        {props.errorAdding ? <ShowError error={props.errorAdding} reason="adding" /> : null}
+        {props.errorDeleting ? <ShowError error={props.errorDeleting} reason="deleting" /> : null}
+        {props.errorEditing ? <ShowError error={props.errorEditing} reason="saving" /> : null}
         {props.isLoading ? (
           <Row>
             <Loading />
           </Row>
         ) : (
-          <div></div>
+          null
         )}
         {props.errorListing ? (
           <Alert key="danger" variant="danger">
@@ -143,14 +142,10 @@ export default function ListSchedules(props) {
                           </div>
                         </Col>
                         <Col>
-                          <Link to={`/newSchedule`}>
-                            <button type="button" className="btn btn-success">
-                              <i>
-                                <FontAwesomeIcon icon={faPlus} />
-                              </i>{" "}
-                              New Schedule
-                            </button>
-                          </Link>
+                          <Button as={Link} to="/newschedule" variant="success">
+                            <FontAwesomeIcon icon={faPlus} />{" "}
+                            New Schedule
+                          </Button>
                         </Col>
                       </Row>
                     </form>

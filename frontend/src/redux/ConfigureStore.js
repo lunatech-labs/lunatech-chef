@@ -17,9 +17,7 @@ export const ConfigureStore = () => {
             attendance: attendanceReducer,
         },
         middleware: getDefaultMiddleware =>
-            getDefaultMiddleware({
-                serializableCheck: false,
-            }),
+            getDefaultMiddleware(),
     });
     return store;
 };

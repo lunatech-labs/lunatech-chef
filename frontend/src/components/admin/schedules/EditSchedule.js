@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Form, Field } from "react-final-form";
 import DatePicker from "react-datepicker";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Navigate } from "react-router-dom";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
@@ -15,7 +15,7 @@ export default function EditSchedule(props) {
                 </div>
             );
         } else {
-            return <div></div>;
+            return null;
         }
     }
 
@@ -135,30 +135,24 @@ export default function EditSchedule(props) {
     const required = (value) => (value ? undefined : "Required");
 
     const getInitialDate = (schedule) => {
+        if (!schedule) return new Date();
         if ("date" in schedule) {
-            return new Date().setFullYear(
-                schedule.date[0],
-                schedule.date[1] - 1,
-                schedule.date[2]
-            );
+            return new Date(schedule.date[0], schedule.date[1] - 1, schedule.date[2]);
         } else {
-            return new Date().setFullYear(
-                schedule.nextDate[0],
-                schedule.nextDate[1] - 1,
-                schedule.nextDate[2]
-            );
+            return new Date(schedule.nextDate[0], schedule.nextDate[1] - 1, schedule.nextDate[2]);
         }
     };
 
+    const navigate = useNavigate();
     const schedule = useLocation().state;
 
     const [date, setDate] = useState(new Date(getInitialDate(schedule)));
 
-    const handleChange = (date) => {
-        setDate(date)
-    };
+    if (!schedule) return <Navigate to="/allschedules" replace />;
 
-    const navigate = useNavigate();
+    const handleChange = (selectedDate) => {
+        setDate(selectedDate)
+    };
     const onSubmit = (values) => {
         let shortDate = date.toISOString().substring(0, 10);
         let editedSchedule = {

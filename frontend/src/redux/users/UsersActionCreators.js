@@ -9,6 +9,7 @@ import {
     fetchSchedulesAttendance,
 } from "../schedules/SchedulesActionCreators";
 import { fetchAttendanceUser } from "../attendance/AttendanceActionCreators";
+import { STORAGE_USER_UUID } from "../LocalStorageKeys";
 
 export const login = (token) => (dispatch) => {
     const authHeader = {
@@ -24,17 +25,22 @@ export const login = (token) => (dispatch) => {
             dispatch(userLoggedIn(response.data));
 
             const userUuid = response.data.uuid;
-            localStorage.setItem("userUuid", userUuid);
+            localStorage.setItem(STORAGE_USER_UUID, userUuid);
             getInitialData(dispatch);
         })
         .catch(function (error) {
             console.log("Failed logging in user " + error);
-            dispatch(userLoggedInFailed(error));
+            dispatch(userLoggedInFailed(error.message));
         });
 };
 
+let requestInterceptorId = null;
+
 const configureAxios = (response) => {
-    axiosInstance.interceptors.request.use(
+    if (requestInterceptorId !== null) {
+        axiosInstance.interceptors.request.eject(requestInterceptorId);
+    }
+    requestInterceptorId = axiosInstance.interceptors.request.use(
         function (config) {
             config.headers = {
                 ...config.headers,
@@ -64,7 +70,7 @@ export const saveUserProfile = (userUuid, userProfile) => (dispatch) => {
 
     axiosInstance
         .put("/users/" + userUuid, userProfileToSave)
-        .then((response) => {
+        .then(() => {
             dispatch(fetchSchedulesAttendance());
             dispatch(userUpdatedProfile(userProfileToSave));
         })

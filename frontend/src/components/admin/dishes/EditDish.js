@@ -1,6 +1,6 @@
 import React from "react";
 import { Form, Field } from "react-final-form";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Navigate } from "react-router-dom";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
@@ -10,6 +10,8 @@ export function EditDish(props) {
     const required = (value) => (value ? undefined : "Required");
 
     const dish = useLocation().state;
+
+    if (!dish) return <Navigate to="/alldishes" replace />;
 
     const onSubmit = (values) => {
         let editedDish = {
@@ -28,7 +30,7 @@ export function EditDish(props) {
                 </div>
             );
         } else {
-            return <div></div>;
+            return null;
         }
     }
 

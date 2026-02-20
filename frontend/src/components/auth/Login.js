@@ -3,14 +3,8 @@ import Button from "react-bootstrap/Button";
 import Row from 'react-bootstrap/Row';
 import { useAuth } from "react-oidc-context";
 
-
-export function Login() {
-
+function Login() {
   const auth = useAuth();
-
-  const handleClick = () => {
-    auth.signinRedirect();
-  };
 
   return (
     <div className="container">
@@ -25,11 +19,8 @@ export function Login() {
       </Row>
       <Row>
         <Button
-          type="primary"
-          danger
-          onClick={() => {
-            handleClick();
-          }}
+          variant="primary"
+          onClick={() => auth.signinRedirect()}
         >
           Sign in with Google
         </Button>
@@ -39,4 +30,3 @@ export function Login() {
 }
 
 export default Login;
-

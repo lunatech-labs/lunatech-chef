@@ -11,8 +11,16 @@ export const UserProfile = (props) => {
         props.saveUserProfile(props.user.uuid, values);
     };
 
-    function RenderData() {
-        return (
+    return (
+        <Container>
+            <Row>
+                <h3 className="mt-4">User Profile</h3>
+            </Row>
+            {props.user.error ? (
+                <Alert key="danger" variant="danger">
+                    An error occured when saving the profile: {props.user.error}
+                </Alert>
+            ) : null}
             <Row>
                 <Form
                     onSubmit={onSubmit}
@@ -123,22 +131,9 @@ export const UserProfile = (props) => {
                                 </Col>
                             </Row>
                         </form>
-                    )
-                    }
+                    )}
                 ></Form>
             </Row>
-        );
-    }
-
-    return (
-        <Container>
-            <Row>
-                <h3 className="mt-4">User Profile</h3>
-            </Row>
-            {props.user.error ? <Alert key="danger" variant="danger">
-                An error occured when saving the profile: {props.user.error}
-            </Alert> : <div></div>}
-            <RenderData />
         </Container>
     );
 };

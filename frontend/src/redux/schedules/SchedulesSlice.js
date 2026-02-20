@@ -21,55 +21,54 @@ const schedulesSlice = createSlice({
         // schedules
         allSchedulesLoading(state, action) {
             state.isLoading = true
-            state.errorListing = false;
-            state.errorAdding = false;
-            state.errorEditing = false;
-            state.errorDeleting = false;
+            state.errorListing = null;
+            state.errorAdding = null;
+            state.errorEditing = null;
+            state.errorDeleting = null;
         },
         allSchedulesLoadingFailed(state, action) {
             state.isLoading = false;
-            state.errorAdding = false;
-            state.errorEditing = false;
-            state.errorDeleting = false;
+            state.errorAdding = null;
+            state.errorEditing = null;
+            state.errorDeleting = null;
             state.errorListing = action.payload;
         },
         allSchedulesShown(state, action) {
             state.isLoading = false;
-            state.errorListing = false;
-            state.errorAdding = false;
-            state.errorEditing = false;
-            state.errorDeleting = false;
+            state.errorListing = null;
+            state.errorAdding = null;
+            state.errorEditing = null;
+            state.errorDeleting = null;
             state.schedules = action.payload
         },
         scheduleAddedFailed(state, action) {
             state.isLoading = false;
-            state.errorListing = false;
-            state.errorEditing = false;
-            state.errorDeleting = false;
+            state.errorListing = null;
+            state.errorEditing = null;
+            state.errorDeleting = null;
             state.errorAdding = action.payload;
         },
         scheduleEditedFailed(state, action) {
             state.isLoading = false;
-            state.errorListing = false;
-            state.errorEditing = false;
-            state.errorDeleting = false;
+            state.errorListing = null;
+            state.errorDeleting = null;
             state.errorEditing = action.payload;
         },
         scheduleDeletedFailed(state, action) {
             state.isLoading = false;
-            state.errorListing = false;
-            state.errorAdding = false;
-            state.errorEditing = false;
+            state.errorListing = null;
+            state.errorAdding = null;
+            state.errorEditing = null;
             state.errorDeleting = action.payload;
         },
 
         // recurrent schedules
         allRecurrentSchedulesShown(state, action) {
             state.isLoading = false;
-            state.errorListing = false;
-            state.errorAdding = false;
-            state.errorEditing = false;
-            state.errorDeleting = false;
+            state.errorListing = null;
+            state.errorAdding = null;
+            state.errorEditing = null;
+            state.errorDeleting = null;
             state.recurrentSchedules = action.payload
         },
 
@@ -82,7 +81,7 @@ const schedulesSlice = createSlice({
         },
         allSchedulesAttendanceShown(state, action) {
             state.isLoadingAttendance = false
-            state.attendance = action.payload.data
+            state.attendance = action.payload
         }
     }
 })

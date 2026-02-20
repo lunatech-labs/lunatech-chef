@@ -5,6 +5,7 @@ import {
   fetchSchedulesAttendance,
 } from "../schedules/SchedulesActionCreators";
 import { fetchAttendanceUser } from "../attendance/AttendanceActionCreators";
+import { STORAGE_USER_UUID } from "../LocalStorageKeys";
 
 export const fetchMenus = () => (dispatch) => {
   dispatch(allMenusLoading(true));
@@ -28,7 +29,7 @@ export const addNewMenu = (newMenu) => (dispatch) => {
 
   axiosInstance
     .post("/menus", menuToAdd)
-    .then((response) => {
+    .then(() => {
       dispatch(fetchMenus());
     })
     .catch(function (error) {
@@ -43,10 +44,10 @@ export const editMenu = (editedMenu) => (dispatch) => {
     dishesUuids: editedMenu.dishesUuids,
   };
 
-  const userUuid = localStorage.getItem("userUuid");
+  const userUuid = localStorage.getItem(STORAGE_USER_UUID);
   axiosInstance
     .put("/menus/" + editedMenu.uuid, menuToEdit)
-    .then((response) => {
+    .then(() => {
       dispatch(fetchMenus());
       dispatch(fetchSchedules());
       dispatch(fetchSchedulesAttendance());
@@ -59,10 +60,10 @@ export const editMenu = (editedMenu) => (dispatch) => {
 };
 
 export const deleteMenu = (menuUuid) => (dispatch) => {
-  const userUuid = localStorage.getItem("userUuid");
+  const userUuid = localStorage.getItem(STORAGE_USER_UUID);
   axiosInstance
     .delete("/menus/" + menuUuid)
-    .then((response) => {
+    .then(() => {
       dispatch(fetchMenus());
       dispatch(fetchSchedules());
       dispatch(fetchSchedulesAttendance());

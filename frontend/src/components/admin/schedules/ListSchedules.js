@@ -143,7 +143,7 @@ export default function ListSchedules(props) {
                           </div>
                         </Col>
                         <Col>
-                          <Link to={`/newSchedule`}>
+                          <Link to="/newschedule">
                             <button type="button" className="btn btn-success">
                               <i>
                                 <FontAwesomeIcon icon={faPlus} />

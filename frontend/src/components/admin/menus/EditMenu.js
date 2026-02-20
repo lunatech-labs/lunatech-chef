@@ -1,6 +1,6 @@
 import React from "react";
 import { Form, Field } from "react-final-form";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Navigate } from "react-router-dom";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
@@ -9,8 +9,9 @@ export function EditMenu(props) {
     const required = (value) => (value ? undefined : "Required");
 
     const menu = useLocation().state;
-
     const navigate = useNavigate();
+
+    if (!menu) return <Navigate to="/allmenus" replace />;
     const onSubmit = (values) => {
         let editedMenu = {
             ...values,

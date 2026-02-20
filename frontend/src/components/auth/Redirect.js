@@ -35,7 +35,7 @@ export function Redirect(props) {
             handleLogin(id_token);
             navigate("/");
         }
-    });
+    }, [auth.isAuthenticated, auth.activeNavigator, auth.isLoading]);
 
     function ActiveNavigator() {
         return (

@@ -2,10 +2,10 @@ import { allAttendancesLoading, allAttendancesLoadingFailed, allAttendancesShown
 import { axiosInstance } from "../Axios";
 import { fetchSchedulesAttendance } from "../schedules/SchedulesActionCreators";
 
-export const fetchAttendanceUser = () => (dispatch) => {
+export const fetchAttendanceUser = (userUuid) => (dispatch) => {
     dispatch(allAttendancesLoading(true));
 
-    const userUuid = localStorage.getItem("userUuid");
+    const uuid = userUuid || localStorage.getItem("userUuid");
     const office = localStorage.getItem("filterOfficeScheduledMeals");
     const date = new Date().toISOString().substring(0, 10);
 
@@ -15,7 +15,7 @@ export const fetchAttendanceUser = () => (dispatch) => {
             : "?fromdate=" + date + "&office=" + office;
 
     axiosInstance
-        .get("/attendancesWithScheduleInfo/" + userUuid + filter)
+        .get("/attendancesWithScheduleInfo/" + uuid + filter)
         .then(function (response) {
             dispatch(allAttendancesShown(response.data));
         })

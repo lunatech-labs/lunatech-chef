@@ -82,7 +82,7 @@ const schedulesSlice = createSlice({
         },
         allSchedulesAttendanceShown(state, action) {
             state.isLoadingAttendance = false
-            state.attendance = action.payload.data
+            state.attendance = action.payload
         }
     }
 })

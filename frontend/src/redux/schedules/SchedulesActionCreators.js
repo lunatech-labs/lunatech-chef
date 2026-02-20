@@ -63,7 +63,7 @@ export const fetchSchedulesAttendance = () => (dispatch) => {
     axiosInstance
         .get("/schedulesWithAttendanceInfo" + filter)
         .then(function (response) {
-            dispatch(allSchedulesAttendanceShown(response));
+            dispatch(allSchedulesAttendanceShown(response.data));
         })
         .catch(function (error) {
             console.log("Failed loading Schedules: " + error);

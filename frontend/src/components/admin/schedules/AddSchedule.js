@@ -19,9 +19,9 @@ export default function AddSchedule(props) {
 
         const onSubmit = (values) => {
             let shortDate = date.toISOString().substring(0, 10);
-            let nextShortDate = date
+            let nextShortDate = new Date(date)
 
-            nextShortDate.setDate(date.getDate() + parseInt(values.recurrency))
+            nextShortDate.setDate(nextShortDate.getDate() + parseInt(values.recurrency))
 
             props.addNewSchedule({
                 ...values,

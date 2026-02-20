@@ -4,7 +4,7 @@ import { useAuth, hasAuthParams } from "react-oidc-context";
 import { useNavigate } from "react-router-dom";
 import { User } from "oidc-client-ts";
 
-function Redirect(props) {
+function Redirect({ login }) {
     const auth = useAuth();
     const navigate = useNavigate();
 
@@ -26,10 +26,10 @@ function Redirect(props) {
 
             const { id_token } = User.fromStorageString(oidcStorage);
 
-            props.login(id_token);
+            login(id_token);
             navigate("/");
         }
-    }, [auth.isAuthenticated, auth.activeNavigator, auth.isLoading, props.login, navigate]);
+    }, [auth, navigate, login]);
 
     return auth.activeNavigator ? <div>Signing you in/out...</div> : null;
 }

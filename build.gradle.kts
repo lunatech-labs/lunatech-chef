@@ -42,7 +42,7 @@ dependencies {
     implementation("org.flywaydb:flyway-database-postgresql:11.18.0")
     implementation("org.ktorm:ktorm-core:4.1.1")
     implementation("com.zaxxer:HikariCP:7.0.2")
-    implementation("org.postgresql:postgresql:42.7.9")
+    implementation("org.postgresql:postgresql:42.7.10")
     implementation("org.quartz-scheduler:quartz:2.5.2")
 
     implementation("io.ktor:ktor-server-status-pages")

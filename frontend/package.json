@@ -40,9 +40,9 @@
   },
   "main": "index.js",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -63,6 +63,7 @@
   "devDependencies": {
     "@babel/core": "^7.28.6",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.0",
-    "@babel/preset-env": "^7.25.4"
+    "@babel/preset-env": "^7.25.4",
+    "@craco/craco": "^7.1.0"
   }
 }

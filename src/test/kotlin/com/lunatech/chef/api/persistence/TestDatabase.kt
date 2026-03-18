@@ -2,12 +2,12 @@ package com.lunatech.chef.api.persistence
 
 import org.flywaydb.core.Flyway
 import org.ktorm.database.Database
-import org.testcontainers.containers.PostgreSQLContainer
+import org.testcontainers.postgresql.PostgreSQLContainer
 
 object TestDatabase {
     private var database: Database? = null
 
-    private val postgresContainer: PostgreSQLContainer<*> =
+    private val postgresContainer: PostgreSQLContainer =
         PostgreSQLContainer("postgres:15-alpine")
             .withDatabaseName("lunatech-chef-test")
             .withUsername("test")

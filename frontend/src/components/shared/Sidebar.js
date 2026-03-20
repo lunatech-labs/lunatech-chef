@@ -1,59 +1,99 @@
-import React from 'react';
-import {
-    CDBSidebar,
-    CDBSidebarContent,
-    CDBSidebarFooter,
-    CDBSidebarHeader,
-    CDBSidebarMenu,
-    CDBSidebarMenuItem,
-} from 'cdbreact';
+import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+    faBars,
+    faHippo,
+    faUserFriends,
+    faBook,
+    faUtensils,
+    faMap,
+    faCalendar,
+    faArchive,
+    faUser,
+    faUserSlash,
+} from '@fortawesome/free-solid-svg-icons';
 
-// based on https://medium.com/@devwares/how-to-create-a-responsive-sidebar-in-react-using-bootstrap-and-contrast-86d0829f8c6c
 const Sidebar = (props) => {
+    const [collapsed, setCollapsed] = useState(false);
+
     return (
         <div className="sidebar">
-            <CDBSidebar textColor="#000" backgroundColor="#f0f0f0">
-                <CDBSidebarHeader prefix={<i className="fa fa-bars fa-large"></i>}>Lunatech's Chef</CDBSidebarHeader>
-                <CDBSidebarContent className="sidebar-content">
-                    <CDBSidebarMenu>
-                        <NavLink to="/" className={({ isActive }) => isActive ? "activeClicked" : ""}>
-                            <CDBSidebarMenuItem icon="hippo">My lunches</CDBSidebarMenuItem>
-                        </NavLink>
-                        <NavLink to="/whoisjoining" className={({ isActive }) => isActive ? "activeClicked" : ""}>
-                            <CDBSidebarMenuItem icon="user-friends">Who's joining?</CDBSidebarMenuItem>
-                        </NavLink>
-                        {props.isAdmin ? (
-                            <div>
-                                <NavLink to="/allmenus" className={({ isActive }) => isActive ? "activeClicked" : ""}>
-                                    <CDBSidebarMenuItem icon="book">Menus</CDBSidebarMenuItem>
-                                </NavLink>
-                                <NavLink to="/alldishes" className={({ isActive }) => isActive ? "activeClicked" : ""}>
-                                    <CDBSidebarMenuItem icon="utensils">Dishes</CDBSidebarMenuItem>
-                                </NavLink>
-                                <NavLink to="/alloffices" className={({ isActive }) => isActive ? "activeClicked" : ""}>
-                                    <CDBSidebarMenuItem icon="map">Offices</CDBSidebarMenuItem>
-                                </NavLink>
-                                <NavLink to="/allschedules" className={({ isActive }) => isActive ? "activeClicked" : ""}>
-                                    <CDBSidebarMenuItem icon="calendar">Schedules</CDBSidebarMenuItem>
-                                </NavLink>
-                                <NavLink to="/monthlyreports" className={({ isActive }) => isActive ? "activeClicked" : ""}>
-                                    <CDBSidebarMenuItem icon="archive">Monthly Reports</CDBSidebarMenuItem>
-                                </NavLink>
-                            </div>
-                        ) : null}
-                        <NavLink to="/userProfile" className={({ isActive }) => isActive ? "activeClicked" : ""}>
-                            <CDBSidebarMenuItem icon="user">Profile</CDBSidebarMenuItem>
-                        </NavLink>
-                        <NavLink to="/" onClick={props.logout} className="">
-                            <CDBSidebarMenuItem icon="user-slash">Logout</CDBSidebarMenuItem>
-                        </NavLink>
-                    </CDBSidebarMenu>
-                </CDBSidebarContent>
-                <CDBSidebarFooter>
-                    <img src={process.env.PUBLIC_URL + 'lunatech-logo.png'} alt="Lunatech logo" width="270px" />
-                </CDBSidebarFooter>
-            </CDBSidebar>
+            <nav className={`sidebar-panel${collapsed ? ' sidebar-collapsed' : ''}`}>
+                <div className="sidebar-header">
+                    <button className="sidebar-toggle" onClick={() => setCollapsed(c => !c)}>
+                        <FontAwesomeIcon icon={faBars} />
+                    </button>
+                    {!collapsed && <span className="sidebar-title">Lunatech's Chef</span>}
+                </div>
+                <div className="sidebar-content">
+                    <ul className="sidebar-menu">
+                        <li>
+                            <NavLink to="/" className={({ isActive }) => isActive ? "sidebar-link activeClicked" : "sidebar-link"}>
+                                <FontAwesomeIcon icon={faHippo} fixedWidth />
+                                {!collapsed && <span>My lunches</span>}
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to="/whoisjoining" className={({ isActive }) => isActive ? "sidebar-link activeClicked" : "sidebar-link"}>
+                                <FontAwesomeIcon icon={faUserFriends} fixedWidth />
+                                {!collapsed && <span>Who's joining?</span>}
+                            </NavLink>
+                        </li>
+                        {props.isAdmin && (
+                            <>
+                                <li>
+                                    <NavLink to="/allmenus" className={({ isActive }) => isActive ? "sidebar-link activeClicked" : "sidebar-link"}>
+                                        <FontAwesomeIcon icon={faBook} fixedWidth />
+                                        {!collapsed && <span>Menus</span>}
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to="/alldishes" className={({ isActive }) => isActive ? "sidebar-link activeClicked" : "sidebar-link"}>
+                                        <FontAwesomeIcon icon={faUtensils} fixedWidth />
+                                        {!collapsed && <span>Dishes</span>}
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to="/alloffices" className={({ isActive }) => isActive ? "sidebar-link activeClicked" : "sidebar-link"}>
+                                        <FontAwesomeIcon icon={faMap} fixedWidth />
+                                        {!collapsed && <span>Offices</span>}
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to="/allschedules" className={({ isActive }) => isActive ? "sidebar-link activeClicked" : "sidebar-link"}>
+                                        <FontAwesomeIcon icon={faCalendar} fixedWidth />
+                                        {!collapsed && <span>Schedules</span>}
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to="/monthlyreports" className={({ isActive }) => isActive ? "sidebar-link activeClicked" : "sidebar-link"}>
+                                        <FontAwesomeIcon icon={faArchive} fixedWidth />
+                                        {!collapsed && <span>Monthly Reports</span>}
+                                    </NavLink>
+                                </li>
+                            </>
+                        )}
+                        <li>
+                            <NavLink to="/userProfile" className={({ isActive }) => isActive ? "sidebar-link activeClicked" : "sidebar-link"}>
+                                <FontAwesomeIcon icon={faUser} fixedWidth />
+                                {!collapsed && <span>Profile</span>}
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to="/" onClick={props.logout} className="sidebar-link">
+                                <FontAwesomeIcon icon={faUserSlash} fixedWidth />
+                                {!collapsed && <span>Logout</span>}
+                            </NavLink>
+                        </li>
+                    </ul>
+                </div>
+                {!collapsed && (
+                    <div className="sidebar-footer">
+                        <img src="/lunatech-logo.png" alt="Lunatech logo" width="270px" />
+                    </div>
+                )}
+            </nav>
         </div>
     );
 };

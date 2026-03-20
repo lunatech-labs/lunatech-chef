@@ -15,8 +15,8 @@ const container = document.getElementById('root');
 const root = createRoot(container);
 
 const oidcConfig = {
-  authority: `${process.env.REACT_APP_REALMS_URL}`,
-  client_id: `${process.env.REACT_APP_CLIENT_ID}`,
+  authority: `${import.meta.env.REACT_APP_REALMS_URL}`,
+  client_id: `${import.meta.env.REACT_APP_CLIENT_ID}`,
   redirect_uri: `${window.location.origin}/redirect`,
 };
 

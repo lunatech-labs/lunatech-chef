@@ -21,7 +21,7 @@ function Redirect({ login }) {
         if (auth.isAuthenticated && !auth.activeNavigator && !auth.isLoading) {
             const oidcStorage =
                 sessionStorage.getItem(
-                    `oidc.user:${process.env.REACT_APP_REALMS_URL}:${process.env.REACT_APP_CLIENT_ID}`
+                    `oidc.user:${import.meta.env.REACT_APP_REALMS_URL}:${import.meta.env.REACT_APP_CLIENT_ID}`
                 ) ?? "";
 
             const { id_token } = User.fromStorageString(oidcStorage);

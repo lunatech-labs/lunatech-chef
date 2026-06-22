@@ -153,8 +153,16 @@ export default function EditSchedule(props) {
     const handleChange = (selectedDate) => {
         setDate(selectedDate)
     };
+
+    function toLocalDateString(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`; // "2026-03-18"
+    }
+
     const onSubmit = (values) => {
-        let shortDate = date.toISOString().substring(0, 10);
+        let shortDate = toLocalDateString(date);
         let editedSchedule = {
             ...values,
             uuid: schedule.uuid,

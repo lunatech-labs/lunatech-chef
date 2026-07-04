@@ -22,6 +22,7 @@ import {
     fetchSchedules,
     fetchRecurrentSchedules,
     fetchSchedulesAttendance,
+    fetchSchedulesExternalAttendance,
     addNewSchedule,
     editSchedule,
     deleteSchedule,
@@ -32,6 +33,9 @@ import {
     editAttendance,
     showNewAttendance,
 } from "../redux/attendance/AttendanceActionCreators";
+import {
+    editExternalAttendance,
+} from "../redux/externalAttendance/ExternalAttendanceActionCreators";
 import {
     login,
     logout,
@@ -69,6 +73,7 @@ function Main() {
     const menusState = useSelector(state => state.menus)
     const schedulesState = useSelector(state => state.schedules)
     const attendanceState = useSelector(state => state.attendance)
+    const externalAttendanceState = useSelector(state => state.externalAttendance)
 
     // Create callback functions that dispatch as needed, with arguments
     const dispatch = useDispatch()
@@ -142,6 +147,14 @@ function Main() {
         dispatch(showNewAttendance(attendance))
     }
     //
+    // External Attendance
+    const handleFetchSchedulesExternalAttendance = () => {
+        dispatch(fetchSchedulesExternalAttendance())
+    }
+    const handleEditExternalAttendance = (externalAttendance) => {
+        dispatch(editExternalAttendance(externalAttendance))
+    }
+
     // Reports
     const handleGetReport = (parameters) => {
         dispatch(getReport(parameters))
@@ -164,9 +177,13 @@ function Main() {
             <WhoIsJoining
                 isLoading={schedulesState.isLoadingAttendance}
                 attendance={schedulesState.attendance}
+                externalAttendance={schedulesState.externalAttendance}
                 offices={officesState.offices}
                 errorListing={schedulesState.errorListingAttendance}
-                filter={handleFetchSchedulesAttendance}
+                filterAttendance={handleFetchSchedulesAttendance}
+                filterExternalAttendance={handleFetchSchedulesExternalAttendance}
+                editExternalAttendance={handleEditExternalAttendance}
+                isUserAdmin={userState.isAdmin}
             />
         );
     };
@@ -345,6 +362,7 @@ function Main() {
                         <Sidebar logout={handleLogout} isAdmin={userState.isAdmin} />
                         <Routes>
                             {/* do not use the same routes as the ones available in the BE server */}
+                            <Route path="/" element={<ListSchedulesForUser />} />
                             <Route
                                 path="/whoisjoining"
                                 element={<WhoIsJoiningSchedule />}
@@ -370,7 +388,6 @@ function Main() {
                             </Route>
                             <Route path="/loginUser" element={<LoginUser />} />
                             <Route path="/userProfile" element={<Profile />} />
-                            <Route path="/" element={<ListSchedulesForUser />} />
                             <Route
                                 path="*"
                                 element={<Navigate to="/" replace />}

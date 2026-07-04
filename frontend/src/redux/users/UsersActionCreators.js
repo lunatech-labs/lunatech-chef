@@ -7,6 +7,7 @@ import {
     fetchSchedules,
     fetchRecurrentSchedules,
     fetchSchedulesAttendance,
+    fetchSchedulesExternalAttendance
 } from "../schedules/SchedulesActionCreators";
 import { fetchAttendanceUser } from "../attendance/AttendanceActionCreators";
 import { STORAGE_USER_UUID } from "../LocalStorageKeys";
@@ -88,6 +89,7 @@ const getInitialData = (dispatch) => {
     dispatch(fetchRecurrentSchedules());
     dispatch(fetchAttendanceUser());
     dispatch(fetchSchedulesAttendance());
+    dispatch(fetchSchedulesExternalAttendance());
 };
 
 export const logout = () => (dispatch) => {

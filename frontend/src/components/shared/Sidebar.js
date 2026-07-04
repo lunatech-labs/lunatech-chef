@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -29,13 +29,15 @@ const Sidebar = (props) => {
                 <div className="sidebar-content">
                     <ul className="sidebar-menu">
                         <li>
-                            <NavLink to="/" className={({ isActive }) => isActive ? "sidebar-link activeClicked" : "sidebar-link"}>
+                            <NavLink to="/"
+                                className={({ isActive }) => isActive ? "sidebar-link activeClicked" : "sidebar-link"}>
                                 <FontAwesomeIcon icon={faHippo} fixedWidth />
                                 {!collapsed && <span>My lunches</span>}
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to="/whoisjoining" className={({ isActive }) => isActive ? "sidebar-link activeClicked" : "sidebar-link"}>
+                            <NavLink to="/whoisjoining"
+                                className={({ isActive }) => isActive ? "sidebar-link activeClicked" : "sidebar-link"}>
                                 <FontAwesomeIcon icon={faUserFriends} fixedWidth />
                                 {!collapsed && <span>Who's joining?</span>}
                             </NavLink>
@@ -43,31 +45,36 @@ const Sidebar = (props) => {
                         {props.isAdmin && (
                             <>
                                 <li>
-                                    <NavLink to="/allmenus" className={({ isActive }) => isActive ? "sidebar-link activeClicked" : "sidebar-link"}>
+                                    <NavLink to="/allmenus"
+                                        className={({ isActive }) => isActive ? "sidebar-link activeClicked" : "sidebar-link"}>
                                         <FontAwesomeIcon icon={faBook} fixedWidth />
                                         {!collapsed && <span>Menus</span>}
                                     </NavLink>
                                 </li>
                                 <li>
-                                    <NavLink to="/alldishes" className={({ isActive }) => isActive ? "sidebar-link activeClicked" : "sidebar-link"}>
+                                    <NavLink to="/alldishes"
+                                        className={({ isActive }) => isActive ? "sidebar-link activeClicked" : "sidebar-link"}>
                                         <FontAwesomeIcon icon={faUtensils} fixedWidth />
                                         {!collapsed && <span>Dishes</span>}
                                     </NavLink>
                                 </li>
                                 <li>
-                                    <NavLink to="/alloffices" className={({ isActive }) => isActive ? "sidebar-link activeClicked" : "sidebar-link"}>
+                                    <NavLink to="/alloffices"
+                                        className={({ isActive }) => isActive ? "sidebar-link activeClicked" : "sidebar-link"}>
                                         <FontAwesomeIcon icon={faMap} fixedWidth />
                                         {!collapsed && <span>Offices</span>}
                                     </NavLink>
                                 </li>
                                 <li>
-                                    <NavLink to="/allschedules" className={({ isActive }) => isActive ? "sidebar-link activeClicked" : "sidebar-link"}>
+                                    <NavLink to="/allschedules"
+                                        className={({ isActive }) => isActive ? "sidebar-link activeClicked" : "sidebar-link"}>
                                         <FontAwesomeIcon icon={faCalendar} fixedWidth />
-                                        {!collapsed && <span>Schedules</span>}
+                                        {!collapsed && <span>Scheduled Lunches</span>}
                                     </NavLink>
                                 </li>
                                 <li>
-                                    <NavLink to="/monthlyreports" className={({ isActive }) => isActive ? "sidebar-link activeClicked" : "sidebar-link"}>
+                                    <NavLink to="/monthlyreports"
+                                        className={({ isActive }) => isActive ? "sidebar-link activeClicked" : "sidebar-link"}>
                                         <FontAwesomeIcon icon={faArchive} fixedWidth />
                                         {!collapsed && <span>Monthly Reports</span>}
                                     </NavLink>
@@ -75,7 +82,8 @@ const Sidebar = (props) => {
                             </>
                         )}
                         <li>
-                            <NavLink to="/userProfile" className={({ isActive }) => isActive ? "sidebar-link activeClicked" : "sidebar-link"}>
+                            <NavLink to="/userProfile"
+                                className={({ isActive }) => isActive ? "sidebar-link activeClicked" : "sidebar-link"}>
                                 <FontAwesomeIcon icon={faUser} fixedWidth />
                                 {!collapsed && <span>Profile</span>}
                             </NavLink>

@@ -6,8 +6,10 @@ const initState = {
     schedules: [],
     recurrentSchedules: [],
     attendance: [],
+    externalAttendance: [],
     errorListing: null,
     errorListingAttendance: null,
+    errorListingExternalAttendance: null,
     errorAdding: null,
     errorEditing: null,
     errorDeleting: null,
@@ -79,13 +81,23 @@ const schedulesSlice = createSlice({
         allSchedulesAttendanceLoadingFailed(state, action) {
             state.errorListingAttendance = action.payload
         },
+        allSchedulesExternalAttendanceLoadingFailed(state, action) {
+            state.errorListingExternalAttendance = action.payload
+        },
         allSchedulesAttendanceShown(state, action) {
             state.isLoadingAttendance = false
             state.attendance = action.payload
+        },
+        allSchedulesExternalAttendanceShown(state, action) {
+            state.isLoadingAttendance = false
+            state.externalAttendance = action.payload
         }
     }
 })
 
-export const { allSchedulesLoading, allSchedulesLoadingFailed, allSchedulesShown, scheduleAddedFailed, scheduleEditedFailed, scheduleDeletedFailed, allRecurrentSchedulesShown, allSchedulesAttendanceLoading, allSchedulesAttendanceLoadingFailed, allSchedulesAttendanceShown } = schedulesSlice.actions
+export const { allSchedulesLoading, allSchedulesLoadingFailed, allSchedulesShown,
+    scheduleAddedFailed, scheduleEditedFailed, scheduleDeletedFailed, allRecurrentSchedulesShown,
+    allSchedulesAttendanceLoading, allSchedulesAttendanceLoadingFailed, allSchedulesAttendanceShown,
+    allSchedulesExternalAttendanceLoadingFailed, allSchedulesExternalAttendanceShown } = schedulesSlice.actions
 
 export default schedulesSlice.reducer

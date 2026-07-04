@@ -35,6 +35,7 @@ export const editAttendance = (attendance) => (dispatch) => {
         .put("/attendances/" + attendance.uuid, attendanceToEdit)
         .then(function () {
             dispatch(fetchSchedulesAttendance());
+            dispatch(fetchSchedulesExternalAttendance());
         })
         .catch(function (error) {
             console.log("Failed adding Schedule attendance: " + error);

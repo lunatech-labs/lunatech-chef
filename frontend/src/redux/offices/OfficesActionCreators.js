@@ -3,6 +3,7 @@ import { axiosInstance } from "../Axios";
 import {
     fetchSchedules,
     fetchSchedulesAttendance,
+    fetchSchedulesExternalAttendance
 } from "../schedules/SchedulesActionCreators";
 import { fetchAttendanceUser } from "../attendance/AttendanceActionCreators";
 import { STORAGE_USER_UUID } from "../LocalStorageKeys";
@@ -51,6 +52,7 @@ export const editOffice = (editedOffice) => (dispatch) => {
             dispatch(fetchOffices());
             dispatch(fetchSchedules());
             dispatch(fetchSchedulesAttendance());
+            dispatch(fetchSchedulesExternalAttendance());
             dispatch(fetchAttendanceUser(userUuid));
         })
         .catch(function (error) {
@@ -67,6 +69,7 @@ export const deleteOffice = (officeUuid) => (dispatch) => {
             dispatch(fetchOffices());
             dispatch(fetchSchedules());
             dispatch(fetchSchedulesAttendance());
+            dispatch(fetchSchedulesExternalAttendance());
             dispatch(fetchAttendanceUser(userUuid));
         })
         .catch(function (error) {

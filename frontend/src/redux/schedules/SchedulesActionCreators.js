@@ -122,6 +122,7 @@ export const addNewSchedule = (newSchedule) => (dispatch) => {
         .then(() => {
             dispatch(fetchSchedules());
             dispatch(fetchSchedulesAttendance());
+            dispatch(fetchSchedulesExternalAttendance());
             dispatch(fetchAttendanceUser(userUuid));
         })
         .catch(function (error) {
@@ -170,6 +171,7 @@ export const editSingleSchedule = (editedSchedule) => (dispatch) => {
         .then(() => {
             dispatch(fetchSchedules());
             dispatch(fetchSchedulesAttendance());
+            dispatch(fetchSchedulesExternalAttendance());
             dispatch(fetchAttendanceUser(userUuid));
         })
         .catch(function (error) {
@@ -192,6 +194,7 @@ export const editRecurrentSchedule = (editedSchedule) => (dispatch) => {
         .then(() => {
             dispatch(fetchRecurrentSchedules());
             dispatch(fetchSchedulesAttendance());
+            dispatch(fetchSchedulesExternalAttendance());
             dispatch(fetchAttendanceUser(userUuid));
         })
         .catch(function (error) {
@@ -207,6 +210,7 @@ export const deleteSchedule = (scheduleUuid) => (dispatch) => {
         .then(() => {
             dispatch(fetchSchedules());
             dispatch(fetchSchedulesAttendance());
+            dispatch(fetchSchedulesExternalAttendance());
             dispatch(fetchAttendanceUser(userUuid));
         })
         .catch(function (error) {

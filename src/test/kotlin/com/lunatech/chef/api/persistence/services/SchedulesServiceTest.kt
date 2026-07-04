@@ -4,13 +4,25 @@ import com.lunatech.chef.api.persistence.TestDatabase
 import com.lunatech.chef.api.persistence.TestFixtures.aDish
 import com.lunatech.chef.api.persistence.TestFixtures.aMenu
 import com.lunatech.chef.api.persistence.TestFixtures.aSchedule
+import com.lunatech.chef.api.persistence.TestFixtures.aUser
+import com.lunatech.chef.api.persistence.TestFixtures.anAttendance
+import com.lunatech.chef.api.persistence.TestFixtures.anExternalAttendance
 import com.lunatech.chef.api.persistence.TestFixtures.anOffice
+import com.lunatech.chef.api.persistence.TestFixtures.uniqueEmail
+import com.lunatech.chef.api.persistence.schemas.Attendances
+import com.lunatech.chef.api.persistence.schemas.ExternalAttendances
 import com.lunatech.chef.api.routes.UpdatedSchedule
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.ktorm.dsl.eq
+import org.ktorm.dsl.from
+import org.ktorm.dsl.map
+import org.ktorm.dsl.select
+import org.ktorm.dsl.where
 import java.time.LocalDate
 import java.util.UUID
 
@@ -19,10 +31,14 @@ class SchedulesServiceTest {
     private lateinit var menusService: MenusService
     private lateinit var officesService: OfficesService
     private lateinit var dishesService: DishesService
+    private lateinit var usersService: UsersService
+    private lateinit var attendancesService: AttendancesService
+    private lateinit var externalAttendancesService: ExternalAttendancesService
 
     private lateinit var testOfficeUuid: UUID
     private lateinit var testMenuUuid: UUID
     private lateinit var testMenu2Uuid: UUID
+    private lateinit var testUserUuid: UUID
 
     @BeforeEach
     fun setup() {
@@ -32,6 +48,9 @@ class SchedulesServiceTest {
         menusService = MenusService(database)
         officesService = OfficesService(database)
         dishesService = DishesService(database)
+        usersService = UsersService(database)
+        attendancesService = AttendancesService(database, usersService)
+        externalAttendancesService = ExternalAttendancesService(database)
 
         // Create test office
         val testOffice = anOffice(city = "Rotterdam")
@@ -48,7 +67,30 @@ class SchedulesServiceTest {
         menusService.insert(testMenu2)
         testMenuUuid = testMenu.uuid
         testMenu2Uuid = testMenu2.uuid
+
+        // Create test user
+        val testUser = aUser(name = "John Doe", emailAddress = uniqueEmail("john"), officeUuid = testOfficeUuid)
+        usersService.insert(testUser)
+        testUserUuid = testUser.uuid
     }
+
+    // Helper to retrieve attendances directly from database, including deleted ones
+    private fun getAttendancesByScheduleUuid(scheduleUuid: UUID) =
+        TestDatabase
+            .getDatabase()
+            .from(Attendances)
+            .select()
+            .where { Attendances.scheduleUuid eq scheduleUuid }
+            .map { Attendances.createEntity(it) }
+
+    // Helper to retrieve external attendances directly from database, including deleted ones
+    private fun getExternalAttendancesByScheduleUuid(scheduleUuid: UUID) =
+        TestDatabase
+            .getDatabase()
+            .from(ExternalAttendances)
+            .select()
+            .where { ExternalAttendances.scheduleUuid eq scheduleUuid }
+            .map { ExternalAttendances.createEntity(it) }
 
     @Nested
     inner class InsertOperations {
@@ -267,6 +309,67 @@ class SchedulesServiceTest {
             val deleteResult = schedulesService.delete(nonExistentUuid)
 
             assertEquals(0, deleteResult, "Delete should return 0 for non-existent schedule")
+        }
+
+        @Test
+        fun `delete soft deletes related attendances`() {
+            val schedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
+            schedulesService.insert(schedule)
+            val attendance = anAttendance(scheduleUuid = schedule.uuid, userUuid = testUserUuid, isAttending = true)
+            attendancesService.insert(attendance)
+
+            schedulesService.delete(schedule.uuid)
+
+            val attendances = getAttendancesByScheduleUuid(schedule.uuid)
+            assertEquals(1, attendances.size, "Attendance should still exist in database")
+            assertTrue(attendances[0].isDeleted, "Related attendance should be soft deleted")
+        }
+
+        @Test
+        fun `delete soft deletes related external attendances`() {
+            val schedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
+            schedulesService.insert(schedule)
+            val externalAttendance = anExternalAttendance(scheduleUuid = schedule.uuid, attendancesCount = 5)
+            externalAttendancesService.insert(externalAttendance)
+
+            schedulesService.delete(schedule.uuid)
+
+            val externalAttendances = getExternalAttendancesByScheduleUuid(schedule.uuid)
+            assertEquals(1, externalAttendances.size, "External attendance should still exist in database")
+            assertTrue(externalAttendances[0].isDeleted, "Related external attendance should be soft deleted")
+        }
+
+        @Test
+        fun `delete does not affect attendances of other schedules`() {
+            val schedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
+            val otherSchedule = aSchedule(menuUuid = testMenu2Uuid, date = LocalDate.now().plusDays(8), officeUuid = testOfficeUuid)
+            schedulesService.insert(schedule)
+            schedulesService.insert(otherSchedule)
+
+            val attendance = anAttendance(scheduleUuid = schedule.uuid, userUuid = testUserUuid, isAttending = true)
+            val otherAttendance = anAttendance(scheduleUuid = otherSchedule.uuid, userUuid = testUserUuid, isAttending = true)
+            attendancesService.insert(attendance)
+            attendancesService.insert(otherAttendance)
+
+            val externalAttendance = anExternalAttendance(scheduleUuid = schedule.uuid, attendancesCount = 2)
+            val otherExternalAttendance = anExternalAttendance(scheduleUuid = otherSchedule.uuid, attendancesCount = 3)
+            externalAttendancesService.insert(externalAttendance)
+            externalAttendancesService.insert(otherExternalAttendance)
+
+            schedulesService.delete(schedule.uuid)
+
+            assertFalse(
+                schedulesService.getByUuid(otherSchedule.uuid)[0].isDeleted,
+                "Other schedule should not be soft deleted",
+            )
+            assertFalse(
+                getAttendancesByScheduleUuid(otherSchedule.uuid)[0].isDeleted,
+                "Attendance of other schedule should not be soft deleted",
+            )
+            assertFalse(
+                getExternalAttendancesByScheduleUuid(otherSchedule.uuid)[0].isDeleted,
+                "External attendance of other schedule should not be soft deleted",
+            )
         }
     }
 }

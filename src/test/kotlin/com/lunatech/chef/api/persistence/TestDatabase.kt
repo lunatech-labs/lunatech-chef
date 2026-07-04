@@ -46,6 +46,7 @@ object TestDatabase {
             val tables =
                 listOf(
                     "attendances",
+                    "external_attendances",
                     "users",
                     "schedules",
                     "recurrent_schedules",

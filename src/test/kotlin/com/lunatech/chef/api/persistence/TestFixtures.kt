@@ -2,6 +2,7 @@ package com.lunatech.chef.api.persistence
 
 import com.lunatech.chef.api.domain.Attendance
 import com.lunatech.chef.api.domain.Dish
+import com.lunatech.chef.api.domain.ExternalAttendance
 import com.lunatech.chef.api.domain.MenuWithDishesUuid
 import com.lunatech.chef.api.domain.Office
 import com.lunatech.chef.api.domain.RecurrentSchedule
@@ -137,6 +138,14 @@ object TestFixtures {
         isAttending: Boolean? = null,
         isDeleted: Boolean = false,
     ): Attendance = Attendance(uuid, scheduleUuid, userUuid, isAttending, isDeleted)
+
+    // External attendance builder
+    fun anExternalAttendance(
+        uuid: UUID = UUID.randomUUID(),
+        scheduleUuid: UUID,
+        attendancesCount: Int = 0,
+        isDeleted: Boolean = false,
+    ): ExternalAttendance = ExternalAttendance(uuid, scheduleUuid, attendancesCount, isDeleted)
 
     // Helper to generate unique email addresses
     private var emailCounter = 0

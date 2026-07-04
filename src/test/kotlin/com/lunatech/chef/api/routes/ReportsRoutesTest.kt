@@ -56,7 +56,7 @@ class ReportsRoutesTest {
         menusService = MenusService(database)
         schedulesService = SchedulesService(database)
         usersService = UsersService(database)
-        attendancesService = AttendancesService(database, usersService, schedulesService)
+        attendancesService = AttendancesService(database, usersService)
 
         val testOffice = anOffice(city = "Rotterdam")
         officesService.insert(testOffice)

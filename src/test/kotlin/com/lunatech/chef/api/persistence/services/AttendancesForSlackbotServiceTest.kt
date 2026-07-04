@@ -43,7 +43,7 @@ class AttendancesForSlackbotServiceTest {
         menusService = MenusService(database)
         schedulesService = SchedulesService(database)
         usersService = UsersService(database)
-        attendancesService = AttendancesService(database, usersService, schedulesService)
+        attendancesService = AttendancesService(database, usersService)
 
         // Create test office
         val testOffice = anOffice(city = "Rotterdam")
@@ -67,7 +67,8 @@ class AttendancesForSlackbotServiceTest {
         testMenuUuid = testMenu.uuid
 
         // Create test schedule
-        val testSchedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(3), officeUuid = testOfficeUuid)
+        val testSchedule =
+            aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(3), officeUuid = testOfficeUuid)
         schedulesService.insert(testSchedule)
         testScheduleUuid = testSchedule.uuid
     }
@@ -76,7 +77,8 @@ class AttendancesForSlackbotServiceTest {
     inner class GetMissingAttendancesOperations {
         @Test
         fun `getMissingAttendances returns attendances with null isAttending`() {
-            val missingAttendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = null)
+            val missingAttendance =
+                anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = null)
             attendancesService.insert(missingAttendance)
 
             val fromDate = LocalDate.now()
@@ -94,8 +96,10 @@ class AttendancesForSlackbotServiceTest {
 
         @Test
         fun `getMissingAttendances excludes answered attendances`() {
-            val missingAttendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = null)
-            val answeredAttendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUser2Uuid, isAttending = true)
+            val missingAttendance =
+                anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = null)
+            val answeredAttendance =
+                anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUser2Uuid, isAttending = true)
             attendancesService.insert(missingAttendance)
             attendancesService.insert(answeredAttendance)
 
@@ -111,10 +115,16 @@ class AttendancesForSlackbotServiceTest {
         @Test
         fun `getMissingAttendances excludes deleted schedules`() {
             val deletedSchedule =
-                aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(5), officeUuid = testOfficeUuid, isDeleted = true)
+                aSchedule(
+                    menuUuid = testMenuUuid,
+                    date = LocalDate.now().plusDays(5),
+                    officeUuid = testOfficeUuid,
+                    isDeleted = true,
+                )
             schedulesService.insert(deletedSchedule)
 
-            val missingAttendance = anAttendance(scheduleUuid = deletedSchedule.uuid, userUuid = testUserUuid, isAttending = null)
+            val missingAttendance =
+                anAttendance(scheduleUuid = deletedSchedule.uuid, userUuid = testUserUuid, isAttending = null)
             attendancesService.insert(missingAttendance)
 
             val fromDate = LocalDate.now()
@@ -128,10 +138,16 @@ class AttendancesForSlackbotServiceTest {
         @Test
         fun `getMissingAttendances excludes inactive users`() {
             val inactiveUser =
-                aUser(name = "Inactive User", emailAddress = uniqueEmail("inactive"), officeUuid = testOfficeUuid, isInactive = true)
+                aUser(
+                    name = "Inactive User",
+                    emailAddress = uniqueEmail("inactive"),
+                    officeUuid = testOfficeUuid,
+                    isInactive = true,
+                )
             usersService.insert(inactiveUser)
 
-            val missingAttendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = inactiveUser.uuid, isAttending = null)
+            val missingAttendance =
+                anAttendance(scheduleUuid = testScheduleUuid, userUuid = inactiveUser.uuid, isAttending = null)
             attendancesService.insert(missingAttendance)
 
             val fromDate = LocalDate.now()
@@ -145,10 +161,16 @@ class AttendancesForSlackbotServiceTest {
         @Test
         fun `getMissingAttendances excludes deleted users`() {
             val deletedUser =
-                aUser(name = "Deleted User", emailAddress = uniqueEmail("deleted"), officeUuid = testOfficeUuid, isDeleted = true)
+                aUser(
+                    name = "Deleted User",
+                    emailAddress = uniqueEmail("deleted"),
+                    officeUuid = testOfficeUuid,
+                    isDeleted = true,
+                )
             usersService.insert(deletedUser)
 
-            val missingAttendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = deletedUser.uuid, isAttending = null)
+            val missingAttendance =
+                anAttendance(scheduleUuid = testScheduleUuid, userUuid = deletedUser.uuid, isAttending = null)
             attendancesService.insert(missingAttendance)
 
             val fromDate = LocalDate.now()
@@ -161,13 +183,17 @@ class AttendancesForSlackbotServiceTest {
 
         @Test
         fun `getMissingAttendances filters by date range`() {
-            val scheduleInRange = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(3), officeUuid = testOfficeUuid)
-            val scheduleOutOfRange = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(10), officeUuid = testOfficeUuid)
+            val scheduleInRange =
+                aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(3), officeUuid = testOfficeUuid)
+            val scheduleOutOfRange =
+                aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(10), officeUuid = testOfficeUuid)
             schedulesService.insert(scheduleInRange)
             schedulesService.insert(scheduleOutOfRange)
 
-            val attendanceInRange = anAttendance(scheduleUuid = scheduleInRange.uuid, userUuid = testUserUuid, isAttending = null)
-            val attendanceOutOfRange = anAttendance(scheduleUuid = scheduleOutOfRange.uuid, userUuid = testUser2Uuid, isAttending = null)
+            val attendanceInRange =
+                anAttendance(scheduleUuid = scheduleInRange.uuid, userUuid = testUserUuid, isAttending = null)
+            val attendanceOutOfRange =
+                anAttendance(scheduleUuid = scheduleOutOfRange.uuid, userUuid = testUser2Uuid, isAttending = null)
             attendancesService.insert(attendanceInRange)
             attendancesService.insert(attendanceOutOfRange)
 
@@ -182,8 +208,10 @@ class AttendancesForSlackbotServiceTest {
 
         @Test
         fun `getMissingAttendances returns results ordered by date`() {
-            val schedule1 = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(5), officeUuid = testOfficeUuid)
-            val schedule2 = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(2), officeUuid = testOfficeUuid)
+            val schedule1 =
+                aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(5), officeUuid = testOfficeUuid)
+            val schedule2 =
+                aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(2), officeUuid = testOfficeUuid)
             schedulesService.insert(schedule1)
             schedulesService.insert(schedule2)
 
@@ -223,8 +251,10 @@ class AttendancesForSlackbotServiceTest {
             schedulesService.insert(scheduleOnFromDate)
             schedulesService.insert(scheduleOnUntilDate)
 
-            val attendance1 = anAttendance(scheduleUuid = scheduleOnFromDate.uuid, userUuid = testUserUuid, isAttending = null)
-            val attendance2 = anAttendance(scheduleUuid = scheduleOnUntilDate.uuid, userUuid = testUser2Uuid, isAttending = null)
+            val attendance1 =
+                anAttendance(scheduleUuid = scheduleOnFromDate.uuid, userUuid = testUserUuid, isAttending = null)
+            val attendance2 =
+                anAttendance(scheduleUuid = scheduleOnUntilDate.uuid, userUuid = testUser2Uuid, isAttending = null)
             attendancesService.insert(attendance1)
             attendancesService.insert(attendance2)
 

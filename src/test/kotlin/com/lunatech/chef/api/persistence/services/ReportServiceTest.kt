@@ -43,7 +43,7 @@ class ReportServiceTest {
         menusService = MenusService(database)
         schedulesService = SchedulesService(database)
         usersService = UsersService(database)
-        attendancesService = AttendancesService(database, usersService, schedulesService)
+        attendancesService = AttendancesService(database, usersService)
 
         // Create test office
         val testOffice = anOffice(city = "Rotterdam")
@@ -97,8 +97,10 @@ class ReportServiceTest {
             val schedule = aSchedule(menuUuid = testMenuUuid, date = scheduleDate, officeUuid = testOfficeUuid)
             schedulesService.insert(schedule)
 
-            val attendingAttendance = anAttendance(scheduleUuid = schedule.uuid, userUuid = testUserUuid, isAttending = true)
-            val notAttendingAttendance = anAttendance(scheduleUuid = schedule.uuid, userUuid = testUser2Uuid, isAttending = false)
+            val attendingAttendance =
+                anAttendance(scheduleUuid = schedule.uuid, userUuid = testUserUuid, isAttending = true)
+            val notAttendingAttendance =
+                anAttendance(scheduleUuid = schedule.uuid, userUuid = testUser2Uuid, isAttending = false)
             attendancesService.insert(attendingAttendance)
             attendancesService.insert(notAttendingAttendance)
 
@@ -115,9 +117,15 @@ class ReportServiceTest {
             val schedule = aSchedule(menuUuid = testMenuUuid, date = scheduleDate, officeUuid = testOfficeUuid)
             schedulesService.insert(schedule)
 
-            val activeAttendance = anAttendance(scheduleUuid = schedule.uuid, userUuid = testUserUuid, isAttending = true)
+            val activeAttendance =
+                anAttendance(scheduleUuid = schedule.uuid, userUuid = testUserUuid, isAttending = true)
             val deletedAttendance =
-                anAttendance(scheduleUuid = schedule.uuid, userUuid = testUser2Uuid, isAttending = true, isDeleted = true)
+                anAttendance(
+                    scheduleUuid = schedule.uuid,
+                    userUuid = testUser2Uuid,
+                    isAttending = true,
+                    isDeleted = true,
+                )
             attendancesService.insert(activeAttendance)
             attendancesService.insert(deletedAttendance)
 
@@ -133,13 +141,17 @@ class ReportServiceTest {
             val thisMonthDate = today.withDayOfMonth(10)
             val nextMonthDate = today.plusMonths(1).withDayOfMonth(10)
 
-            val thisMonthSchedule = aSchedule(menuUuid = testMenuUuid, date = thisMonthDate, officeUuid = testOfficeUuid)
-            val nextMonthSchedule = aSchedule(menuUuid = testMenuUuid, date = nextMonthDate, officeUuid = testOfficeUuid)
+            val thisMonthSchedule =
+                aSchedule(menuUuid = testMenuUuid, date = thisMonthDate, officeUuid = testOfficeUuid)
+            val nextMonthSchedule =
+                aSchedule(menuUuid = testMenuUuid, date = nextMonthDate, officeUuid = testOfficeUuid)
             schedulesService.insert(thisMonthSchedule)
             schedulesService.insert(nextMonthSchedule)
 
-            val thisMonthAttendance = anAttendance(scheduleUuid = thisMonthSchedule.uuid, userUuid = testUserUuid, isAttending = true)
-            val nextMonthAttendance = anAttendance(scheduleUuid = nextMonthSchedule.uuid, userUuid = testUserUuid, isAttending = true)
+            val thisMonthAttendance =
+                anAttendance(scheduleUuid = thisMonthSchedule.uuid, userUuid = testUserUuid, isAttending = true)
+            val nextMonthAttendance =
+                anAttendance(scheduleUuid = nextMonthSchedule.uuid, userUuid = testUserUuid, isAttending = true)
             attendancesService.insert(thisMonthAttendance)
             attendancesService.insert(nextMonthAttendance)
 

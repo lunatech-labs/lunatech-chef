@@ -10,13 +10,13 @@ import java.time.LocalDate
 import java.util.UUID
 
 fun Route.attendancesWithScheduleInfo(attendancesWithScheduleInfoService: AttendancesWithScheduleInfoService) {
-    val menusRoute = "/attendancesWithScheduleInfo"
+    val attendancesWithScheduleInfo = "/attendancesWithScheduleInfo"
     val userUuidRoute = "/{useruuid}"
     val userUuidParam = "useruuid"
     val fromDateParam = "fromdate"
     val officeParam = "office"
 
-    route(menusRoute) {
+    route(attendancesWithScheduleInfo) {
         route(userUuidRoute) {
             // get all attendances for a user with the data about the menus
             get {

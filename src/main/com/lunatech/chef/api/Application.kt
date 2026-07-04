@@ -16,6 +16,8 @@ import com.lunatech.chef.api.persistence.services.AttendancesService
 import com.lunatech.chef.api.persistence.services.AttendancesWithScheduleInfoService
 import com.lunatech.chef.api.persistence.services.DishesService
 import com.lunatech.chef.api.persistence.services.ExcelService
+import com.lunatech.chef.api.persistence.services.ExternalAttendancesService
+import com.lunatech.chef.api.persistence.services.ExternalAttendancesWithScheduleInfoService
 import com.lunatech.chef.api.persistence.services.MenusService
 import com.lunatech.chef.api.persistence.services.MenusWithDishesNamesService
 import com.lunatech.chef.api.persistence.services.OfficesService
@@ -32,6 +34,8 @@ import com.lunatech.chef.api.routes.attendancesForSlackbot
 import com.lunatech.chef.api.routes.attendancesWithScheduleInfo
 import com.lunatech.chef.api.routes.authentication
 import com.lunatech.chef.api.routes.dishes
+import com.lunatech.chef.api.routes.externalAttendances
+import com.lunatech.chef.api.routes.externalAttendancesWithScheduleInfo
 import com.lunatech.chef.api.routes.healthCheck
 import com.lunatech.chef.api.routes.menus
 import com.lunatech.chef.api.routes.menusWithDishesInfo
@@ -120,7 +124,10 @@ fun Application.module() {
         RecurrentSchedulesWithMenuInfoService(dbConnection, menusWithDishesService)
     val schedulesWithAttendanceInfoService = SchedulesWithAttendanceInfoService(dbConnection, menusService)
     val usersService = UsersService(dbConnection)
-    val attendancesService = AttendancesService(dbConnection, usersService, schedulesService)
+    val attendancesService = AttendancesService(dbConnection, usersService)
+    val externalAttendancesService = ExternalAttendancesService(dbConnection)
+    val externalAttendancesWithScheduleInfoService =
+        ExternalAttendancesWithScheduleInfoService(dbConnection, schedulesService, menusWithDishesService)
     val attendancesWithInfoService =
         AttendancesWithScheduleInfoService(dbConnection, schedulesService, menusWithDishesService)
     val attendancesForSlackbotService = AttendancesForSlackbotService(dbConnection)
@@ -251,7 +258,7 @@ fun Application.module() {
             dishes(dishesService)
             menus(menusService)
             menusWithDishesInfo(menusWithDishesService)
-            schedules(schedulesService, attendancesService)
+            schedules(schedulesService, attendancesService, externalAttendancesService)
             schedulesWithMenusInfo(schedulesWithMenuInfoService)
             schedulesWithAttendanceInfo(schedulesWithAttendanceInfoService)
             recurrentSchedules(recurrentSchedulesService)
@@ -261,6 +268,8 @@ fun Application.module() {
             attendances(attendancesService)
             attendancesForSlackbot(attendancesForSlackbotService)
             reports(reportService, excelService)
+            externalAttendances(externalAttendancesService)
+            externalAttendancesWithScheduleInfo(externalAttendancesWithScheduleInfoService)
         }
 
         singlePageApplication {

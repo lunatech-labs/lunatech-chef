@@ -55,7 +55,7 @@ class AttendancesForSlackbotRoutesTest {
         menusService = MenusService(database)
         schedulesService = SchedulesService(database)
         usersService = UsersService(database)
-        attendancesService = AttendancesService(database, usersService, schedulesService)
+        attendancesService = AttendancesService(database, usersService)
 
         val testOffice = anOffice(city = "Rotterdam")
         officesService.insert(testOffice)
@@ -73,7 +73,8 @@ class AttendancesForSlackbotRoutesTest {
         usersService.insert(testUser)
         testUserUuid = testUser.uuid
 
-        val testSchedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(3), officeUuid = testOfficeUuid)
+        val testSchedule =
+            aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(3), officeUuid = testOfficeUuid)
         schedulesService.insert(testSchedule)
         testScheduleUuid = testSchedule.uuid
     }
@@ -137,7 +138,8 @@ class AttendancesForSlackbotRoutesTest {
         fun `returns missing attendances when user has null isAttending`() =
             testApplication {
                 setupAttendancesForSlackbotRoutes()
-                val missingAttendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = null)
+                val missingAttendance =
+                    anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = null)
                 attendancesService.insert(missingAttendance)
 
                 val fromDate = LocalDate.now()
@@ -153,7 +155,8 @@ class AttendancesForSlackbotRoutesTest {
         fun `returns empty list when no missing attendances`() =
             testApplication {
                 setupAttendancesForSlackbotRoutes()
-                val answeredAttendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = true)
+                val answeredAttendance =
+                    anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = true)
                 attendancesService.insert(answeredAttendance)
 
                 val fromDate = LocalDate.now()
@@ -169,7 +172,8 @@ class AttendancesForSlackbotRoutesTest {
         fun `returns empty list when user declined attendance`() =
             testApplication {
                 setupAttendancesForSlackbotRoutes()
-                val declinedAttendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = false)
+                val declinedAttendance =
+                    anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = false)
                 attendancesService.insert(declinedAttendance)
 
                 val fromDate = LocalDate.now()

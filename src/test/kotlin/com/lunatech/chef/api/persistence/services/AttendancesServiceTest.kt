@@ -49,7 +49,7 @@ class AttendancesServiceTest {
         menusService = MenusService(database)
         schedulesService = SchedulesService(database)
         usersService = UsersService(database)
-        attendancesService = AttendancesService(database, usersService, schedulesService)
+        attendancesService = AttendancesService(database, usersService)
 
         // Create test office
         val testOffice = anOffice(city = "Rotterdam")
@@ -304,7 +304,8 @@ class AttendancesServiceTest {
         @Test
         fun `multiple users can have attendance for same schedule`() {
             val attendance1 = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = true)
-            val attendance2 = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUser2Uuid, isAttending = false)
+            val attendance2 =
+                anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUser2Uuid, isAttending = false)
 
             val result1 = attendancesService.insert(attendance1)
             val result2 = attendancesService.insert(attendance2)

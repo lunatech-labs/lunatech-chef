@@ -79,20 +79,22 @@ class UsersService(
         }
 
     fun delete(uuid: UUID): Int {
-        val result =
-            database.update(Users) {
+        database.useTransaction {
+            val result =
+                database.update(Users) {
+                    set(it.isDeleted, true)
+                    where {
+                        it.uuid eq uuid
+                    }
+                }
+            // delete related attendances
+            database.update(Attendances) {
                 set(it.isDeleted, true)
                 where {
-                    it.uuid eq uuid
+                    it.userUuid eq uuid
                 }
             }
-        // delete related attendances
-        database.update(Attendances) {
-            set(it.isDeleted, true)
-            where {
-                it.userUuid eq uuid
-            }
+            return result
         }
-        return result
     }
 }

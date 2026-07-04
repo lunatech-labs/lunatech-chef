@@ -1,8 +1,11 @@
 package com.lunatech.chef.api.schedulers.recurrentschedules
 
+import com.lunatech.chef.api.domain.ExternalAttendance
+import com.lunatech.chef.api.domain.NewExternalAttendance
 import com.lunatech.chef.api.domain.NewSchedule
 import com.lunatech.chef.api.domain.Schedule
 import com.lunatech.chef.api.persistence.services.AttendancesService
+import com.lunatech.chef.api.persistence.services.ExternalAttendancesService
 import com.lunatech.chef.api.persistence.services.RecurrentSchedulesService
 import com.lunatech.chef.api.persistence.services.SchedulesService
 import com.lunatech.chef.api.routes.UpdatedRecurrentSchedule
@@ -18,6 +21,7 @@ class RSJob : Job {
         const val SCHEDULES_SERVICE: String = "schedulesService"
         const val RECURRENT_SCHEDULES_SERVICE: String = "recurrentSchedulesService"
         const val ATTENDANCES_SERVICE: String = "attendancesService"
+        const val EXTERNAL_ATTENDANCES_SERVICE: String = "externalAttendancesService"
     }
 
     override fun execute(context: JobExecutionContext?) {
@@ -31,6 +35,8 @@ class RSJob : Job {
         val recurrentSchedulesService: RecurrentSchedulesService =
             dataMap[RECURRENT_SCHEDULES_SERVICE] as RecurrentSchedulesService
         val attendancesService: AttendancesService = dataMap[ATTENDANCES_SERVICE] as AttendancesService
+        val externalAttendancesService: ExternalAttendancesService =
+            dataMap[EXTERNAL_ATTENDANCES_SERVICE] as ExternalAttendancesService
 
         val recSchedules = recurrentSchedulesService.getIntervalDate(today, inAWeek)
 
@@ -42,6 +48,12 @@ class RSJob : Job {
 
             if (isInserted == 1) {
                 attendancesService.insertAttendanceAllUsers(dbSchedule.uuid, isAttending = null)
+                val externalAttendance = NewExternalAttendance(dbSchedule.uuid)
+                externalAttendancesService.insert(
+                    ExternalAttendance.fromNewExternalAttendance(
+                        externalAttendance,
+                    ),
+                )
                 val updatedRecSchedule =
                     UpdatedRecurrentSchedule(
                         menuUuid = rec.menuUuid,

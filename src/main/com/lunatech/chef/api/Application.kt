@@ -135,7 +135,14 @@ fun Application.module() {
     val excelService = ExcelService()
 
     val scheduler = StdSchedulerFactory.getDefaultScheduler()
-    rcSchedulerTrigger(scheduler, schedulesService, recurrentSchedulesService, attendancesService, scCronString)
+    rcSchedulerTrigger(
+        scheduler,
+        schedulesService,
+        recurrentSchedulesService,
+        attendancesService,
+        externalAttendancesService,
+        scCronString,
+    )
     mrSchedulerTrigger(scheduler, mrCronString, monthlyReportConfig, mailerConfig, reportService, excelService)
 
     install(CORS) {

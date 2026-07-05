@@ -41,7 +41,7 @@ class MRJob : Job {
         logger.info("building report for year $year")
         logger.info("building report for month $month $monthName")
 
-        val reportEntries = reportService.getReportByMonth(year, month)
+        val reportEntries = reportService.getListAttendeesByMonth(year, month)
         val excelReport = excelService.exportToExcel(reportEntries)
 
         val email: Email =

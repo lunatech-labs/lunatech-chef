@@ -1,6 +1,6 @@
 package com.lunatech.chef.api.persistence.services
 
-import com.lunatech.chef.api.domain.ReportEntry
+import com.lunatech.chef.api.domain.AttendeeReportEntry
 import org.apache.poi.ss.usermodel.CellStyle
 import org.apache.poi.xssf.usermodel.XSSFRow
 import org.apache.poi.xssf.usermodel.XSSFSheet
@@ -15,7 +15,7 @@ class ExcelService {
         val weekNumber: Int,
         val name: String,
         val city: String,
-        val country: String,
+        val externalAttendees: Int,
     )
 
     private val startingRow = 2
@@ -26,9 +26,16 @@ class ExcelService {
         return date.get(weekfields.weekOfWeekBasedYear())
     }
 
-    fun exportToExcel(report: List<ReportEntry>): ByteArray {
+    fun exportToExcel(report: List<AttendeeReportEntry>): ByteArray {
         val reportWithWeek =
-            report.map { entry -> ReportEntryWeek(toWeekNumber(entry.date), entry.name, entry.city, entry.country) }
+            report.map { entry ->
+                ReportEntryWeek(
+                    toWeekNumber(entry.date),
+                    entry.name,
+                    entry.city,
+                    entry.externalAttendees,
+                )
+            }
 
         val workbook = XSSFWorkbook()
         val cellStyle = workbook.createCellStyle()
@@ -72,13 +79,22 @@ class ExcelService {
                         val (city, reportByCity) = indexedValue.value
                         val row = sheet.getRow(startingRow) ?: sheet.createRow(startingRow)
                         val users = reportByCity.map { (_, name, _, _) -> name }
+                        val externalAttendees = reportByCity.first().externalAttendees
 
-                        writeSecondRow(
+                        writeCell(
                             row,
-                            "$city: (total ${users.size})",
+                            "$city: ${users.size} internal attendees",
                             cellStyle,
                             index,
                         )
+
+                        writeCell(
+                            row,
+                            "$city: $externalAttendees external attendees",
+                            cellStyle,
+                            index + 1,
+                        )
+
                         writeUserData(sheet, users, index)
                     }
                 }
@@ -103,7 +119,7 @@ class ExcelService {
         }
     }
 
-    private fun writeSecondRow(
+    private fun writeCell(
         row: XSSFRow,
         cellValue: String,
         cellStyle: CellStyle,
@@ -119,7 +135,7 @@ class ExcelService {
         users: List<String>,
         columnIndex: Int,
     ) {
-        val rowSkips = 3
+        val rowSkips = 4
         users.withIndex().forEach { (index, user) ->
             val row = sheet.getRow(index + rowSkips) ?: sheet.createRow(index + rowSkips)
 

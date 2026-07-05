@@ -1,4 +1,5 @@
 import { allSchedulesLoading, allSchedulesLoadingFailed, allSchedulesShown, scheduleAddedFailed, scheduleEditedFailed, scheduleDeletedFailed, allRecurrentSchedulesShown, allSchedulesAttendanceLoading, allSchedulesAttendanceLoadingFailed, allSchedulesAttendanceShown } from "./SchedulesSlice";
+import { allSchedulesExternalAttendanceLoadingFailed, allSchedulesExternalAttendanceShown } from "./SchedulesSlice";
 import { axiosInstance } from "../Axios";
 import { fetchAttendanceUser } from "../attendance/AttendanceActionCreators";
 import {
@@ -78,6 +79,31 @@ export const fetchSchedulesAttendance = () => (dispatch) => {
         });
 };
 
+export const fetchSchedulesExternalAttendance = () => (dispatch) => {
+    dispatch(allSchedulesAttendanceLoading(true));
+
+    const savedDate = localStorage.getItem(STORAGE_FILTER_DATE_WHO_IS_JOINING);
+    const date =
+        savedDate === null ? new Date().toISOString().substring(0, 10) : savedDate;
+
+    const office = localStorage.getItem(STORAGE_FILTER_OFFICE_WHO_IS_JOINING);
+
+    var filter =
+        office === null || office === ""
+            ? "?fromdate=" + date
+            : "?fromdate=" + date + "&office=" + office;
+
+    axiosInstance
+        .get("/externalAttendancesWithScheduleInfo" + filter)
+        .then(function (response) {
+            dispatch(allSchedulesExternalAttendanceShown(response.data));
+        })
+        .catch(function (error) {
+            console.log("Failed loading Schedules: " + error);
+            dispatch(allSchedulesExternalAttendanceLoadingFailed(error.message));
+        });
+};
+
 export const addNewSchedule = (newSchedule) => (dispatch) => {
     const scheduleToAdd = {
         menuUuid: newSchedule.menuUuid,
@@ -96,6 +122,7 @@ export const addNewSchedule = (newSchedule) => (dispatch) => {
         .then(() => {
             dispatch(fetchSchedules());
             dispatch(fetchSchedulesAttendance());
+            dispatch(fetchSchedulesExternalAttendance());
             dispatch(fetchAttendanceUser(userUuid));
         })
         .catch(function (error) {
@@ -144,6 +171,7 @@ export const editSingleSchedule = (editedSchedule) => (dispatch) => {
         .then(() => {
             dispatch(fetchSchedules());
             dispatch(fetchSchedulesAttendance());
+            dispatch(fetchSchedulesExternalAttendance());
             dispatch(fetchAttendanceUser(userUuid));
         })
         .catch(function (error) {
@@ -166,6 +194,7 @@ export const editRecurrentSchedule = (editedSchedule) => (dispatch) => {
         .then(() => {
             dispatch(fetchRecurrentSchedules());
             dispatch(fetchSchedulesAttendance());
+            dispatch(fetchSchedulesExternalAttendance());
             dispatch(fetchAttendanceUser(userUuid));
         })
         .catch(function (error) {
@@ -181,6 +210,7 @@ export const deleteSchedule = (scheduleUuid) => (dispatch) => {
         .then(() => {
             dispatch(fetchSchedules());
             dispatch(fetchSchedulesAttendance());
+            dispatch(fetchSchedulesExternalAttendance());
             dispatch(fetchAttendanceUser(userUuid));
         })
         .catch(function (error) {

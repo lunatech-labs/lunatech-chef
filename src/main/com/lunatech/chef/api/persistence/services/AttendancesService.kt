@@ -7,13 +7,11 @@ import org.ktorm.database.Database
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.insert
 import org.ktorm.dsl.update
-import org.ktorm.dsl.where
 import java.util.UUID
 
 class AttendancesService(
     private val database: Database,
     private val usersService: UsersService,
-    private val schedulesService: SchedulesService,
 ) {
     fun insert(attendance: Attendance): Int =
         database.insert(Attendances) {

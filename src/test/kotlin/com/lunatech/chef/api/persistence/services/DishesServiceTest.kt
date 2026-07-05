@@ -2,6 +2,7 @@ package com.lunatech.chef.api.persistence.services
 
 import com.lunatech.chef.api.persistence.TestDatabase
 import com.lunatech.chef.api.persistence.TestFixtures.aDish
+import com.lunatech.chef.api.persistence.TestFixtures.aMenu
 import com.lunatech.chef.api.routes.UpdatedDish
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -13,12 +14,14 @@ import java.util.UUID
 
 class DishesServiceTest {
     private lateinit var dishesService: DishesService
+    private lateinit var menusService: MenusService
 
     @BeforeEach
     fun setup() {
         val database = TestDatabase.getDatabase()
         TestDatabase.resetDatabase()
         dishesService = DishesService(database)
+        menusService = MenusService(database)
     }
 
     @Nested
@@ -264,6 +267,52 @@ class DishesServiceTest {
             val deleteResult = dishesService.delete(nonExistentUuid)
 
             assertEquals(0, deleteResult, "Delete should return 0 for non-existent dish")
+        }
+
+        @Test
+        fun `delete removes dish from menus that contain it`() {
+            val dish = aDish(name = "Dish to delete")
+            val otherDish = aDish(name = "Other dish")
+            dishesService.insert(dish)
+            dishesService.insert(otherDish)
+
+            val menu = aMenu(name = "Menu with dishes", dishesUuids = listOf(dish.uuid, otherDish.uuid))
+            menusService.insert(menu)
+
+            dishesService.delete(dish.uuid)
+
+            val retrieved = menusService.getByUuid(menu.uuid)
+            assertEquals(1, retrieved?.dishesUuids?.size, "Menu should only contain the remaining dish")
+            assertFalse(
+                retrieved?.dishesUuids?.contains(dish.uuid) == true,
+                "Deleted dish should be removed from the menu",
+            )
+            assertTrue(
+                retrieved?.dishesUuids?.contains(otherDish.uuid) == true,
+                "Other dish should remain on the menu",
+            )
+        }
+
+        @Test
+        fun `delete does not affect dishes of other menus`() {
+            val dish = aDish(name = "Dish to delete")
+            val otherDish = aDish(name = "Other dish")
+            dishesService.insert(dish)
+            dishesService.insert(otherDish)
+
+            val menu = aMenu(name = "Menu with deleted dish", dishesUuids = listOf(dish.uuid))
+            val otherMenu = aMenu(name = "Other menu", dishesUuids = listOf(otherDish.uuid))
+            menusService.insert(menu)
+            menusService.insert(otherMenu)
+
+            dishesService.delete(dish.uuid)
+
+            val retrievedOtherMenu = menusService.getByUuid(otherMenu.uuid)
+            assertEquals(1, retrievedOtherMenu?.dishesUuids?.size, "Other menu should keep its dish")
+            assertTrue(
+                retrievedOtherMenu?.dishesUuids?.contains(otherDish.uuid) == true,
+                "Dish of other menu should not be removed",
+            )
         }
     }
 }

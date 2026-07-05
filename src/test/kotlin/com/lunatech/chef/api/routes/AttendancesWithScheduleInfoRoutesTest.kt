@@ -56,8 +56,9 @@ class AttendancesWithScheduleInfoRoutesTest {
         schedulesService = SchedulesService(database)
         usersService = UsersService(database)
         menusWithDishesNamesService = MenusWithDishesNamesService(database)
-        attendancesService = AttendancesService(database, usersService, schedulesService)
-        attendancesWithScheduleInfoService = AttendancesWithScheduleInfoService(database, schedulesService, menusWithDishesNamesService)
+        attendancesService = AttendancesService(database, usersService)
+        attendancesWithScheduleInfoService =
+            AttendancesWithScheduleInfoService(database, schedulesService, menusWithDishesNamesService)
 
         val testOffice = anOffice(city = "Rotterdam")
         officesService.insert(testOffice)
@@ -74,7 +75,8 @@ class AttendancesWithScheduleInfoRoutesTest {
         usersService.insert(testUser)
         testUserUuid = testUser.uuid
 
-        val testSchedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
+        val testSchedule =
+            aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
         schedulesService.insert(testSchedule)
         testScheduleUuid = testSchedule.uuid
     }
@@ -103,7 +105,8 @@ class AttendancesWithScheduleInfoRoutesTest {
         fun `returns attendances with schedule info`() =
             testApplication {
                 setupAttendancesWithScheduleInfoRoutes()
-                val attendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = true)
+                val attendance =
+                    anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = true)
                 attendancesService.insert(attendance)
 
                 val response = client.get("/attendancesWithScheduleInfo/$testUserUuid")
@@ -120,7 +123,8 @@ class AttendancesWithScheduleInfoRoutesTest {
         fun `filters by fromdate`() =
             testApplication {
                 setupAttendancesWithScheduleInfoRoutes()
-                val attendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = true)
+                val attendance =
+                    anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = true)
                 attendancesService.insert(attendance)
 
                 val response = client.get("/attendancesWithScheduleInfo/$testUserUuid?fromdate=${LocalDate.now()}")
@@ -133,7 +137,8 @@ class AttendancesWithScheduleInfoRoutesTest {
         fun `filters by office`() =
             testApplication {
                 setupAttendancesWithScheduleInfoRoutes()
-                val attendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = true)
+                val attendance =
+                    anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = true)
                 attendancesService.insert(attendance)
 
                 val response = client.get("/attendancesWithScheduleInfo/$testUserUuid?office=$testOfficeUuid")

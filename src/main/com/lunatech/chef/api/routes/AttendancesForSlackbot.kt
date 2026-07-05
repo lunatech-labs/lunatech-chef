@@ -13,11 +13,11 @@ import java.time.LocalDate
 private val logger = KotlinLogging.logger {}
 
 fun Route.attendancesForSlackbot(attendancesForSlackbotService: AttendancesForSlackbotService) {
-    val attendancesRoute = "/attendancesforslackbot"
+    val attendancesForSlackbotRoute = "/attendancesforslackbot"
     val fromDateParam = "fromdate"
     val untilDateParam = "untildate"
 
-    route(attendancesRoute) {
+    route(attendancesForSlackbotRoute) {
         get {
             val maybeDateFrom = call.parameters[fromDateParam]
             val maybeDateUntil = call.parameters[untilDateParam]

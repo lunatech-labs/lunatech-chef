@@ -1,7 +1,8 @@
 package com.lunatech.chef.api.persistence.services
 
-import com.lunatech.chef.api.domain.ReportEntry
+import com.lunatech.chef.api.domain.AttendeeReportEntry
 import com.lunatech.chef.api.persistence.schemas.Attendances
+import com.lunatech.chef.api.persistence.schemas.ExternalAttendances
 import com.lunatech.chef.api.persistence.schemas.Offices
 import com.lunatech.chef.api.persistence.schemas.Schedules
 import com.lunatech.chef.api.persistence.schemas.Users
@@ -23,18 +24,24 @@ import java.time.LocalDate
 class ReportService(
     val database: Database,
 ) {
-    fun getReportByMonth(
+    fun getListAttendeesByMonth(
         year: Int,
         month: Int,
-    ): List<ReportEntry> {
+    ): List<AttendeeReportEntry> {
         val (startDate, endDate) = getTimeInterval(year, month)
         return database
             .from(Attendances)
             .leftJoin(Users, on = Attendances.userUuid eq Users.uuid)
             .leftJoin(Schedules, on = Attendances.scheduleUuid eq Schedules.uuid)
+            .leftJoin(ExternalAttendances, on = Schedules.uuid eq ExternalAttendances.scheduleUuid)
             .leftJoin(Offices, on = Schedules.officeUuid eq Offices.uuid)
-            .selectDistinct(Schedules.date, Users.name, Offices.city, Offices.country)
-            .where {
+            .selectDistinct(
+                Schedules.date,
+                Users.name,
+                Offices.city,
+                Offices.country,
+                ExternalAttendances.attendancesCount,
+            ).where {
                 val conditions = ArrayList<ColumnDeclaring<Boolean>>()
                 conditions += Schedules.date greaterEq startDate
                 conditions += Schedules.date lessEq endDate
@@ -43,11 +50,11 @@ class ReportService(
                 conditions.reduce { a, b -> a and b }
             }.orderBy(Schedules.date.asc(), Users.name.asc(), Offices.city.asc(), Offices.country.asc())
             .map { row ->
-                ReportEntry(
+                AttendeeReportEntry(
                     row[Schedules.date] ?: LocalDate.now(),
                     row[Users.name] ?: "",
                     row[Offices.city] ?: "",
-                    row[Offices.country] ?: "",
+                    row[ExternalAttendances.attendancesCount] ?: 0,
                 )
             }
     }

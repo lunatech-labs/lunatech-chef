@@ -9,6 +9,7 @@ import com.lunatech.chef.api.persistence.TestFixtures.anOffice
 import com.lunatech.chef.api.persistence.TestFixtures.uniqueEmail
 import com.lunatech.chef.api.persistence.services.AttendancesService
 import com.lunatech.chef.api.persistence.services.DishesService
+import com.lunatech.chef.api.persistence.services.ExternalAttendancesService
 import com.lunatech.chef.api.persistence.services.MenusService
 import com.lunatech.chef.api.persistence.services.OfficesService
 import com.lunatech.chef.api.persistence.services.SchedulesService
@@ -36,6 +37,7 @@ import java.util.UUID
 class SchedulesRoutesTest {
     private lateinit var schedulesService: SchedulesService
     private lateinit var attendancesService: AttendancesService
+    private lateinit var externalAttendancesService: ExternalAttendancesService
     private lateinit var menusService: MenusService
     private lateinit var officesService: OfficesService
     private lateinit var dishesService: DishesService
@@ -53,7 +55,8 @@ class SchedulesRoutesTest {
         menusService = MenusService(database)
         schedulesService = SchedulesService(database)
         usersService = UsersService(database)
-        attendancesService = AttendancesService(database, usersService, schedulesService)
+        attendancesService = AttendancesService(database, usersService)
+        externalAttendancesService = ExternalAttendancesService(database)
 
         val testOffice = anOffice(city = "Rotterdam")
         officesService.insert(testOffice)
@@ -75,7 +78,7 @@ class SchedulesRoutesTest {
         install(ContentNegotiation) {
             register(RouteTestHelpers.jsonContentType, RouteTestHelpers.jacksonConverter())
         }
-        routing { schedules(schedulesService, attendancesService) }
+        routing { schedules(schedulesService, attendancesService, externalAttendancesService) }
     }
 
     @Nested
@@ -95,7 +98,8 @@ class SchedulesRoutesTest {
         fun `returns all non-deleted schedules`() =
             testApplication {
                 setupSchedulesRoutes()
-                val schedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
+                val schedule =
+                    aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
                 schedulesService.insert(schedule)
 
                 val response = client.get("/schedules")
@@ -111,7 +115,8 @@ class SchedulesRoutesTest {
         fun `returns schedule when it exists`() =
             testApplication {
                 setupSchedulesRoutes()
-                val schedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
+                val schedule =
+                    aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
                 schedulesService.insert(schedule)
 
                 val response = client.get("/schedules/${schedule.uuid}")
@@ -180,7 +185,8 @@ class SchedulesRoutesTest {
             testApplication {
                 setupSchedulesRoutes()
                 val client = jsonClient()
-                val schedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
+                val schedule =
+                    aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
                 schedulesService.insert(schedule)
                 val newDate = LocalDate.now().plusDays(14)
 
@@ -208,7 +214,8 @@ class SchedulesRoutesTest {
         fun `soft deletes schedule`() =
             testApplication {
                 setupSchedulesRoutes()
-                val schedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
+                val schedule =
+                    aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
                 schedulesService.insert(schedule)
 
                 val response = client.delete("/schedules/${schedule.uuid}")

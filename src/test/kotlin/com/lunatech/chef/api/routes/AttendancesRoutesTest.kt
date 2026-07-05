@@ -52,7 +52,7 @@ class AttendancesRoutesTest {
         menusService = MenusService(database)
         schedulesService = SchedulesService(database)
         usersService = UsersService(database)
-        attendancesService = AttendancesService(database, usersService, schedulesService)
+        attendancesService = AttendancesService(database, usersService)
 
         val testOffice = anOffice(city = "Rotterdam")
         officesService.insert(testOffice)
@@ -69,7 +69,8 @@ class AttendancesRoutesTest {
         usersService.insert(testUser)
         testUserUuid = testUser.uuid
 
-        val testSchedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
+        val testSchedule =
+            aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
         schedulesService.insert(testSchedule)
         testScheduleUuid = testSchedule.uuid
     }
@@ -184,7 +185,8 @@ class AttendancesRoutesTest {
             testApplication {
                 setupAttendancesRoutes()
                 val client = jsonClient()
-                val attendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = false)
+                val attendance =
+                    anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = false)
                 attendancesService.insert(attendance)
 
                 val response =
@@ -201,7 +203,8 @@ class AttendancesRoutesTest {
             testApplication {
                 setupAttendancesRoutes()
                 val client = jsonClient()
-                val attendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = true)
+                val attendance =
+                    anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = true)
                 attendancesService.insert(attendance)
 
                 val response =

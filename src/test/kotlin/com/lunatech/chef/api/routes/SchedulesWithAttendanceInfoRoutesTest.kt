@@ -52,7 +52,7 @@ class SchedulesWithAttendanceInfoRoutesTest {
         menusService = MenusService(database)
         schedulesService = SchedulesService(database)
         usersService = UsersService(database)
-        attendancesService = AttendancesService(database, usersService, schedulesService)
+        attendancesService = AttendancesService(database, usersService)
         schedulesWithAttendanceInfoService = SchedulesWithAttendanceInfoService(database, menusService)
 
         val testOffice = anOffice(city = "Rotterdam")
@@ -95,7 +95,8 @@ class SchedulesWithAttendanceInfoRoutesTest {
         fun `returns schedules with attendants`() =
             testApplication {
                 setupSchedulesWithAttendanceInfoRoutes()
-                val schedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
+                val schedule =
+                    aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
                 schedulesService.insert(schedule)
 
                 val attendance = anAttendance(scheduleUuid = schedule.uuid, userUuid = testUserUuid, isAttending = true)
@@ -115,7 +116,8 @@ class SchedulesWithAttendanceInfoRoutesTest {
         fun `filters by fromdate`() =
             testApplication {
                 setupSchedulesWithAttendanceInfoRoutes()
-                val futureSchedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(5), officeUuid = testOfficeUuid)
+                val futureSchedule =
+                    aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(5), officeUuid = testOfficeUuid)
                 schedulesService.insert(futureSchedule)
 
                 val response = client.get("/schedulesWithAttendanceInfo?fromdate=${LocalDate.now()}")
@@ -128,7 +130,8 @@ class SchedulesWithAttendanceInfoRoutesTest {
         fun `filters by office`() =
             testApplication {
                 setupSchedulesWithAttendanceInfoRoutes()
-                val schedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
+                val schedule =
+                    aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
                 schedulesService.insert(schedule)
 
                 val response = client.get("/schedulesWithAttendanceInfo?office=$testOfficeUuid")

@@ -4,6 +4,7 @@ import com.lunatech.chef.api.domain.DishOnMenu
 import com.lunatech.chef.api.domain.MenuWithDishesUuid
 import com.lunatech.chef.api.persistence.schemas.Attendances
 import com.lunatech.chef.api.persistence.schemas.DishesOnMenus
+import com.lunatech.chef.api.persistence.schemas.ExternalAttendances
 import com.lunatech.chef.api.persistence.schemas.MenuNames
 import com.lunatech.chef.api.persistence.schemas.Schedules
 import com.lunatech.chef.api.routes.UpdatedMenu
@@ -110,47 +111,51 @@ class MenusService(
         return updatedName
     }
 
-    fun delete(uuid: UUID): Int {
-        val result =
+    fun delete(uuid: UUID): Int =
+        database.useTransaction {
             database.update(MenuNames) {
                 set(it.isDeleted, true)
                 where {
                     it.uuid eq uuid
                 }
-            }
 
-        // delete related schedules and attendances (after current date)
-        val baseDate = LocalDate.now()
-        val schedulesUuid =
-            database
-                .from(Schedules)
-                .select()
-                .where {
-                    val conditions = ArrayList<ColumnDeclaring<Boolean>>()
-                    conditions += Schedules.menuUuid eq uuid
-                    conditions += Schedules.date greater baseDate
-                    conditions.reduce { a, b -> a and b }
-                }.map { sch -> Schedules.createEntity(sch) }
-                .map { schedule -> schedule.uuid }
+                // delete related schedules and attendances (after current date)
+                val baseDate = LocalDate.now()
+                val schedulesUuid =
+                    database
+                        .from(Schedules)
+                        .select()
+                        .where {
+                            val conditions = ArrayList<ColumnDeclaring<Boolean>>()
+                            conditions += Schedules.menuUuid eq uuid
+                            conditions += Schedules.date greater baseDate
+                            conditions.reduce { a, b -> a and b }
+                        }.map { sch -> Schedules.createEntity(sch) }
+                        .map { schedule -> schedule.uuid }
 
-        database.update(Schedules) {
-            set(it.isDeleted, true)
-            where {
-                val conditions = ArrayList<ColumnDeclaring<Boolean>>()
-                conditions += Schedules.menuUuid eq uuid
-                conditions += Schedules.date greater baseDate
-                conditions.reduce { a, b -> a and b }
-            }
-        }
-        schedulesUuid.map { scheduleUuid ->
-            database.update(Attendances) { attendance ->
-                set(attendance.isDeleted, true)
-                where {
-                    attendance.scheduleUuid eq scheduleUuid
+                database.update(Schedules) {
+                    set(it.isDeleted, true)
+                    where {
+                        val conditions = ArrayList<ColumnDeclaring<Boolean>>()
+                        conditions += Schedules.menuUuid eq uuid
+                        conditions += Schedules.date greater baseDate
+                        conditions.reduce { a, b -> a and b }
+                    }
+                }
+                schedulesUuid.forEach { scheduleUuid ->
+                    database.update(Attendances) { attendance ->
+                        set(attendance.isDeleted, true)
+                        where {
+                            attendance.scheduleUuid eq scheduleUuid
+                        }
+                    }
+                    database.update(ExternalAttendances) { externalAttendances ->
+                        set(externalAttendances.isDeleted, true)
+                        where {
+                            externalAttendances.scheduleUuid eq scheduleUuid
+                        }
+                    }
                 }
             }
         }
-
-        return result
-    }
 }

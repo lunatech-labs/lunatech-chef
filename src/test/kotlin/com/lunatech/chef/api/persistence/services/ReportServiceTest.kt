@@ -43,7 +43,7 @@ class ReportServiceTest {
         menusService = MenusService(database)
         schedulesService = SchedulesService(database)
         usersService = UsersService(database)
-        attendancesService = AttendancesService(database, usersService, schedulesService)
+        attendancesService = AttendancesService(database, usersService)
 
         // Create test office
         val testOffice = anOffice(city = "Rotterdam")
@@ -80,14 +80,13 @@ class ReportServiceTest {
             val attendance = anAttendance(scheduleUuid = schedule.uuid, userUuid = testUserUuid, isAttending = true)
             attendancesService.insert(attendance)
 
-            val report = reportService.getReportByMonth(today.year, today.monthValue)
+            val report = reportService.getListAttendeesByMonth(today.year, today.monthValue)
 
             assertEquals(1, report.size)
             val entry = report[0]
             assertEquals(scheduleDate, entry.date)
             assertEquals(testUserName, entry.name)
             assertEquals("Rotterdam", entry.city)
-            assertEquals("Netherlands", entry.country)
         }
 
         @Test
@@ -97,12 +96,14 @@ class ReportServiceTest {
             val schedule = aSchedule(menuUuid = testMenuUuid, date = scheduleDate, officeUuid = testOfficeUuid)
             schedulesService.insert(schedule)
 
-            val attendingAttendance = anAttendance(scheduleUuid = schedule.uuid, userUuid = testUserUuid, isAttending = true)
-            val notAttendingAttendance = anAttendance(scheduleUuid = schedule.uuid, userUuid = testUser2Uuid, isAttending = false)
+            val attendingAttendance =
+                anAttendance(scheduleUuid = schedule.uuid, userUuid = testUserUuid, isAttending = true)
+            val notAttendingAttendance =
+                anAttendance(scheduleUuid = schedule.uuid, userUuid = testUser2Uuid, isAttending = false)
             attendancesService.insert(attendingAttendance)
             attendancesService.insert(notAttendingAttendance)
 
-            val report = reportService.getReportByMonth(today.year, today.monthValue)
+            val report = reportService.getListAttendeesByMonth(today.year, today.monthValue)
 
             assertEquals(1, report.size)
             assertEquals(testUserName, report[0].name)
@@ -115,13 +116,19 @@ class ReportServiceTest {
             val schedule = aSchedule(menuUuid = testMenuUuid, date = scheduleDate, officeUuid = testOfficeUuid)
             schedulesService.insert(schedule)
 
-            val activeAttendance = anAttendance(scheduleUuid = schedule.uuid, userUuid = testUserUuid, isAttending = true)
+            val activeAttendance =
+                anAttendance(scheduleUuid = schedule.uuid, userUuid = testUserUuid, isAttending = true)
             val deletedAttendance =
-                anAttendance(scheduleUuid = schedule.uuid, userUuid = testUser2Uuid, isAttending = true, isDeleted = true)
+                anAttendance(
+                    scheduleUuid = schedule.uuid,
+                    userUuid = testUser2Uuid,
+                    isAttending = true,
+                    isDeleted = true,
+                )
             attendancesService.insert(activeAttendance)
             attendancesService.insert(deletedAttendance)
 
-            val report = reportService.getReportByMonth(today.year, today.monthValue)
+            val report = reportService.getListAttendeesByMonth(today.year, today.monthValue)
 
             assertEquals(1, report.size)
             assertEquals(testUserName, report[0].name)
@@ -133,17 +140,21 @@ class ReportServiceTest {
             val thisMonthDate = today.withDayOfMonth(10)
             val nextMonthDate = today.plusMonths(1).withDayOfMonth(10)
 
-            val thisMonthSchedule = aSchedule(menuUuid = testMenuUuid, date = thisMonthDate, officeUuid = testOfficeUuid)
-            val nextMonthSchedule = aSchedule(menuUuid = testMenuUuid, date = nextMonthDate, officeUuid = testOfficeUuid)
+            val thisMonthSchedule =
+                aSchedule(menuUuid = testMenuUuid, date = thisMonthDate, officeUuid = testOfficeUuid)
+            val nextMonthSchedule =
+                aSchedule(menuUuid = testMenuUuid, date = nextMonthDate, officeUuid = testOfficeUuid)
             schedulesService.insert(thisMonthSchedule)
             schedulesService.insert(nextMonthSchedule)
 
-            val thisMonthAttendance = anAttendance(scheduleUuid = thisMonthSchedule.uuid, userUuid = testUserUuid, isAttending = true)
-            val nextMonthAttendance = anAttendance(scheduleUuid = nextMonthSchedule.uuid, userUuid = testUserUuid, isAttending = true)
+            val thisMonthAttendance =
+                anAttendance(scheduleUuid = thisMonthSchedule.uuid, userUuid = testUserUuid, isAttending = true)
+            val nextMonthAttendance =
+                anAttendance(scheduleUuid = nextMonthSchedule.uuid, userUuid = testUserUuid, isAttending = true)
             attendancesService.insert(thisMonthAttendance)
             attendancesService.insert(nextMonthAttendance)
 
-            val report = reportService.getReportByMonth(today.year, today.monthValue)
+            val report = reportService.getListAttendeesByMonth(today.year, today.monthValue)
 
             assertEquals(1, report.size)
             assertEquals(thisMonthDate, report[0].date)
@@ -161,7 +172,7 @@ class ReportServiceTest {
             attendancesService.insert(attendance1)
             attendancesService.insert(attendance2)
 
-            val report = reportService.getReportByMonth(today.year, today.monthValue)
+            val report = reportService.getListAttendeesByMonth(today.year, today.monthValue)
 
             assertEquals(2, report.size)
             val userNames = report.map { it.name }
@@ -186,7 +197,7 @@ class ReportServiceTest {
             attendancesService.insert(attendance1)
             attendancesService.insert(attendance2)
 
-            val report = reportService.getReportByMonth(today.year, today.monthValue)
+            val report = reportService.getListAttendeesByMonth(today.year, today.monthValue)
 
             assertEquals(2, report.size)
             // First entry should be Bob on date1 (earlier date)
@@ -201,7 +212,7 @@ class ReportServiceTest {
         fun `getReportByMonth returns empty list when no attendances`() {
             val today = LocalDate.now()
 
-            val report = reportService.getReportByMonth(today.year, today.monthValue)
+            val report = reportService.getListAttendeesByMonth(today.year, today.monthValue)
 
             assertTrue(report.isEmpty())
         }
@@ -216,7 +227,7 @@ class ReportServiceTest {
             val attendance = anAttendance(scheduleUuid = schedule.uuid, userUuid = testUserUuid, isAttending = true)
             attendancesService.insert(attendance)
 
-            val report = reportService.getReportByMonth(2024, 6)
+            val report = reportService.getListAttendeesByMonth(2024, 6)
 
             assertEquals(1, report.size)
             assertEquals(pastDate, report[0].date)

@@ -58,7 +58,8 @@ fun Route.users(usersService: UsersService) {
         route(UUID_ROUTE) {
             // get single user
             get {
-                val uuid = call.parameters[UUID_PARAM].toUUIDOrNull() ?: return@get call.respond(BadRequest, "Invalid UUID")
+                val uuid =
+                    call.parameters[UUID_PARAM].toUUIDOrNull() ?: return@get call.respond(BadRequest, "Invalid UUID")
                 val user = usersService.getByUuid(uuid)
                 if (user.isEmpty()) {
                     call.respond(NotFound)
@@ -69,7 +70,11 @@ fun Route.users(usersService: UsersService) {
             // modify existing user
             put {
                 try {
-                    val uuid = call.parameters[UUID_PARAM].toUUIDOrNull() ?: return@put call.respond(BadRequest, "Invalid UUID")
+                    val uuid =
+                        call.parameters[UUID_PARAM].toUUIDOrNull() ?: return@put call.respond(
+                            BadRequest,
+                            "Invalid UUID",
+                        )
                     val updatedUser = call.receive<UpdatedUser>()
                     val result = usersService.update(uuid, updatedUser)
                     if (result == 1) call.respond(OK) else call.respond(InternalServerError)
@@ -80,8 +85,10 @@ fun Route.users(usersService: UsersService) {
             }
             // delete a single user
             delete {
-                val uuid = call.parameters[UUID_PARAM].toUUIDOrNull() ?: return@delete call.respond(BadRequest, "Invalid UUID")
+                val uuid =
+                    call.parameters[UUID_PARAM].toUUIDOrNull() ?: return@delete call.respond(BadRequest, "Invalid UUID")
                 val result = usersService.delete(uuid)
+                logger.info("Deleting user {}", result)
                 if (result == 1) call.respond(OK) else call.respond(InternalServerError)
             }
         }

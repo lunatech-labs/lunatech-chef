@@ -1,8 +1,11 @@
 package com.lunatech.chef.api.routes
 
+import com.lunatech.chef.api.domain.ExternalAttendance
+import com.lunatech.chef.api.domain.NewExternalAttendance
 import com.lunatech.chef.api.domain.NewSchedule
 import com.lunatech.chef.api.domain.Schedule
 import com.lunatech.chef.api.persistence.services.AttendancesService
+import com.lunatech.chef.api.persistence.services.ExternalAttendancesService
 import com.lunatech.chef.api.persistence.services.SchedulesService
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Created
@@ -32,6 +35,7 @@ data class UpdatedSchedule(
 fun Route.schedules(
     schedulesService: SchedulesService,
     attendancesService: AttendancesService,
+    externalAttendancesService: ExternalAttendancesService,
 ) {
     val schedulesRoute = "/schedules"
 
@@ -54,6 +58,12 @@ fun Route.schedules(
                             scheduleToInsert.uuid,
                             isAttending = null,
                         )
+                        val externalAttendance = NewExternalAttendance(scheduleToInsert.uuid)
+                        externalAttendancesService.insert(
+                            ExternalAttendance.fromNewExternalAttendance(
+                                externalAttendance,
+                            ),
+                        )
                     } else {
                         0
                     }
@@ -67,7 +77,8 @@ fun Route.schedules(
         route(UUID_ROUTE) {
             // get single schedule
             get {
-                val uuid = call.parameters[UUID_PARAM].toUUIDOrNull() ?: return@get call.respond(BadRequest, "Invalid UUID")
+                val uuid =
+                    call.parameters[UUID_PARAM].toUUIDOrNull() ?: return@get call.respond(BadRequest, "Invalid UUID")
                 val schedule = schedulesService.getByUuid(uuid)
                 if (schedule.isEmpty()) {
                     call.respond(NotFound)
@@ -78,7 +89,11 @@ fun Route.schedules(
             // modify existing schedule
             put {
                 try {
-                    val uuid = call.parameters[UUID_PARAM].toUUIDOrNull() ?: return@put call.respond(BadRequest, "Invalid UUID")
+                    val uuid =
+                        call.parameters[UUID_PARAM].toUUIDOrNull() ?: return@put call.respond(
+                            BadRequest,
+                            "Invalid UUID",
+                        )
                     val updatedSchedule = call.receive<UpdatedSchedule>()
                     val result = schedulesService.update(uuid, updatedSchedule)
                     if (result == 1) call.respond(OK) else call.respond(InternalServerError)
@@ -89,7 +104,8 @@ fun Route.schedules(
             }
             // delete a single schedule
             delete {
-                val uuid = call.parameters[UUID_PARAM].toUUIDOrNull() ?: return@delete call.respond(BadRequest, "Invalid UUID")
+                val uuid =
+                    call.parameters[UUID_PARAM].toUUIDOrNull() ?: return@delete call.respond(BadRequest, "Invalid UUID")
                 val result = schedulesService.delete(uuid)
 
                 // TODO delete all related attendance

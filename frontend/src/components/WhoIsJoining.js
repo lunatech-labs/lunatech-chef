@@ -17,7 +17,7 @@ export default function WhoIsJoining(props) {
     const savedOffice = localStorage.getItem(STORAGE_FILTER_OFFICE_WHO_IS_JOINING);
 
     const [startDate, setDateSchedule] = useState(savedDate === null ? new Date() : new Date(savedDate));
-    const [startOffice, ] = useState(savedOffice === null ? "" : savedOffice);
+    const [startOffice,] = useState(savedOffice === null ? "" : savedOffice);
 
     const handleDateChange = (date) => {
         setDateSchedule(date)
@@ -31,14 +31,21 @@ export default function WhoIsJoining(props) {
 
         localStorage.setItem(STORAGE_FILTER_DATE_WHO_IS_JOINING, shortDate);
         localStorage.setItem(STORAGE_FILTER_OFFICE_WHO_IS_JOINING, chosenOffice);
-        props.filter(shortDate, values.office);
+        props.filterAttendance(shortDate, values.office);
+        props.filterExternalAttendance(shortDate, values.office);
     };
+
+    const handleExternalAttendanceUpdate = (values) => {
+        props.editExternalAttendance(values);
+    }
 
     function RenderData({
         isLoading,
         error,
         attendances,
+        externalAttendances,
         offices,
+        isUserAdmin
     }) {
         if (isLoading) {
             return (
@@ -119,14 +126,76 @@ export default function WhoIsJoining(props) {
                             ></Form>
                         </div>
                     </Row>
-                    <Row></Row>
+                    {isUserAdmin ? (
+                        <div>
+                            <h1>External Attendees</h1>
+                            <Table striped bordered className="table-externalAttendances">
+                                <thead>
+                                    <tr>
+                                        <td width={240}>Menu</td>
+                                        <td width={230}>Office</td>
+                                        <td width={230}>Date</td>
+                                        <td>Total number of external attendants</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {externalAttendances.map((externalAttendance, index) => {
+                                        return (
+                                            <tr key={index}>
+                                                <td>{externalAttendance.menu.name}</td>
+                                                <td>{externalAttendance.office}</td>
+                                                <td>{externalAttendance.date[2]} {ToMonth(externalAttendance.date[1])} {externalAttendance.date[0]}</td>
+                                                <td>
+                                                    <Form
+                                                        onSubmit={handleExternalAttendanceUpdate}
+                                                        initialValues={{
+                                                            uuid: externalAttendance.uuid,
+                                                            attendancesCount: externalAttendance.attendancesCount
+                                                        }}
+                                                        render={({ handleSubmit, submitting, pristine }) => (
+                                                            <form onSubmit={handleSubmit}>
+                                                                <div className="input-group">
+                                                                    <Field name="attendancesCount" >
+                                                                        {({ input }) => (
+                                                                            <div className="d-grid">
+                                                                                <input {...input} type="number" maxLength={20} min={0} max={9999} />
+                                                                            </div>
+                                                                        )}
+                                                                    </Field>
+
+                                                                    <Button
+                                                                        type="submit"
+                                                                        variant="success"
+                                                                        disabled={submitting}
+                                                                    >
+                                                                        Save
+                                                                    </Button>
+                                                                </div>
+                                                            </form>
+                                                        )}
+                                                    >
+                                                        <Button
+                                                            variant="primary"
+                                                            onClick={() => handleSave(externalCount)}
+                                                        >Save</Button>
+                                                    </Form>
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </Table>
+                            <Row></Row>
+                            <h1>Lunatech Attendees</h1>
+                        </div>
+                    ) : <></>}
                     <Table striped bordered className="table-whoisjoining">
                         <thead>
                             <tr>
                                 <td width={240}>Menu</td>
                                 <td width={230}>Office</td>
                                 <td width={230}>Date</td>
-                                <td>Total attendants</td>
+                                <td>Total number of attendants</td>
                             </tr>
                         </thead>
                     </Table>
@@ -170,7 +239,7 @@ export default function WhoIsJoining(props) {
                             );
                         })}
                     </Accordion>
-                </div>
+                </div >
             );
         }
     }
@@ -184,7 +253,9 @@ export default function WhoIsJoining(props) {
                 isLoading={props.isLoading}
                 error={props.errorListing}
                 attendances={props.attendance}
+                externalAttendances={props.externalAttendance}
                 offices={props.offices}
+                isUserAdmin={props.isUserAdmin}
             />
         </Container>
     );

@@ -2,6 +2,7 @@ package com.lunatech.chef.api.persistence.services
 
 import com.lunatech.chef.api.domain.Schedule
 import com.lunatech.chef.api.persistence.schemas.Attendances
+import com.lunatech.chef.api.persistence.schemas.ExternalAttendances
 import com.lunatech.chef.api.persistence.schemas.Schedules
 import com.lunatech.chef.api.routes.UpdatedSchedule
 import org.ktorm.database.Database
@@ -66,20 +67,29 @@ class SchedulesService(
         }
 
     fun delete(uuid: UUID): Int {
-        val result =
-            database.update(Schedules) {
+        database.useTransaction {
+            val result =
+                database.update(Schedules) {
+                    set(it.isDeleted, true)
+                    where {
+                        it.uuid eq uuid
+                    }
+                }
+            // delete related attendances
+            database.update(Attendances) {
                 set(it.isDeleted, true)
                 where {
-                    it.uuid eq uuid
+                    it.scheduleUuid eq uuid
                 }
             }
-        // delete related attendances
-        database.update(Attendances) {
-            set(it.isDeleted, true)
-            where {
-                it.scheduleUuid eq uuid
+            // delete related external attendances
+            database.update(ExternalAttendances) {
+                set(it.isDeleted, true)
+                where {
+                    it.scheduleUuid eq uuid
+                }
             }
+            return result
         }
-        return result
     }
 }

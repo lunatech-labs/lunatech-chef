@@ -24,7 +24,7 @@ object RecurrentSchedules : BaseTable<RecurrentSchedule>("recurrent_schedules") 
         uuid = row[uuid] ?: DEFAULT_UUID,
         menuUuid = row[menuUuid] ?: DEFAULT_UUID,
         officeUuid = row[officeUuid] ?: DEFAULT_UUID,
-        repetitionDays = row[repetitionDays] ?: DEFAULT_RECURRENCY,
+        repetitionDays = row[repetitionDays] ?: DEFAULT_ZERO,
         nextDate = row[nextDate] ?: LocalDate.now(),
         isDeleted = row[isDeleted] ?: DEFAULT_FALSE,
     )

@@ -1,9 +1,14 @@
 package com.lunatech.chef.api.persistence.services
 
 import com.lunatech.chef.api.persistence.TestDatabase
+import com.lunatech.chef.api.persistence.TestFixtures.aDish
+import com.lunatech.chef.api.persistence.TestFixtures.aMenu
+import com.lunatech.chef.api.persistence.TestFixtures.aSchedule
 import com.lunatech.chef.api.persistence.TestFixtures.aUser
+import com.lunatech.chef.api.persistence.TestFixtures.anAttendance
 import com.lunatech.chef.api.persistence.TestFixtures.anOffice
 import com.lunatech.chef.api.persistence.TestFixtures.uniqueEmail
+import com.lunatech.chef.api.persistence.schemas.Attendances
 import com.lunatech.chef.api.routes.UpdatedUser
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -12,11 +17,21 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.ktorm.dsl.eq
+import org.ktorm.dsl.from
+import org.ktorm.dsl.map
+import org.ktorm.dsl.select
+import org.ktorm.dsl.where
+import java.time.LocalDate
 import java.util.UUID
 
 class UsersServiceTest {
     private lateinit var usersService: UsersService
     private lateinit var officesService: OfficesService
+    private lateinit var dishesService: DishesService
+    private lateinit var menusService: MenusService
+    private lateinit var schedulesService: SchedulesService
+    private lateinit var attendancesService: AttendancesService
     private lateinit var testOfficeUuid: UUID
 
     @BeforeEach
@@ -25,12 +40,36 @@ class UsersServiceTest {
         TestDatabase.resetDatabase()
         usersService = UsersService(database)
         officesService = OfficesService(database)
+        dishesService = DishesService(database)
+        menusService = MenusService(database)
+        schedulesService = SchedulesService(database)
+        attendancesService = AttendancesService(database, usersService)
 
         // Create a test office for user foreign key
         val testOffice = anOffice(city = "Rotterdam")
         officesService.insert(testOffice)
         testOfficeUuid = testOffice.uuid
     }
+
+    // Helper to create a schedule for attendance tests
+    private fun createTestSchedule(): UUID {
+        val dish = aDish(name = "Pasta", isVegetarian = true)
+        dishesService.insert(dish)
+        val menu = aMenu(name = "Lunch Menu", dishesUuids = listOf(dish.uuid))
+        menusService.insert(menu)
+        val schedule = aSchedule(menuUuid = menu.uuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
+        schedulesService.insert(schedule)
+        return schedule.uuid
+    }
+
+    // Helper to retrieve attendances directly from database, including deleted ones
+    private fun getAttendancesByUserUuid(userUuid: UUID) =
+        TestDatabase
+            .getDatabase()
+            .from(Attendances)
+            .select()
+            .where { Attendances.userUuid eq userUuid }
+            .map { Attendances.createEntity(it) }
 
     @Nested
     inner class InsertOperations {
@@ -331,6 +370,46 @@ class UsersServiceTest {
             val deleteResult = usersService.delete(nonExistentUuid)
 
             assertEquals(0, deleteResult, "Delete should return 0 for non-existent user")
+        }
+
+        @Test
+        fun `delete soft deletes related attendances of the user`() {
+            val scheduleUuid = createTestSchedule()
+            val user = aUser(name = "John Doe", emailAddress = uniqueEmail("john"), officeUuid = testOfficeUuid)
+            usersService.insert(user)
+            val attendance = anAttendance(scheduleUuid = scheduleUuid, userUuid = user.uuid, isAttending = true)
+            attendancesService.insert(attendance)
+
+            usersService.delete(user.uuid)
+
+            val attendances = getAttendancesByUserUuid(user.uuid)
+            assertEquals(1, attendances.size, "Attendance should still exist in database")
+            assertTrue(attendances[0].isDeleted, "Related attendance should be soft deleted")
+        }
+
+        @Test
+        fun `delete does not affect attendances of other users`() {
+            val scheduleUuid = createTestSchedule()
+            val user = aUser(name = "John Doe", emailAddress = uniqueEmail("john"), officeUuid = testOfficeUuid)
+            val otherUser = aUser(name = "Jane Doe", emailAddress = uniqueEmail("jane"), officeUuid = testOfficeUuid)
+            usersService.insert(user)
+            usersService.insert(otherUser)
+
+            val attendance = anAttendance(scheduleUuid = scheduleUuid, userUuid = user.uuid, isAttending = true)
+            val otherAttendance = anAttendance(scheduleUuid = scheduleUuid, userUuid = otherUser.uuid, isAttending = true)
+            attendancesService.insert(attendance)
+            attendancesService.insert(otherAttendance)
+
+            usersService.delete(user.uuid)
+
+            assertFalse(
+                usersService.getByUuid(otherUser.uuid)[0].isDeleted,
+                "Other user should not be soft deleted",
+            )
+            assertFalse(
+                getAttendancesByUserUuid(otherUser.uuid)[0].isDeleted,
+                "Attendance of other user should not be soft deleted",
+            )
         }
     }
 }

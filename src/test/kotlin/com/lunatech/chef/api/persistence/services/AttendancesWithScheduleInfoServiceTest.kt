@@ -44,8 +44,9 @@ class AttendancesWithScheduleInfoServiceTest {
         schedulesService = SchedulesService(database)
         usersService = UsersService(database)
         menusWithDishesNamesService = MenusWithDishesNamesService(database)
-        attendancesService = AttendancesService(database, usersService, schedulesService)
-        attendancesWithScheduleInfoService = AttendancesWithScheduleInfoService(database, schedulesService, menusWithDishesNamesService)
+        attendancesService = AttendancesService(database, usersService)
+        attendancesWithScheduleInfoService =
+            AttendancesWithScheduleInfoService(database, schedulesService, menusWithDishesNamesService)
 
         // Create test offices
         val testOffice = anOffice(city = "Rotterdam")
@@ -68,8 +69,10 @@ class AttendancesWithScheduleInfoServiceTest {
         testMenuUuid = testMenu.uuid
 
         // Create test schedules
-        val testSchedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
-        val testSchedule2 = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(14), officeUuid = testOffice2Uuid)
+        val testSchedule =
+            aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
+        val testSchedule2 =
+            aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(14), officeUuid = testOffice2Uuid)
         schedulesService.insert(testSchedule)
         schedulesService.insert(testSchedule2)
         testScheduleUuid = testSchedule.uuid
@@ -97,15 +100,19 @@ class AttendancesWithScheduleInfoServiceTest {
 
         @Test
         fun `getByUserUuidFiltered filters by fromDate`() {
-            val pastSchedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().minusDays(5), officeUuid = testOfficeUuid)
+            val pastSchedule =
+                aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().minusDays(5), officeUuid = testOfficeUuid)
             schedulesService.insert(pastSchedule)
 
-            val pastAttendance = anAttendance(scheduleUuid = pastSchedule.uuid, userUuid = testUserUuid, isAttending = true)
-            val futureAttendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = true)
+            val pastAttendance =
+                anAttendance(scheduleUuid = pastSchedule.uuid, userUuid = testUserUuid, isAttending = true)
+            val futureAttendance =
+                anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = true)
             attendancesService.insert(pastAttendance)
             attendancesService.insert(futureAttendance)
 
-            val attendances = attendancesWithScheduleInfoService.getByUserUuidFiltered(testUserUuid, LocalDate.now(), null)
+            val attendances =
+                attendancesWithScheduleInfoService.getByUserUuidFiltered(testUserUuid, LocalDate.now(), null)
 
             assertEquals(1, attendances.size)
             assertEquals(testScheduleUuid, attendances[0].scheduleUuid)
@@ -114,11 +121,13 @@ class AttendancesWithScheduleInfoServiceTest {
         @Test
         fun `getByUserUuidFiltered filters by office`() {
             val attendance1 = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = true)
-            val attendance2 = anAttendance(scheduleUuid = testSchedule2Uuid, userUuid = testUserUuid, isAttending = true)
+            val attendance2 =
+                anAttendance(scheduleUuid = testSchedule2Uuid, userUuid = testUserUuid, isAttending = true)
             attendancesService.insert(attendance1)
             attendancesService.insert(attendance2)
 
-            val attendances = attendancesWithScheduleInfoService.getByUserUuidFiltered(testUserUuid, null, testOfficeUuid)
+            val attendances =
+                attendancesWithScheduleInfoService.getByUserUuidFiltered(testUserUuid, null, testOfficeUuid)
 
             assertEquals(1, attendances.size)
             assertEquals("Rotterdam", attendances[0].office)
@@ -126,17 +135,22 @@ class AttendancesWithScheduleInfoServiceTest {
 
         @Test
         fun `getByUserUuidFiltered filters by both fromDate and office`() {
-            val pastSchedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().minusDays(5), officeUuid = testOfficeUuid)
+            val pastSchedule =
+                aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().minusDays(5), officeUuid = testOfficeUuid)
             schedulesService.insert(pastSchedule)
 
-            val pastAttendance = anAttendance(scheduleUuid = pastSchedule.uuid, userUuid = testUserUuid, isAttending = true)
-            val futureAttendance1 = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = true)
-            val futureAttendance2 = anAttendance(scheduleUuid = testSchedule2Uuid, userUuid = testUserUuid, isAttending = true)
+            val pastAttendance =
+                anAttendance(scheduleUuid = pastSchedule.uuid, userUuid = testUserUuid, isAttending = true)
+            val futureAttendance1 =
+                anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = true)
+            val futureAttendance2 =
+                anAttendance(scheduleUuid = testSchedule2Uuid, userUuid = testUserUuid, isAttending = true)
             attendancesService.insert(pastAttendance)
             attendancesService.insert(futureAttendance1)
             attendancesService.insert(futureAttendance2)
 
-            val attendances = attendancesWithScheduleInfoService.getByUserUuidFiltered(testUserUuid, LocalDate.now(), testOfficeUuid)
+            val attendances =
+                attendancesWithScheduleInfoService.getByUserUuidFiltered(testUserUuid, LocalDate.now(), testOfficeUuid)
 
             assertEquals(1, attendances.size)
             assertEquals(testScheduleUuid, attendances[0].scheduleUuid)
@@ -145,9 +159,15 @@ class AttendancesWithScheduleInfoServiceTest {
 
         @Test
         fun `getByUserUuidFiltered excludes deleted attendances`() {
-            val activeAttendance = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = true)
+            val activeAttendance =
+                anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = true)
             val deletedAttendance =
-                anAttendance(scheduleUuid = testSchedule2Uuid, userUuid = testUserUuid, isAttending = true, isDeleted = true)
+                anAttendance(
+                    scheduleUuid = testSchedule2Uuid,
+                    userUuid = testUserUuid,
+                    isAttending = true,
+                    isDeleted = true,
+                )
             attendancesService.insert(activeAttendance)
             attendancesService.insert(deletedAttendance)
 
@@ -167,7 +187,8 @@ class AttendancesWithScheduleInfoServiceTest {
         @Test
         fun `getByUserUuidFiltered returns attendances ordered by date`() {
             val attendance1 = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = true)
-            val attendance2 = anAttendance(scheduleUuid = testSchedule2Uuid, userUuid = testUserUuid, isAttending = true)
+            val attendance2 =
+                anAttendance(scheduleUuid = testSchedule2Uuid, userUuid = testUserUuid, isAttending = true)
             attendancesService.insert(attendance1)
             attendancesService.insert(attendance2)
 

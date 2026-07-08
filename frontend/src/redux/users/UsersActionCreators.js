@@ -67,6 +67,7 @@ export const saveUserProfile = (userUuid, userProfile) => (dispatch) => {
         isGlutenIntolerant: userProfile.isGlutenIntolerant,
         isLactoseIntolerant: userProfile.isLactoseIntolerant,
         otherRestrictions: userProfile.otherRestrictions,
+        optOutLunches: userProfile.optOutLunches,
     };
 
     axiosInstance

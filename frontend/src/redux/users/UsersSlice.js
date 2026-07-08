@@ -16,6 +16,7 @@ const initState = {
     isGlutenIntolerant: false,
     isLactoseIntolerant: false,
     otherRestrictions: "",
+    optOutLunches: false,
     error: null,
 };
 
@@ -40,6 +41,7 @@ const usersSlice = createSlice({
             state.isGlutenIntolerant = action.payload.isGlutenIntolerant;
             state.isLactoseIntolerant = action.payload.isLactoseIntolerant;
             state.otherRestrictions = action.payload.otherRestrictions;
+            state.optOutLunches = action.payload.optOutLunches;
             state.error = null;
         },
         userLoggedInFailed(state, action) {
@@ -61,6 +63,7 @@ const usersSlice = createSlice({
             state.isGlutenIntolerant = action.payload.isGlutenIntolerant;
             state.isLactoseIntolerant = action.payload.isLactoseIntolerant;
             state.otherRestrictions = action.payload.otherRestrictions;
+            state.optOutLunches = action.payload.optOutLunches;
             state.error = null;
         },
         userUpdatedProfileFailed(state, action) {

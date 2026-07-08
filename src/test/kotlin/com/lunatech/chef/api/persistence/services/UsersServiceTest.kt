@@ -316,6 +316,28 @@ class UsersServiceTest {
         }
 
         @Test
+        fun `update modifies opt out from lunches setting`() {
+            val user =
+                aUser(
+                    name = "John Doe",
+                    emailAddress = uniqueEmail("john"),
+                    officeUuid = testOfficeUuid,
+                )
+            usersService.insert(user)
+
+            val updatedUser =
+                UpdatedUser(
+                    officeUuid = testOfficeUuid,
+                    optOutLunches = true,
+                )
+            usersService.update(user.uuid, updatedUser)
+
+            val retrieved = usersService.getByUuid(user.uuid)[0]
+
+            assertTrue(retrieved.optOutLunches)
+        }
+
+        @Test
         fun `update returns 0 for non-existent user`() {
             val nonExistentUuid = UUID.randomUUID()
             val updatedUser =

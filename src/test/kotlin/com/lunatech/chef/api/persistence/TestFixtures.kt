@@ -82,6 +82,7 @@ object TestFixtures {
         isGlutenIntolerant: Boolean = false,
         isLactoseIntolerant: Boolean = false,
         otherRestrictions: String = "",
+        optOutLunches: Boolean = false,
         isInactive: Boolean = false,
         isDeleted: Boolean = false,
     ): User =
@@ -99,6 +100,7 @@ object TestFixtures {
             isGlutenIntolerant = isGlutenIntolerant,
             isLactoseIntolerant = isLactoseIntolerant,
             otherRestrictions = otherRestrictions,
+            optOutLunches = optOutLunches,
             isInactive = isInactive,
             isDeleted = isDeleted,
         )

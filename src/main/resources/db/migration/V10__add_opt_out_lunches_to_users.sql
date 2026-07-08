@@ -1,0 +1,2 @@
+ALTER TABLE users
+    ADD COLUMN opt_out_lunches BOOLEAN NOT NULL DEFAULT FALSE;

@@ -159,6 +159,29 @@ class AttendancesForSlackbotServiceTest {
         }
 
         @Test
+        fun `getMissingAttendances excludes users that opted out from lunches`() {
+            val optedOutUser =
+                aUser(
+                    name = "Opted Out User",
+                    emailAddress = uniqueEmail("optedout"),
+                    officeUuid = testOfficeUuid,
+                    optOutLunches = true,
+                )
+            usersService.insert(optedOutUser)
+
+            val missingAttendance =
+                anAttendance(scheduleUuid = testScheduleUuid, userUuid = optedOutUser.uuid, isAttending = null)
+            attendancesService.insert(missingAttendance)
+
+            val fromDate = LocalDate.now()
+            val untilDate = LocalDate.now().plusDays(7)
+
+            val missing = attendancesForSlackbotService.getMissingAttendances(fromDate, untilDate)
+
+            assertTrue(missing.isEmpty(), "Should exclude users that opted out from lunches")
+        }
+
+        @Test
         fun `getMissingAttendances excludes deleted users`() {
             val deletedUser =
                 aUser(

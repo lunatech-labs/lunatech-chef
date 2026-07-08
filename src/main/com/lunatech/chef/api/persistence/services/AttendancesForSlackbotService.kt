@@ -49,6 +49,7 @@ class AttendancesForSlackbotService(
                 conditions += Schedules.isDeleted eq false
                 conditions += Users.isInactive eq false
                 conditions += Users.isDeleted eq false
+                conditions += Users.optOutLunches eq false
 
                 conditions.reduce { a, b -> a and b }
             }.orderBy(Schedules.date.asc())

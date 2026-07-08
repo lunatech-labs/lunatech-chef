@@ -54,6 +54,7 @@ class UsersService(
             set(it.isGlutenIntolerant, user.isGlutenIntolerant)
             set(it.isLactoseIntolerant, user.isLactoseIntolerant)
             set(it.otherRestrictions, user.otherRestrictions)
+            set(it.optOutLunches, user.optOutLunches)
             set(it.isInactive, user.isInactive)
             set(it.isDeleted, user.isDeleted)
         }
@@ -73,6 +74,7 @@ class UsersService(
             set(it.isGlutenIntolerant, user.isGlutenIntolerant)
             set(it.isLactoseIntolerant, user.isLactoseIntolerant)
             set(it.otherRestrictions, user.otherRestrictions)
+            set(it.optOutLunches, user.optOutLunches)
             where {
                 it.uuid eq uuid
             }

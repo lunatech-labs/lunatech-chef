@@ -21,6 +21,7 @@ object Users : BaseTable<User>("users") {
     val isGlutenIntolerant = boolean("is_gluten_intolerant")
     val isLactoseIntolerant = boolean("is_lactose_intolerant")
     val otherRestrictions = varchar("other_restrictions")
+    val optOutLunches = boolean("opt_out_lunches")
     val isInactive = boolean("is_inactive")
     val isDeleted = boolean("is_deleted")
 
@@ -41,6 +42,7 @@ object Users : BaseTable<User>("users") {
         isGlutenIntolerant = row[isGlutenIntolerant] ?: DEFAULT_FALSE,
         isLactoseIntolerant = row[isLactoseIntolerant] ?: DEFAULT_FALSE,
         otherRestrictions = row[otherRestrictions] ?: DEFAULT_STRING,
+        optOutLunches = row[optOutLunches] ?: DEFAULT_FALSE,
         isInactive = row[isInactive] ?: DEFAULT_FALSE,
         isDeleted = row[isDeleted] ?: DEFAULT_FALSE,
     )

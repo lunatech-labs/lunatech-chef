@@ -15,6 +15,7 @@ data class NewUser(
     val isGlutenIntolerant: Boolean = false,
     val isLactoseIntolerant: Boolean = false,
     val otherRestrictions: String = "",
+    val optOutLunches: Boolean = false,
 )
 
 data class User(
@@ -31,6 +32,7 @@ data class User(
     val isGlutenIntolerant: Boolean = false,
     val isLactoseIntolerant: Boolean = false,
     val otherRestrictions: String = "",
+    val optOutLunches: Boolean = false,
     val isInactive: Boolean = false,
     val isDeleted: Boolean = false,
 ) {
@@ -50,6 +52,7 @@ data class User(
                 isGlutenIntolerant = newUser.isGlutenIntolerant,
                 isLactoseIntolerant = newUser.isLactoseIntolerant,
                 otherRestrictions = newUser.otherRestrictions,
+                optOutLunches = newUser.optOutLunches,
             )
     }
 }

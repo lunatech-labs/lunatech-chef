@@ -32,6 +32,7 @@ data class UpdatedUser(
     val isGlutenIntolerant: Boolean = false,
     val isLactoseIntolerant: Boolean = false,
     val otherRestrictions: String = "",
+    val optOutLunches: Boolean = false,
 )
 
 fun Route.users(usersService: UsersService) {

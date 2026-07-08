@@ -48,6 +48,7 @@ data class ChefSession(
     val isGlutenIntolerant: Boolean = false,
     val isLactoseIntolerant: Boolean = false,
     val otherRestrictions: String = "",
+    val optOutLunches: Boolean = false,
 )
 
 data class AccountPrincipal(
@@ -144,6 +145,7 @@ fun buildChefSession(
         isGlutenIntolerant = user.isGlutenIntolerant,
         isLactoseIntolerant = user.isLactoseIntolerant,
         otherRestrictions = user.otherRestrictions,
+        optOutLunches = user.optOutLunches,
     )
 }
 

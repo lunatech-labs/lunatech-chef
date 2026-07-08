@@ -35,6 +35,7 @@ export const UserProfile = (props) => {
                         isGlutenIntolerant: props.user.isGlutenIntolerant,
                         isLactoseIntolerant: props.user.isLactoseIntolerant,
                         otherRestrictions: props.user.otherRestrictions,
+                        optOutLunches: props.user.optOutLunches,
                     }}
                     render={({ handleSubmit, submitting, pristine }) => (
                         <form onSubmit={handleSubmit}>
@@ -61,6 +62,11 @@ export const UserProfile = (props) => {
                                             })}
                                         </Field>
                                     </div>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col lg="4">
+                                    <Field name="optOutLunches" component="input" type="checkbox"></Field><span>  I want to opt out from all lunches</span>
                                 </Col>
                             </Row>
                             <Row></Row>

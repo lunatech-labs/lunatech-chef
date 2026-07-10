@@ -67,9 +67,9 @@ dependencies {
     testImplementation("io.ktor:ktor-server-test-host")
     testImplementation("io.ktor:ktor-client-content-negotiation")
     testImplementation("org.junit.jupiter:junit-jupiter:6.0.2")
-    testImplementation("org.testcontainers:testcontainers:2.0.3")
-    testImplementation("org.testcontainers:testcontainers-junit-jupiter:2.0.3")
-    testImplementation("org.testcontainers:testcontainers-postgresql:2.0.3")
+    testImplementation("org.testcontainers:testcontainers:2.0.4")
+    testImplementation("org.testcontainers:testcontainers-junit-jupiter:2.0.4")
+    testImplementation("org.testcontainers:testcontainers-postgresql:2.0.4")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 

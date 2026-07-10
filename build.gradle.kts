@@ -33,7 +33,7 @@ dependencies {
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
     implementation("ch.qos.logback:logback-classic:1.5.23")
     implementation("com.newrelic.logging:logback:3.4.0")
-    implementation("org.apache.logging.log4j:log4j-core:2.25.4")
+    implementation("org.apache.logging.log4j:log4j-core:2.26.1")
 
     implementation("com.google.api-client:google-api-client:2.9.0")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.20.1")
@@ -42,7 +42,7 @@ dependencies {
     implementation("org.flywaydb:flyway-database-postgresql:12.1.1")
     implementation("org.ktorm:ktorm-core:4.1.1")
     implementation("com.zaxxer:HikariCP:7.0.2")
-    implementation("org.postgresql:postgresql:42.7.10")
+    implementation("org.postgresql:postgresql:42.7.11")
     implementation("org.quartz-scheduler:quartz:2.5.2")
 
     implementation("io.ktor:ktor-server-status-pages")

@@ -70,7 +70,7 @@ dependencies {
     testImplementation("org.testcontainers:testcontainers:2.0.4")
     testImplementation("org.testcontainers:testcontainers-junit-jupiter:2.0.4")
     testImplementation("org.testcontainers:testcontainers-postgresql:2.0.4")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.1.1")
 }
 
 tasks.test {

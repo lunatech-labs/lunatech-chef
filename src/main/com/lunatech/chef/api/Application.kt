@@ -47,6 +47,7 @@ import com.lunatech.chef.api.routes.reports
 import com.lunatech.chef.api.routes.schedules
 import com.lunatech.chef.api.routes.schedulesWithAttendanceInfo
 import com.lunatech.chef.api.routes.schedulesWithMenusInfo
+import com.lunatech.chef.api.routes.slackInteraction
 import com.lunatech.chef.api.routes.users
 import com.lunatech.chef.api.routes.validateSession
 import com.lunatech.chef.api.schedulers.monthlyreports.mrSchedulerTrigger
@@ -269,6 +270,7 @@ fun Application.module() {
         }
         healthCheck()
         authentication(schedulesService, attendancesService, usersService, authConfig.admins)
+        slackInteraction(attendancesService, slackBotConfig.publicUrl)
 
         authenticate("session-auth", "auth-jwt") {
             offices(officesService)

@@ -9,6 +9,7 @@ import com.lunatech.chef.api.config.FlywayConfig
 import com.lunatech.chef.api.config.JwtConfig
 import com.lunatech.chef.api.config.MailerConfig
 import com.lunatech.chef.api.config.MonthlyReportConfig
+import com.lunatech.chef.api.config.SlackBotConfig
 import com.lunatech.chef.api.persistence.DBEvolution
 import com.lunatech.chef.api.persistence.Database
 import com.lunatech.chef.api.persistence.services.AttendancesForSlackbotService
@@ -50,7 +51,12 @@ import com.lunatech.chef.api.routes.users
 import com.lunatech.chef.api.routes.validateSession
 import com.lunatech.chef.api.schedulers.monthlyreports.mrSchedulerTrigger
 import com.lunatech.chef.api.schedulers.recurrentschedules.rcSchedulerTrigger
+import com.lunatech.chef.api.schedulers.slackbot.sbSchedulerTrigger
+import com.lunatech.chef.api.slackbot.LunchReminderService
+import com.lunatech.chef.api.slackbot.SlackApiClient
 import com.typesafe.config.ConfigFactory
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.apache.Apache
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
@@ -102,6 +108,7 @@ fun Application.module() {
 
     val monthlyReportConfig = MonthlyReportConfig.fromConfig(config.getConfig("monthly-report-email"))
     val mailerConfig = MailerConfig.fromConfig(config.getConfig("mailer"))
+    val slackBotConfig = SlackBotConfig.fromConfig(config.getConfig("slackbot"))
 
     val keycloakProvider = UrlJwkProvider(URI(jwtConfig.jwkProvider).toURL())
 
@@ -133,6 +140,8 @@ fun Application.module() {
     val attendancesForSlackbotService = AttendancesForSlackbotService(dbConnection)
     val reportService = ReportService(dbConnection)
     val excelService = ExcelService()
+    val slackApi = SlackApiClient(slackBotConfig.token, HttpClient(Apache))
+    val lunchReminderService = LunchReminderService(attendancesForSlackbotService, slackApi)
 
     val scheduler = StdSchedulerFactory.getDefaultScheduler()
     rcSchedulerTrigger(
@@ -144,6 +153,7 @@ fun Application.module() {
         scCronString,
     )
     mrSchedulerTrigger(scheduler, mrCronString, monthlyReportConfig, mailerConfig, reportService, excelService)
+    sbSchedulerTrigger(scheduler, lunchReminderService, slackBotConfig.cron)
 
     install(CORS) {
         allowMethod(HttpMethod.Post)

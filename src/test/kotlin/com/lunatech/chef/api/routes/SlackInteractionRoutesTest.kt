@@ -177,4 +177,38 @@ class SlackInteractionRoutesTest {
             assertTrue(response.bodyAsText().startsWith("Something went wrong"))
             assertEquals(true, getAttendanceByUuid(attendanceUuid)?.isAttending)
         }
+
+    @Test
+    fun `a 3-part action value responds with error ack and does not update the attendance`() =
+        testApplication {
+            setupSlackRoute()
+
+            val response =
+                client.submitForm(
+                    url = "/slack",
+                    formParameters = parameters { append("payload", payload("${attendanceUuid}_true_extra")) },
+                )
+
+            assertEquals(HttpStatusCode.OK, response.status)
+            assertTrue(response.bodyAsText().startsWith("Something went wrong"))
+            assertEquals(null, getAttendanceByUuid(attendanceUuid)?.isAttending)
+        }
+
+    @Test
+    fun `a payload with no decision-named action responds with error ack`() =
+        testApplication {
+            setupSlackRoute()
+
+            val noDecisionPayload =
+                """{"callback_id":"Rotterdam_Monday","actions":[{"name":"other","type":"button","value":"${attendanceUuid}_true"}],"user":{"id":"U1"}}"""
+            val response =
+                client.submitForm(
+                    url = "/slack",
+                    formParameters = parameters { append("payload", noDecisionPayload) },
+                )
+
+            assertEquals(HttpStatusCode.OK, response.status)
+            assertTrue(response.bodyAsText().startsWith("Something went wrong"))
+            assertEquals(null, getAttendanceByUuid(attendanceUuid)?.isAttending)
+        }
 }

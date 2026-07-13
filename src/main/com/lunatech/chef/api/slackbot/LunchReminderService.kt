@@ -3,6 +3,7 @@ package com.lunatech.chef.api.slackbot
 import com.lunatech.chef.api.persistence.services.AttendancesForSlackbotService
 import mu.KotlinLogging
 import java.time.LocalDate
+import java.time.ZoneId
 
 private val logger = KotlinLogging.logger {}
 
@@ -18,7 +19,7 @@ class LunchReminderService(
         private const val DAYS_SPAN = 4L
     }
 
-    suspend fun sendReminders(today: LocalDate = LocalDate.now()) {
+    suspend fun sendReminders(today: LocalDate = LocalDate.now(ZoneId.of("Europe/Amsterdam"))) {
         val missing = attendancesForSlackbotService.getMissingAttendances(today, today.plusDays(DAYS_SPAN))
         if (missing.isEmpty()) {
             logger.info { "Lunchbot will not send any message. No attendances to be answered were found." }
@@ -27,9 +28,13 @@ class LunchReminderService(
         logger.info { "Lunchbot should send a total of ${missing.size} messages" }
 
         val byEmail = missing.groupBy { it.emailAddress }
+        val slackUsers = slackApi.usersList()
+        if (slackUsers.isEmpty()) {
+            logger.error { "Slack users.list returned no users, aborting reminder run" }
+            return
+        }
         val slackIdByEmail =
-            slackApi
-                .usersList()
+            slackUsers
                 .filter { !it.deleted && it.email != null }
                 .associate { it.email!! to it.id }
 
@@ -46,16 +51,20 @@ class LunchReminderService(
                     continue
                 }
                 for (attendance in attendances) {
-                    slackApi.postMessage(
-                        channel,
-                        SlackMessages.SALUTATION,
-                        SlackMessages.attachmentsJson(
-                            attendance.attendanceUuid,
-                            attendance.date,
-                            attendance.office,
-                            attendance.menuName,
-                        ),
-                    )
+                    val sent =
+                        slackApi.postMessage(
+                            channel,
+                            SlackMessages.SALUTATION,
+                            SlackMessages.attachmentsJson(
+                                attendance.attendanceUuid,
+                                attendance.date,
+                                attendance.office,
+                                attendance.menuName,
+                            ),
+                        )
+                    if (!sent) {
+                        logger.error { "Slack chat.postMessage failed for $email, continuing with remaining attendances" }
+                    }
                 }
             } catch (exception: Exception) {
                 logger.error(exception) { "Error sending lunch reminders to $email, continuing with remaining users" }

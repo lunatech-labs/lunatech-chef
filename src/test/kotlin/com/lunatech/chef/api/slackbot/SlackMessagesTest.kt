@@ -31,6 +31,11 @@ class SlackMessagesTest {
     }
 
     @Test
+    fun `dayOfWeek returns the full English day name for a non-Monday date`() {
+        assertEquals("Saturday", SlackMessages.dayOfWeek(LocalDate.of(2026, 7, 25)))
+    }
+
+    @Test
     fun `salutation matches the java bot`() {
         assertEquals(
             "Hello, LunchBot here. :robot_face:\nI would love to see you at the office. Are you joining us for lunch?",

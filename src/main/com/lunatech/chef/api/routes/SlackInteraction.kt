@@ -50,8 +50,9 @@ fun Route.slackInteraction(
             val valueParts = value?.split("_")
             val uuid = valueParts?.getOrNull(0).toUUIDOrNull()
             val isAttending = valueParts?.getOrNull(1)?.toBooleanStrictOrNull()
-            if (uuid == null || isAttending == null) {
-                logger.error { "Slack interaction with unusable action value: $value" }
+            if (valueParts?.size != 2 || uuid == null || isAttending == null) {
+                val sanitizedValue = value?.replace("\n", "\\n")?.replace("\r", "\\r")?.take(100)
+                logger.error { "Slack interaction with unusable action value: $sanitizedValue" }
                 return@post call.respondText(errorAck)
             }
 

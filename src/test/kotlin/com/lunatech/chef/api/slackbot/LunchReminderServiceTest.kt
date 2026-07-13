@@ -26,6 +26,8 @@ import java.util.UUID
 private class FakeSlackApi(
     private val users: List<SlackUser>,
     private val failOpenFor: Set<String> = emptySet(),
+    private val nullChannelFor: Set<String> = emptySet(),
+    private val postMessageResult: Boolean = true,
 ) : SlackApi {
     val openedConversations = mutableListOf<String>()
     val postedMessages = mutableListOf<Triple<String, String, String>>()
@@ -34,6 +36,7 @@ private class FakeSlackApi(
 
     override suspend fun openConversation(userId: String): String? {
         if (userId in failOpenFor) throw RuntimeException("boom")
+        if (userId in nullChannelFor) return null
         openedConversations.add(userId)
         return "channel-$userId"
     }
@@ -44,7 +47,7 @@ private class FakeSlackApi(
         attachmentsJson: String,
     ): Boolean {
         postedMessages.add(Triple(channel, text, attachmentsJson))
-        return true
+        return postMessageResult
     }
 }
 
@@ -150,5 +153,52 @@ class LunchReminderServiceTest {
 
             assertEquals(0, slack.openedConversations.size)
             assertEquals(0, slack.postedMessages.size)
+        }
+
+    @Test
+    fun `a false postMessage result does not stop remaining messages`() =
+        runBlocking {
+            insertMissingAttendance(1)
+            insertMissingAttendance(2)
+            val slack = FakeSlackApi(listOf(SlackUser("U1", false, userEmail)), postMessageResult = false)
+
+            LunchReminderService(attendancesForSlackbotService, slack).sendReminders()
+
+            assertEquals(2, slack.postedMessages.size)
+        }
+
+    @Test
+    fun `an empty usersList leads to zero openConversation calls and no exception`() =
+        runBlocking {
+            insertMissingAttendance(1)
+            val slack = FakeSlackApi(emptyList())
+
+            LunchReminderService(attendancesForSlackbotService, slack).sendReminders()
+
+            assertEquals(0, slack.openedConversations.size)
+            assertEquals(0, slack.postedMessages.size)
+        }
+
+    @Test
+    fun `openConversation returning null does not post and does not affect other users`() =
+        runBlocking {
+            insertMissingAttendance(1)
+            val otherEmail = uniqueEmail("other")
+            val other = aUser(name = "Other", emailAddress = otherEmail, officeUuid = officeUuid)
+            usersService.insert(other)
+            val schedule = aSchedule(menuUuid = menuUuid, date = LocalDate.now().plusDays(1), officeUuid = officeUuid)
+            schedulesService.insert(schedule)
+            attendancesService.insert(anAttendance(scheduleUuid = schedule.uuid, userUuid = other.uuid, isAttending = null))
+
+            val slack =
+                FakeSlackApi(
+                    listOf(SlackUser("U1", false, userEmail), SlackUser("U2", false, otherEmail)),
+                    nullChannelFor = setOf("U1"),
+                )
+
+            LunchReminderService(attendancesForSlackbotService, slack).sendReminders()
+
+            assertEquals(1, slack.postedMessages.size)
+            assertEquals("channel-U2", slack.postedMessages[0].first)
         }
 }

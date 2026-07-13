@@ -31,7 +31,6 @@ import com.lunatech.chef.api.persistence.services.SchedulesWithMenuInfoService
 import com.lunatech.chef.api.persistence.services.UsersService
 import com.lunatech.chef.api.routes.ChefSession
 import com.lunatech.chef.api.routes.attendances
-import com.lunatech.chef.api.routes.attendancesForSlackbot
 import com.lunatech.chef.api.routes.attendancesWithScheduleInfo
 import com.lunatech.chef.api.routes.authentication
 import com.lunatech.chef.api.routes.dishes
@@ -214,27 +213,6 @@ fun Application.module() {
         }
 
         /***
-         * This validates tokens used by the slack bot to communicate with lunachef
-         */
-        jwt("auth-jwt") {
-            verifier(keycloakProvider, jwtConfig.issuer)
-            challenge { _, _ ->
-                call.respond(HttpStatusCode.Unauthorized, "Token is not valid or has expired")
-            }
-            validate { credential ->
-                if (credential.expiresAt?.toInstant()?.isAfter(Instant.now()) == true &&
-                    credential.payload
-                        .getClaim("azp")
-                        .asString() != ""
-                ) {
-                    JWTPrincipal(credential.payload)
-                } else {
-                    null
-                }
-            }
-        }
-
-        /***
          * This validates the Google idToken obtained at login
          */
         jwt("idtoken") {
@@ -272,7 +250,7 @@ fun Application.module() {
         authentication(schedulesService, attendancesService, usersService, authConfig.admins)
         slackInteraction(attendancesService, slackBotConfig.publicUrl)
 
-        authenticate("session-auth", "auth-jwt") {
+        authenticate("session-auth") {
             offices(officesService)
             dishes(dishesService)
             menus(menusService)
@@ -285,7 +263,6 @@ fun Application.module() {
             attendancesWithScheduleInfo(attendancesWithInfoService)
             users(usersService)
             attendances(attendancesService)
-            attendancesForSlackbot(attendancesForSlackbotService)
             reports(reportService, excelService)
             externalAttendances(externalAttendancesService)
             externalAttendancesWithScheduleInfo(externalAttendancesWithScheduleInfoService)

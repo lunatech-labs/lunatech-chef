@@ -36,12 +36,14 @@ object SlackMessages {
                         linkedMapOf(
                             "name" to ACTION_NAME,
                             "text" to "Yes, I'll be in $office!",
+                            "type" to "button",
                             "style" to "primary",
                             "value" to "${attendanceUuid}_true",
                         ),
                         linkedMapOf(
                             "name" to ACTION_NAME,
                             "text" to "Nope. :no_good:",
+                            "type" to "button",
                             "style" to "danger",
                             "value" to "${attendanceUuid}_false",
                         ),

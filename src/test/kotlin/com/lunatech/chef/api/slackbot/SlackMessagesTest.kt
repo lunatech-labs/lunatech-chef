@@ -21,8 +21,8 @@ class SlackMessagesTest {
               "text":"*Day*: Monday\n*Where*: Rotterdam\n*Menu*: Pasta Day",
               "callback_id":"Rotterdam_Monday",
               "actions":[
-                {"name":"decision","text":"Yes, I'll be in Rotterdam!","style":"primary","value":"11111111-2222-3333-4444-555555555555_true"},
-                {"name":"decision","text":"Nope. :no_good:","style":"danger","value":"11111111-2222-3333-4444-555555555555_false"}
+                {"name":"decision","text":"Yes, I'll be in Rotterdam!","type":"button","style":"primary","value":"11111111-2222-3333-4444-555555555555_true"},
+                {"name":"decision","text":"Nope. :no_good:","type":"button","style":"danger","value":"11111111-2222-3333-4444-555555555555_false"}
               ]}]
             """.trimIndent()
 

@@ -4,17 +4,19 @@ import com.typesafe.config.Config
 import io.github.config4k.getValue
 
 data class SlackBotConfig(
+    val enabled: Boolean,
     val token: String,
     val cron: String,
     val publicUrl: String,
 ) {
     companion object {
         fun fromConfig(config: Config): SlackBotConfig {
+            val enabled: Boolean by config
             val token: String by config
             val cron: String by config
             val publicUrl: String by config
 
-            return SlackBotConfig(token, cron, publicUrl)
+            return SlackBotConfig(enabled, token, cron, publicUrl)
         }
     }
 }

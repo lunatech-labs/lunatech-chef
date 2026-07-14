@@ -11,6 +11,7 @@ class SlackBotConfigTest {
             ConfigFactory.parseString(
                 """
                 slackbot {
+                  enabled = true
                   token = "xoxp-something"
                   cron = "0 0 10 ? * MON,TUE"
                   publicUrl = "https://lunch.lunatech.nl"
@@ -20,6 +21,7 @@ class SlackBotConfigTest {
 
         val slackBotConfig = SlackBotConfig.fromConfig(config.getConfig("slackbot"))
 
+        assertEquals(true, slackBotConfig.enabled)
         assertEquals("xoxp-something", slackBotConfig.token)
         assertEquals("0 0 10 ? * MON,TUE", slackBotConfig.cron)
         assertEquals("https://lunch.lunatech.nl", slackBotConfig.publicUrl)

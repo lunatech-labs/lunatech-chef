@@ -154,7 +154,9 @@ fun Application.module() {
         scCronString,
     )
     mrSchedulerTrigger(scheduler, mrCronString, monthlyReportConfig, mailerConfig, reportService, excelService)
-    sbSchedulerTrigger(scheduler, lunchReminderService, slackBotConfig.cron)
+    if (slackBotConfig.enabled) {
+        sbSchedulerTrigger(scheduler, lunchReminderService, slackBotConfig.cron)
+    }
 
     install(CORS) {
         allowMethod(HttpMethod.Post)

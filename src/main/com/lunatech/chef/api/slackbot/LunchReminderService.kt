@@ -33,13 +33,14 @@ class LunchReminderService(
             logger.error { "Slack users.list returned no users, aborting reminder run" }
             return
         }
+        // email casing differs between chef and Slack profiles for some users
         val slackIdByEmail =
             slackUsers
                 .filter { !it.deleted && it.email != null }
-                .associate { it.email!! to it.id }
+                .associate { it.email!!.lowercase() to it.id }
 
         for ((email, attendances) in byEmail) {
-            val slackId = slackIdByEmail[email]
+            val slackId = slackIdByEmail[email.lowercase()]
             if (slackId == null) {
                 logger.warn { "No Slack match for $email, skipping" }
                 continue

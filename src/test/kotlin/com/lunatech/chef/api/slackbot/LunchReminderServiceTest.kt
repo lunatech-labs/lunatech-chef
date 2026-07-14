@@ -145,6 +145,18 @@ class LunchReminderServiceTest {
         }
 
     @Test
+    fun `matches chef and slack emails case-insensitively`() =
+        runBlocking {
+            insertMissingAttendance(1)
+            val slack = FakeSlackApi(listOf(SlackUser("U1", false, userEmail.uppercase())))
+
+            LunchReminderService(attendancesForSlackbotService, slack).sendReminders()
+
+            assertEquals(listOf("U1"), slack.openedConversations)
+            assertEquals(1, slack.postedMessages.size)
+        }
+
+    @Test
     fun `does nothing when there are no missing attendances`() =
         runBlocking {
             val slack = FakeSlackApi(listOf(SlackUser("U1", false, userEmail)))

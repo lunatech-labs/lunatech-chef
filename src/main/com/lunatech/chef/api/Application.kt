@@ -140,7 +140,8 @@ fun Application.module() {
     val attendancesForSlackbotService = AttendancesForSlackbotService(dbConnection)
     val reportService = ReportService(dbConnection)
     val excelService = ExcelService()
-    val slackApi = SlackApiClient(slackBotConfig.token, HttpClient(Apache))
+    val slackHttpClient = HttpClient(Apache)
+    val slackApi = SlackApiClient(slackBotConfig.token, slackHttpClient)
     val lunchReminderService = LunchReminderService(attendancesForSlackbotService, slackApi)
 
     val scheduler = StdSchedulerFactory.getDefaultScheduler()
@@ -238,6 +239,7 @@ fun Application.module() {
     }
     monitor.subscribe(ApplicationStopped) {
         logger.info("Time to clean up")
+        slackHttpClient.close()
     }
 
     logger.info { "Booting up!!" }

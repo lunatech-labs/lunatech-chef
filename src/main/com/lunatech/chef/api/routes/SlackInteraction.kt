@@ -62,11 +62,18 @@ fun Route.slackInteraction(
                 return@post call.respondText(errorAck)
             }
 
-            val callbackParts = payload.callback_id?.split("_")
+            // day names contain no underscore, so split office/day from the last one:
+            // office names themselves may contain underscores
+            val callbackId = payload.callback_id
             val ack =
                 when {
                     !isAttending -> SlackMessages.notGoingResponse(publicUrl)
-                    callbackParts?.size == 2 -> SlackMessages.goingResponse(callbackParts[0], callbackParts[1], publicUrl)
+                    callbackId != null && callbackId.contains("_") ->
+                        SlackMessages.goingResponse(
+                            callbackId.substringBeforeLast("_"),
+                            callbackId.substringAfterLast("_"),
+                            publicUrl,
+                        )
                     else -> errorAck
                 }
             call.respondText(ack)

@@ -179,6 +179,25 @@ class SlackInteractionRoutesTest {
         }
 
     @Test
+    fun `office name containing an underscore still gets the going ack`() =
+        testApplication {
+            setupSlackRoute()
+
+            val response =
+                client.submitForm(
+                    url = "/slack",
+                    formParameters = parameters { append("payload", payload("${attendanceUuid}_true", callbackId = "Den_Haag_Monday")) },
+                )
+
+            assertEquals(HttpStatusCode.OK, response.status)
+            assertEquals(
+                "Great, see you in Den_Haag on Monday! :star-struck: If your plans change, please update your answer at $publicUrl.",
+                response.bodyAsText(),
+            )
+            assertEquals(true, getAttendanceByUuid(attendanceUuid)?.isAttending)
+        }
+
+    @Test
     fun `a 3-part action value responds with error ack and does not update the attendance`() =
         testApplication {
             setupSlackRoute()

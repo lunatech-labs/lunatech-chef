@@ -252,7 +252,7 @@ fun Application.module() {
         }
         healthCheck()
         authentication(schedulesService, attendancesService, usersService, authConfig.admins)
-        slackInteraction(attendancesService, slackBotConfig.publicUrl)
+        slackInteraction(attendancesService, slackBotConfig.publicUrl, slackBotConfig.signingSecret)
 
         authenticate("session-auth") {
             offices(officesService)

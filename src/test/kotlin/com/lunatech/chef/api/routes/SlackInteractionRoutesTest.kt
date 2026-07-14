@@ -16,9 +16,16 @@ import com.lunatech.chef.api.persistence.services.MenusService
 import com.lunatech.chef.api.persistence.services.OfficesService
 import com.lunatech.chef.api.persistence.services.SchedulesService
 import com.lunatech.chef.api.persistence.services.UsersService
-import io.ktor.client.request.forms.submitForm
+import io.ktor.client.HttpClient
+import io.ktor.client.request.header
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
+import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.contentType
+import io.ktor.http.formUrlEncode
 import io.ktor.http.parameters
 import io.ktor.server.routing.routing
 import io.ktor.server.testing.ApplicationTestBuilder
@@ -32,11 +39,15 @@ import org.ktorm.dsl.from
 import org.ktorm.dsl.map
 import org.ktorm.dsl.select
 import org.ktorm.dsl.where
+import java.time.Instant
 import java.time.LocalDate
 import java.util.UUID
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
 
 class SlackInteractionRoutesTest {
     private val publicUrl = "https://lunch.lunatech.nl"
+    private val signingSecret = "test-signing-secret"
 
     private lateinit var attendancesService: AttendancesService
     private lateinit var attendanceUuid: UUID
@@ -68,7 +79,7 @@ class SlackInteractionRoutesTest {
     }
 
     private fun ApplicationTestBuilder.setupSlackRoute() {
-        routing { slackInteraction(attendancesService, publicUrl) }
+        routing { slackInteraction(attendancesService, publicUrl, signingSecret) }
     }
 
     // Same direct-query helper pattern as AttendancesServiceTest (the service has no read method)
@@ -94,16 +105,39 @@ class SlackInteractionRoutesTest {
         callbackId: String = "Rotterdam_Monday",
     ): String = """{"callback_id":"$callbackId","actions":[{"name":"decision","type":"button","value":"$value"}],"user":{"id":"U1"}}"""
 
+    private fun computeSignature(
+        secret: String,
+        timestamp: String,
+        body: String,
+    ): String {
+        val mac = Mac.getInstance("HmacSHA256")
+        mac.init(SecretKeySpec(secret.toByteArray(), "HmacSHA256"))
+        return "v0=" + mac.doFinal("v0:$timestamp:$body".toByteArray()).joinToString("") { "%02x".format(it) }
+    }
+
+    private suspend fun HttpClient.postSlack(
+        payloadJson: String,
+        timestamp: Long = Instant.now().epochSecond,
+        secret: String = signingSecret,
+        signed: Boolean = true,
+    ): HttpResponse {
+        val body = parameters { append("payload", payloadJson) }.formUrlEncode()
+        return post("/slack") {
+            contentType(ContentType.Application.FormUrlEncoded)
+            if (signed) {
+                header("X-Slack-Request-Timestamp", timestamp.toString())
+                header("X-Slack-Signature", computeSignature(secret, timestamp.toString(), body))
+            }
+            setBody(body)
+        }
+    }
+
     @Test
     fun `yes answer updates attendance and responds with going ack`() =
         testApplication {
             setupSlackRoute()
 
-            val response =
-                client.submitForm(
-                    url = "/slack",
-                    formParameters = parameters { append("payload", payload("${attendanceUuid}_true")) },
-                )
+            val response = client.postSlack(payload("${attendanceUuid}_true"))
 
             assertEquals(HttpStatusCode.OK, response.status)
             assertEquals(
@@ -118,11 +152,7 @@ class SlackInteractionRoutesTest {
         testApplication {
             setupSlackRoute()
 
-            val response =
-                client.submitForm(
-                    url = "/slack",
-                    formParameters = parameters { append("payload", payload("${attendanceUuid}_false")) },
-                )
+            val response = client.postSlack(payload("${attendanceUuid}_false"))
 
             assertEquals(HttpStatusCode.OK, response.status)
             assertEquals(
@@ -133,15 +163,45 @@ class SlackInteractionRoutesTest {
         }
 
     @Test
+    fun `an unsigned request is rejected and does not update the attendance`() =
+        testApplication {
+            setupSlackRoute()
+
+            val response = client.postSlack(payload("${attendanceUuid}_true"), signed = false)
+
+            assertEquals(HttpStatusCode.Unauthorized, response.status)
+            assertEquals(null, getAttendanceByUuid(attendanceUuid)?.isAttending)
+        }
+
+    @Test
+    fun `a request signed with the wrong secret is rejected`() =
+        testApplication {
+            setupSlackRoute()
+
+            val response = client.postSlack(payload("${attendanceUuid}_true"), secret = "wrong-secret")
+
+            assertEquals(HttpStatusCode.Unauthorized, response.status)
+            assertEquals(null, getAttendanceByUuid(attendanceUuid)?.isAttending)
+        }
+
+    @Test
+    fun `a stale timestamp is rejected to prevent replays`() =
+        testApplication {
+            setupSlackRoute()
+
+            val staleTimestamp = Instant.now().epochSecond - 600
+            val response = client.postSlack(payload("${attendanceUuid}_true"), timestamp = staleTimestamp)
+
+            assertEquals(HttpStatusCode.Unauthorized, response.status)
+            assertEquals(null, getAttendanceByUuid(attendanceUuid)?.isAttending)
+        }
+
+    @Test
     fun `malformed payload responds with error ack`() =
         testApplication {
             setupSlackRoute()
 
-            val response =
-                client.submitForm(
-                    url = "/slack",
-                    formParameters = parameters { append("payload", "{not json") },
-                )
+            val response = client.postSlack("{not json")
 
             assertEquals(HttpStatusCode.OK, response.status)
             assertTrue(response.bodyAsText().startsWith("Something went wrong"))
@@ -152,11 +212,7 @@ class SlackInteractionRoutesTest {
         testApplication {
             setupSlackRoute()
 
-            val response =
-                client.submitForm(
-                    url = "/slack",
-                    formParameters = parameters { append("payload", payload("${UUID.randomUUID()}_true")) },
-                )
+            val response = client.postSlack(payload("${UUID.randomUUID()}_true"))
 
             assertEquals(HttpStatusCode.OK, response.status)
             assertTrue(response.bodyAsText().startsWith("Something went wrong"))
@@ -167,11 +223,7 @@ class SlackInteractionRoutesTest {
         testApplication {
             setupSlackRoute()
 
-            val response =
-                client.submitForm(
-                    url = "/slack",
-                    formParameters = parameters { append("payload", payload("${attendanceUuid}_true", callbackId = "nodash")) },
-                )
+            val response = client.postSlack(payload("${attendanceUuid}_true", callbackId = "nodash"))
 
             assertEquals(HttpStatusCode.OK, response.status)
             assertTrue(response.bodyAsText().startsWith("Something went wrong"))
@@ -183,11 +235,7 @@ class SlackInteractionRoutesTest {
         testApplication {
             setupSlackRoute()
 
-            val response =
-                client.submitForm(
-                    url = "/slack",
-                    formParameters = parameters { append("payload", payload("${attendanceUuid}_true", callbackId = "Den_Haag_Monday")) },
-                )
+            val response = client.postSlack(payload("${attendanceUuid}_true", callbackId = "Den_Haag_Monday"))
 
             assertEquals(HttpStatusCode.OK, response.status)
             assertEquals(
@@ -202,11 +250,7 @@ class SlackInteractionRoutesTest {
         testApplication {
             setupSlackRoute()
 
-            val response =
-                client.submitForm(
-                    url = "/slack",
-                    formParameters = parameters { append("payload", payload("${attendanceUuid}_true_extra")) },
-                )
+            val response = client.postSlack(payload("${attendanceUuid}_true_extra"))
 
             assertEquals(HttpStatusCode.OK, response.status)
             assertTrue(response.bodyAsText().startsWith("Something went wrong"))
@@ -220,11 +264,7 @@ class SlackInteractionRoutesTest {
 
             val noDecisionPayload =
                 """{"callback_id":"Rotterdam_Monday","actions":[{"name":"other","type":"button","value":"${attendanceUuid}_true"}],"user":{"id":"U1"}}"""
-            val response =
-                client.submitForm(
-                    url = "/slack",
-                    formParameters = parameters { append("payload", noDecisionPayload) },
-                )
+            val response = client.postSlack(noDecisionPayload)
 
             assertEquals(HttpStatusCode.OK, response.status)
             assertTrue(response.bodyAsText().startsWith("Something went wrong"))

@@ -162,8 +162,8 @@ function Main() {
     }
     //
     // Users
-    const handleLogin = (token) => {
-        dispatch(login(token))
+    const handleLogin = () => {
+        dispatch(login())
     }
     const handleLogout = () => {
         dispatch(logout())

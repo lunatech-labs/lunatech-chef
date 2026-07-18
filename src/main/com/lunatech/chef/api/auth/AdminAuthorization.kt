@@ -15,6 +15,9 @@ import io.ktor.server.routing.RouteSelectorEvaluation
 import io.ktor.server.routing.RoutingResolveContext
 import java.util.UUID
 
+/** Keycloak client role that grants admin access, carried in the ID token's roles claim. */
+const val ADMIN_ROLE = "admin"
+
 /** True when the call carries a valid session belonging to an admin user. */
 val ApplicationCall.isAdminSession: Boolean
     get() = principal<ChefSession>()?.isAdmin == true

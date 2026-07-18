@@ -221,7 +221,11 @@ fun Application.module() {
          * This validates the Google idToken obtained at login
          */
         jwt("idtoken") {
-            verifier(keycloakProvider, jwtConfig.issuer)
+            // Only accept tokens minted for our own client: other clients in the
+            // realm share the signature and issuer but not the roles claim semantics.
+            verifier(keycloakProvider, jwtConfig.issuer) {
+                withAudience(jwtConfig.clientId)
+            }
             challenge { _, _ ->
                 call.respond(HttpStatusCode.Unauthorized, "IdToken is not valid or has expired")
             }
@@ -253,7 +257,7 @@ fun Application.module() {
             call.respondFile(File("frontend/build/index.html"))
         }
         healthCheck()
-        authentication(schedulesService, attendancesService, usersService, authConfig.admins)
+        authentication(schedulesService, attendancesService, usersService)
         slackInteraction(attendancesService, slackBotConfig.publicUrl, slackBotConfig.signingSecret)
 
         authenticate("session-auth") {

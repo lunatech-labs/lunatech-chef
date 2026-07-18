@@ -1,16 +1,44 @@
 package com.lunatech.chef.api.routes
 
+import com.auth0.jwt.JWT
+import com.auth0.jwt.algorithms.Algorithm
+import com.auth0.jwt.interfaces.Payload
+import com.lunatech.chef.api.auth.ADMIN_ROLE
+import com.lunatech.chef.api.persistence.TestDatabase
 import com.lunatech.chef.api.persistence.TestFixtures.aUser
+import com.lunatech.chef.api.persistence.TestFixtures.uniqueEmail
+import com.lunatech.chef.api.persistence.services.AttendancesService
+import com.lunatech.chef.api.persistence.services.SchedulesService
+import com.lunatech.chef.api.persistence.services.UsersService
+import io.ktor.client.call.body
+import io.ktor.client.request.get
+import io.ktor.client.request.header
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.auth.Authentication
+import io.ktor.server.auth.jwt.JWTPrincipal
+import io.ktor.server.auth.jwt.jwt
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.server.routing.routing
+import io.ktor.server.sessions.SessionTransportTransformerMessageAuthentication
+import io.ktor.server.sessions.Sessions
+import io.ktor.server.sessions.header
+import io.ktor.server.testing.ApplicationTestBuilder
+import io.ktor.server.testing.testApplication
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.UUID
+
+private const val TEST_JWT_SECRET = "test-jwt-secret"
+private const val TEST_CLIENT_ID = "lunachef-test"
 
 class AuthorizationRoutesTest {
     @Nested
@@ -44,41 +72,59 @@ class AuthorizationRoutesTest {
     }
 
     @Nested
-    inner class IsAdminTests {
+    inner class ExtractRolesTests {
+        private fun payloadOf(token: String): Payload = JWT.decode(token)
+
         @Test
-        fun `returns true for admin email`() {
-            val admins = listOf("admin@lunatech.nl", "superadmin@lunatech.nl")
+        fun `returns roles when claim contains admin`() {
+            val token =
+                JWT
+                    .create()
+                    .withClaim("roles", listOf(ADMIN_ROLE, "user"))
+                    .sign(Algorithm.HMAC256(TEST_JWT_SECRET))
 
-            val result = isAdmin(admins, "admin@lunatech.nl")
+            val roles = extractRoles(payloadOf(token))
 
-            assertTrue(result)
+            assertEquals(listOf(ADMIN_ROLE, "user"), roles)
         }
 
         @Test
-        fun `returns false for non-admin email`() {
-            val admins = listOf("admin@lunatech.nl")
+        fun `returns roles when claim does not contain admin`() {
+            val token =
+                JWT
+                    .create()
+                    .withClaim("roles", listOf("user"))
+                    .sign(Algorithm.HMAC256(TEST_JWT_SECRET))
 
-            val result = isAdmin(admins, "user@lunatech.nl")
+            val roles = extractRoles(payloadOf(token))
 
-            assertFalse(result)
+            assertEquals(listOf("user"), roles)
         }
 
         @Test
-        fun `returns false for empty admin list`() {
-            val admins = emptyList<String>()
+        fun `returns empty list when claim is absent`() {
+            val token =
+                JWT
+                    .create()
+                    .withClaim("email", "user@lunatech.nl")
+                    .sign(Algorithm.HMAC256(TEST_JWT_SECRET))
 
-            val result = isAdmin(admins, "user@lunatech.nl")
+            val roles = extractRoles(payloadOf(token))
 
-            assertFalse(result)
+            assertEquals(emptyList<String>(), roles)
         }
 
         @Test
-        fun `is case sensitive`() {
-            val admins = listOf("Admin@lunatech.nl")
+        fun `returns empty list when claim has the wrong type`() {
+            val token =
+                JWT
+                    .create()
+                    .withClaim("roles", ADMIN_ROLE)
+                    .sign(Algorithm.HMAC256(TEST_JWT_SECRET))
 
-            val result = isAdmin(admins, "admin@lunatech.nl")
+            val roles = extractRoles(payloadOf(token))
 
-            assertFalse(result)
+            assertEquals(emptyList<String>(), roles)
         }
     }
 
@@ -97,9 +143,8 @@ class AuthorizationRoutesTest {
                     isLactoseIntolerant = true,
                     otherRestrictions = "No spicy food",
                 )
-            val admins = listOf("john@lunatech.nl")
 
-            val session = buildChefSession(user, admins)
+            val session = buildChefSession(user, listOf(ADMIN_ROLE))
 
             assertEquals(user.uuid, session.uuid)
             assertEquals(user.name, session.name)
@@ -114,19 +159,32 @@ class AuthorizationRoutesTest {
         }
 
         @Test
-        fun `sets isAdmin false for non-admin`() {
+        fun `sets isAdmin false without the admin role`() {
             val user =
                 aUser(
                     name = "Jane Doe",
                     emailAddress = "jane@lunatech.nl",
                     officeUuid = null,
                 )
-            val admins = listOf("admin@lunatech.nl")
 
-            val session = buildChefSession(user, admins)
+            val session = buildChefSession(user, listOf("user"))
 
             assertFalse(session.isAdmin)
             assertEquals("", session.officeUuid)
+        }
+
+        @Test
+        fun `sets isAdmin false for empty roles`() {
+            val user =
+                aUser(
+                    name = "Jane Doe",
+                    emailAddress = "jane@lunatech.nl",
+                    officeUuid = null,
+                )
+
+            val session = buildChefSession(user, emptyList())
+
+            assertFalse(session.isAdmin)
         }
 
         @Test
@@ -137,9 +195,8 @@ class AuthorizationRoutesTest {
                     emailAddress = "test@lunatech.nl",
                     officeUuid = null,
                 )
-            val admins = emptyList<String>()
 
-            val session = buildChefSession(user, admins)
+            val session = buildChefSession(user, emptyList())
 
             assertEquals("", session.officeUuid)
         }
@@ -160,9 +217,8 @@ class AuthorizationRoutesTest {
                     isGlutenIntolerant = true,
                     isLactoseIntolerant = true,
                 )
-            val admins = emptyList<String>()
 
-            val session = buildChefSession(user, admins)
+            val session = buildChefSession(user, emptyList())
 
             assertTrue(session.isVegetarian)
             assertTrue(session.hasHalalRestriction)
@@ -173,6 +229,142 @@ class AuthorizationRoutesTest {
             assertTrue(session.isGlutenIntolerant)
             assertTrue(session.isLactoseIntolerant)
         }
+    }
+
+    @Nested
+    inner class LoginRouteTests {
+        private lateinit var schedulesService: SchedulesService
+        private lateinit var attendancesService: AttendancesService
+        private lateinit var usersService: UsersService
+
+        @BeforeEach
+        fun setup() {
+            val database = TestDatabase.getDatabase()
+            TestDatabase.resetDatabase()
+            schedulesService = SchedulesService(database)
+            usersService = UsersService(database)
+            attendancesService = AttendancesService(database, usersService)
+        }
+
+        private fun ApplicationTestBuilder.setupLoginRoute() {
+            install(ContentNegotiation) {
+                register(RouteTestHelpers.jsonContentType, RouteTestHelpers.jacksonConverter())
+            }
+            install(Sessions) {
+                header<ChefSession>(TEST_SESSION_HEADER) {
+                    transform(SessionTransportTransformerMessageAuthentication("test-session-secret".encodeToByteArray()))
+                }
+            }
+            install(Authentication) {
+                jwt("idtoken") {
+                    // Mirrors production: the verifier requires the token audience to
+                    // be the configured client id, on top of the signature check.
+                    verifier(
+                        JWT
+                            .require(Algorithm.HMAC256(TEST_JWT_SECRET))
+                            .withAudience(TEST_CLIENT_ID)
+                            .build(),
+                    )
+                    validate { credential -> JWTPrincipal(credential.payload) }
+                }
+            }
+            routing {
+                authentication(schedulesService, attendancesService, usersService)
+            }
+        }
+
+        private fun idTokenFor(
+            email: String,
+            roles: List<String>? = null,
+            audience: String? = TEST_CLIENT_ID,
+        ): String {
+            val builder = JWT.create().withClaim("email", email)
+            if (roles != null) builder.withClaim("roles", roles)
+            if (audience != null) builder.withAudience(audience)
+            return builder.sign(Algorithm.HMAC256(TEST_JWT_SECRET))
+        }
+
+        @Test
+        fun `login with the admin role yields an admin session`() =
+            testApplication {
+                setupLoginRoute()
+                val client = jsonClient()
+
+                val response =
+                    client.get("/login") {
+                        header(HttpHeaders.Authorization, "Bearer ${idTokenFor(uniqueEmail("admin"), listOf(ADMIN_ROLE))}")
+                    }
+
+                assertEquals(HttpStatusCode.OK, response.status)
+                val session = response.body<ChefSession>()
+                assertTrue(session.isAdmin)
+            }
+
+        @Test
+        fun `login without a roles claim yields a non-admin session`() =
+            testApplication {
+                setupLoginRoute()
+                val client = jsonClient()
+
+                val response =
+                    client.get("/login") {
+                        header(HttpHeaders.Authorization, "Bearer ${idTokenFor(uniqueEmail("employee"))}")
+                    }
+
+                assertEquals(HttpStatusCode.OK, response.status)
+                val session = response.body<ChefSession>()
+                assertFalse(session.isAdmin)
+            }
+
+        @Test
+        fun `login with a token for another client is unauthorized`() =
+            testApplication {
+                setupLoginRoute()
+                val client = jsonClient()
+
+                val response =
+                    client.get("/login") {
+                        header(
+                            HttpHeaders.Authorization,
+                            "Bearer ${idTokenFor(uniqueEmail("intruder"), listOf(ADMIN_ROLE), audience = "other-client")}",
+                        )
+                    }
+
+                assertEquals(HttpStatusCode.Unauthorized, response.status)
+            }
+
+        @Test
+        fun `login with a token without an audience is unauthorized`() =
+            testApplication {
+                setupLoginRoute()
+                val client = jsonClient()
+
+                val response =
+                    client.get("/login") {
+                        header(
+                            HttpHeaders.Authorization,
+                            "Bearer ${idTokenFor(uniqueEmail("intruder"), listOf(ADMIN_ROLE), audience = null)}",
+                        )
+                    }
+
+                assertEquals(HttpStatusCode.Unauthorized, response.status)
+            }
+
+        @Test
+        fun `login with roles missing admin yields a non-admin session`() =
+            testApplication {
+                setupLoginRoute()
+                val client = jsonClient()
+
+                val response =
+                    client.get("/login") {
+                        header(HttpHeaders.Authorization, "Bearer ${idTokenFor(uniqueEmail("employee"), listOf("user"))}")
+                    }
+
+                assertEquals(HttpStatusCode.OK, response.status)
+                val session = response.body<ChefSession>()
+                assertFalse(session.isAdmin)
+            }
     }
 
     @Nested

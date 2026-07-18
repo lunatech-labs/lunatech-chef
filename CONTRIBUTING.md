@@ -52,8 +52,6 @@ POSTGRESQL_ADDON_DB = "lunatech-chef-api"
 POSTGRESQL_ADDON_USER = "lunatech-chef-api"
 POSTGRESQL_ADDON_PASSWORD = ""
 
-AUTH_SESSION_SECRET_KEY = "" //ask a current developer or check clever-cloud configuration
-
 // point token verification at the local Keycloak from docker compose
 JWK_PROVIDER = "http://localhost:8081/realms/lunatech/protocol/openid-connect/certs"
 JWK_ISSUER = "http://localhost:8081/realms/lunatech"
@@ -132,16 +130,12 @@ Only authorized request are accepted. These are the steps:
 
 2. Update the token in `http-client.private.env.json`.
 
-   To get a new token you have to launch the application locally and login using the Google sign-in.
-   After a successful login a token can be printed by adding a log statement in login.js `handleLogin` method.
-   Copy and paste it into `http-client.private.env.json` in `token`.
+   To get a new token, launch the application locally and log in through Keycloak. The access token is stored in
+   `sessionStorage` under the key `oidc.user:<REACT_APP_REALMS_URL>:<REACT_APP_CLIENT_ID>`; open the browser devtools
+   console and run `JSON.parse(sessionStorage.getItem("oidc.user:...")).access_token` to print it, then copy it into
+   `http-client.private.env.json` as `token`.
 
-3. Update the session in `http-client.private.env.json`.
-
-   Run the login request in `1-login.http`. Running this request will output a `CHEF_SESSION` string. Update the
-   `session` in `http-client.private.env.json` with that string.
-
-4. You are now ready to run the other requests.
+3. You are now ready to run the requests, starting with `1-me.http`.
 
 # Deploy Lunatech-chef
 

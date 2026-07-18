@@ -4,7 +4,7 @@ plugins {
     id("io.ktor.plugin") version "3.4.0"
     id("com.github.node-gradle.node") version "7.1.0"
     id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
-    id("org.jetbrains.kotlin.jvm") version "2.3.20"
+    id("org.jetbrains.kotlin.jvm") version "2.4.0"
     id("org.jetbrains.kotlin.plugin.serialization") version "2.3.20"
     id("com.github.autostyle") version "4.0.1"
 }
@@ -31,7 +31,7 @@ repositories {
 
 dependencies {
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
-    implementation("ch.qos.logback:logback-classic:1.5.23")
+    implementation("ch.qos.logback:logback-classic:1.5.38")
     implementation("com.newrelic.logging:logback:3.4.0")
     implementation("org.apache.logging.log4j:log4j-core:2.26.1")
 
@@ -68,9 +68,9 @@ dependencies {
     testImplementation("io.ktor:ktor-client-content-negotiation")
     testImplementation("io.ktor:ktor-client-mock")
     testImplementation("org.junit.jupiter:junit-jupiter:6.1.1")
-    testImplementation("org.testcontainers:testcontainers:2.0.4")
-    testImplementation("org.testcontainers:testcontainers-junit-jupiter:2.0.4")
-    testImplementation("org.testcontainers:testcontainers-postgresql:2.0.4")
+    testImplementation("org.testcontainers:testcontainers:2.0.5")
+    testImplementation("org.testcontainers:testcontainers-junit-jupiter:2.0.5")
+    testImplementation("org.testcontainers:testcontainers-postgresql:2.0.5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.1.1")
 }
 

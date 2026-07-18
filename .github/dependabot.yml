@@ -25,6 +25,8 @@ updates:
           - "react-dom"
           - "@types/react"
           - "@types/react-dom"
+          - "react-final-form"
+          - "final-form"
       npm-minor-patch:
         update-types:
           - "minor"

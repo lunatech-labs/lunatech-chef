@@ -1,5 +1,5 @@
 import { userLoggedIn, userLoggedInFailed, userLoggedOut, userUpdatedProfile, userUpdatedProfileFailed } from "./UsersSlice";
-import { axiosInstance } from "../Axios";
+import { axiosInstance, onUnauthorized } from "../Axios";
 import { fetchDishes } from "../dishes/DishesActionCreators";
 import { fetchOffices } from "../offices/OfficesActionCreators";
 import { fetchMenus } from "../menus/MenusActionCreators";
@@ -12,17 +12,12 @@ import {
 import { fetchAttendanceUser } from "../attendance/AttendanceActionCreators";
 import { STORAGE_USER_UUID } from "../LocalStorageKeys";
 
-export const login = (token) => (dispatch) => {
-    const authHeader = {
-        headers: {
-            Authorization: "BEARER " + token,
-        }
-    };
+export const login = () => (dispatch) => {
+    onUnauthorized(() => dispatch(userLoggedOut()));
 
     axiosInstance
-        .get("/login", authHeader)
+        .get("/me")
         .then((response) => {
-            configureAxios(response);
             dispatch(userLoggedIn(response.data));
 
             const userUuid = response.data.uuid;
@@ -33,26 +28,6 @@ export const login = (token) => (dispatch) => {
             console.log("Failed logging in user " + error);
             dispatch(userLoggedInFailed(error.message));
         });
-};
-
-let requestInterceptorId = null;
-
-const configureAxios = (response) => {
-    if (requestInterceptorId !== null) {
-        axiosInstance.interceptors.request.eject(requestInterceptorId);
-    }
-    requestInterceptorId = axiosInstance.interceptors.request.use(
-        function (config) {
-            config.headers = {
-                ...config.headers,
-                CHEF_SESSION: response.headers.chef_session,
-            };
-            return config;
-        },
-        function (error) {
-            return Promise.reject(error);
-        }
-    );
 };
 
 export const saveUserProfile = (userUuid, userProfile) => (dispatch) => {

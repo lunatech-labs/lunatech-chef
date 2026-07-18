@@ -18,7 +18,7 @@ function Redirect({ login }) {
         }
 
         if (auth.isAuthenticated && !auth.activeNavigator && !auth.isLoading) {
-            login(auth.user.id_token);
+            login();
             navigate("/");
         }
     }, [auth, navigate, login]);

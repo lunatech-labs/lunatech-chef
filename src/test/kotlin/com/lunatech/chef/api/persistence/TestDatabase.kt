@@ -8,7 +8,7 @@ object TestDatabase {
     private var database: Database? = null
 
     private val postgresContainer: PostgreSQLContainer =
-        PostgreSQLContainer("postgres:15-alpine")
+        PostgreSQLContainer("postgres:18-alpine")
             .withDatabaseName("lunatech-chef-test")
             .withUsername("test")
             .withPassword("test")

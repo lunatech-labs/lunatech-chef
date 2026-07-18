@@ -62,7 +62,7 @@ dependencies {
     implementation("io.ktor:ktor-client-core-jvm")
     implementation("io.ktor:ktor-client-logging-jvm")
 
-    implementation("org.simplejavamail:simple-java-mail:8.12.6")
+    implementation("org.simplejavamail:simple-java-mail:9.1.0")
 
     testImplementation("io.ktor:ktor-server-test-host")
     testImplementation("io.ktor:ktor-client-content-negotiation")

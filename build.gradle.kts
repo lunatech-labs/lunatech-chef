@@ -1,11 +1,11 @@
 import com.github.gradle.node.npm.task.NpmTask
 
 plugins {
-    id("io.ktor.plugin") version "3.4.0"
+    id("io.ktor.plugin") version "3.5.1"
     id("com.github.node-gradle.node") version "7.1.0"
     id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
-    id("org.jetbrains.kotlin.jvm") version "2.3.20"
-    id("org.jetbrains.kotlin.plugin.serialization") version "2.3.20"
+    id("org.jetbrains.kotlin.jvm") version "2.4.10"
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.4.10"
     id("com.github.autostyle") version "4.0.1"
 }
 
@@ -32,17 +32,17 @@ repositories {
 dependencies {
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
     implementation("ch.qos.logback:logback-classic:1.5.38")
-    implementation("com.newrelic.logging:logback:3.4.0")
+    implementation("com.newrelic.logging:logback:3.5.0")
     implementation("org.apache.logging.log4j:log4j-core:2.26.1")
 
     implementation("com.google.api-client:google-api-client:2.9.0")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.20.1")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.22.1")
     implementation("io.github.config4k:config4k:0.7.0")
     implementation("org.flywaydb:flyway-core:12.11.0")
     implementation("org.flywaydb:flyway-database-postgresql:12.11.0")
     implementation("org.ktorm:ktorm-core:4.2.1")
     implementation("com.zaxxer:HikariCP:7.1.0")
-    implementation("org.postgresql:postgresql:42.7.11")
+    implementation("org.postgresql:postgresql:42.7.13")
     implementation("org.quartz-scheduler:quartz:2.5.2")
 
     implementation("io.ktor:ktor-server-status-pages")
@@ -67,11 +67,11 @@ dependencies {
     testImplementation("io.ktor:ktor-server-test-host")
     testImplementation("io.ktor:ktor-client-content-negotiation")
     testImplementation("io.ktor:ktor-client-mock")
-    testImplementation("org.junit.jupiter:junit-jupiter:6.1.1")
+    testImplementation("org.junit.jupiter:junit-jupiter:6.1.2")
     testImplementation("org.testcontainers:testcontainers:2.0.5")
     testImplementation("org.testcontainers:testcontainers-junit-jupiter:2.0.5")
     testImplementation("org.testcontainers:testcontainers-postgresql:2.0.5")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.1.1")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.1.2")
 }
 
 tasks.test {

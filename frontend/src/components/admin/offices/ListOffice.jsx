@@ -15,7 +15,7 @@ export default function ListOffice(props) {
         if (error) {
             return (
                 <Alert key="danger" variant="danger">
-                    An error occured when {reason} an office: {error}
+                    An error occurred when {reason} an office: {error}
                 </Alert>
             );
         }

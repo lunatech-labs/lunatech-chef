@@ -13,7 +13,7 @@ function Login() {
       </Row>
       <Row>
         <p>
-          You must be a Lunatech employee with a valid Google account to use
+          You must be a Lunatech employee with a valid Lunatech account to use
           this software.<br />
         </p>
       </Row>
@@ -22,7 +22,7 @@ function Login() {
           variant="primary"
           onClick={() => auth.signinRedirect()}
         >
-          Sign in with Google
+          Sign in
         </Button>
       </Row>
     </div>

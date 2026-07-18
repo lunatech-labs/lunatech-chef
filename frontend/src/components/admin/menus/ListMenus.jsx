@@ -14,7 +14,7 @@ export default function ListMenus(props) {
     function ShowError({ error, reason }) {
         return (
             <Alert key="danger" variant="danger">
-                An error occured when {reason} a menu: {error}
+                An error occurred when {reason} a menu: {error}
             </Alert>
         );
     }

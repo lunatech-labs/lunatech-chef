@@ -15,7 +15,7 @@ export default function ListDishes(props) {
     function ShowError({ error, reason }) {
         return (
             <Alert key="danger" variant="danger">
-                An error occured when {reason} a dish: {error}
+                An error occurred when {reason} a dish: {error}
             </Alert>
         );
     }

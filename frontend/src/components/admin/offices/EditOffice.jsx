@@ -25,7 +25,7 @@ export function EditOffice(props) {
         if (error) {
             return (
                 <div>
-                    <h4>An error occurred when editing a Office: {error}</h4>
+                    <h4>An error occurred when editing an Office: {error}</h4>
                 </div>
             );
         } else {

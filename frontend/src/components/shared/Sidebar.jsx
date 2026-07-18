@@ -24,7 +24,7 @@ const Sidebar = (props) => {
                     <button className="sidebar-toggle" onClick={() => setCollapsed(c => !c)}>
                         <FontAwesomeIcon icon={faBars} />
                     </button>
-                    {!collapsed && <span className="sidebar-title">Lunatech's Chef</span>}
+                    {!collapsed && <span className="sidebar-title">Lunatech Chef</span>}
                 </div>
                 <div className="sidebar-content">
                     <ul className="sidebar-menu">

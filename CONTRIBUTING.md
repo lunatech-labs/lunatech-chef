@@ -57,8 +57,10 @@ MAILPACE_API_KEY = ""
 // - schedules being created automatically
 // - sending the monthly report email automatically 
 
+// RECURRENT_SCHEDULES_ENABLED = true
 // RECURRENT_SCHEDULES_CRON = "0 */10 * ? * *" // every 10 minutes for example
 
+// MONTHLY_REPORTS_ENABLED = true
 // MONTHLY_REPORTS_CRON = "0 */10 * ? * *" // every 10 minutes for example
 // EMAIL_RECIPIENTS = "<test with your email>"
 // MAILPACE_API_KEY = "" //ask a current developer or check clever-cloud configuration

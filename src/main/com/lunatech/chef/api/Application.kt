@@ -11,6 +11,7 @@ import com.lunatech.chef.api.config.FlywayConfig
 import com.lunatech.chef.api.config.JwtConfig
 import com.lunatech.chef.api.config.MailerConfig
 import com.lunatech.chef.api.config.MonthlyReportConfig
+import com.lunatech.chef.api.config.SchedulerConfig
 import com.lunatech.chef.api.config.SlackBotConfig
 import com.lunatech.chef.api.persistence.DBEvolution
 import com.lunatech.chef.api.persistence.Database
@@ -114,8 +115,8 @@ fun Application.module() {
 
     val keycloakProvider = UrlJwkProvider(URI(jwtConfig.jwkProvider).toURL())
 
-    val scCronString = config.getString("recurrent-schedules-cron")
-    val mrCronString = config.getString("monthly-reports-cron")
+    val recurrentSchedulesConfig = SchedulerConfig.fromConfig(config.getConfig("recurrent-schedules"))
+    val monthlyReportsConfig = SchedulerConfig.fromConfig(config.getConfig("monthly-reports"))
 
     val chefSession = "CHEF_SESSION"
 
@@ -147,15 +148,26 @@ fun Application.module() {
     val lunchReminderService = LunchReminderService(attendancesForSlackbotService, slackApi)
 
     val scheduler = StdSchedulerFactory.getDefaultScheduler()
-    rcSchedulerTrigger(
-        scheduler,
-        schedulesService,
-        recurrentSchedulesService,
-        attendancesService,
-        externalAttendancesService,
-        scCronString,
-    )
-    mrSchedulerTrigger(scheduler, mrCronString, monthlyReportConfig, mailerConfig, reportService, excelService)
+    if (recurrentSchedulesConfig.enabled) {
+        rcSchedulerTrigger(
+            scheduler,
+            schedulesService,
+            recurrentSchedulesService,
+            attendancesService,
+            externalAttendancesService,
+            recurrentSchedulesConfig.cron,
+        )
+    }
+    if (monthlyReportsConfig.enabled) {
+        mrSchedulerTrigger(
+            scheduler,
+            monthlyReportsConfig.cron,
+            monthlyReportConfig,
+            mailerConfig,
+            reportService,
+            excelService,
+        )
+    }
     if (slackBotConfig.enabled) {
         sbSchedulerTrigger(scheduler, lunchReminderService, slackBotConfig.cron)
     }

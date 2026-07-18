@@ -1,12 +1,15 @@
 package com.lunatech.chef.api
 
+import com.auth0.jwk.JwkProviderBuilder
 import com.auth0.jwk.UrlJwkProvider
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.lunatech.chef.api.auth.KEYCLOAK_AUTH
 import com.lunatech.chef.api.auth.adminOnly
 import com.lunatech.chef.api.auth.adminOnlyWrites
 import com.lunatech.chef.api.auth.idTokenAuthentication
+import com.lunatech.chef.api.auth.keycloakJwt
 import com.lunatech.chef.api.config.AuthConfig
 import com.lunatech.chef.api.config.FlywayConfig
 import com.lunatech.chef.api.config.JwtConfig
@@ -41,6 +44,7 @@ import com.lunatech.chef.api.routes.dishes
 import com.lunatech.chef.api.routes.externalAttendances
 import com.lunatech.chef.api.routes.externalAttendancesWithScheduleInfo
 import com.lunatech.chef.api.routes.healthCheck
+import com.lunatech.chef.api.routes.me
 import com.lunatech.chef.api.routes.menus
 import com.lunatech.chef.api.routes.menusWithDishesInfo
 import com.lunatech.chef.api.routes.offices
@@ -90,6 +94,7 @@ import org.quartz.impl.StdSchedulerFactory
 import java.io.File
 import java.net.URI
 import java.time.format.DateTimeParseException
+import java.util.concurrent.TimeUnit
 
 fun main(args: Array<String>): Unit =
     io.ktor.server.netty.EngineMain
@@ -112,6 +117,13 @@ fun Application.module() {
     val slackBotConfig = SlackBotConfig.fromConfig(config.getConfig("slackbot"))
 
     val keycloakProvider = UrlJwkProvider(URI(jwtConfig.jwkProvider).toURL())
+
+    // Cached and rate limited: token signatures are verified on every request.
+    val keycloakJwkProvider =
+        JwkProviderBuilder(URI(jwtConfig.jwkProvider).toURL())
+            .cached(10, 24, TimeUnit.HOURS)
+            .rateLimited(10, 1, TimeUnit.MINUTES)
+            .build()
 
     val recurrentSchedulesConfig = SchedulerConfig.fromConfig(config.getConfig("recurrent-schedules"))
     val monthlyReportsConfig = SchedulerConfig.fromConfig(config.getConfig("monthly-reports"))
@@ -228,6 +240,12 @@ fun Application.module() {
         }
 
         idTokenAuthentication(keycloakProvider, jwtConfig)
+
+        keycloakJwt(usersService) {
+            verifier(keycloakJwkProvider, jwtConfig.issuer) {
+                withAudience(jwtConfig.clientId)
+            }
+        }
     }
 
     monitor.subscribe(ApplicationStarted) {
@@ -248,6 +266,10 @@ fun Application.module() {
         healthCheck()
         authentication(schedulesService, attendancesService, usersService)
         slackInteraction(attendancesService, slackBotConfig.publicUrl, slackBotConfig.signingSecret)
+
+        authenticate(KEYCLOAK_AUTH) {
+            me(usersService)
+        }
 
         authenticate("session-auth") {
             menusWithDishesInfo(menusWithDishesService)

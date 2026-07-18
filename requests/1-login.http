@@ -1,3 +1,0 @@
-GET {{ host }}/login
-Authorization: BEARER {{ token }}
-

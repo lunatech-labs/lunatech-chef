@@ -1,6 +1,6 @@
 POST {{ host }}/attendances
 Content-Type: application/json
-CHEF_SESSION: {{ session }}
+Authorization: Bearer {{ token }}
 
 {
   "scheduleUuid": "334ba1ab-1be8-4be7-b3fb-46e6dcb38187",
@@ -12,7 +12,7 @@ CHEF_SESSION: {{ session }}
 
 PUT {{ host }}/attendances/1dcbc463-f6d1-4164-aaa0-deb17f06cf59
 Content-Type: application/json
-CHEF_SESSION: {{ session }}
+Authorization: Bearer {{ token }}
 
 {
   "isAttending": "false"

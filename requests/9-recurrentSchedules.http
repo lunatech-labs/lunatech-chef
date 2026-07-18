@@ -1,6 +1,6 @@
 POST {{ host }}/recurrentschedules
 Content-Type: application/json
-CHEF_SESSION: {{ session }}
+Authorization: Bearer {{ token }}
 
 { "menuUuid":"36cb6be6-6ded-447a-8273-57636b3b3675",
   "officeUuid":"8b06e81d-4065-4139-bb42-88ef31393227",
@@ -12,13 +12,13 @@ CHEF_SESSION: {{ session }}
 ###
 
 GET {{ host }}/recurrentschedules
-CHEF_SESSION: {{ session }}
+Authorization: Bearer {{ token }}
 
 ###
 
 PUT {{ host }}/recurrentschedules/038e2c7e-bb93-4f14-a9f9-5
 Content-Type: application/json
-CHEF_SESSION: {{ session }}
+Authorization: Bearer {{ token }}
 
 { "menuUuid":"36cb6be6-6ded-447a-8273-57636b3b3675",
   "officeUuid":"8b06e81d-4065-4139-bb42-88ef31393227",
@@ -29,12 +29,12 @@ CHEF_SESSION: {{ session }}
 ###
 
 DELETE {{ host }}/recurrentschedules/038e2c7e-bb93-4f14-a9f9-d02734545805
-CHEF_SESSION: {{ session }}
+Authorization: Bearer {{ token }}
 
 ###
 
 DELETE {{ host }}/recurrentschedules/undefined
-CHEF_SESSION: {{ session }}
+Authorization: Bearer {{ token }}
 
 ###
 

@@ -1,6 +1,6 @@
 POST {{ host }}/users
 Content-Type: application/json
-CHEF_SESSION: {{ session }}
+Authorization: Bearer {{ token }}
 
 {
   "name": "Maria do Carmo",
@@ -20,18 +20,18 @@ CHEF_SESSION: {{ session }}
 ###
 
 GET {{ host }}/users
-CHEF_SESSION: {{ session }}
+Authorization: Bearer {{ token }}
 
 ###
 
 GET {{ host }}/users/f0daa634-8ec7-4fef-88c7-a92d608b6eea
-CHEF_SESSION: {{ session }}
+Authorization: Bearer {{ token }}
 
 ###
 
 PUT {{ host }}/users/3529bd57-94b7-4e82-b3d4-132c38d5b188
 Content-Type: application/json
-CHEF_SESSION: {{ session }}
+Authorization: Bearer {{ token }}
 
 {
   "officeUuid": "3d13f21d-a96e-4fd2-a2a9-3077f2729caf",
@@ -49,7 +49,7 @@ CHEF_SESSION: {{ session }}
 ###
 
 DELETE {{ host }}/users/e106ce93-89e5-4164-9698-8df9dbe354bd
-CHEF_SESSION: {{ session }}
+Authorization: Bearer {{ token }}
 
 ###
 

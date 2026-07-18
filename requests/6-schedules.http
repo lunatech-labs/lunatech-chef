@@ -1,6 +1,6 @@
 POST {{ host }}/schedules
 Content-Type: application/json
-CHEF_SESSION: {{ session }}
+Authorization: Bearer {{ token }}
 
 { "menuUuid":"d36bb3da-8a12-4d21-aa1b-72b04acdf965",
   "officeUuid":"b515fe85-991d-450e-88e1-b1c88ce22e14",
@@ -10,18 +10,18 @@ CHEF_SESSION: {{ session }}
 ###
 
 GET {{ host }}/schedules
-CHEF_SESSION: {{ session }}
+Authorization: Bearer {{ token }}
 
 ###
 
 GET {{ host }}/schedules/4403ce6b-24b5-40b2-8482-211a1da7731f
-CHEF_SESSION: {{ session }}
+Authorization: Bearer {{ token }}
 
 ###
 
 PUT {{ host }}/schedules/4403ce6b-24b5-40b2-8482-211a1da7731f
 Content-Type: application/json
-CHEF_SESSION: {{ session }}
+Authorization: Bearer {{ token }}
 
 { "menuUuid": "bc868425-74c4-4c74-9cb0-ec789d8d474d",
   "date": "2020-04-25",
@@ -31,12 +31,12 @@ CHEF_SESSION: {{ session }}
 ###
 
 DELETE {{ host }}/schedules/4403ce6b-24b5-40b2-8482-211a1da7731f
-CHEF_SESSION: {{ session }}
+Authorization: Bearer {{ token }}
 
 ###
 
 DELETE {{ host }}/schedules/undefined
-CHEF_SESSION: {{ session }}
+Authorization: Bearer {{ token }}
 
 ###
 

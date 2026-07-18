@@ -1,0 +1,2 @@
+GET {{ host }}/me
+Authorization: Bearer {{ token }}

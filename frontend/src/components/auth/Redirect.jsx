@@ -2,7 +2,6 @@ import React from "react";
 import { useEffect } from "react";
 import { useAuth, hasAuthParams } from "react-oidc-context";
 import { useNavigate } from "react-router-dom";
-import { User } from "oidc-client-ts";
 
 function Redirect({ login }) {
     const auth = useAuth();
@@ -19,14 +18,7 @@ function Redirect({ login }) {
         }
 
         if (auth.isAuthenticated && !auth.activeNavigator && !auth.isLoading) {
-            const oidcStorage =
-                sessionStorage.getItem(
-                    `oidc.user:${import.meta.env.REACT_APP_REALMS_URL}:${import.meta.env.REACT_APP_CLIENT_ID}`
-                ) ?? "";
-
-            const { id_token } = User.fromStorageString(oidcStorage);
-
-            login(id_token);
+            login(auth.user.id_token);
             navigate("/");
         }
     }, [auth, navigate, login]);

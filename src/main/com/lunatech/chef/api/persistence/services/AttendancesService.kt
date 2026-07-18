@@ -5,8 +5,12 @@ import com.lunatech.chef.api.persistence.schemas.Attendances
 import com.lunatech.chef.api.routes.UpdatedAttendance
 import org.ktorm.database.Database
 import org.ktorm.dsl.eq
+import org.ktorm.dsl.from
 import org.ktorm.dsl.insert
+import org.ktorm.dsl.map
+import org.ktorm.dsl.select
 import org.ktorm.dsl.update
+import org.ktorm.dsl.where
 import java.util.UUID
 
 class AttendancesService(
@@ -21,6 +25,14 @@ class AttendancesService(
             set(it.isAttending, attendance.isAttending)
             set(it.isDeleted, attendance.isDeleted)
         }
+
+    fun getByUuid(uuid: UUID): Attendance? =
+        database
+            .from(Attendances)
+            .select()
+            .where { Attendances.uuid eq uuid }
+            .map { Attendances.createEntity(it) }
+            .firstOrNull()
 
     fun update(
         uuid: UUID,

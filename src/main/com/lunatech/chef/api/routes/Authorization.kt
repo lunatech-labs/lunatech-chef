@@ -7,6 +7,7 @@ import com.lunatech.chef.api.domain.User
 import com.lunatech.chef.api.persistence.services.AttendancesService
 import com.lunatech.chef.api.persistence.services.SchedulesService
 import com.lunatech.chef.api.persistence.services.UsersService
+import com.lunatech.chef.api.persistence.services.getUserNameFromEmail
 import com.lunatech.chef.api.serialization.UUIDSerializer
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.http.HttpStatusCode.Companion.Unauthorized
@@ -25,7 +26,6 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
-import java.util.Locale
 import java.util.UUID
 
 private val logger = KotlinLogging.logger {}
@@ -112,12 +112,6 @@ fun addNewUserToSchedules(
     schedulesService.getAfterDate(LocalDate.now()).map { schedule ->
         attendancesService.insertAttendanceForUser(userUuid, schedule.uuid, null)
     }
-
-fun getUserNameFromEmail(emailAddress: String): String =
-    emailAddress
-        .split("@")[0]
-        .split(".")
-        .joinToString(" ") { name -> name.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() } }
 
 /**
  * Extracts the roles claim from the verified ID token payload. A missing or

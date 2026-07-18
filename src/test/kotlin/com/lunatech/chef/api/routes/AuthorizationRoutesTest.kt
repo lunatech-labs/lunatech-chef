@@ -42,36 +42,6 @@ private const val TEST_CLIENT_ID = "lunachef-test"
 
 class AuthorizationRoutesTest {
     @Nested
-    inner class GetUserNameFromEmailTests {
-        @Test
-        fun `extracts and formats name correctly`() {
-            val email = "john.doe@lunatech.nl"
-
-            val name = getUserNameFromEmail(email)
-
-            assertEquals("John Doe", name)
-        }
-
-        @Test
-        fun `handles single name`() {
-            val email = "admin@lunatech.nl"
-
-            val name = getUserNameFromEmail(email)
-
-            assertEquals("Admin", name)
-        }
-
-        @Test
-        fun `handles multiple parts`() {
-            val email = "john.middle.doe@lunatech.nl"
-
-            val name = getUserNameFromEmail(email)
-
-            assertEquals("John Middle Doe", name)
-        }
-    }
-
-    @Nested
     inner class ExtractRolesTests {
         private fun payloadOf(token: String): Payload = JWT.decode(token)
 

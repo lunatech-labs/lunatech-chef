@@ -20,22 +20,26 @@ gradle buildAll
 
 # Run Lunatech-chef
 
-## Start docker with Postgres
+## Start Postgres and Keycloak with Docker
 
-Before starting the Lunatech-chef you need an instance of Postgress running. There's a docker file that provides one
-already.
-
-Build to the docker image:
-
-```commandline
-podman build -t lunatech-chef-api dockerdev/postgres/.
-```
-
-Run the docker image:
+Local development uses two containers, defined in `docker-compose.yml`: a Postgres database and a Keycloak instance
+that is pre-configured for this app. The Keycloak realm (the `lunachef-local` client, the `admin` client role, the
+flat `roles` token mapper, the `backoffice` and `hrm` groups and two test users) is imported automatically from
+`dockerdev/keycloak/lunatech-realm.json`.
 
 ```commandline
-podman run -it -m 1024m --env POSTGRES_HOST_AUTH_METHOD=trust --name postgres -p 5432:5432 lunatech-chef-api -c log_statement=all
+docker compose up -d
 ```
+
+Keycloak runs on http://localhost:8081 (admin console login: `admin` / `admin`). Two test users are available, both
+with password `lunachef`:
+
+- `admin.user@lunatech.nl` is a member of the `backoffice` group and therefore a Chef admin
+- `normal.user@lunatech.nl` is a regular user
+
+To change the realm configuration, edit `dockerdev/keycloak/lunatech-realm.json` and recreate the container with
+`docker compose up -d --force-recreate keycloak`. The import only runs for realms that do not exist yet, so an
+existing container keeps its old state.
 
 ## Setup environment variables
 
@@ -49,6 +53,10 @@ POSTGRESQL_ADDON_USER = "lunatech-chef-api"
 POSTGRESQL_ADDON_PASSWORD = ""
 
 AUTH_SESSION_SECRET_KEY = "" //ask a current developer or check clever-cloud configuration
+
+// point token verification at the local Keycloak from docker compose
+JWK_PROVIDER = "http://localhost:8081/realms/lunatech/protocol/openid-connect/certs"
+JWK_ISSUER = "http://localhost:8081/realms/lunatech"
 
 KTOR_ENV = dev
 MAILPACE_API_KEY = ""
@@ -70,13 +78,14 @@ Both take the same information:
 
 ```shell
 REACT_APP_BASE_URL=http://localhost:8080
-REACT_APP_REALMS_URL=https://keycloak.lunatech.com/realms/lunatech
+REACT_APP_REALMS_URL=http://localhost:8081/realms/lunatech
 REACT_APP_CLIENT_ID=lunachef-local
 ```
 
-There are two types of users: normal users and admin users. Admin access is granted through Keycloak: assign yourself
-the `admin` client role on the `lunachef-local` client in Keycloak, or join the `backoffice` or `hrm` group. The role
-reaches the backend as a `roles` claim in the ID token.
+There are two types of users: normal users and admin users. Admin access is granted through Keycloak: the app-specific
+`admin` client role reaches the backend as a flat `roles` claim in the ID token, and members of the `backoffice` and
+`hrm` groups hold that role. Locally, log in as `admin.user@lunatech.nl` for an admin account or
+`normal.user@lunatech.nl` for a regular one (both use password `lunachef`).
 
 ## Start Lunatech-chef (FE and BE starting together)
 

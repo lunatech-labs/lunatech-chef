@@ -1,0 +1,97 @@
+{
+  "realm": "lunatech",
+  "enabled": true,
+  "registrationAllowed": false,
+  "clients": [
+    {
+      "clientId": "lunachef-local",
+      "name": "Lunatech Chef (local development)",
+      "enabled": true,
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "fullScopeAllowed": false,
+      "rootUrl": "http://localhost:3000",
+      "redirectUris": ["http://localhost:3000/*", "http://localhost:8080/*"],
+      "webOrigins": ["http://localhost:3000", "http://localhost:8080"],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "http://localhost:3000/*##http://localhost:8080/*"
+      },
+      "protocolMappers": [
+        {
+          "name": "lunachef roles",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-client-role-mapper",
+          "consentRequired": false,
+          "config": {
+            "claim.name": "roles",
+            "jsonType.label": "String",
+            "multivalued": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true",
+            "usermodel.clientRoleMapping.clientId": "lunachef-local"
+          }
+        }
+      ]
+    }
+  ],
+  "roles": {
+    "client": {
+      "lunachef-local": [
+        {
+          "name": "admin",
+          "description": "Lunatech Chef administrator"
+        }
+      ]
+    }
+  },
+  "groups": [
+    {
+      "name": "backoffice",
+      "clientRoles": {
+        "lunachef-local": ["admin"]
+      }
+    },
+    {
+      "name": "hrm",
+      "clientRoles": {
+        "lunachef-local": ["admin"]
+      }
+    }
+  ],
+  "users": [
+    {
+      "username": "admin.user@lunatech.nl",
+      "email": "admin.user@lunatech.nl",
+      "emailVerified": true,
+      "enabled": true,
+      "firstName": "Admin",
+      "lastName": "User",
+      "groups": ["/backoffice"],
+      "credentials": [
+        {
+          "type": "password",
+          "value": "lunachef",
+          "temporary": false
+        }
+      ]
+    },
+    {
+      "username": "normal.user@lunatech.nl",
+      "email": "normal.user@lunatech.nl",
+      "emailVerified": true,
+      "enabled": true,
+      "firstName": "Normal",
+      "lastName": "User",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "lunachef",
+          "temporary": false
+        }
+      ]
+    }
+  ]
+}

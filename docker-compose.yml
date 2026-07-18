@@ -1,0 +1,19 @@
+services:
+  postgres:
+    build: dockerdev/postgres
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+    command: -c log_statement=all
+    ports:
+      - "5432:5432"
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.3
+    command: start-dev --import-realm
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./dockerdev/keycloak:/opt/keycloak/data/import:ro

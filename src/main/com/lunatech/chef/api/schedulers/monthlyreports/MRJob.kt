@@ -4,6 +4,7 @@ import com.lunatech.chef.api.config.MailerConfig
 import com.lunatech.chef.api.config.MonthlyReportConfig
 import com.lunatech.chef.api.persistence.services.ExcelService
 import com.lunatech.chef.api.persistence.services.ReportService
+import jakarta.mail.Message
 import mu.KotlinLogging
 import org.quartz.Job
 import org.quartz.JobExecutionContext
@@ -48,7 +49,7 @@ class MRJob : Job {
             EmailBuilder
                 .startingBlank()
                 .from(monthlyReportConfig.from)
-                .to(monthlyReportConfig.to)
+                .withRecipients(null, false, Message.RecipientType.TO, monthlyReportConfig.to)
                 .withSubject(monthlyReportConfig.subject)
                 .withPlainText("Please find the lunch planner monthly report attached, for the month of $monthName")
                 .withAttachment("report.xlsx", excelReport, "application/vnd.ms-excel")

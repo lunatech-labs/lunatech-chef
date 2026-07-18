@@ -37,12 +37,9 @@ The meal planning requires the following to be created, in the order mentioned:
 
 - After that each user can choose if they wish to attend a scheduled meal or not.
 
-### Slackbot
+### Slack bot
 
-The Lunatech-chef integrates with a slackbot. The slackbot was implemented independently and the codebase can be found
-at `lunatech-slackbots` (note that it's a private repository).
-The slackbot runs weekly and, using Slack, every week it invites Lunatech employees to come to the office and enjoy
-lunch together with colleagues.
+Chef includes the LunchBot Slack integration. A Quartz job (cron `SLACKBOT_CRON`, production runs Monday and Tuesday 10:00 Europe/Amsterdam) sends a DM to every employee who has not answered for a scheduled lunch in the next 4 days. Button answers arrive on `POST /slack` and update the attendance. Configuration lives in the `slackbot` block of `application.conf` (`SLACK_USER_TOKEN`, `SLACKBOT_CRON`).
 
 ### Contributing
 

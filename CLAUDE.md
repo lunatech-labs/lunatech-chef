@@ -40,14 +40,14 @@ npm test         # Run tests
 - **Backend**: Kotlin + Ktor 3.3, Ktorm ORM, PostgreSQL, Flyway migrations
 - **Frontend**: React 18 + Redux Toolkit, React Router, React Bootstrap
 - **Auth**: Keycloak (Lunatech instance)
-- **Scheduling**: Quartz for recurring tasks (auto-schedule creation, monthly reports)
+- **Scheduling**: Quartz for recurring tasks (auto-schedule creation, monthly reports, Slack lunch reminders)
 
 ### Backend Structure (`src/main/com/lunatech/chef/api/`)
 - `Application.kt` - Main entry point, Ktor server setup with all routes
 - `routes/` - HTTP route handlers (Offices, Dishes, Menus, Schedules, Attendances, Users, Reports, etc.)
 - `persistence/schemas/` - Ktorm ORM entity mappings
 - `persistence/services/` - Business logic layer
-- `schedulers/` - Quartz jobs for recurring schedules and monthly reports
+- `schedulers/` - Quartz jobs for recurring schedules, monthly reports, and Slack lunch reminders
 - `auth/` - Authorization logic and role handling
 - `config/` - Configuration classes
 

@@ -1,0 +1,31 @@
+package com.lunatech.chef.api.config
+
+import com.typesafe.config.ConfigFactory
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
+
+class SlackBotConfigTest {
+    @Test
+    fun `parses slackbot config block`() {
+        val config =
+            ConfigFactory.parseString(
+                """
+                slackbot {
+                  enabled = true
+                  token = "xoxp-something"
+                  signingSecret = "shhh"
+                  cron = "0 0 10 ? * MON,TUE"
+                  publicUrl = "https://lunch.lunatech.nl"
+                }
+                """.trimIndent(),
+            )
+
+        val slackBotConfig = SlackBotConfig.fromConfig(config.getConfig("slackbot"))
+
+        assertEquals(true, slackBotConfig.enabled)
+        assertEquals("xoxp-something", slackBotConfig.token)
+        assertEquals("shhh", slackBotConfig.signingSecret)
+        assertEquals("0 0 10 ? * MON,TUE", slackBotConfig.cron)
+        assertEquals("https://lunch.lunatech.nl", slackBotConfig.publicUrl)
+    }
+}

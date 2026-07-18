@@ -38,6 +38,7 @@ import java.util.Date
 import java.util.UUID
 
 private const val TEST_JWT_SECRET = "test-jwt-secret"
+private const val TEST_CLIENT_ID = "lunachef-test"
 
 class AuthorizationRoutesTest {
     @Nested
@@ -256,7 +257,14 @@ class AuthorizationRoutesTest {
             }
             install(Authentication) {
                 jwt("idtoken") {
-                    verifier(JWT.require(Algorithm.HMAC256(TEST_JWT_SECRET)).build())
+                    // Mirrors production: the verifier requires the token audience to
+                    // be the configured client id, on top of the signature check.
+                    verifier(
+                        JWT
+                            .require(Algorithm.HMAC256(TEST_JWT_SECRET))
+                            .withAudience(TEST_CLIENT_ID)
+                            .build(),
+                    )
                     validate { credential -> JWTPrincipal(credential.payload) }
                 }
             }
@@ -268,9 +276,11 @@ class AuthorizationRoutesTest {
         private fun idTokenFor(
             email: String,
             roles: List<String>? = null,
+            audience: String? = TEST_CLIENT_ID,
         ): String {
             val builder = JWT.create().withClaim("email", email)
             if (roles != null) builder.withClaim("roles", roles)
+            if (audience != null) builder.withAudience(audience)
             return builder.sign(Algorithm.HMAC256(TEST_JWT_SECRET))
         }
 
@@ -304,6 +314,40 @@ class AuthorizationRoutesTest {
                 assertEquals(HttpStatusCode.OK, response.status)
                 val session = response.body<ChefSession>()
                 assertFalse(session.isAdmin)
+            }
+
+        @Test
+        fun `login with a token for another client is unauthorized`() =
+            testApplication {
+                setupLoginRoute()
+                val client = jsonClient()
+
+                val response =
+                    client.get("/login") {
+                        header(
+                            HttpHeaders.Authorization,
+                            "Bearer ${idTokenFor(uniqueEmail("intruder"), listOf(ADMIN_ROLE), audience = "other-client")}",
+                        )
+                    }
+
+                assertEquals(HttpStatusCode.Unauthorized, response.status)
+            }
+
+        @Test
+        fun `login with a token without an audience is unauthorized`() =
+            testApplication {
+                setupLoginRoute()
+                val client = jsonClient()
+
+                val response =
+                    client.get("/login") {
+                        header(
+                            HttpHeaders.Authorization,
+                            "Bearer ${idTokenFor(uniqueEmail("intruder"), listOf(ADMIN_ROLE), audience = null)}",
+                        )
+                    }
+
+                assertEquals(HttpStatusCode.Unauthorized, response.status)
             }
 
         @Test

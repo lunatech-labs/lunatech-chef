@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Route, Routes, Navigate, useLocation } from "react-router-dom";
 import Container from 'react-bootstrap/Container';
 import Sidebar from "./shared/Sidebar";
 import { useSelector, useDispatch } from 'react-redux'
+import { useAuth } from "react-oidc-context";
 import {
     addNewDish,
     editDish,
@@ -68,6 +69,7 @@ import ProtectedRoutes from "./auth/ProtectedRoutes";
 function Main() {
 
     const location = useLocation()
+    const auth = useAuth()
     const userState = useSelector(state => state.user)
     const officesState = useSelector(state => state.offices)
     const dishesState = useSelector(state => state.dishes)
@@ -78,6 +80,14 @@ function Main() {
 
     // Create callback functions that dispatch as needed, with arguments
     const dispatch = useDispatch()
+
+    // The Redux store resets on a page refresh while the OIDC user survives
+    // in storage, so re-establish the app session from the OIDC session.
+    useEffect(() => {
+        if (auth.isAuthenticated && !userState.isAuthenticated) {
+            dispatch(login())
+        }
+    }, [auth.isAuthenticated, userState.isAuthenticated, dispatch])
     //
     // Offices
     const handleAddNewOffice = (newOffice) => {
@@ -162,10 +172,10 @@ function Main() {
     }
     //
     // Users
-    const handleLogin = () => {
-        dispatch(login())
-    }
     const handleLogout = () => {
+        // Drop the OIDC user as well, otherwise the session would be
+        // re-established right away (and the token kept being sent).
+        auth.removeUser()
         dispatch(logout())
     }
     const handleSaveUserProfile = (uuid, profile) => {
@@ -343,7 +353,7 @@ function Main() {
         return <Login />;
     };
 
-    const RedirectUser = () => { return <Redirect login={handleLogin} /> }
+    const RedirectUser = () => { return <Redirect /> }
 
     const Profile = () => {
         return (
@@ -394,6 +404,12 @@ function Main() {
                                 element={<Navigate to="/" replace />}
                             />
                         </Routes>
+                    </div>
+                </Container>
+            ) : auth.isLoading || (auth.isAuthenticated && !userState.error) ? (
+                <Container>
+                    <div className="d-flex" id="wrapper">
+                        <div>Signing you in...</div>
                     </div>
                 </Container>
             ) : (

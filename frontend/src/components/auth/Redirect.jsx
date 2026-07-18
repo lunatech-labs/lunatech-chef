@@ -1,11 +1,11 @@
 import React from "react";
 import { useEffect } from "react";
 import { useAuth, hasAuthParams } from "react-oidc-context";
-import { useNavigate } from "react-router-dom";
 
-function Redirect({ login }) {
+// Landing page for the Keycloak redirect. Once the OIDC library finishes the
+// code exchange, Main picks the session up and routes back to the app.
+function Redirect() {
     const auth = useAuth();
-    const navigate = useNavigate();
 
     useEffect(() => {
         if (
@@ -16,12 +16,7 @@ function Redirect({ login }) {
         ) {
             auth.signinRedirect();
         }
-
-        if (auth.isAuthenticated && !auth.activeNavigator && !auth.isLoading) {
-            login();
-            navigate("/");
-        }
-    }, [auth, navigate, login]);
+    }, [auth]);
 
     return auth.activeNavigator ? <div>Signing you in/out...</div> : null;
 }

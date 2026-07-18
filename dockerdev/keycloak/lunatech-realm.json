@@ -102,6 +102,21 @@
           "temporary": false
         }
       ]
+    },
+    {
+      "username": "unverified.user@lunatech.nl",
+      "email": "unverified.user@lunatech.nl",
+      "emailVerified": false,
+      "enabled": true,
+      "firstName": "Unverified",
+      "lastName": "User",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "lunachef",
+          "temporary": false
+        }
+      ]
     }
   ]
 }

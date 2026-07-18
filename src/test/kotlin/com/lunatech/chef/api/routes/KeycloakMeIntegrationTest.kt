@@ -152,6 +152,20 @@ class KeycloakMeIntegrationTest {
         }
 
     @Test
+    fun `me with a token whose email is not verified is unauthorized`() =
+        testApplication {
+            setupMeRoute()
+            val client = jsonClient()
+
+            val response =
+                client.get("/me") {
+                    header(HttpHeaders.Authorization, "Bearer ${TestKeycloak.accessTokenFor("unverified.user@lunatech.nl")}")
+                }
+
+            assertEquals(HttpStatusCode.Unauthorized, response.status)
+        }
+
+    @Test
     fun `me with a token not signed by keycloak is unauthorized`() =
         testApplication {
             setupMeRoute()

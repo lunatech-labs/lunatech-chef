@@ -2,6 +2,7 @@ package com.lunatech.chef.api.routes
 
 import com.auth0.jwt.interfaces.Payload
 import com.lunatech.chef.api.auth.ADMIN_ROLE
+import com.lunatech.chef.api.auth.extractRoles
 import com.lunatech.chef.api.domain.NewUser
 import com.lunatech.chef.api.domain.User
 import com.lunatech.chef.api.persistence.services.AttendancesService
@@ -30,7 +31,6 @@ import java.util.UUID
 
 private val logger = KotlinLogging.logger {}
 private val sessionDateFormatter = DateTimeFormatter.ofPattern("yyMMddHHmmss")
-private const val ROLES_CLAIM = "roles"
 
 @Serializable
 data class ChefSession(
@@ -111,18 +111,6 @@ fun addNewUserToSchedules(
 ): List<Int> =
     schedulesService.getAfterDate(LocalDate.now()).map { schedule ->
         attendancesService.insertAttendanceForUser(userUuid, schedule.uuid, null)
-    }
-
-/**
- * Extracts the roles claim from the verified ID token payload. A missing or
- * malformed claim yields an empty list, so callers fail closed to non-admin.
- */
-fun extractRoles(payload: Payload): List<String> =
-    try {
-        payload.getClaim(ROLES_CLAIM).asList(String::class.java) ?: emptyList()
-    } catch (exception: Exception) {
-        logger.debug("Could not read the $ROLES_CLAIM claim from the ID token {}", exception)
-        emptyList()
     }
 
 fun buildChefSession(

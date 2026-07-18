@@ -2,7 +2,6 @@ package com.lunatech.chef.api.routes
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
-import com.auth0.jwt.interfaces.Payload
 import com.lunatech.chef.api.auth.ADMIN_ROLE
 import com.lunatech.chef.api.persistence.TestDatabase
 import com.lunatech.chef.api.persistence.TestFixtures.aUser
@@ -41,63 +40,6 @@ private const val TEST_JWT_SECRET = "test-jwt-secret"
 private const val TEST_CLIENT_ID = "lunachef-test"
 
 class AuthorizationRoutesTest {
-    @Nested
-    inner class ExtractRolesTests {
-        private fun payloadOf(token: String): Payload = JWT.decode(token)
-
-        @Test
-        fun `returns roles when claim contains admin`() {
-            val token =
-                JWT
-                    .create()
-                    .withClaim("roles", listOf(ADMIN_ROLE, "user"))
-                    .sign(Algorithm.HMAC256(TEST_JWT_SECRET))
-
-            val roles = extractRoles(payloadOf(token))
-
-            assertEquals(listOf(ADMIN_ROLE, "user"), roles)
-        }
-
-        @Test
-        fun `returns roles when claim does not contain admin`() {
-            val token =
-                JWT
-                    .create()
-                    .withClaim("roles", listOf("user"))
-                    .sign(Algorithm.HMAC256(TEST_JWT_SECRET))
-
-            val roles = extractRoles(payloadOf(token))
-
-            assertEquals(listOf("user"), roles)
-        }
-
-        @Test
-        fun `returns empty list when claim is absent`() {
-            val token =
-                JWT
-                    .create()
-                    .withClaim("email", "user@lunatech.nl")
-                    .sign(Algorithm.HMAC256(TEST_JWT_SECRET))
-
-            val roles = extractRoles(payloadOf(token))
-
-            assertEquals(emptyList<String>(), roles)
-        }
-
-        @Test
-        fun `returns empty list when claim has the wrong type`() {
-            val token =
-                JWT
-                    .create()
-                    .withClaim("roles", ADMIN_ROLE)
-                    .sign(Algorithm.HMAC256(TEST_JWT_SECRET))
-
-            val roles = extractRoles(payloadOf(token))
-
-            assertEquals(emptyList<String>(), roles)
-        }
-    }
-
     @Nested
     inner class BuildChefSessionTests {
         @Test

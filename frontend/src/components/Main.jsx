@@ -401,6 +401,7 @@ function Main() {
                         <LoginUser />
                         <Routes>
                             <Route path="/redirect" element={<RedirectUser />} />
+                            <Route path="*" element={null} />
                         </Routes>
                     </div>
                 </Container>

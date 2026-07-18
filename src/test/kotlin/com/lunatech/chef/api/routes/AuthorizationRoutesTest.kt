@@ -36,8 +36,8 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.UUID
 
-private const val TEST_JWT_SECRET = "test-jwt-secret"
-private const val TEST_CLIENT_ID = "lunachef-test"
+private const val LOGIN_TEST_JWT_SECRET = "test-jwt-secret"
+private const val LOGIN_TEST_CLIENT_ID = "lunachef-test"
 
 class AuthorizationRoutesTest {
     @Nested
@@ -173,8 +173,8 @@ class AuthorizationRoutesTest {
                     // be the configured client id, on top of the signature check.
                     verifier(
                         JWT
-                            .require(Algorithm.HMAC256(TEST_JWT_SECRET))
-                            .withAudience(TEST_CLIENT_ID)
+                            .require(Algorithm.HMAC256(LOGIN_TEST_JWT_SECRET))
+                            .withAudience(LOGIN_TEST_CLIENT_ID)
                             .build(),
                     )
                     validate { credential -> JWTPrincipal(credential.payload) }
@@ -188,12 +188,12 @@ class AuthorizationRoutesTest {
         private fun idTokenFor(
             email: String,
             roles: List<String>? = null,
-            audience: String? = TEST_CLIENT_ID,
+            audience: String? = LOGIN_TEST_CLIENT_ID,
         ): String {
             val builder = JWT.create().withClaim("email", email)
             if (roles != null) builder.withClaim("roles", roles)
             if (audience != null) builder.withAudience(audience)
-            return builder.sign(Algorithm.HMAC256(TEST_JWT_SECRET))
+            return builder.sign(Algorithm.HMAC256(LOGIN_TEST_JWT_SECRET))
         }
 
         @Test

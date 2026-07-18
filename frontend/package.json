@@ -17,7 +17,7 @@
     "@types/react": "^18.3.12",
     "axios": "^1.13.6",
     "bootstrap": "^5.3.3",
-    "final-form": "^4.20.10",
+    "final-form": "^5.0.1",
     "oidc-client-ts": "^3.5.0",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.4",

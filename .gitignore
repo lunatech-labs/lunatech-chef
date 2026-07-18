@@ -7,6 +7,5 @@
 *.ipr
 *.iws
 src/main/resources/override.conf
-.clever.json
 .sdkmanrc
 http-client.private.env.json

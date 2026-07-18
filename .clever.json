@@ -1,0 +1,12 @@
+{
+  "apps": [
+    {
+      "app_id": "app_e8d28710-9003-4513-ba2d-b31c2e4db7f3",
+      "org_id": "orga_ecf3612b-543b-4e2e-b709-d2013df2fee9",
+      "deploy_url": "https://github.com/lunatech-labs/lunatech-chef.git",
+      "git_ssh_url": "https://github.com/lunatech-labs/lunatech-chef.git",
+      "name": "lunatech-chef",
+      "alias": "lunatech-chef"
+    }
+  ]
+}

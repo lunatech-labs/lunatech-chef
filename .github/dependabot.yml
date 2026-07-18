@@ -34,3 +34,11 @@ updates:
         update-types:
           - "minor"
           - "patch"
+    ignore:
+      # CodeQL's Kotlin extractor only supports versions below 2.3.30 (unstable
+      # compiler IR API, needs an explicit bump per Kotlin release upstream).
+      # Remove once https://github.com/github/codeql/issues/21938 is resolved.
+      - dependency-name: "org.jetbrains.kotlin.jvm"
+        versions: [">=2.3.30"]
+      - dependency-name: "org.jetbrains.kotlin.plugin.serialization"
+        versions: [">=2.3.30"]

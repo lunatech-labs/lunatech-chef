@@ -18,7 +18,7 @@ export const UserProfile = (props) => {
             </Row>
             {props.user.error ? (
                 <Alert key="danger" variant="danger">
-                    An error occured when saving the profile: {props.user.error}
+                    An error occurred when saving the profile: {props.user.error}
                 </Alert>
             ) : null}
             <Row>

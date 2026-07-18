@@ -19,7 +19,7 @@ export default function ListSchedules(props) {
     function ShowError({error, reason}) {
         return (
             <Alert key="danger" variant="danger">
-                An error occured when {reason} a schedule: {error}
+                An error occurred when {reason} a schedule: {error}
             </Alert>
         );
     }

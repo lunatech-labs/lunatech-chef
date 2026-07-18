@@ -12,19 +12,17 @@ Lunatech Chef is a full-stack meal planning application for Lunatech offices. Us
 # Build everything (backend + frontend)
 gradle buildAll
 
-# Build and run the application (serves on http://localhost:8080)
-gradle buildAll && gradle run
+# Start Postgres + Keycloak containers, then run the app (serves on http://localhost:8080)
+gradle devRun
 
-# Build backend only
-gradle build
-
-# Run backend only
+# Run backend only (expects containers already running; this is also the Clever Cloud deploy command)
 gradle run
 
-# Lint Kotlin code
-gradle ktlintCheck
+# Run backend tests (requires Docker: testcontainers boots Postgres and Keycloak)
+gradle test
 
-# Format Kotlin code
+# Lint / format Kotlin code
+gradle ktlintCheck
 gradle ktlintFormat
 
 # Frontend commands (from /frontend directory)
@@ -34,12 +32,14 @@ npm run build    # Production build
 npm test         # Run tests
 ```
 
+IMPORTANT: Clever Cloud deploys with `gradle --no-daemon run` and builds with `buildAll` (see `clevercloud/gradle.json`). Never make `run` or `buildAll` depend on Docker Compose or tests; dev-only wiring belongs in `devRun`.
+
 ## Architecture
 
 ### Tech Stack
 - **Backend**: Kotlin + Ktor 3.3, Ktorm ORM, PostgreSQL, Flyway migrations
 - **Frontend**: React 18 + Redux Toolkit, React Router, React Bootstrap
-- **Auth**: Keycloak (Lunatech instance)
+- **Auth**: Keycloak. The frontend sends the ID token to `/login`; the backend verifies signature (JWKS), issuer, and audience (`jwt.clientId`, `JWT_CLIENT_ID=lunachef` in prod, default `lunachef-local`). Admin = the app-specific `admin` client role, delivered as a flat `roles` claim by a User Client Role mapper (Token Claim Name `roles`, Client ID set, Add to ID token ON); the `backoffice` and `hrm` groups hold that role. Roles are per-client in Keycloak.
 - **Scheduling**: Quartz for recurring tasks (auto-schedule creation, monthly reports, Slack lunch reminders)
 
 ### Backend Structure (`src/main/com/lunatech/chef/api/`)
@@ -58,7 +58,7 @@ npm test         # Run tests
 
 ### Database
 - PostgreSQL with Flyway migrations in `src/main/resources/db/migration/`
-- Local dev: Docker/Podman with postgres image (see CONTRIBUTING.md)
+- Local dev: `docker compose up -d` starts Postgres and a Keycloak pre-loaded from `dockerdev/keycloak/lunatech-realm.json` (also used as the fixture in `KeycloakLoginIntegrationTest`). Test users: `admin.user@lunatech.nl` (admin) and `normal.user@lunatech.nl`, password `lunachef`.
 
 ## Configuration
 
@@ -70,7 +70,7 @@ npm test         # Run tests
 - Create `frontend/.env.development` and `frontend/.env.production` with:
   ```
   REACT_APP_BASE_URL=http://localhost:8080
-  REACT_APP_REALMS_URL=https://keycloak.lunatech.com/realms/lunatech
+  REACT_APP_REALMS_URL=http://localhost:8081/realms/lunatech
   REACT_APP_CLIENT_ID=lunachef-local
   ```
 

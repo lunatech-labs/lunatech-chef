@@ -49,7 +49,7 @@ class MRJob : Job {
             EmailBuilder
                 .startingBlank()
                 .from(monthlyReportConfig.from)
-                .withRecipients(null, false, Message.RecipientType.TO, monthlyReportConfig.to)
+                .withRecipients("Lunatech Chef Reports", true, Message.RecipientType.TO, monthlyReportConfig.to)
                 .withSubject(monthlyReportConfig.subject)
                 .withPlainText("Please find the lunch planner monthly report attached, for the month of $monthName")
                 .withAttachment("report.xlsx", excelReport, "application/vnd.ms-excel")

@@ -7,6 +7,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "2.3.21"
     id("org.jetbrains.kotlin.plugin.serialization") version "2.3.21"
     id("com.github.autostyle") version "4.0.1"
+    id("com.avast.gradle.docker-compose") version "0.17.12"
 }
 
 application {
@@ -21,6 +22,8 @@ sourceSets {
     }
     test {
         java.srcDirs("src/test")
+        // Reuse the local dev Keycloak realm as a test fixture
+        resources.srcDir("dockerdev/keycloak")
     }
 }
 
@@ -81,6 +84,23 @@ tasks.test {
 
 tasks.register("buildAll") {
     dependsOn(tasks.assemble, buildFrontApp)
+}
+
+// Local development only. Clever Cloud deploys with "gradle run" (see clevercloud/gradle.json),
+// so the run task itself must never depend on Docker Compose.
+dockerCompose {
+    // Use the standalone docker-compose binary, which both Docker Desktop and podman setups provide
+    useDockerComposeV2 = false
+}
+
+tasks.register("devRun") {
+    group = "application"
+    description = "Starts Postgres and Keycloak via Docker Compose, then runs the application"
+    dependsOn("composeUp", tasks.named("run"))
+}
+
+tasks.named("run") {
+    mustRunAfter("composeUp")
 }
 
 val buildFrontApp by tasks.registering(NpmTask::class) {

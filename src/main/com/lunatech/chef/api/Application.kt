@@ -6,6 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.lunatech.chef.api.auth.adminOnly
 import com.lunatech.chef.api.auth.adminOnlyWrites
+import com.lunatech.chef.api.auth.idTokenAuthentication
 import com.lunatech.chef.api.config.AuthConfig
 import com.lunatech.chef.api.config.FlywayConfig
 import com.lunatech.chef.api.config.JwtConfig
@@ -70,8 +71,6 @@ import io.ktor.server.application.ApplicationStopped
 import io.ktor.server.application.install
 import io.ktor.server.auth.Authentication
 import io.ktor.server.auth.authenticate
-import io.ktor.server.auth.jwt.JWTPrincipal
-import io.ktor.server.auth.jwt.jwt
 import io.ktor.server.auth.session
 import io.ktor.server.http.content.react
 import io.ktor.server.http.content.singlePageApplication
@@ -90,7 +89,6 @@ import mu.KotlinLogging
 import org.quartz.impl.StdSchedulerFactory
 import java.io.File
 import java.net.URI
-import java.time.Instant
 import java.time.format.DateTimeParseException
 
 fun main(args: Array<String>): Unit =
@@ -229,28 +227,7 @@ fun Application.module() {
             }
         }
 
-        /***
-         * This validates the Google idToken obtained at login
-         */
-        jwt("idtoken") {
-            // Only accept tokens minted for our own client: other clients in the
-            // realm share the signature and issuer but not the roles claim semantics.
-            verifier(keycloakProvider, jwtConfig.issuer) {
-                withAudience(jwtConfig.clientId)
-            }
-            challenge { _, _ ->
-                call.respond(HttpStatusCode.Unauthorized, "IdToken is not valid or has expired")
-            }
-            validate { credential ->
-                if (credential.expiresAt?.toInstant()?.isAfter(Instant.now()) == true &&
-                    credential.payload.getClaim("email_verified").asBoolean()
-                ) {
-                    JWTPrincipal(credential.payload)
-                } else {
-                    null
-                }
-            }
-        }
+        idTokenAuthentication(keycloakProvider, jwtConfig)
     }
 
     monitor.subscribe(ApplicationStarted) {

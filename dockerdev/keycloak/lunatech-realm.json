@@ -4,7 +4,7 @@
   "registrationAllowed": false,
   "clients": [
     {
-      "clientId": "lunachef-local",
+      "clientId": "lunachef",
       "name": "Lunatech Chef (local development)",
       "enabled": true,
       "publicClient": true,
@@ -31,7 +31,17 @@
             "id.token.claim": "true",
             "access.token.claim": "true",
             "userinfo.token.claim": "true",
-            "usermodel.clientRoleMapping.clientId": "lunachef-local"
+            "usermodel.clientRoleMapping.clientId": "lunachef"
+          }
+        },
+        {
+          "name": "lunachef audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.client.audience": "lunachef",
+            "access.token.claim": "true"
           }
         }
       ]
@@ -39,7 +49,7 @@
   ],
   "roles": {
     "client": {
-      "lunachef-local": [
+      "lunachef": [
         {
           "name": "admin",
           "description": "Lunatech Chef administrator"
@@ -51,13 +61,13 @@
     {
       "name": "backoffice",
       "clientRoles": {
-        "lunachef-local": ["admin"]
+        "lunachef": ["admin"]
       }
     },
     {
       "name": "hrm",
       "clientRoles": {
-        "lunachef-local": ["admin"]
+        "lunachef": ["admin"]
       }
     }
   ],

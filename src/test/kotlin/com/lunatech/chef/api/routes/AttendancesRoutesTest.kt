@@ -1,5 +1,6 @@
 package com.lunatech.chef.api.routes
 
+import com.lunatech.chef.api.auth.KEYCLOAK_AUTH
 import com.lunatech.chef.api.domain.User
 import com.lunatech.chef.api.persistence.TestDatabase
 import com.lunatech.chef.api.persistence.TestFixtures.aDish
@@ -82,10 +83,9 @@ class AttendancesRoutesTest {
         install(ContentNegotiation) {
             register(RouteTestHelpers.jsonContentType, RouteTestHelpers.jacksonConverter())
         }
-        installSessionAuth()
+        installKeycloakAuth(usersService)
         routing {
-            testSessionIssuer()
-            authenticate("session-auth") {
+            authenticate(KEYCLOAK_AUTH) {
                 attendances(attendancesService)
             }
         }
@@ -97,7 +97,7 @@ class AttendancesRoutesTest {
         fun `creates new attendance`() =
             testApplication {
                 setupAttendancesRoutes()
-                val client = authenticatedJsonClient(aChefSession(testUser))
+                val client = authenticatedJsonClient(aUserToken(testUser))
 
                 val response =
                     client.post("/attendances") {
@@ -118,7 +118,7 @@ class AttendancesRoutesTest {
         fun `creates attendance with false isAttending`() =
             testApplication {
                 setupAttendancesRoutes()
-                val client = authenticatedJsonClient(aChefSession(testUser))
+                val client = authenticatedJsonClient(aUserToken(testUser))
 
                 val response =
                     client.post("/attendances") {
@@ -139,7 +139,7 @@ class AttendancesRoutesTest {
         fun `creates attendance with null isAttending for undecided`() =
             testApplication {
                 setupAttendancesRoutes()
-                val client = authenticatedJsonClient(aChefSession(testUser))
+                val client = authenticatedJsonClient(aUserToken(testUser))
 
                 val response =
                     client.post("/attendances") {
@@ -160,7 +160,7 @@ class AttendancesRoutesTest {
         fun `returns BadRequest for invalid data`() =
             testApplication {
                 setupAttendancesRoutes()
-                val client = authenticatedJsonClient(aChefSession(testUser))
+                val client = authenticatedJsonClient(aUserToken(testUser))
 
                 val response =
                     client.post("/attendances") {
@@ -175,7 +175,7 @@ class AttendancesRoutesTest {
         fun `returns BadRequest for invalid JSON`() =
             testApplication {
                 setupAttendancesRoutes()
-                val client = authenticatedJsonClient(aChefSession(testUser))
+                val client = authenticatedJsonClient(aUserToken(testUser))
 
                 val response =
                     client.post("/attendances") {
@@ -193,7 +193,7 @@ class AttendancesRoutesTest {
         fun `updates existing attendance`() =
             testApplication {
                 setupAttendancesRoutes()
-                val client = authenticatedJsonClient(aChefSession(testUser))
+                val client = authenticatedJsonClient(aUserToken(testUser))
                 val attendance =
                     anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = false)
                 attendancesService.insert(attendance)
@@ -211,7 +211,7 @@ class AttendancesRoutesTest {
         fun `updates attendance from true to false`() =
             testApplication {
                 setupAttendancesRoutes()
-                val client = authenticatedJsonClient(aChefSession(testUser))
+                val client = authenticatedJsonClient(aUserToken(testUser))
                 val attendance =
                     anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = true)
                 attendancesService.insert(attendance)

@@ -1,5 +1,6 @@
 package com.lunatech.chef.api.routes
 
+import com.lunatech.chef.api.auth.KEYCLOAK_AUTH
 import com.lunatech.chef.api.persistence.TestDatabase
 import com.lunatech.chef.api.persistence.TestFixtures.aUser
 import com.lunatech.chef.api.persistence.TestFixtures.anOffice
@@ -48,10 +49,9 @@ class UsersRoutesTest {
         install(ContentNegotiation) {
             register(RouteTestHelpers.jsonContentType, RouteTestHelpers.jacksonConverter())
         }
-        installSessionAuth()
+        installKeycloakAuth(usersService)
         routing {
-            testSessionIssuer()
-            authenticate("session-auth") {
+            authenticate(KEYCLOAK_AUTH) {
                 users(usersService)
             }
         }
@@ -63,7 +63,7 @@ class UsersRoutesTest {
         fun `returns empty list when no users exist`() =
             testApplication {
                 setupUsersRoutes()
-                val client = authenticatedJsonClient(anAdminSession())
+                val client = authenticatedJsonClient(anAdminToken())
 
                 val response = client.get("/users")
 
@@ -75,7 +75,7 @@ class UsersRoutesTest {
         fun `returns all non-deleted users`() =
             testApplication {
                 setupUsersRoutes()
-                val client = authenticatedJsonClient(anAdminSession())
+                val client = authenticatedJsonClient(anAdminToken())
                 val user = aUser(name = "John Doe", emailAddress = uniqueEmail("john"), officeUuid = testOfficeUuid)
                 usersService.insert(user)
 
@@ -89,7 +89,7 @@ class UsersRoutesTest {
         fun `does not return deleted users`() =
             testApplication {
                 setupUsersRoutes()
-                val client = authenticatedJsonClient(anAdminSession())
+                val client = authenticatedJsonClient(anAdminToken())
                 val activeUser = aUser(name = "Active User", emailAddress = uniqueEmail("active"), officeUuid = testOfficeUuid)
                 val deletedUser =
                     aUser(name = "Deleted User", emailAddress = uniqueEmail("deleted"), officeUuid = testOfficeUuid, isDeleted = true)
@@ -110,7 +110,7 @@ class UsersRoutesTest {
         fun `returns user when it exists`() =
             testApplication {
                 setupUsersRoutes()
-                val client = authenticatedJsonClient(anAdminSession())
+                val client = authenticatedJsonClient(anAdminToken())
                 val user = aUser(name = "John Doe", emailAddress = uniqueEmail("john"), officeUuid = testOfficeUuid)
                 usersService.insert(user)
 
@@ -124,7 +124,7 @@ class UsersRoutesTest {
         fun `returns NotFound for non-existent UUID`() =
             testApplication {
                 setupUsersRoutes()
-                val client = authenticatedJsonClient(anAdminSession())
+                val client = authenticatedJsonClient(anAdminToken())
 
                 val response = client.get("/users/${UUID.randomUUID()}")
 
@@ -138,7 +138,7 @@ class UsersRoutesTest {
         fun `creates new user`() =
             testApplication {
                 setupUsersRoutes()
-                val client = authenticatedJsonClient(anAdminSession())
+                val client = authenticatedJsonClient(anAdminToken())
 
                 val response =
                     client.post("/users") {
@@ -163,7 +163,7 @@ class UsersRoutesTest {
         fun `creates user with null office`() =
             testApplication {
                 setupUsersRoutes()
-                val client = authenticatedJsonClient(anAdminSession())
+                val client = authenticatedJsonClient(anAdminToken())
 
                 val response =
                     client.post("/users") {
@@ -184,7 +184,7 @@ class UsersRoutesTest {
         fun `returns BadRequest for invalid JSON`() =
             testApplication {
                 setupUsersRoutes()
-                val client = authenticatedJsonClient(anAdminSession())
+                val client = authenticatedJsonClient(anAdminToken())
 
                 val response =
                     client.post("/users") {
@@ -202,7 +202,7 @@ class UsersRoutesTest {
         fun `updates existing user`() =
             testApplication {
                 setupUsersRoutes()
-                val client = authenticatedJsonClient(anAdminSession())
+                val client = authenticatedJsonClient(anAdminToken())
                 val user = aUser(name = "John Doe", emailAddress = uniqueEmail("john"), officeUuid = testOfficeUuid, isVegetarian = false)
                 usersService.insert(user)
 
@@ -239,7 +239,7 @@ class UsersRoutesTest {
         fun `soft deletes user`() =
             testApplication {
                 setupUsersRoutes()
-                val client = authenticatedJsonClient(anAdminSession())
+                val client = authenticatedJsonClient(anAdminToken())
                 val user = aUser(name = "John Doe", emailAddress = uniqueEmail("john"), officeUuid = testOfficeUuid)
                 usersService.insert(user)
 

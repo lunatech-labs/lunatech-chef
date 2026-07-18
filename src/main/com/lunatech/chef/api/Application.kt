@@ -1,16 +1,13 @@
 package com.lunatech.chef.api
 
 import com.auth0.jwk.JwkProviderBuilder
-import com.auth0.jwk.UrlJwkProvider
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.lunatech.chef.api.auth.KEYCLOAK_AUTH
 import com.lunatech.chef.api.auth.adminOnly
 import com.lunatech.chef.api.auth.adminOnlyWrites
-import com.lunatech.chef.api.auth.idTokenAuthentication
 import com.lunatech.chef.api.auth.keycloakJwt
-import com.lunatech.chef.api.config.AuthConfig
 import com.lunatech.chef.api.config.FlywayConfig
 import com.lunatech.chef.api.config.JwtConfig
 import com.lunatech.chef.api.config.MailerConfig
@@ -36,10 +33,8 @@ import com.lunatech.chef.api.persistence.services.SchedulesService
 import com.lunatech.chef.api.persistence.services.SchedulesWithAttendanceInfoService
 import com.lunatech.chef.api.persistence.services.SchedulesWithMenuInfoService
 import com.lunatech.chef.api.persistence.services.UsersService
-import com.lunatech.chef.api.routes.ChefSession
 import com.lunatech.chef.api.routes.attendances
 import com.lunatech.chef.api.routes.attendancesWithScheduleInfo
-import com.lunatech.chef.api.routes.authentication
 import com.lunatech.chef.api.routes.dishes
 import com.lunatech.chef.api.routes.externalAttendances
 import com.lunatech.chef.api.routes.externalAttendancesWithScheduleInfo
@@ -56,7 +51,6 @@ import com.lunatech.chef.api.routes.schedulesWithAttendanceInfo
 import com.lunatech.chef.api.routes.schedulesWithMenusInfo
 import com.lunatech.chef.api.routes.slackInteraction
 import com.lunatech.chef.api.routes.users
-import com.lunatech.chef.api.routes.validateSession
 import com.lunatech.chef.api.schedulers.monthlyreports.mrSchedulerTrigger
 import com.lunatech.chef.api.schedulers.recurrentschedules.rcSchedulerTrigger
 import com.lunatech.chef.api.schedulers.slackbot.sbSchedulerTrigger
@@ -75,7 +69,6 @@ import io.ktor.server.application.ApplicationStopped
 import io.ktor.server.application.install
 import io.ktor.server.auth.Authentication
 import io.ktor.server.auth.authenticate
-import io.ktor.server.auth.session
 import io.ktor.server.http.content.react
 import io.ktor.server.http.content.singlePageApplication
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
@@ -86,9 +79,6 @@ import io.ktor.server.response.respond
 import io.ktor.server.response.respondFile
 import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
-import io.ktor.server.sessions.SessionTransportTransformerMessageAuthentication
-import io.ktor.server.sessions.Sessions
-import io.ktor.server.sessions.header
 import mu.KotlinLogging
 import org.quartz.impl.StdSchedulerFactory
 import java.io.File
@@ -109,14 +99,11 @@ fun Application.module() {
 
     val config = ConfigFactory.load()
     val dbConfig = FlywayConfig.fromConfig(config.getConfig("database"))
-    val authConfig = AuthConfig.fromConfig(config.getConfig("auth"))
     val jwtConfig = JwtConfig.fromConfig(config.getConfig("jwt"))
 
     val monthlyReportConfig = MonthlyReportConfig.fromConfig(config.getConfig("monthly-report-email"))
     val mailerConfig = MailerConfig.fromConfig(config.getConfig("mailer"))
     val slackBotConfig = SlackBotConfig.fromConfig(config.getConfig("slackbot"))
-
-    val keycloakProvider = UrlJwkProvider(URI(jwtConfig.jwkProvider).toURL())
 
     // Cached and rate limited: token signatures are verified on every request.
     val keycloakJwkProvider =
@@ -127,8 +114,6 @@ fun Application.module() {
 
     val recurrentSchedulesConfig = SchedulerConfig.fromConfig(config.getConfig("recurrent-schedules"))
     val monthlyReportsConfig = SchedulerConfig.fromConfig(config.getConfig("monthly-reports"))
-
-    val chefSession = "CHEF_SESSION"
 
     runDBEvolutions(dbConfig)
 
@@ -191,7 +176,6 @@ fun Application.module() {
         allowHeader(HttpHeaders.ContentType)
         allowHeader(HttpHeaders.AccessControlAllowOrigin)
         allowHeader(HttpHeaders.Authorization)
-        allowHeader(chefSession)
         anyHost()
     }
 
@@ -216,31 +200,9 @@ fun Application.module() {
         }
     }
 
-    // This will add Date and Server headers to each HTTP response besides CHEF_SESSION header
-    // it's needed when start BE and FE separately
-    install(DefaultHeaders) {
-        header(HttpHeaders.AccessControlExposeHeaders, chefSession)
-    }
-
-    install(Sessions) {
-        header<ChefSession>(chefSession) {
-            val secretSignKey = authConfig.secretKey.encodeToByteArray()
-            transform(SessionTransportTransformerMessageAuthentication(secretSignKey))
-        }
-    }
+    install(DefaultHeaders)
 
     install(Authentication) {
-        session("session-auth") {
-            validate { chefSession ->
-                validateSession(chefSession, authConfig.ttlLimit)
-            }
-            challenge {
-                call.respond(HttpStatusCode.Unauthorized, "Session is not valid or has expired")
-            }
-        }
-
-        idTokenAuthentication(keycloakProvider, jwtConfig)
-
         keycloakJwt(usersService) {
             verifier(keycloakJwkProvider, jwtConfig.issuer) {
                 withAudience(jwtConfig.clientId)
@@ -264,14 +226,10 @@ fun Application.module() {
             call.respondFile(File("frontend/build/index.html"))
         }
         healthCheck()
-        authentication(schedulesService, attendancesService, usersService)
         slackInteraction(attendancesService, slackBotConfig.publicUrl, slackBotConfig.signingSecret)
 
         authenticate(KEYCLOAK_AUTH) {
             me(usersService)
-        }
-
-        authenticate("session-auth") {
             menusWithDishesInfo(menusWithDishesService)
             schedulesWithMenusInfo(schedulesWithMenuInfoService)
             schedulesWithAttendanceInfo(schedulesWithAttendanceInfoService)

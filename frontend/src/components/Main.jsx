@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Route, Routes, Navigate, useLocation } from "react-router-dom";
 import Container from 'react-bootstrap/Container';
 import Sidebar from "./shared/Sidebar";
 import { useSelector, useDispatch } from 'react-redux'
@@ -67,6 +67,7 @@ import ProtectedRoutes from "./auth/ProtectedRoutes";
 
 function Main() {
 
+    const location = useLocation()
     const userState = useSelector(state => state.user)
     const officesState = useSelector(state => state.offices)
     const dishesState = useSelector(state => state.dishes)
@@ -399,10 +400,7 @@ function Main() {
                 <Container>
                     <div className="d-flex" id="wrapper">
                         <LoginUser />
-                        <Routes>
-                            <Route path="/redirect" element={<RedirectUser />} />
-                            <Route path="*" element={null} />
-                        </Routes>
+                        {location.pathname === "/redirect" && <RedirectUser />}
                     </div>
                 </Container>
             )

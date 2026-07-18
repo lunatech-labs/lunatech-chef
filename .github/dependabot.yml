@@ -19,6 +19,12 @@ updates:
       time: "07:00"
       timezone: "Europe/Amsterdam"
     groups:
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
       npm-minor-patch:
         update-types:
           - "minor"

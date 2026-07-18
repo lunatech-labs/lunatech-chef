@@ -91,10 +91,14 @@ There are two types of users: normal users and admin users. Admin access is gran
 
 ```commandline
 gradle buildAll
-gradle run
+gradle devRun
 ```
 
 The application will start at `http://localhost:8080`
+
+`gradle devRun` starts the Postgres and Keycloak containers first (the same as `docker compose up -d`) and then runs
+the application. Plain `gradle run` only runs the application and expects the containers to be running already. The
+production deployment on Clever Cloud uses `gradle run`, so the compose setup never affects it.
 
 ## Start Lunatech-chef (FE and BE starting separately)
 

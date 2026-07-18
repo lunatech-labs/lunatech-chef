@@ -35,7 +35,6 @@ dependencies {
     implementation("com.newrelic.logging:logback:3.5.0")
     implementation("org.apache.logging.log4j:log4j-core:2.26.1")
 
-    implementation("com.google.api-client:google-api-client:2.9.0")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.22.1")
     implementation("io.github.config4k:config4k:0.7.0")
     implementation("org.flywaydb:flyway-core:12.11.0")

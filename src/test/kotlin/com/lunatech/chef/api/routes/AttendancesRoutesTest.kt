@@ -1,5 +1,6 @@
 package com.lunatech.chef.api.routes
 
+import com.lunatech.chef.api.domain.User
 import com.lunatech.chef.api.persistence.TestDatabase
 import com.lunatech.chef.api.persistence.TestFixtures.aDish
 import com.lunatech.chef.api.persistence.TestFixtures.aMenu
@@ -19,6 +20,7 @@ import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
+import io.ktor.server.auth.authenticate
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.routing.routing
 import io.ktor.server.testing.ApplicationTestBuilder
@@ -40,6 +42,7 @@ class AttendancesRoutesTest {
 
     private lateinit var testOfficeUuid: UUID
     private lateinit var testMenuUuid: UUID
+    private lateinit var testUser: User
     private lateinit var testUserUuid: UUID
     private lateinit var testScheduleUuid: UUID
 
@@ -65,7 +68,7 @@ class AttendancesRoutesTest {
         menusService.insert(testMenu)
         testMenuUuid = testMenu.uuid
 
-        val testUser = aUser(name = "Test User", emailAddress = uniqueEmail("test"), officeUuid = testOfficeUuid)
+        testUser = aUser(name = "Test User", emailAddress = uniqueEmail("test"), officeUuid = testOfficeUuid)
         usersService.insert(testUser)
         testUserUuid = testUser.uuid
 
@@ -79,7 +82,13 @@ class AttendancesRoutesTest {
         install(ContentNegotiation) {
             register(RouteTestHelpers.jsonContentType, RouteTestHelpers.jacksonConverter())
         }
-        routing { attendances(attendancesService) }
+        installSessionAuth()
+        routing {
+            testSessionIssuer()
+            authenticate("session-auth") {
+                attendances(attendancesService)
+            }
+        }
     }
 
     @Nested
@@ -88,7 +97,7 @@ class AttendancesRoutesTest {
         fun `creates new attendance`() =
             testApplication {
                 setupAttendancesRoutes()
-                val client = jsonClient()
+                val client = authenticatedJsonClient(aChefSession(testUser))
 
                 val response =
                     client.post("/attendances") {
@@ -109,7 +118,7 @@ class AttendancesRoutesTest {
         fun `creates attendance with false isAttending`() =
             testApplication {
                 setupAttendancesRoutes()
-                val client = jsonClient()
+                val client = authenticatedJsonClient(aChefSession(testUser))
 
                 val response =
                     client.post("/attendances") {
@@ -130,7 +139,7 @@ class AttendancesRoutesTest {
         fun `creates attendance with null isAttending for undecided`() =
             testApplication {
                 setupAttendancesRoutes()
-                val client = jsonClient()
+                val client = authenticatedJsonClient(aChefSession(testUser))
 
                 val response =
                     client.post("/attendances") {
@@ -151,7 +160,7 @@ class AttendancesRoutesTest {
         fun `returns BadRequest for invalid data`() =
             testApplication {
                 setupAttendancesRoutes()
-                val client = jsonClient()
+                val client = authenticatedJsonClient(aChefSession(testUser))
 
                 val response =
                     client.post("/attendances") {
@@ -166,7 +175,7 @@ class AttendancesRoutesTest {
         fun `returns BadRequest for invalid JSON`() =
             testApplication {
                 setupAttendancesRoutes()
-                val client = jsonClient()
+                val client = authenticatedJsonClient(aChefSession(testUser))
 
                 val response =
                     client.post("/attendances") {
@@ -184,7 +193,7 @@ class AttendancesRoutesTest {
         fun `updates existing attendance`() =
             testApplication {
                 setupAttendancesRoutes()
-                val client = jsonClient()
+                val client = authenticatedJsonClient(aChefSession(testUser))
                 val attendance =
                     anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = false)
                 attendancesService.insert(attendance)
@@ -202,7 +211,7 @@ class AttendancesRoutesTest {
         fun `updates attendance from true to false`() =
             testApplication {
                 setupAttendancesRoutes()
-                val client = jsonClient()
+                val client = authenticatedJsonClient(aChefSession(testUser))
                 val attendance =
                     anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = true)
                 attendancesService.insert(attendance)

@@ -48,7 +48,6 @@ POSTGRESQL_ADDON_DB = "lunatech-chef-api"
 POSTGRESQL_ADDON_USER = "lunatech-chef-api"
 POSTGRESQL_ADDON_PASSWORD = ""
 
-AUTH_SESSION_CLIENT_ID = "" //ask a current developer or check clever-cloud configuration
 AUTH_SESSION_SECRET_KEY = "" //ask a current developer or check clever-cloud configuration
 
 KTOR_ENV = dev

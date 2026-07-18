@@ -51,10 +51,6 @@ data class ChefSession(
     val optOutLunches: Boolean = false,
 )
 
-data class AccountPrincipal(
-    val email: String,
-)
-
 fun Route.authentication(
     schedulesService: SchedulesService,
     attendancesService: AttendancesService,
@@ -157,7 +153,7 @@ fun isAdmin(
 fun validateSession(
     session: ChefSession,
     ttlLimit: Int,
-): AccountPrincipal? =
+): ChefSession? =
     try {
         val ttlClient = LocalDateTime.parse(session.ttl, sessionDateFormatter)
         val duration = ChronoUnit.MINUTES.between(ttlClient, LocalDateTime.now())
@@ -165,7 +161,7 @@ fun validateSession(
         if (duration < 0 || duration > ttlLimit) {
             null
         } else {
-            AccountPrincipal(session.emailAddress)
+            session
         }
     } catch (exception: Exception) {
         logger.error("Exception during session validation {}", exception)

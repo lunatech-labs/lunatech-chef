@@ -1,5 +1,8 @@
 package com.lunatech.chef.api.routes
 
+import com.lunatech.chef.api.auth.isAdminSession
+import com.lunatech.chef.api.auth.mayManageUser
+import com.lunatech.chef.api.auth.respondForbidden
 import com.lunatech.chef.api.domain.NewUser
 import com.lunatech.chef.api.domain.User
 import com.lunatech.chef.api.persistence.services.UsersService
@@ -39,13 +42,15 @@ fun Route.users(usersService: UsersService) {
     val usersRoute = "/users"
 
     route(usersRoute) {
-        // get all users
+        // get all users, admins only
         get {
+            if (!call.isAdminSession) return@get call.respondForbidden()
             val users = usersService.getAll()
             call.respond(OK, users)
         }
-        // create a new single users
+        // create a new single users, admins only
         post {
+            if (!call.isAdminSession) return@post call.respondForbidden()
             try {
                 val newUser = call.receive<NewUser>()
                 val inserted = usersService.insert(User.fromNewUser(newUser))
@@ -57,10 +62,11 @@ fun Route.users(usersService: UsersService) {
         }
 
         route(UUID_ROUTE) {
-            // get single user
+            // get single user, own profile or admin
             get {
                 val uuid =
                     call.parameters[UUID_PARAM].toUUIDOrNull() ?: return@get call.respond(BadRequest, "Invalid UUID")
+                if (!call.mayManageUser(uuid)) return@get call.respondForbidden()
                 val user = usersService.getByUuid(uuid)
                 if (user.isEmpty()) {
                     call.respond(NotFound)
@@ -68,7 +74,7 @@ fun Route.users(usersService: UsersService) {
                     call.respond(OK, user.first())
                 }
             }
-            // modify existing user
+            // modify existing user, own profile or admin
             put {
                 try {
                     val uuid =
@@ -76,6 +82,7 @@ fun Route.users(usersService: UsersService) {
                             BadRequest,
                             "Invalid UUID",
                         )
+                    if (!call.mayManageUser(uuid)) return@put call.respondForbidden()
                     val updatedUser = call.receive<UpdatedUser>()
                     val result = usersService.update(uuid, updatedUser)
                     if (result == 1) call.respond(OK) else call.respond(InternalServerError)
@@ -84,10 +91,11 @@ fun Route.users(usersService: UsersService) {
                     call.respond(BadRequest, exception.message ?: "")
                 }
             }
-            // delete a single user
+            // delete a single user, admins only
             delete {
                 val uuid =
                     call.parameters[UUID_PARAM].toUUIDOrNull() ?: return@delete call.respond(BadRequest, "Invalid UUID")
+                if (!call.isAdminSession) return@delete call.respondForbidden()
                 val result = usersService.delete(uuid)
                 logger.info("Deleting user {}", result)
                 if (result == 1) call.respond(OK) else call.respond(InternalServerError)

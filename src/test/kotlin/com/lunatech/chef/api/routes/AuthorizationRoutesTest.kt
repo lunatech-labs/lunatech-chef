@@ -193,7 +193,7 @@ class AuthorizationRoutesTest {
             val principal = validateSession(session, 60)
 
             assertNotNull(principal)
-            assertEquals("test@lunatech.nl", principal?.email)
+            assertEquals("test@lunatech.nl", principal?.emailAddress)
         }
 
         @Test

@@ -4,6 +4,8 @@ import com.auth0.jwk.UrlJwkProvider
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.lunatech.chef.api.auth.adminOnly
+import com.lunatech.chef.api.auth.adminOnlyWrites
 import com.lunatech.chef.api.config.AuthConfig
 import com.lunatech.chef.api.config.FlywayConfig
 import com.lunatech.chef.api.config.JwtConfig
@@ -255,21 +257,26 @@ fun Application.module() {
         slackInteraction(attendancesService, slackBotConfig.publicUrl, slackBotConfig.signingSecret)
 
         authenticate("session-auth") {
-            offices(officesService)
-            dishes(dishesService)
-            menus(menusService)
             menusWithDishesInfo(menusWithDishesService)
-            schedules(schedulesService, attendancesService, externalAttendancesService)
             schedulesWithMenusInfo(schedulesWithMenuInfoService)
             schedulesWithAttendanceInfo(schedulesWithAttendanceInfoService)
-            recurrentSchedules(recurrentSchedulesService)
             recurrentSchedulesWithMenusInfo(recurrentSchedulesMenuWithInfoService)
             attendancesWithScheduleInfo(attendancesWithInfoService)
             users(usersService)
             attendances(attendancesService)
-            reports(reportService, excelService)
             externalAttendances(externalAttendancesService)
             externalAttendancesWithScheduleInfo(externalAttendancesWithScheduleInfoService)
+
+            adminOnlyWrites {
+                offices(officesService)
+                dishes(dishesService)
+                menus(menusService)
+                schedules(schedulesService, attendancesService, externalAttendancesService)
+                recurrentSchedules(recurrentSchedulesService)
+            }
+            adminOnly {
+                reports(reportService, excelService)
+            }
         }
 
         singlePageApplication {

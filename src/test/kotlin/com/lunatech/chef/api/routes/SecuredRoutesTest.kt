@@ -1,5 +1,6 @@
 package com.lunatech.chef.api.routes
 
+import com.lunatech.chef.api.auth.KEYCLOAK_AUTH
 import com.lunatech.chef.api.auth.adminOnly
 import com.lunatech.chef.api.auth.adminOnlyWrites
 import com.lunatech.chef.api.domain.NewAttendance
@@ -22,10 +23,8 @@ import com.lunatech.chef.api.persistence.services.OfficesService
 import com.lunatech.chef.api.persistence.services.ReportService
 import com.lunatech.chef.api.persistence.services.SchedulesService
 import com.lunatech.chef.api.persistence.services.UsersService
-import io.ktor.client.HttpClient
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
-import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
@@ -110,10 +109,9 @@ class SecuredRoutesTest {
         install(ContentNegotiation) {
             register(RouteTestHelpers.jsonContentType, RouteTestHelpers.jacksonConverter())
         }
-        installSessionAuth()
+        installKeycloakAuth(usersService)
         routing {
-            testSessionIssuer()
-            authenticate("session-auth") {
+            authenticate(KEYCLOAK_AUTH) {
                 users(usersService)
                 attendances(attendancesService)
                 adminOnlyWrites {
@@ -126,17 +124,12 @@ class SecuredRoutesTest {
         }
     }
 
-    private suspend fun HttpClient.sessionFor(
-        user: User,
-        isAdmin: Boolean = false,
-    ): String = obtainSessionHeader(aChefSession(user, isAdmin))
-
     private fun anUpdatedUser() = UpdatedUser(officeUuid = testOfficeUuid, isVegetarian = true)
 
     @Nested
     inner class WithoutSession {
         @Test
-        fun `rejects requests without a session`() =
+        fun `rejects requests without a token`() =
             testApplication {
                 setupSecuredRoutes()
                 val response = client.get("/offices")
@@ -150,10 +143,9 @@ class SecuredRoutesTest {
         fun `can read offices`() =
             testApplication {
                 setupSecuredRoutes()
-                val client = jsonClient()
-                val session = client.sessionFor(employee)
+                val client = authenticatedJsonClient(aUserToken(employee))
 
-                val response = client.get("/offices") { header(TEST_SESSION_HEADER, session) }
+                val response = client.get("/offices")
 
                 assertEquals(HttpStatusCode.OK, response.status)
             }
@@ -162,12 +154,10 @@ class SecuredRoutesTest {
         fun `cannot create an office`() =
             testApplication {
                 setupSecuredRoutes()
-                val client = jsonClient()
-                val session = client.sessionFor(employee)
+                val client = authenticatedJsonClient(aUserToken(employee))
 
                 val response =
                     client.post("/offices") {
-                        header(TEST_SESSION_HEADER, session)
                         contentType(RouteTestHelpers.jsonContentType)
                         setBody(NewOffice(city = "Amsterdam", country = "Netherlands"))
                     }
@@ -179,12 +169,10 @@ class SecuredRoutesTest {
         fun `cannot update an office`() =
             testApplication {
                 setupSecuredRoutes()
-                val client = jsonClient()
-                val session = client.sessionFor(employee)
+                val client = authenticatedJsonClient(aUserToken(employee))
 
                 val response =
                     client.put("/offices/$testOfficeUuid") {
-                        header(TEST_SESSION_HEADER, session)
                         contentType(RouteTestHelpers.jsonContentType)
                         setBody(UpdatedOffice(city = "Utrecht", country = "Netherlands"))
                     }
@@ -196,10 +184,9 @@ class SecuredRoutesTest {
         fun `cannot delete an office`() =
             testApplication {
                 setupSecuredRoutes()
-                val client = jsonClient()
-                val session = client.sessionFor(employee)
+                val client = authenticatedJsonClient(aUserToken(employee))
 
-                val response = client.delete("/offices/$testOfficeUuid") { header(TEST_SESSION_HEADER, session) }
+                val response = client.delete("/offices/$testOfficeUuid")
 
                 assertEquals(HttpStatusCode.Forbidden, response.status)
             }
@@ -208,10 +195,9 @@ class SecuredRoutesTest {
         fun `cannot download reports`() =
             testApplication {
                 setupSecuredRoutes()
-                val client = jsonClient()
-                val session = client.sessionFor(employee)
+                val client = authenticatedJsonClient(aUserToken(employee))
 
-                val response = client.get("/reports?year=2026&month=7") { header(TEST_SESSION_HEADER, session) }
+                val response = client.get("/reports?year=2026&month=7")
 
                 assertEquals(HttpStatusCode.Forbidden, response.status)
             }
@@ -220,10 +206,9 @@ class SecuredRoutesTest {
         fun `cannot list all users`() =
             testApplication {
                 setupSecuredRoutes()
-                val client = jsonClient()
-                val session = client.sessionFor(employee)
+                val client = authenticatedJsonClient(aUserToken(employee))
 
-                val response = client.get("/users") { header(TEST_SESSION_HEADER, session) }
+                val response = client.get("/users")
 
                 assertEquals(HttpStatusCode.Forbidden, response.status)
             }
@@ -232,12 +217,10 @@ class SecuredRoutesTest {
         fun `cannot create a user`() =
             testApplication {
                 setupSecuredRoutes()
-                val client = jsonClient()
-                val session = client.sessionFor(employee)
+                val client = authenticatedJsonClient(aUserToken(employee))
 
                 val response =
                     client.post("/users") {
-                        header(TEST_SESSION_HEADER, session)
                         contentType(RouteTestHelpers.jsonContentType)
                         setBody(NewUser(name = "Intruder", emailAddress = uniqueEmail("intruder"), officeUuid = null))
                     }
@@ -249,10 +232,9 @@ class SecuredRoutesTest {
         fun `cannot delete a user`() =
             testApplication {
                 setupSecuredRoutes()
-                val client = jsonClient()
-                val session = client.sessionFor(employee)
+                val client = authenticatedJsonClient(aUserToken(employee))
 
-                val response = client.delete("/users/${otherUser.uuid}") { header(TEST_SESSION_HEADER, session) }
+                val response = client.delete("/users/${otherUser.uuid}")
 
                 assertEquals(HttpStatusCode.Forbidden, response.status)
             }
@@ -261,10 +243,9 @@ class SecuredRoutesTest {
         fun `can read own profile`() =
             testApplication {
                 setupSecuredRoutes()
-                val client = jsonClient()
-                val session = client.sessionFor(employee)
+                val client = authenticatedJsonClient(aUserToken(employee))
 
-                val response = client.get("/users/${employee.uuid}") { header(TEST_SESSION_HEADER, session) }
+                val response = client.get("/users/${employee.uuid}")
 
                 assertEquals(HttpStatusCode.OK, response.status)
             }
@@ -273,10 +254,9 @@ class SecuredRoutesTest {
         fun `cannot read another users profile`() =
             testApplication {
                 setupSecuredRoutes()
-                val client = jsonClient()
-                val session = client.sessionFor(employee)
+                val client = authenticatedJsonClient(aUserToken(employee))
 
-                val response = client.get("/users/${otherUser.uuid}") { header(TEST_SESSION_HEADER, session) }
+                val response = client.get("/users/${otherUser.uuid}")
 
                 assertEquals(HttpStatusCode.Forbidden, response.status)
             }
@@ -285,12 +265,10 @@ class SecuredRoutesTest {
         fun `can update own profile`() =
             testApplication {
                 setupSecuredRoutes()
-                val client = jsonClient()
-                val session = client.sessionFor(employee)
+                val client = authenticatedJsonClient(aUserToken(employee))
 
                 val response =
                     client.put("/users/${employee.uuid}") {
-                        header(TEST_SESSION_HEADER, session)
                         contentType(RouteTestHelpers.jsonContentType)
                         setBody(anUpdatedUser())
                     }
@@ -302,12 +280,10 @@ class SecuredRoutesTest {
         fun `cannot update another users profile`() =
             testApplication {
                 setupSecuredRoutes()
-                val client = jsonClient()
-                val session = client.sessionFor(employee)
+                val client = authenticatedJsonClient(aUserToken(employee))
 
                 val response =
                     client.put("/users/${otherUser.uuid}") {
-                        header(TEST_SESSION_HEADER, session)
                         contentType(RouteTestHelpers.jsonContentType)
                         setBody(anUpdatedUser())
                     }
@@ -319,12 +295,10 @@ class SecuredRoutesTest {
         fun `can sign up own attendance`() =
             testApplication {
                 setupSecuredRoutes()
-                val client = jsonClient()
-                val session = client.sessionFor(employee)
+                val client = authenticatedJsonClient(aUserToken(employee))
 
                 val response =
                     client.post("/attendances") {
-                        header(TEST_SESSION_HEADER, session)
                         contentType(RouteTestHelpers.jsonContentType)
                         setBody(NewAttendance(scheduleUuid = testScheduleUuid, userUuid = employee.uuid, isAttending = true))
                     }
@@ -336,12 +310,10 @@ class SecuredRoutesTest {
         fun `cannot create an attendance for another user`() =
             testApplication {
                 setupSecuredRoutes()
-                val client = jsonClient()
-                val session = client.sessionFor(employee)
+                val client = authenticatedJsonClient(aUserToken(employee))
 
                 val response =
                     client.post("/attendances") {
-                        header(TEST_SESSION_HEADER, session)
                         contentType(RouteTestHelpers.jsonContentType)
                         setBody(NewAttendance(scheduleUuid = testScheduleUuid, userUuid = otherUser.uuid, isAttending = true))
                     }
@@ -353,12 +325,10 @@ class SecuredRoutesTest {
         fun `can update own attendance`() =
             testApplication {
                 setupSecuredRoutes()
-                val client = jsonClient()
-                val session = client.sessionFor(employee)
+                val client = authenticatedJsonClient(aUserToken(employee))
 
                 val response =
                     client.put("/attendances/$employeeAttendanceUuid") {
-                        header(TEST_SESSION_HEADER, session)
                         contentType(RouteTestHelpers.jsonContentType)
                         setBody(UpdatedAttendance(isAttending = true))
                     }
@@ -370,12 +340,10 @@ class SecuredRoutesTest {
         fun `cannot update another users attendance`() =
             testApplication {
                 setupSecuredRoutes()
-                val client = jsonClient()
-                val session = client.sessionFor(employee)
+                val client = authenticatedJsonClient(aUserToken(employee))
 
                 val response =
                     client.put("/attendances/$otherUserAttendanceUuid") {
-                        header(TEST_SESSION_HEADER, session)
                         contentType(RouteTestHelpers.jsonContentType)
                         setBody(UpdatedAttendance(isAttending = true))
                     }
@@ -390,12 +358,10 @@ class SecuredRoutesTest {
         fun `can create an office`() =
             testApplication {
                 setupSecuredRoutes()
-                val client = jsonClient()
-                val session = client.sessionFor(admin, isAdmin = true)
+                val client = authenticatedJsonClient(aUserToken(admin, isAdmin = true))
 
                 val response =
                     client.post("/offices") {
-                        header(TEST_SESSION_HEADER, session)
                         contentType(RouteTestHelpers.jsonContentType)
                         setBody(NewOffice(city = "Amsterdam", country = "Netherlands"))
                     }
@@ -407,10 +373,9 @@ class SecuredRoutesTest {
         fun `can download reports`() =
             testApplication {
                 setupSecuredRoutes()
-                val client = jsonClient()
-                val session = client.sessionFor(admin, isAdmin = true)
+                val client = authenticatedJsonClient(aUserToken(admin, isAdmin = true))
 
-                val response = client.get("/reports?year=2026&month=7") { header(TEST_SESSION_HEADER, session) }
+                val response = client.get("/reports?year=2026&month=7")
 
                 assertEquals(HttpStatusCode.OK, response.status)
             }
@@ -419,10 +384,9 @@ class SecuredRoutesTest {
         fun `can list all users`() =
             testApplication {
                 setupSecuredRoutes()
-                val client = jsonClient()
-                val session = client.sessionFor(admin, isAdmin = true)
+                val client = authenticatedJsonClient(aUserToken(admin, isAdmin = true))
 
-                val response = client.get("/users") { header(TEST_SESSION_HEADER, session) }
+                val response = client.get("/users")
 
                 assertEquals(HttpStatusCode.OK, response.status)
             }
@@ -431,12 +395,10 @@ class SecuredRoutesTest {
         fun `can update another users profile`() =
             testApplication {
                 setupSecuredRoutes()
-                val client = jsonClient()
-                val session = client.sessionFor(admin, isAdmin = true)
+                val client = authenticatedJsonClient(aUserToken(admin, isAdmin = true))
 
                 val response =
                     client.put("/users/${otherUser.uuid}") {
-                        header(TEST_SESSION_HEADER, session)
                         contentType(RouteTestHelpers.jsonContentType)
                         setBody(anUpdatedUser())
                     }
@@ -448,12 +410,10 @@ class SecuredRoutesTest {
         fun `can update another users attendance`() =
             testApplication {
                 setupSecuredRoutes()
-                val client = jsonClient()
-                val session = client.sessionFor(admin, isAdmin = true)
+                val client = authenticatedJsonClient(aUserToken(admin, isAdmin = true))
 
                 val response =
                     client.put("/attendances/$otherUserAttendanceUuid") {
-                        header(TEST_SESSION_HEADER, session)
                         contentType(RouteTestHelpers.jsonContentType)
                         setBody(UpdatedAttendance(isAttending = true))
                     }

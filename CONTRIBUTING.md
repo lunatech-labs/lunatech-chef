@@ -23,7 +23,7 @@ gradle buildAll
 ## Start Postgres and Keycloak with Docker
 
 Local development uses two containers, defined in `docker-compose.yml`: a Postgres database and a Keycloak instance
-that is pre-configured for this app. The Keycloak realm (the `lunachef-local` client, the `admin` client role, the
+that is pre-configured for this app. The Keycloak realm (the `lunachef` client, the `admin` client role, the
 flat `roles` token mapper, the `backoffice` and `hrm` groups and two test users) is imported automatically from
 `dockerdev/keycloak/lunatech-realm.json`.
 
@@ -81,7 +81,7 @@ Both take the same information:
 ```shell
 REACT_APP_BASE_URL=http://localhost:8080
 REACT_APP_REALMS_URL=http://localhost:8081/realms/lunatech
-REACT_APP_CLIENT_ID=lunachef-local
+REACT_APP_CLIENT_ID=lunachef
 ```
 
 There are two types of users: normal users and admin users. Admin access is granted through Keycloak: the app-specific

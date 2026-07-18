@@ -1,6 +1,5 @@
 package com.lunatech.chef.api.auth
 
-import com.lunatech.chef.api.routes.ChefSession
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.ApplicationCall
@@ -18,22 +17,22 @@ import java.util.UUID
 /** Keycloak client role that grants admin access, carried in the ID token's roles claim. */
 const val ADMIN_ROLE = "admin"
 
-/** True when the call carries a valid session belonging to an admin user. */
-val ApplicationCall.isAdminSession: Boolean
-    get() = principal<ChefSession>()?.isAdmin == true
+/** True when the call carries a valid token belonging to an admin user. */
+val ApplicationCall.isAdmin: Boolean
+    get() = principal<ChefPrincipal>()?.isAdmin == true
 
-/** True when the call's session belongs to [userUuid] or to an admin. */
-fun ApplicationCall.mayManageUser(userUuid: UUID): Boolean = isAdminSession || principal<ChefSession>()?.uuid == userUuid
+/** True when the call's token belongs to [userUuid] or to an admin. */
+fun ApplicationCall.mayManageUser(userUuid: UUID): Boolean = isAdmin || principal<ChefPrincipal>()?.user?.uuid == userUuid
 
 suspend fun ApplicationCall.respondForbidden() = respond(HttpStatusCode.Forbidden, "Administrator rights required")
 
 private val AdminOnlyPlugin =
     createRouteScopedPlugin("AdminOnly") {
         on(AuthenticationChecked) { call ->
-            // A missing principal means authentication failed; the session provider's
+            // A missing principal means authentication failed; the jwt provider's
             // challenge responds with 401, so only authenticated non-admins get a 403.
-            val session = call.principal<ChefSession>() ?: return@on
-            if (!session.isAdmin) {
+            val principal = call.principal<ChefPrincipal>() ?: return@on
+            if (!principal.isAdmin) {
                 call.respondForbidden()
             }
         }
@@ -43,8 +42,8 @@ private val AdminOnlyWritesPlugin =
     createRouteScopedPlugin("AdminOnlyWrites") {
         on(AuthenticationChecked) { call ->
             if (call.request.local.method == HttpMethod.Get) return@on
-            val session = call.principal<ChefSession>() ?: return@on
-            if (!session.isAdmin) {
+            val principal = call.principal<ChefPrincipal>() ?: return@on
+            if (!principal.isAdmin) {
                 call.respondForbidden()
             }
         }
@@ -67,7 +66,7 @@ private class AuthorizationRouteSelector(
 
 /**
  * Restricts every route registered inside [build] to admin users.
- * Must be nested inside an authenticate block that produces a [ChefSession] principal.
+ * Must be nested inside an authenticate(KEYCLOAK_AUTH) block.
  */
 fun Route.adminOnly(build: Route.() -> Unit): Route {
     val authorizedRoute = createChild(AuthorizationRouteSelector("admin only"))
@@ -79,7 +78,7 @@ fun Route.adminOnly(build: Route.() -> Unit): Route {
 /**
  * Restricts POST/PUT/DELETE routes registered inside [build] to admin users,
  * while leaving GET routes accessible to any authenticated user.
- * Must be nested inside an authenticate block that produces a [ChefSession] principal.
+ * Must be nested inside an authenticate(KEYCLOAK_AUTH) block.
  */
 fun Route.adminOnlyWrites(build: Route.() -> Unit): Route {
     val authorizedRoute = createChild(AuthorizationRouteSelector("admin-only writes"))

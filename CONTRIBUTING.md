@@ -74,9 +74,9 @@ REACT_APP_REALMS_URL=https://keycloak.lunatech.com/realms/lunatech
 REACT_APP_CLIENT_ID=lunachef-local
 ```
 
-There are two types of users: normal users and admin users. To be able to see all option in the Lunatech-chef UI you
-will need to
-add yourself as an admin in the `application.conf` file.
+There are two types of users: normal users and admin users. Admin access is granted through Keycloak: assign yourself
+the `admin` client role on the `lunachef-local` client in Keycloak, or join the `backoffice` or `hrm` group. The role
+reaches the backend as a `roles` claim in the ID token.
 
 ## Start Lunatech-chef (FE and BE starting together)
 

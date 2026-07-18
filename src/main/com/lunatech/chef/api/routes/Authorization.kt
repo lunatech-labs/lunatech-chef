@@ -1,6 +1,7 @@
 package com.lunatech.chef.api.routes
 
 import com.auth0.jwt.interfaces.Payload
+import com.lunatech.chef.api.auth.ADMIN_ROLE
 import com.lunatech.chef.api.domain.NewUser
 import com.lunatech.chef.api.domain.User
 import com.lunatech.chef.api.persistence.services.AttendancesService
@@ -29,6 +30,7 @@ import java.util.UUID
 
 private val logger = KotlinLogging.logger {}
 private val sessionDateFormatter = DateTimeFormatter.ofPattern("yyMMddHHmmss")
+private const val ROLES_CLAIM = "roles"
 
 @Serializable
 data class ChefSession(
@@ -55,7 +57,6 @@ fun Route.authentication(
     schedulesService: SchedulesService,
     attendancesService: AttendancesService,
     usersService: UsersService,
-    admins: List<String>,
 ) {
     val loginRoute = "/login"
 
@@ -66,7 +67,7 @@ fun Route.authentication(
 
                 if (payload != null) {
                     val user = addUserToDB(schedulesService, attendancesService, usersService, payload)
-                    val session = buildChefSession(user, admins)
+                    val session = buildChefSession(user, extractRoles(payload))
 
                     call.sessions.set(session)
                     call.respond(OK, session)
@@ -118,11 +119,23 @@ fun getUserNameFromEmail(emailAddress: String): String =
         .split(".")
         .joinToString(" ") { name -> name.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() } }
 
+/**
+ * Extracts the roles claim from the verified ID token payload. A missing or
+ * malformed claim yields an empty list, so callers fail closed to non-admin.
+ */
+fun extractRoles(payload: Payload): List<String> =
+    try {
+        payload.getClaim(ROLES_CLAIM).asList(String::class.java) ?: emptyList()
+    } catch (exception: Exception) {
+        logger.debug("Could not read the $ROLES_CLAIM claim from the ID token {}", exception)
+        emptyList()
+    }
+
 fun buildChefSession(
     user: User,
-    admins: List<String>,
+    roles: List<String>,
 ): ChefSession {
-    val isAdmin = isAdmin(admins, user.emailAddress)
+    val isAdmin = ADMIN_ROLE in roles
     val ttl = LocalDateTime.now().format(sessionDateFormatter)
 
     return ChefSession(
@@ -144,11 +157,6 @@ fun buildChefSession(
         optOutLunches = user.optOutLunches,
     )
 }
-
-fun isAdmin(
-    admins: List<String>,
-    email: String,
-): Boolean = admins.contains(email)
 
 fun validateSession(
     session: ChefSession,

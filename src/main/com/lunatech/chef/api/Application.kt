@@ -253,7 +253,7 @@ fun Application.module() {
             call.respondFile(File("frontend/build/index.html"))
         }
         healthCheck()
-        authentication(schedulesService, attendancesService, usersService, authConfig.admins)
+        authentication(schedulesService, attendancesService, usersService)
         slackInteraction(attendancesService, slackBotConfig.publicUrl, slackBotConfig.signingSecret)
 
         authenticate("session-auth") {

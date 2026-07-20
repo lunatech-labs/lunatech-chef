@@ -70,6 +70,12 @@ MAILPACE_API_KEY = ""
 // MONTHLY_REPORTS_CRON = "0 */10 * ? * *" // every 10 minutes for example
 // EMAIL_RECIPIENTS = "<test with your email>"
 // MAILPACE_API_KEY = "" //ask a current developer or check clever-cloud configuration
+
+// you will need to setup these if you wish to test the Slack lunch bot:
+// SLACKBOT_ENABLED = true
+// SLACK_USER_TOKEN = "" // ask a current developer or check clever-cloud configuration
+// SLACK_SIGNING_SECRET = "" // from the Slack app's Basic Information > App Credentials > Signing Secret;
+                             // must match the value on clever-cloud exactly, or every interaction is rejected
 ```
 
 In `frontend/` create the files `.env.development` and `.env.production`. The one that is needed depends on the way the

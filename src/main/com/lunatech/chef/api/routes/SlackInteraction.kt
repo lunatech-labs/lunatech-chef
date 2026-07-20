@@ -36,10 +36,64 @@ data class SlackInteractionPayload(
     val actions: List<SlackInteractionAction> = emptyList(),
 )
 
+private sealed class SlackSignatureCheck {
+    object Valid : SlackSignatureCheck()
+
+    object MissingSecret : SlackSignatureCheck()
+
+    object MissingHeaders : SlackSignatureCheck()
+
+    object InvalidTimestampFormat : SlackSignatureCheck()
+
+    data class StaleTimestamp(
+        val skewSeconds: Long,
+    ) : SlackSignatureCheck()
+
+    object SignatureMismatch : SlackSignatureCheck()
+
+    fun reason(): String =
+        when (this) {
+            Valid -> "valid"
+            MissingSecret -> "signing secret is not configured"
+            MissingHeaders -> "timestamp or signature header is missing"
+            InvalidTimestampFormat -> "timestamp header is not a valid number"
+            is StaleTimestamp -> "timestamp is ${skewSeconds}s outside the ${MAX_TIMESTAMP_SKEW_SECONDS}s window"
+            SignatureMismatch -> "computed signature did not match the header"
+        }
+}
+
 /**
- * Verifies Slack's request signature: HMAC-SHA256 of "v0:{timestamp}:{body}"
+ * Checks Slack's request signature: HMAC-SHA256 of "v0:{timestamp}:{body}"
  * with the app's signing secret, compared in constant time. Rejects requests
  * older than 5 minutes to prevent replays. Fails closed on an empty secret.
+ */
+private fun checkSlackSignature(
+    signingSecret: String,
+    timestamp: String?,
+    body: String,
+    signature: String?,
+    nowEpochSeconds: Long = Instant.now().epochSecond,
+): SlackSignatureCheck {
+    if (signingSecret.isEmpty()) return SlackSignatureCheck.MissingSecret
+    if (timestamp == null || signature == null) return SlackSignatureCheck.MissingHeaders
+    val requestSeconds = timestamp.toLongOrNull() ?: return SlackSignatureCheck.InvalidTimestampFormat
+    val skewSeconds = abs(nowEpochSeconds - requestSeconds)
+    if (skewSeconds > MAX_TIMESTAMP_SKEW_SECONDS) return SlackSignatureCheck.StaleTimestamp(skewSeconds)
+
+    val mac = Mac.getInstance("HmacSHA256")
+    mac.init(SecretKeySpec(signingSecret.toByteArray(), "HmacSHA256"))
+    val digest = mac.doFinal("$SIGNATURE_VERSION:$timestamp:$body".toByteArray())
+    val computed = "$SIGNATURE_VERSION=" + digest.joinToString("") { "%02x".format(it) }
+    return if (MessageDigest.isEqual(computed.toByteArray(), signature.toByteArray())) {
+        SlackSignatureCheck.Valid
+    } else {
+        SlackSignatureCheck.SignatureMismatch
+    }
+}
+
+/**
+ * Verifies Slack's request signature. See [checkSlackSignature] for the algorithm;
+ * this boolean wrapper is the stable entry point used by callers and tests.
  */
 fun isValidSlackSignature(
     signingSecret: String,
@@ -47,17 +101,7 @@ fun isValidSlackSignature(
     body: String,
     signature: String?,
     nowEpochSeconds: Long = Instant.now().epochSecond,
-): Boolean {
-    if (signingSecret.isEmpty() || timestamp == null || signature == null) return false
-    val requestSeconds = timestamp.toLongOrNull() ?: return false
-    if (abs(nowEpochSeconds - requestSeconds) > MAX_TIMESTAMP_SKEW_SECONDS) return false
-
-    val mac = Mac.getInstance("HmacSHA256")
-    mac.init(SecretKeySpec(signingSecret.toByteArray(), "HmacSHA256"))
-    val digest = mac.doFinal("$SIGNATURE_VERSION:$timestamp:$body".toByteArray())
-    val computed = "$SIGNATURE_VERSION=" + digest.joinToString("") { "%02x".format(it) }
-    return MessageDigest.isEqual(computed.toByteArray(), signature.toByteArray())
-}
+): Boolean = checkSlackSignature(signingSecret, timestamp, body, signature, nowEpochSeconds) == SlackSignatureCheck.Valid
 
 /**
  * Receives legacy interactive-message button clicks from the LunchBot Slack app.
@@ -77,8 +121,9 @@ fun Route.slackInteraction(
             val rawBody = call.receiveText()
             val timestamp = call.request.headers["X-Slack-Request-Timestamp"]
             val signature = call.request.headers["X-Slack-Signature"]
-            if (!isValidSlackSignature(signingSecret, timestamp, rawBody, signature)) {
-                logger.warn { "Rejected Slack interaction with a missing or invalid signature" }
+            val signatureCheck = checkSlackSignature(signingSecret, timestamp, rawBody, signature)
+            if (signatureCheck != SlackSignatureCheck.Valid) {
+                logger.warn { "Rejected Slack interaction: ${signatureCheck.reason()}" }
                 return@post call.respond(HttpStatusCode.Unauthorized)
             }
 

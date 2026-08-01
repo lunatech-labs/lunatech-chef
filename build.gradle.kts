@@ -40,8 +40,8 @@ dependencies {
 
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.22.1")
     implementation("io.github.config4k:config4k:0.7.0")
-    implementation("org.flywaydb:flyway-core:12.11.0")
-    implementation("org.flywaydb:flyway-database-postgresql:12.11.0")
+    implementation("org.flywaydb:flyway-core:13.0.0")
+    implementation("org.flywaydb:flyway-database-postgresql:13.0.0")
     implementation("org.ktorm:ktorm-core:4.2.1")
     implementation("com.zaxxer:HikariCP:7.1.0")
     implementation("org.postgresql:postgresql:42.7.13")

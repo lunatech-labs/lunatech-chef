@@ -7,7 +7,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "2.3.21"
     id("org.jetbrains.kotlin.plugin.serialization") version "2.3.21"
     id("com.github.autostyle") version "4.0.1"
-    id("com.avast.gradle.docker-compose") version "0.17.12"
+    id("com.avast.gradle.docker-compose") version "0.17.21"
 }
 
 application {
@@ -34,7 +34,7 @@ repositories {
 
 dependencies {
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
-    implementation("ch.qos.logback:logback-classic:1.5.38")
+    implementation("ch.qos.logback:logback-classic:1.6.1")
     implementation("com.newrelic.logging:logback:3.5.0")
     implementation("org.apache.logging.log4j:log4j-core:2.26.1")
 

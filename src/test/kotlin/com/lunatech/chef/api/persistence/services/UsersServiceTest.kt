@@ -9,6 +9,7 @@ import com.lunatech.chef.api.persistence.TestFixtures.anAttendance
 import com.lunatech.chef.api.persistence.TestFixtures.anOffice
 import com.lunatech.chef.api.persistence.TestFixtures.uniqueEmail
 import com.lunatech.chef.api.persistence.schemas.Attendances
+import com.lunatech.chef.api.persistence.schemas.Users
 import com.lunatech.chef.api.routes.UpdatedUser
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -21,6 +22,7 @@ import org.ktorm.dsl.eq
 import org.ktorm.dsl.from
 import org.ktorm.dsl.map
 import org.ktorm.dsl.select
+import org.ktorm.dsl.update
 import org.ktorm.dsl.where
 import java.time.LocalDate
 import java.util.UUID
@@ -432,6 +434,157 @@ class UsersServiceTest {
                 getAttendancesByUserUuid(otherUser.uuid)[0].isDeleted,
                 "Attendance of other user should not be soft deleted",
             )
+        }
+    }
+
+    @Nested
+    inner class Caching {
+        @Test
+        fun `getByEmailAddress caches the result so a direct database change is not reflected`() {
+            val email = uniqueEmail("cached")
+            val user = aUser(name = "Original Name", emailAddress = email, officeUuid = testOfficeUuid)
+            usersService.insert(user)
+
+            val firstLookup = usersService.getByEmailAddress(email)
+            assertEquals("Original Name", firstLookup?.name)
+
+            TestDatabase.getDatabase().update(Users) {
+                set(it.name, "Changed Directly In Db")
+                where { it.uuid eq user.uuid }
+            }
+
+            val secondLookup = usersService.getByEmailAddress(email)
+
+            assertEquals(
+                "Original Name",
+                secondLookup?.name,
+                "Second lookup should return the cached value, not the row changed directly in the database",
+            )
+        }
+
+        @Test
+        fun `update invalidates the cache so a later lookup sees fresh data`() {
+            val email = uniqueEmail("cacheupdate")
+            val user = aUser(name = "John Doe", emailAddress = email, officeUuid = testOfficeUuid, isVegetarian = false)
+            usersService.insert(user)
+            usersService.getByEmailAddress(email)
+
+            usersService.update(
+                user.uuid,
+                UpdatedUser(
+                    officeUuid = testOfficeUuid,
+                    isVegetarian = true,
+                    hasHalalRestriction = false,
+                    hasNutsRestriction = false,
+                    hasSeafoodRestriction = false,
+                    hasPorkRestriction = false,
+                    hasBeefRestriction = false,
+                    isGlutenIntolerant = false,
+                    isLactoseIntolerant = false,
+                    otherRestrictions = "",
+                ),
+            )
+
+            val retrieved = usersService.getByEmailAddress(email)
+
+            assertTrue(
+                retrieved!!.isVegetarian,
+                "Lookup after update should reflect fresh data, not a stale cached entry",
+            )
+        }
+
+        @Test
+        fun `delete invalidates the cache so a later lookup sees fresh data`() {
+            val email = uniqueEmail("cachedelete")
+            val user = aUser(name = "John Doe", emailAddress = email, officeUuid = testOfficeUuid)
+            usersService.insert(user)
+            usersService.getByEmailAddress(email)
+
+            usersService.delete(user.uuid)
+
+            val retrieved = usersService.getByEmailAddress(email)
+
+            assertTrue(
+                retrieved!!.isDeleted,
+                "Lookup after delete should reflect fresh data, not a stale cached entry",
+            )
+        }
+
+        @Test
+        fun `insert populates the cache for the new user without touching other cached entries`() {
+            val cachedEmail = uniqueEmail("cachedother")
+            val cachedUser = aUser(name = "Original Name", emailAddress = cachedEmail, officeUuid = testOfficeUuid)
+            usersService.insert(cachedUser)
+            usersService.getByEmailAddress(cachedEmail)
+
+            TestDatabase.getDatabase().update(Users) {
+                set(it.name, "Changed Directly In Db")
+                where { it.uuid eq cachedUser.uuid }
+            }
+
+            val newUser = aUser(name = "New User", emailAddress = uniqueEmail("brandnew"), officeUuid = testOfficeUuid)
+            usersService.insert(newUser)
+
+            assertEquals(
+                "Original Name",
+                usersService.getByEmailAddress(cachedEmail)?.name,
+                "Inserting an unrelated user should not evict other users' cache entries",
+            )
+            assertEquals(
+                newUser.name,
+                usersService.getByEmailAddress(newUser.emailAddress)?.name,
+                "Insert should populate the cache for the newly created user immediately",
+            )
+        }
+
+        @Test
+        fun `update evicts only the affected user's cache entry`() {
+            val untouchedEmail = uniqueEmail("untouched")
+            val untouchedUser = aUser(name = "Untouched User", emailAddress = untouchedEmail, officeUuid = testOfficeUuid)
+            usersService.insert(untouchedUser)
+            usersService.getByEmailAddress(untouchedEmail)
+
+            val updatedEmail = uniqueEmail("beingupdated")
+            val updatedUser = aUser(name = "Being Updated", emailAddress = updatedEmail, officeUuid = testOfficeUuid)
+            usersService.insert(updatedUser)
+            usersService.getByEmailAddress(updatedEmail)
+
+            TestDatabase.getDatabase().update(Users) {
+                set(it.name, "Changed Directly In Db")
+                where { it.uuid eq untouchedUser.uuid }
+            }
+
+            usersService.update(
+                updatedUser.uuid,
+                UpdatedUser(
+                    officeUuid = testOfficeUuid,
+                    isVegetarian = true,
+                    hasHalalRestriction = false,
+                    hasNutsRestriction = false,
+                    hasSeafoodRestriction = false,
+                    hasPorkRestriction = false,
+                    hasBeefRestriction = false,
+                    isGlutenIntolerant = false,
+                    isLactoseIntolerant = false,
+                    otherRestrictions = "",
+                ),
+            )
+
+            assertEquals(
+                "Untouched User",
+                usersService.getByEmailAddress(untouchedEmail)?.name,
+                "Updating one user should not evict another user's cache entry",
+            )
+        }
+
+        @Test
+        fun `provision populates the cache so a subsequent lookup returns the same user`() {
+            val email = uniqueEmail("provisioned")
+
+            val provisioned = usersService.provision(email)
+            val cached = usersService.getByEmailAddress(email)
+
+            assertEquals(provisioned.uuid, cached?.uuid)
         }
     }
 }

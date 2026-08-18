@@ -18,10 +18,20 @@ import org.ktorm.dsl.where
 import java.time.LocalDate
 import java.util.Locale
 import java.util.UUID
+import java.util.concurrent.ConcurrentHashMap
 
 class UsersService(
     private val database: Database,
 ) {
+    // Auth resolves the caller's User by email on every authenticated request
+    // (see KeycloakAuth.validateKeycloakToken), so this lookup must not cost a
+    // blocking DB round trip per call. Writes below evict only the affected
+    // user's entry (via the uuid -> email index) so profile edits, deletes and
+    // provisioning are visible on the very next read, without punishing every
+    // other cached user with a forced DB round trip on their next request.
+    private val byEmailCache = ConcurrentHashMap<String, User>()
+    private val emailByUuid = ConcurrentHashMap<UUID, String>()
+
     fun getAll(): List<User> =
         database
             .from(Users)
@@ -37,72 +47,87 @@ class UsersService(
             .map { Users.createEntity(it) }
 
     fun getByEmailAddress(emailAddress: String): User? =
-        database
+        byEmailCache[emailAddress] ?: database
             .from(Users)
             .select()
             .where { Users.emailAddress eq emailAddress }
             .map { Users.createEntity(it) }
             .firstOrNull()
+            ?.also { cache(it) }
 
     fun insert(user: User): Int =
-        database.insert(Users) {
-            set(it.uuid, user.uuid)
-            set(it.name, user.name)
-            set(it.emailAddress, user.emailAddress)
-            set(it.officeUuid, user.officeUuid)
-            set(it.isVegetarian, user.isVegetarian)
-            set(it.hasHalalRestriction, user.hasHalalRestriction)
-            set(it.hasNutsRestriction, user.hasNutsRestriction)
-            set(it.hasSeafoodRestriction, user.hasSeafoodRestriction)
-            set(it.hasPorkRestriction, user.hasPorkRestriction)
-            set(it.hasBeefRestriction, user.hasBeefRestriction)
-            set(it.isGlutenIntolerant, user.isGlutenIntolerant)
-            set(it.isLactoseIntolerant, user.isLactoseIntolerant)
-            set(it.otherRestrictions, user.otherRestrictions)
-            set(it.optOutLunches, user.optOutLunches)
-            set(it.isInactive, user.isInactive)
-            set(it.isDeleted, user.isDeleted)
-        }
+        database
+            .insert(Users) {
+                set(it.uuid, user.uuid)
+                set(it.name, user.name)
+                set(it.emailAddress, user.emailAddress)
+                set(it.officeUuid, user.officeUuid)
+                set(it.isVegetarian, user.isVegetarian)
+                set(it.hasHalalRestriction, user.hasHalalRestriction)
+                set(it.hasNutsRestriction, user.hasNutsRestriction)
+                set(it.hasSeafoodRestriction, user.hasSeafoodRestriction)
+                set(it.hasPorkRestriction, user.hasPorkRestriction)
+                set(it.hasBeefRestriction, user.hasBeefRestriction)
+                set(it.isGlutenIntolerant, user.isGlutenIntolerant)
+                set(it.isLactoseIntolerant, user.isLactoseIntolerant)
+                set(it.otherRestrictions, user.otherRestrictions)
+                set(it.optOutLunches, user.optOutLunches)
+                set(it.isInactive, user.isInactive)
+                set(it.isDeleted, user.isDeleted)
+            }.also { cache(user) }
 
     fun update(
         uuid: UUID,
         user: UpdatedUser,
     ): Int =
-        database.update(Users) {
-            set(it.officeUuid, user.officeUuid)
-            set(it.isVegetarian, user.isVegetarian)
-            set(it.hasHalalRestriction, user.hasHalalRestriction)
-            set(it.hasNutsRestriction, user.hasNutsRestriction)
-            set(it.hasSeafoodRestriction, user.hasSeafoodRestriction)
-            set(it.hasPorkRestriction, user.hasPorkRestriction)
-            set(it.hasBeefRestriction, user.hasBeefRestriction)
-            set(it.isGlutenIntolerant, user.isGlutenIntolerant)
-            set(it.isLactoseIntolerant, user.isLactoseIntolerant)
-            set(it.otherRestrictions, user.otherRestrictions)
-            set(it.optOutLunches, user.optOutLunches)
-            where {
-                it.uuid eq uuid
-            }
-        }
+        database
+            .update(Users) {
+                set(it.officeUuid, user.officeUuid)
+                set(it.isVegetarian, user.isVegetarian)
+                set(it.hasHalalRestriction, user.hasHalalRestriction)
+                set(it.hasNutsRestriction, user.hasNutsRestriction)
+                set(it.hasSeafoodRestriction, user.hasSeafoodRestriction)
+                set(it.hasPorkRestriction, user.hasPorkRestriction)
+                set(it.hasBeefRestriction, user.hasBeefRestriction)
+                set(it.isGlutenIntolerant, user.isGlutenIntolerant)
+                set(it.isLactoseIntolerant, user.isLactoseIntolerant)
+                set(it.otherRestrictions, user.otherRestrictions)
+                set(it.optOutLunches, user.optOutLunches)
+                where {
+                    it.uuid eq uuid
+                }
+            }.also { evict(uuid) }
 
     fun delete(uuid: UUID): Int {
-        database.useTransaction {
-            val result =
-                database.update(Users) {
+        val result =
+            database.useTransaction {
+                val result =
+                    database.update(Users) {
+                        set(it.isDeleted, true)
+                        where {
+                            it.uuid eq uuid
+                        }
+                    }
+                // delete related attendances
+                database.update(Attendances) {
                     set(it.isDeleted, true)
                     where {
-                        it.uuid eq uuid
+                        it.userUuid eq uuid
                     }
                 }
-            // delete related attendances
-            database.update(Attendances) {
-                set(it.isDeleted, true)
-                where {
-                    it.userUuid eq uuid
-                }
+                result
             }
-            return result
-        }
+        evict(uuid)
+        return result
+    }
+
+    private fun cache(user: User) {
+        byEmailCache[user.emailAddress] = user
+        emailByUuid[user.uuid] = user.emailAddress
+    }
+
+    private fun evict(uuid: UUID) {
+        emailByUuid.remove(uuid)?.let { byEmailCache.remove(it) }
     }
 
     /**

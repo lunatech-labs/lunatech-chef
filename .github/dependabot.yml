@@ -50,3 +50,9 @@ updates:
         versions: [">=2.3.30"]
       - dependency-name: "org.jetbrains.kotlin.plugin.serialization"
         versions: [">=2.3.30"]
+  - package-ecosystem: 'docker-compose'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    cooldown:
+      default-days: 7

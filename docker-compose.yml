@@ -10,7 +10,7 @@ services:
       - ./dockerdev/postgres/create_db.sh:/docker-entrypoint-initdb.d/create_db.sh:ro
 
   keycloak:
-    image: quay.io/keycloak/keycloak:26.3
+    image: quay.io/keycloak/keycloak:26.7
     command: start-dev --import-realm
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: admin

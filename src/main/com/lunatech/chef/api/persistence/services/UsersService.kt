@@ -10,8 +10,10 @@ import org.ktorm.database.Database
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.from
 import org.ktorm.dsl.gte
+import org.ktorm.dsl.asc
 import org.ktorm.dsl.insert
 import org.ktorm.dsl.map
+import org.ktorm.dsl.orderBy
 import org.ktorm.dsl.select
 import org.ktorm.dsl.update
 import org.ktorm.dsl.where
@@ -37,6 +39,7 @@ class UsersService(
             .from(Users)
             .select()
             .where { Users.isDeleted eq false }
+            .orderBy(Users.name.asc())
             .map { Users.createEntity(it) }
 
     fun getByUuid(uuid: UUID): List<User> =

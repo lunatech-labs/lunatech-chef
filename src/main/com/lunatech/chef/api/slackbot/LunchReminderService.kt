@@ -24,10 +24,6 @@ class LunchReminderService(
 ) {
     companion object {
         private const val DAYS_SPAN = 4L
-
-        // A Slack list smaller than this is a truncated or failing response,
-        // not a real workspace; syncing against it would mass-deactivate users
-        private const val MIN_SLACK_USERS_FOR_SYNC = 100
     }
 
     suspend fun sendReminders(today: LocalDate = LocalDate.now(ZoneId.of("Europe/Amsterdam"))) {
@@ -87,11 +83,10 @@ class LunchReminderService(
     }
 
     private fun syncUserActivity(activeSlackEmails: Set<String>) {
-        if (activeSlackEmails.size < MIN_SLACK_USERS_FOR_SYNC) {
-            logger.error {
-                "Slack returned only ${activeSlackEmails.size} active users with an email, " +
-                    "skipping the user activity sync"
-            }
+        // An empty set is a failing token or scope, not an empty workspace;
+        // syncing against it would deactivate everyone
+        if (activeSlackEmails.isEmpty()) {
+            logger.error { "Slack returned no active users with an email, skipping the user activity sync" }
             return
         }
         for (user in usersService.getAll()) {

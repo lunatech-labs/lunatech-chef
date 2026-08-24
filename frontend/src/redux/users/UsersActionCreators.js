@@ -1,4 +1,4 @@
-import { userLoggedIn, userLoggedInFailed, userLoggedOut, userUpdatedProfile, userUpdatedProfileFailed } from "./UsersSlice";
+import { userLoggedIn, userLoggedInFailed, userLoggedOut, userUpdatedProfile, userUpdatedProfileFailed, allUsersLoading, allUsersShown, allUsersLoadingFailed, userEditedFailed, userDeletedFailed } from "./UsersSlice";
 import { axiosInstance, onUnauthorized } from "../Axios";
 import { fetchDishes } from "../dishes/DishesActionCreators";
 import { fetchOffices } from "../offices/OfficesActionCreators";
@@ -23,6 +23,9 @@ export const login = () => (dispatch) => {
             const userUuid = response.data.uuid;
             localStorage.setItem(STORAGE_USER_UUID, userUuid);
             getInitialData(dispatch);
+            if (response.data.isAdmin) {
+                dispatch(fetchAllUsers());
+            }
         })
         .catch(function (error) {
             console.log("Failed logging in user " + error);
@@ -66,6 +69,58 @@ const getInitialData = (dispatch) => {
     dispatch(fetchAttendanceUser());
     dispatch(fetchSchedulesAttendance());
     dispatch(fetchSchedulesExternalAttendance());
+};
+
+export const fetchAllUsers = () => (dispatch) => {
+    dispatch(allUsersLoading(true));
+
+    axiosInstance
+        .get("/users")
+        .then((response) => {
+            dispatch(allUsersShown(response.data));
+        })
+        .catch(function (error) {
+            console.log("Failed loading Users: " + error);
+            dispatch(allUsersLoadingFailed(error.message));
+        });
+};
+
+export const editUser = (editedUser) => (dispatch) => {
+    const userToSave = {
+        officeUuid: editedUser.officeUuid,
+        isVegetarian: editedUser.isVegetarian,
+        hasHalalRestriction: editedUser.hasHalalRestriction,
+        hasNutsRestriction: editedUser.hasNutsRestriction,
+        hasSeafoodRestriction: editedUser.hasSeafoodRestriction,
+        hasPorkRestriction: editedUser.hasPorkRestriction,
+        hasBeefRestriction: editedUser.hasBeefRestriction,
+        isGlutenIntolerant: editedUser.isGlutenIntolerant,
+        isLactoseIntolerant: editedUser.isLactoseIntolerant,
+        otherRestrictions: editedUser.otherRestrictions,
+        optOutLunches: editedUser.optOutLunches,
+    };
+
+    axiosInstance
+        .put("/users/" + editedUser.uuid, userToSave)
+        .then(() => {
+            dispatch(fetchAllUsers());
+        })
+        .catch(function (error) {
+            console.log("Failed editing User: " + error);
+            dispatch(userEditedFailed(error.message));
+        });
+};
+
+export const deleteUser = (userUuid) => (dispatch) => {
+    axiosInstance
+        .delete("/users/" + userUuid)
+        .then(() => {
+            dispatch(fetchAllUsers());
+        })
+        .catch(function (error) {
+            console.log("Failed removing User: " + error);
+            dispatch(userDeletedFailed(error.message));
+        });
 };
 
 export const logout = () => (dispatch) => {

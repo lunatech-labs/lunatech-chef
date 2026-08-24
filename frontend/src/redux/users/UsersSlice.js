@@ -18,6 +18,11 @@ const initState = {
     otherRestrictions: "",
     optOutLunches: false,
     error: null,
+    allUsers: [],
+    isLoadingAllUsers: false,
+    errorListingUsers: null,
+    errorEditingUser: null,
+    errorDeletingUser: null,
 };
 
 // https://redux.js.org/usage/migrating-to-modern-redux
@@ -69,9 +74,32 @@ const usersSlice = createSlice({
         userUpdatedProfileFailed(state, action) {
             state.error = action.payload;
         },
+        allUsersLoading(state, action) {
+            state.isLoadingAllUsers = true;
+            state.errorListingUsers = null;
+            state.errorEditingUser = null;
+            state.errorDeletingUser = null;
+        },
+        allUsersShown(state, action) {
+            state.isLoadingAllUsers = false;
+            state.errorListingUsers = null;
+            state.allUsers = action.payload;
+        },
+        allUsersLoadingFailed(state, action) {
+            state.isLoadingAllUsers = false;
+            state.errorListingUsers = action.payload;
+        },
+        userEditedFailed(state, action) {
+            state.isLoadingAllUsers = false;
+            state.errorEditingUser = action.payload;
+        },
+        userDeletedFailed(state, action) {
+            state.isLoadingAllUsers = false;
+            state.errorDeletingUser = action.payload;
+        },
     }
 })
 
-export const { userLoggedIn, userLoggedInFailed, userLoggedOut, userUpdatedProfile, userUpdatedProfileFailed } = usersSlice.actions
+export const { userLoggedIn, userLoggedInFailed, userLoggedOut, userUpdatedProfile, userUpdatedProfileFailed, allUsersLoading, allUsersShown, allUsersLoadingFailed, userEditedFailed, userDeletedFailed } = usersSlice.actions
 
 export default usersSlice.reducer

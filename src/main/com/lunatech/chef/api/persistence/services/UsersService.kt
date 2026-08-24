@@ -7,10 +7,10 @@ import com.lunatech.chef.api.persistence.schemas.Schedules
 import com.lunatech.chef.api.persistence.schemas.Users
 import com.lunatech.chef.api.routes.UpdatedUser
 import org.ktorm.database.Database
+import org.ktorm.dsl.asc
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.from
 import org.ktorm.dsl.gte
-import org.ktorm.dsl.asc
 import org.ktorm.dsl.insert
 import org.ktorm.dsl.map
 import org.ktorm.dsl.orderBy

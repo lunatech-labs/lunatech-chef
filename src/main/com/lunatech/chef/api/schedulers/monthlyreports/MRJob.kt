@@ -12,6 +12,7 @@ import org.simplejavamail.api.email.Email
 import org.simplejavamail.api.mailer.Mailer
 import org.simplejavamail.email.EmailBuilder
 import org.simplejavamail.mailer.MailerBuilder
+import org.simplejavamail.recipient.RecipientsBuilder
 import java.time.LocalDate
 
 private val logger = KotlinLogging.logger {}
@@ -49,8 +50,11 @@ class MRJob : Job {
             EmailBuilder
                 .startingBlank()
                 .from(monthlyReportConfig.from)
-                .withRecipients("Lunatech Chef Reports", true, Message.RecipientType.TO, monthlyReportConfig.to)
-                .withSubject(monthlyReportConfig.subject)
+                .withRecipients(
+                    RecipientsBuilder()
+                        .withRecipients("Lunatech Chef Reports", true, Message.RecipientType.TO, monthlyReportConfig.to)
+                        .buildRecipients(),
+                ).withSubject(monthlyReportConfig.subject)
                 .withPlainText("Please find the lunch planner monthly report attached, for the month of $monthName")
                 .withAttachment("report.xlsx", excelReport, "application/vnd.ms-excel")
                 .buildEmail()

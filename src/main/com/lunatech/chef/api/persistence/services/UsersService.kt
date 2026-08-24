@@ -98,6 +98,18 @@ class UsersService(
                 }
             }.also { evict(uuid) }
 
+    fun updateInactive(
+        uuid: UUID,
+        isInactive: Boolean,
+    ): Int =
+        database
+            .update(Users) {
+                set(it.isInactive, isInactive)
+                where {
+                    it.uuid eq uuid
+                }
+            }.also { evict(uuid) }
+
     fun delete(uuid: UUID): Int {
         val result =
             database.useTransaction {

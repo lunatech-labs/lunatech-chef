@@ -17,6 +17,7 @@ import com.lunatech.chef.api.persistence.services.SchedulesService
 import com.lunatech.chef.api.persistence.services.UsersService
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -101,7 +102,7 @@ class LunchReminderServiceTest {
             insertMissingAttendance(2)
             val slack = FakeSlackApi(listOf(SlackUser("U1", false, userEmail)))
 
-            LunchReminderService(attendancesForSlackbotService, slack).sendReminders()
+            LunchReminderService(attendancesForSlackbotService, usersService, slack).sendReminders()
 
             assertEquals(listOf("U1"), slack.openedConversations)
             assertEquals(2, slack.postedMessages.size)
@@ -116,7 +117,7 @@ class LunchReminderServiceTest {
             insertMissingAttendance(1)
             val slack = FakeSlackApi(listOf(SlackUser("U9", true, userEmail)))
 
-            LunchReminderService(attendancesForSlackbotService, slack).sendReminders()
+            LunchReminderService(attendancesForSlackbotService, usersService, slack).sendReminders()
 
             assertEquals(0, slack.postedMessages.size)
         }
@@ -138,7 +139,7 @@ class LunchReminderServiceTest {
                     failOpenFor = setOf("U1"),
                 )
 
-            LunchReminderService(attendancesForSlackbotService, slack).sendReminders()
+            LunchReminderService(attendancesForSlackbotService, usersService, slack).sendReminders()
 
             assertEquals(1, slack.postedMessages.size)
             assertEquals("channel-U2", slack.postedMessages[0].first)
@@ -150,7 +151,7 @@ class LunchReminderServiceTest {
             insertMissingAttendance(1)
             val slack = FakeSlackApi(listOf(SlackUser("U1", false, userEmail.uppercase())))
 
-            LunchReminderService(attendancesForSlackbotService, slack).sendReminders()
+            LunchReminderService(attendancesForSlackbotService, usersService, slack).sendReminders()
 
             assertEquals(listOf("U1"), slack.openedConversations)
             assertEquals(1, slack.postedMessages.size)
@@ -161,7 +162,7 @@ class LunchReminderServiceTest {
         runBlocking {
             val slack = FakeSlackApi(listOf(SlackUser("U1", false, userEmail)))
 
-            LunchReminderService(attendancesForSlackbotService, slack).sendReminders()
+            LunchReminderService(attendancesForSlackbotService, usersService, slack).sendReminders()
 
             assertEquals(0, slack.openedConversations.size)
             assertEquals(0, slack.postedMessages.size)
@@ -174,7 +175,7 @@ class LunchReminderServiceTest {
             insertMissingAttendance(2)
             val slack = FakeSlackApi(listOf(SlackUser("U1", false, userEmail)), postMessageResult = false)
 
-            LunchReminderService(attendancesForSlackbotService, slack).sendReminders()
+            LunchReminderService(attendancesForSlackbotService, usersService, slack).sendReminders()
 
             assertEquals(2, slack.postedMessages.size)
         }
@@ -185,10 +186,103 @@ class LunchReminderServiceTest {
             insertMissingAttendance(1)
             val slack = FakeSlackApi(emptyList())
 
-            LunchReminderService(attendancesForSlackbotService, slack).sendReminders()
+            LunchReminderService(attendancesForSlackbotService, usersService, slack).sendReminders()
 
             assertEquals(0, slack.openedConversations.size)
             assertEquals(0, slack.postedMessages.size)
+        }
+
+    // Enough active Slack members to pass the sync sanity guard
+    private fun manySlackUsers(count: Int): List<SlackUser> = List(count) { SlackUser("F$it", false, "filler$it@lunatech.nl") }
+
+    @Test
+    fun `deactivates chef users that are not active in slack`() =
+        runBlocking {
+            insertMissingAttendance(1)
+            val gone = aUser(name = "Gone", emailAddress = uniqueEmail("gone"), officeUuid = officeUuid)
+            usersService.insert(gone)
+            val slack = FakeSlackApi(manySlackUsers(100) + SlackUser("U1", false, userEmail))
+
+            LunchReminderService(attendancesForSlackbotService, usersService, slack).sendReminders()
+
+            assertTrue(usersService.getByUuid(gone.uuid).first().isInactive)
+            assertFalse(usersService.getByUuid(userUuid).first().isInactive)
+        }
+
+    @Test
+    fun `a deactivated slack account counts as absent`() =
+        runBlocking {
+            insertMissingAttendance(1)
+            val goneEmail = uniqueEmail("gone")
+            val gone = aUser(name = "Gone", emailAddress = goneEmail, officeUuid = officeUuid)
+            usersService.insert(gone)
+            val slack = FakeSlackApi(manySlackUsers(100) + SlackUser("U1", false, userEmail) + SlackUser("U9", true, goneEmail))
+
+            LunchReminderService(attendancesForSlackbotService, usersService, slack).sendReminders()
+
+            assertTrue(usersService.getByUuid(gone.uuid).first().isInactive)
+        }
+
+    @Test
+    fun `reactivates inactive chef users found in slack`() =
+        runBlocking {
+            insertMissingAttendance(1)
+            val backEmail = uniqueEmail("back")
+            val back = aUser(name = "Back", emailAddress = backEmail, officeUuid = officeUuid, isInactive = true)
+            usersService.insert(back)
+            val slack = FakeSlackApi(manySlackUsers(100) + SlackUser("U1", false, userEmail) + SlackUser("U2", false, backEmail))
+
+            LunchReminderService(attendancesForSlackbotService, usersService, slack).sendReminders()
+
+            assertFalse(usersService.getByUuid(back.uuid).first().isInactive)
+        }
+
+    @Test
+    fun `matches activity sync emails case-insensitively`() =
+        runBlocking {
+            insertMissingAttendance(1)
+            val mixedEmail = uniqueEmail("mixed")
+            val mixed = aUser(name = "Mixed", emailAddress = mixedEmail, officeUuid = officeUuid)
+            usersService.insert(mixed)
+            val slack =
+                FakeSlackApi(
+                    manySlackUsers(100) + SlackUser("U1", false, userEmail) + SlackUser("U2", false, mixedEmail.uppercase()),
+                )
+
+            LunchReminderService(attendancesForSlackbotService, usersService, slack).sendReminders()
+
+            assertFalse(usersService.getByUuid(mixed.uuid).first().isInactive)
+        }
+
+    @Test
+    fun `skips the activity sync when the slack list is implausibly small`() =
+        runBlocking {
+            insertMissingAttendance(1)
+            val gone = aUser(name = "Gone", emailAddress = uniqueEmail("gone"), officeUuid = officeUuid)
+            usersService.insert(gone)
+            val slack = FakeSlackApi(listOf(SlackUser("U1", false, userEmail)))
+
+            LunchReminderService(attendancesForSlackbotService, usersService, slack).sendReminders()
+
+            assertFalse(usersService.getByUuid(gone.uuid).first().isInactive)
+            // reminders themselves still go out
+            assertEquals(1, slack.postedMessages.size)
+        }
+
+    @Test
+    fun `sync updates are visible through the by-email cache`() =
+        runBlocking {
+            insertMissingAttendance(1)
+            val goneEmail = uniqueEmail("gone")
+            val gone = aUser(name = "Gone", emailAddress = goneEmail, officeUuid = officeUuid)
+            usersService.insert(gone)
+            // prime the cache with the still-active row
+            assertFalse(usersService.getByEmailAddress(goneEmail)!!.isInactive)
+            val slack = FakeSlackApi(manySlackUsers(100) + SlackUser("U1", false, userEmail))
+
+            LunchReminderService(attendancesForSlackbotService, usersService, slack).sendReminders()
+
+            assertTrue(usersService.getByEmailAddress(goneEmail)!!.isInactive)
         }
 
     @Test
@@ -208,7 +302,7 @@ class LunchReminderServiceTest {
                     nullChannelFor = setOf("U1"),
                 )
 
-            LunchReminderService(attendancesForSlackbotService, slack).sendReminders()
+            LunchReminderService(attendancesForSlackbotService, usersService, slack).sendReminders()
 
             assertEquals(1, slack.postedMessages.size)
             assertEquals("channel-U2", slack.postedMessages[0].first)

@@ -1,6 +1,7 @@
 package com.lunatech.chef.api.slackbot
 
 import com.lunatech.chef.api.persistence.services.AttendancesForSlackbotService
+import com.lunatech.chef.api.persistence.services.UsersService
 import mu.KotlinLogging
 import java.time.LocalDate
 import java.time.ZoneId
@@ -10,13 +11,23 @@ private val logger = KotlinLogging.logger {}
 /**
  * Sends the lunch reminder DMs previously sent by the external lunch-bot.
  * Looks 4 days ahead, matching the old bot: on Monday it covers Monday to Friday.
+ *
+ * Each run also syncs user activity with Slack: a chef user without an active
+ * Slack account (left the company, or their account was deactivated) is marked
+ * inactive, and marked active again if they reappear. Slack is the source of
+ * truth for this flag; there is no admin UI for it.
  */
 class LunchReminderService(
     private val attendancesForSlackbotService: AttendancesForSlackbotService,
+    private val usersService: UsersService,
     private val slackApi: SlackApi,
 ) {
     companion object {
         private const val DAYS_SPAN = 4L
+
+        // A Slack list smaller than this is a truncated or failing response,
+        // not a real workspace; syncing against it would mass-deactivate users
+        private const val MIN_SLACK_USERS_FOR_SYNC = 100
     }
 
     suspend fun sendReminders(today: LocalDate = LocalDate.now(ZoneId.of("Europe/Amsterdam"))) {
@@ -38,6 +49,8 @@ class LunchReminderService(
             slackUsers
                 .filter { !it.deleted && it.email != null }
                 .associate { it.email!!.lowercase() to it.id }
+
+        syncUserActivity(slackIdByEmail.keys)
 
         for ((email, attendances) in byEmail) {
             val slackId = slackIdByEmail[email.lowercase()]
@@ -69,6 +82,24 @@ class LunchReminderService(
                 }
             } catch (exception: Exception) {
                 logger.error(exception) { "Error sending lunch reminders to $email, continuing with remaining users" }
+            }
+        }
+    }
+
+    private fun syncUserActivity(activeSlackEmails: Set<String>) {
+        if (activeSlackEmails.size < MIN_SLACK_USERS_FOR_SYNC) {
+            logger.error {
+                "Slack returned only ${activeSlackEmails.size} active users with an email, " +
+                    "skipping the user activity sync"
+            }
+            return
+        }
+        for (user in usersService.getAll()) {
+            val shouldBeInactive = user.emailAddress.lowercase() !in activeSlackEmails
+            if (user.isInactive != shouldBeInactive) {
+                usersService.updateInactive(user.uuid, shouldBeInactive)
+                val change = if (shouldBeInactive) "inactive: no active Slack account" else "active: found in Slack again"
+                logger.info { "Slack sync marked ${user.emailAddress} $change" }
             }
         }
     }

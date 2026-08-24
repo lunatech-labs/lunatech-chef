@@ -438,6 +438,36 @@ class UsersServiceTest {
     }
 
     @Nested
+    inner class UpdateInactive {
+        @Test
+        fun `updateInactive flips the flag in the database`() {
+            val user = aUser(name = "Leaver", emailAddress = uniqueEmail("leaver"), officeUuid = testOfficeUuid)
+            usersService.insert(user)
+
+            usersService.updateInactive(user.uuid, true)
+            assertTrue(usersService.getByUuid(user.uuid)[0].isInactive)
+
+            usersService.updateInactive(user.uuid, false)
+            assertFalse(usersService.getByUuid(user.uuid)[0].isInactive)
+        }
+
+        @Test
+        fun `updateInactive invalidates the cache so a later lookup sees fresh data`() {
+            val email = uniqueEmail("cacheinactive")
+            val user = aUser(name = "Leaver", emailAddress = email, officeUuid = testOfficeUuid)
+            usersService.insert(user)
+            assertFalse(usersService.getByEmailAddress(email)!!.isInactive)
+
+            usersService.updateInactive(user.uuid, true)
+
+            assertTrue(
+                usersService.getByEmailAddress(email)!!.isInactive,
+                "Lookup after updateInactive should not return the stale cached row",
+            )
+        }
+    }
+
+    @Nested
     inner class Caching {
         @Test
         fun `getByEmailAddress caches the result so a direct database change is not reflected`() {

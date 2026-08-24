@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Table from "react-bootstrap/Table";
+import Badge from "react-bootstrap/Badge";
 import Button from "react-bootstrap/Button";
 import Alert from 'react-bootstrap/Alert';
 import { Loading } from "../../shared/Loading";
 
 export default function ListUsers(props) {
+    const [showInactive, setShowInactive] = useState(false);
+
     function ShowError({ error, reason }) {
         if (error) {
             return (
@@ -73,10 +76,13 @@ export default function ListUsers(props) {
                             </tr>
                         </thead>
                         <tbody>
-                            {users.map((user) => {
+                            {users.filter((user) => showInactive || !user.isInactive).map((user) => {
                                 return (
                                     <tr key={user.uuid}>
-                                        <td>{user.name}</td>
+                                        <td>
+                                            {user.name}
+                                            {user.isInactive ? <>{" "}<Badge bg="secondary">Inactive</Badge></> : null}
+                                        </td>
                                         <td>{user.emailAddress}</td>
                                         <td>{officeCity(user.officeUuid)}</td>
                                         <td>{restrictionsSummary(user)}</td>
@@ -118,6 +124,16 @@ export default function ListUsers(props) {
         <Container>
             <Row>
                 <h3 className="mt-4">Management of Employees</h3>
+            </Row>
+            <Row className="mb-3">
+                <label>
+                    <input
+                        type="checkbox"
+                        checked={showInactive}
+                        onChange={() => setShowInactive(s => !s)}
+                    />
+                    <span>  Show inactive employees</span>
+                </label>
             </Row>
             {props.errorDeleting ? <ShowError error={props.errorDeleting} reason="deleting" /> : null}
             {props.errorEditing ? <ShowError error={props.errorEditing} reason="saving" /> : null}

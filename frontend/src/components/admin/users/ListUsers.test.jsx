@@ -81,6 +81,23 @@ const employees = [
         otherRestrictions: "",
         optOutLunches: true,
     },
+    {
+        uuid: "user-3",
+        name: "Gone Person",
+        emailAddress: "gone.person@lunatech.nl",
+        officeUuid: "office-1",
+        isVegetarian: false,
+        hasHalalRestriction: false,
+        hasNutsRestriction: false,
+        hasSeafoodRestriction: false,
+        hasPorkRestriction: false,
+        hasBeefRestriction: false,
+        isGlutenIntolerant: false,
+        isLactoseIntolerant: false,
+        otherRestrictions: "",
+        optOutLunches: false,
+        isInactive: true,
+    },
 ];
 
 const renderAt = (path) =>
@@ -170,6 +187,23 @@ test("the list shows dietary restrictions and opt-out status", async () => {
 
     const john = (await screen.findByText("John Smith")).closest("tr");
     expect(within(john).getByText("Opted out")).toBeInTheDocument();
+});
+
+test("inactive employees are hidden by default", async () => {
+    renderAt("/allusers");
+
+    expect(await screen.findByText("Jane Doe")).toBeInTheDocument();
+    expect(screen.queryByText("Gone Person")).not.toBeInTheDocument();
+});
+
+test("toggling show inactive reveals inactive employees with a badge", async () => {
+    renderAt("/allusers");
+
+    await screen.findByText("Jane Doe");
+    await userEvent.click(screen.getByRole("checkbox", { name: /show inactive/i }));
+
+    const row = (await screen.findByText("Gone Person")).closest("tr");
+    expect(within(row).getByText("Inactive")).toBeInTheDocument();
 });
 
 test("admin sees the list of employees with name, email and office", async () => {

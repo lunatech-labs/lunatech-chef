@@ -41,6 +41,8 @@ import {
     login,
     logout,
     saveUserProfile,
+    editUser,
+    deleteUser,
 } from "../redux/users/UsersActionCreators";
 import {
     getReport,
@@ -60,6 +62,8 @@ import ListDishes from "./admin/dishes/ListDishes";
 import ListMenus from "./admin/menus/ListMenus";
 import ListOffice from "./admin/offices/ListOffice";
 import ListSchedules from "./admin/schedules/ListSchedules";
+import ListUsers from "./admin/users/ListUsers";
+import { EditUser } from "./admin/users/EditUser";
 import MonthlyReports from "./admin/reports/MonthlyReports";
 import Login from "./auth/Login";
 import Redirect from "./auth/Redirect";
@@ -180,6 +184,12 @@ function Main() {
     }
     const handleSaveUserProfile = (uuid, profile) => {
         dispatch(saveUserProfile(uuid, profile))
+    }
+    const handleEditUser = (editedUser) => {
+        dispatch(editUser(editedUser))
+    }
+    const handleDeleteUser = (userUuid) => {
+        dispatch(deleteUser(userUuid))
     }
 
 
@@ -344,6 +354,30 @@ function Main() {
         );
     };
 
+    const AllUsers = () => {
+        return (
+            <ListUsers
+                isLoading={userState.isLoadingAllUsers}
+                users={userState.allUsers}
+                offices={officesState.offices}
+                deleteUser={handleDeleteUser}
+                errorListing={userState.errorListingUsers}
+                errorEditing={userState.errorEditingUser}
+                errorDeleting={userState.errorDeletingUser}
+            />
+        );
+    };
+
+    const EditExistingUser = () => {
+        return (
+            <EditUser
+                editUser={handleEditUser}
+                offices={officesState.offices}
+                error={userState.errorEditingUser}
+            />
+        );
+    };
+
     const Reports = () => {
         return (<MonthlyReports getReport={handleGetReport} />);
     };
@@ -394,6 +428,9 @@ function Main() {
                                 <Route path="/allschedules" element={<AllSchedules />} />
                                 <Route path="/newschedule" element={<AddNewSchedule />} />
                                 <Route path="/editschedule" element={<EditExistingSchedule />} />
+                                <Route path="/allusers" element={<AllUsers />} />
+                                <Route path="/edituser" element={<EditExistingUser />} />
+
                                 <Route path="/monthlyreports" element={<Reports />} />
 
                             </Route>

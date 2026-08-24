@@ -12,6 +12,7 @@ import {
     faArchive,
     faUser,
     faUserSlash,
+    faUsers,
 } from '@fortawesome/free-solid-svg-icons';
 
 const Sidebar = (props) => {
@@ -70,6 +71,13 @@ const Sidebar = (props) => {
                                         className={({ isActive }) => isActive ? "sidebar-link activeClicked" : "sidebar-link"}>
                                         <FontAwesomeIcon icon={faCalendar} fixedWidth />
                                         {!collapsed && <span>Scheduled Lunches</span>}
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to="/allusers"
+                                        className={({ isActive }) => isActive ? "sidebar-link activeClicked" : "sidebar-link"}>
+                                        <FontAwesomeIcon icon={faUsers} fixedWidth />
+                                        {!collapsed && <span>Employees</span>}
                                     </NavLink>
                                 </li>
                                 <li>

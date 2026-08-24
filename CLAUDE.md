@@ -32,7 +32,7 @@ npm run build    # Production build
 npm test         # Run tests
 ```
 
-IMPORTANT: Clever Cloud deploys with `gradle --no-daemon run` and builds with `buildAll` (see `clevercloud/gradle.json`). Never make `run` or `buildAll` depend on Docker Compose or tests; dev-only wiring belongs in `devRun`.
+IMPORTANT: Clever Cloud builds with `buildAll installDist` (see `clevercloud/gradle.json`). At runtime the app is started by the `CC_RUN_COMMAND` env var on the Clever Cloud app, which runs the installDist start script (`build/install/lunatech-chef/bin/lunatech-chef`) as a single JVM; the script picks up heap sizing from the platform-provided `JAVA_OPTS`. The `deploy.goal` (`gradle --no-daemon run`) is only the fallback when `CC_RUN_COMMAND` is unset; running production through Gradle keeps multiple JVMs alive and previously caused OOM instability on the XS instance. Never make `run`, `buildAll`, or `installDist` depend on Docker Compose or tests; dev-only wiring belongs in `devRun`.
 
 ## Architecture
 

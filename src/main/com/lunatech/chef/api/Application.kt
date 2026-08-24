@@ -140,7 +140,7 @@ fun Application.module() {
     val excelService = ExcelService()
     val slackHttpClient = HttpClient(Apache)
     val slackApi = SlackApiClient(slackBotConfig.token, slackHttpClient)
-    val lunchReminderService = LunchReminderService(attendancesForSlackbotService, slackApi)
+    val lunchReminderService = LunchReminderService(attendancesForSlackbotService, usersService, slackApi)
 
     val scheduler = StdSchedulerFactory.getDefaultScheduler()
     if (recurrentSchedulesConfig.enabled) {

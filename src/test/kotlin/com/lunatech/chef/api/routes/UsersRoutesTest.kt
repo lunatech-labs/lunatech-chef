@@ -86,6 +86,21 @@ class UsersRoutesTest {
             }
 
         @Test
+        fun `returns users ordered by name`() =
+            testApplication {
+                setupUsersRoutes()
+                val client = authenticatedJsonClient(anAdminToken())
+                usersService.insert(aUser(name = "Zoe Last", emailAddress = uniqueEmail("zoe"), officeUuid = testOfficeUuid))
+                usersService.insert(aUser(name = "Adam First", emailAddress = uniqueEmail("adam"), officeUuid = testOfficeUuid))
+
+                val response = client.get("/users")
+
+                assertEquals(HttpStatusCode.OK, response.status)
+                val body = response.bodyAsText()
+                assertTrue(body.indexOf("Adam First") < body.indexOf("Zoe Last"))
+            }
+
+        @Test
         fun `does not return deleted users`() =
             testApplication {
                 setupUsersRoutes()

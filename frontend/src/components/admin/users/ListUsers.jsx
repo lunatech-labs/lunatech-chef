@@ -76,7 +76,11 @@ export default function ListUsers(props) {
                             </tr>
                         </thead>
                         <tbody>
-                            {users.filter((user) => showInactive || !user.isInactive).map((user) => {
+                            {users
+                                .filter((user) => showInactive || !user.isInactive)
+                                .slice()
+                                .sort((a, b) => a.name.localeCompare(b.name))
+                                .map((user) => {
                                 return (
                                     <tr key={user.uuid}>
                                         <td>

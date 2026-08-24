@@ -1,13 +1,13 @@
 import com.github.gradle.node.npm.task.NpmTask
 
 plugins {
-    id("io.ktor.plugin") version "3.5.1"
+    id("io.ktor.plugin") version "3.5.2"
     id("com.github.node-gradle.node") version "7.1.0"
     id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
     id("org.jetbrains.kotlin.jvm") version "2.3.21"
     id("org.jetbrains.kotlin.plugin.serialization") version "2.3.21"
     id("com.github.autostyle") version "4.0.1"
-    id("com.avast.gradle.docker-compose") version "0.17.12"
+    id("com.avast.gradle.docker-compose") version "0.17.21"
 }
 
 application {
@@ -34,7 +34,7 @@ repositories {
 
 dependencies {
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
-    implementation("ch.qos.logback:logback-classic:1.5.38")
+    implementation("ch.qos.logback:logback-classic:1.6.3")
     implementation("com.newrelic.logging:logback:3.5.0")
     implementation("org.apache.logging.log4j:log4j-core:2.26.1")
 
@@ -64,16 +64,16 @@ dependencies {
     implementation("io.ktor:ktor-client-core-jvm")
     implementation("io.ktor:ktor-client-logging-jvm")
 
-    implementation("org.simplejavamail:simple-java-mail:9.1.0")
+    implementation("org.simplejavamail:simple-java-mail:9.3.2")
 
     testImplementation("io.ktor:ktor-server-test-host")
     testImplementation("io.ktor:ktor-client-content-negotiation")
     testImplementation("io.ktor:ktor-client-mock")
-    testImplementation("org.junit.jupiter:junit-jupiter:6.1.2")
+    testImplementation("org.junit.jupiter:junit-jupiter:6.1.3")
     testImplementation("org.testcontainers:testcontainers:2.0.5")
     testImplementation("org.testcontainers:testcontainers-junit-jupiter:2.0.5")
     testImplementation("org.testcontainers:testcontainers-postgresql:2.0.5")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.1.2")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.1.3")
 }
 
 tasks.test {

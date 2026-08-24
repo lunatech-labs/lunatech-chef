@@ -50,22 +50,6 @@ const offices = [
 
 const employees = [
     {
-        uuid: "user-1",
-        name: "Jane Doe",
-        emailAddress: "jane.doe@lunatech.nl",
-        officeUuid: "office-2",
-        isVegetarian: true,
-        hasHalalRestriction: false,
-        hasNutsRestriction: false,
-        hasSeafoodRestriction: false,
-        hasPorkRestriction: false,
-        hasBeefRestriction: false,
-        isGlutenIntolerant: false,
-        isLactoseIntolerant: false,
-        otherRestrictions: "",
-        optOutLunches: false,
-    },
-    {
         uuid: "user-2",
         name: "John Smith",
         emailAddress: "john.smith@lunatech.nl",
@@ -80,6 +64,22 @@ const employees = [
         isLactoseIntolerant: false,
         otherRestrictions: "",
         optOutLunches: true,
+    },
+    {
+        uuid: "user-1",
+        name: "Jane Doe",
+        emailAddress: "jane.doe@lunatech.nl",
+        officeUuid: "office-2",
+        isVegetarian: true,
+        hasHalalRestriction: false,
+        hasNutsRestriction: false,
+        hasSeafoodRestriction: false,
+        hasPorkRestriction: false,
+        hasBeefRestriction: false,
+        isGlutenIntolerant: false,
+        isLactoseIntolerant: false,
+        otherRestrictions: "",
+        optOutLunches: false,
     },
     {
         uuid: "user-3",
@@ -204,6 +204,19 @@ test("toggling show inactive reveals inactive employees with a badge", async () 
 
     const row = (await screen.findByText("Gone Person")).closest("tr");
     expect(within(row).getByText("Inactive")).toBeInTheDocument();
+});
+
+test("employees are sorted by name", async () => {
+    renderAt("/allusers");
+
+    await screen.findByText("Jane Doe");
+    await userEvent.click(screen.getByRole("checkbox", { name: /show inactive/i }));
+
+    const names = screen
+        .getAllByRole("row")
+        .slice(1)
+        .map((row) => within(row).getAllByRole("cell")[0].textContent.trim());
+    expect(names).toEqual(["Gone Person Inactive", "Jane Doe", "John Smith"]);
 });
 
 test("admin sees the list of employees with name, email and office", async () => {

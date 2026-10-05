@@ -1,7 +1,7 @@
 import com.github.gradle.node.npm.task.NpmTask
 
 plugins {
-    id("io.ktor.plugin") version "3.5.2"
+    id("io.ktor.plugin") version "3.6.0"
     id("com.github.node-gradle.node") version "7.1.0"
     id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
     id("org.jetbrains.kotlin.jvm") version "2.3.21"
@@ -34,14 +34,14 @@ repositories {
 
 dependencies {
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
-    implementation("ch.qos.logback:logback-classic:1.6.3")
+    implementation("ch.qos.logback:logback-classic:1.6.4")
     implementation("com.newrelic.logging:logback:3.5.0")
     implementation("org.apache.logging.log4j:log4j-core:2.26.1")
 
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.22.1")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.22.3")
     implementation("io.github.config4k:config4k:0.7.0")
-    implementation("org.flywaydb:flyway-core:13.0.0")
-    implementation("org.flywaydb:flyway-database-postgresql:13.0.0")
+    implementation("org.flywaydb:flyway-core:13.8.0")
+    implementation("org.flywaydb:flyway-database-postgresql:13.8.0")
     implementation("org.ktorm:ktorm-core:4.2.1")
     implementation("com.zaxxer:HikariCP:7.1.0")
     implementation("org.postgresql:postgresql:42.7.13")
@@ -64,7 +64,7 @@ dependencies {
     implementation("io.ktor:ktor-client-core-jvm")
     implementation("io.ktor:ktor-client-logging-jvm")
 
-    implementation("org.simplejavamail:simple-java-mail:9.3.2")
+    implementation("org.simplejavamail:simple-java-mail:9.3.5")
 
     testImplementation("io.ktor:ktor-server-test-host")
     testImplementation("io.ktor:ktor-client-content-negotiation")

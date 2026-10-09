@@ -58,7 +58,7 @@ import com.lunatech.chef.api.slackbot.LunchReminderService
 import com.lunatech.chef.api.slackbot.SlackApiClient
 import com.typesafe.config.ConfigFactory
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.apache.Apache
+import io.ktor.client.engine.apache5.Apache5
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
@@ -138,7 +138,7 @@ fun Application.module() {
     val attendancesForSlackbotService = AttendancesForSlackbotService(dbConnection)
     val reportService = ReportService(dbConnection)
     val excelService = ExcelService()
-    val slackHttpClient = HttpClient(Apache)
+    val slackHttpClient = HttpClient(Apache5)
     val slackApi = SlackApiClient(slackBotConfig.token, slackHttpClient)
     val lunchReminderService = LunchReminderService(attendancesForSlackbotService, usersService, slackApi)
 

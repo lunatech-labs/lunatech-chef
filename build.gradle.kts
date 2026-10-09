@@ -61,7 +61,7 @@ dependencies {
     implementation("io.ktor:ktor-server-auth")
     implementation("io.ktor:ktor-server-auth-jwt")
     implementation("io.ktor:ktor-server-sessions-jvm")
-    implementation("io.ktor:ktor-client-apache-jvm")
+    implementation("io.ktor:ktor-client-apache5")
     implementation("io.ktor:ktor-serialization-jackson")
 
     implementation("org.apache.poi:poi-ooxml:5.5.1")
@@ -107,11 +107,13 @@ tasks.named("run") {
     mustRunAfter("composeUp")
 }
 
-val buildFrontApp by tasks.registering(NpmTask::class) {
-    dependsOn(installReactApp)
-    args = listOf("run", "build", "--prefix", "./frontend/")
-}
+val installReactApp =
+    tasks.register<NpmTask>("installReactApp") {
+        args = listOf("ci", "--prefix", "./frontend/")
+    }
 
-val installReactApp by tasks.registering(NpmTask::class) {
-    args = listOf("ci", "--prefix", "./frontend/")
-}
+val buildFrontApp =
+    tasks.register<NpmTask>("buildFrontApp") {
+        dependsOn(installReactApp)
+        args = listOf("run", "build", "--prefix", "./frontend/")
+    }

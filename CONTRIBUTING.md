@@ -7,7 +7,7 @@ project contact person Leonor Boga @leo-bogastry.
 
 In order to be able to run the lunatech-chef locally you need to have the following installed in your local machine:
 
-- [JDK 21](https://sdkman.io/install)
+- [JDK 25](https://sdkman.io/install)
 - [Gradle](https://gradle.org/install)
 - [Npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 - [Docker](https://www.docker.com/products/docker-desktop/)

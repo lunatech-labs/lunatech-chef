@@ -16,6 +16,10 @@ application {
     mainClass = "io.ktor.server.netty.EngineMain"
 }
 
+kotlin {
+    jvmToolchain(25)
+}
+
 sourceSets {
     main {
         java.srcDirs("src/main")

@@ -19,7 +19,9 @@ class ExcelService {
     )
 
     private val startingRow = 2
+    private val userDataStartingRow = 4
     private val defaultColumnWidth = 30
+    private val columnsPerCity = 3
 
     private fun toWeekNumber(date: LocalDate): Int {
         val weekfields = WeekFields.of(Locale.getDefault())
@@ -75,7 +77,7 @@ class ExcelService {
                         cellStyle = cellStyle,
                     )
                     reportByWeek.groupBy { (_, _, city, _) -> city }.toList().withIndex().forEach { indexedValue ->
-                        val index = indexedValue.index
+                        val columnIndex = indexedValue.index * columnsPerCity
                         val (city, reportByCity) = indexedValue.value
                         val row = sheet.getRow(startingRow) ?: sheet.createRow(startingRow)
                         val users = reportByCity.map { (_, name, _, _) -> name }
@@ -85,17 +87,24 @@ class ExcelService {
                             row,
                             "$city: ${users.size} internal attendees",
                             cellStyle,
-                            index,
+                            columnIndex,
                         )
 
                         writeCell(
                             row,
                             "$city: $externalAttendees external attendees",
                             cellStyle,
-                            index + 1,
+                            columnIndex + 1,
                         )
 
-                        writeUserData(sheet, users, index)
+                        writeCell(
+                            row,
+                            "Total: ${users.size + externalAttendees}",
+                            cellStyle,
+                            columnIndex + 2,
+                        )
+
+                        writeUserData(sheet, users, columnIndex)
                     }
                 }
         }
@@ -135,9 +144,9 @@ class ExcelService {
         users: List<String>,
         columnIndex: Int,
     ) {
-        val rowSkips = 4
         users.withIndex().forEach { (index, user) ->
-            val row = sheet.getRow(index + rowSkips) ?: sheet.createRow(index + rowSkips)
+            val rowIndex = index + userDataStartingRow
+            val row = sheet.getRow(rowIndex) ?: sheet.createRow(rowIndex)
 
             val cell = row.createCell(columnIndex)
             cell.setCellValue(user)

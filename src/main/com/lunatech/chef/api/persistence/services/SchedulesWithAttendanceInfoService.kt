@@ -8,7 +8,6 @@ import com.lunatech.chef.api.persistence.schemas.Schedules
 import com.lunatech.chef.api.persistence.schemas.Users
 import org.ktorm.database.Database
 import org.ktorm.dsl.and
-import org.ktorm.dsl.asc
 import org.ktorm.dsl.desc
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.from
@@ -86,7 +85,7 @@ class SchedulesWithAttendanceInfoService(
                     ) and (
                         Attendances.isDeleted eq false
                     )
-                }.orderBy(Users.name.asc())
+                }.orderBy(Users.name.desc())
                 .map { Users.createEntity(it) }
 
         return ScheduleWithAttendanceInfo(schedule.uuid, menu!!.name, attendants, schedule.date, office?.city ?: "")

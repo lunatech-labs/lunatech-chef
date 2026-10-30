@@ -5,11 +5,13 @@ import com.lunatech.chef.api.persistence.schemas.Dishes
 import com.lunatech.chef.api.persistence.schemas.DishesOnMenus
 import com.lunatech.chef.api.routes.UpdatedDish
 import org.ktorm.database.Database
+import org.ktorm.dsl.asc
 import org.ktorm.dsl.delete
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.from
 import org.ktorm.dsl.insert
 import org.ktorm.dsl.map
+import org.ktorm.dsl.orderBy
 import org.ktorm.dsl.select
 import org.ktorm.dsl.update
 import org.ktorm.dsl.where
@@ -23,6 +25,7 @@ class DishesService(
             .from(Dishes)
             .select()
             .where { Dishes.isDeleted eq false }
+            .orderBy(Dishes.name.asc())
             .map { Dishes.createEntity(it) }
 
     fun getByUuid(uuid: UUID): List<Dish> =

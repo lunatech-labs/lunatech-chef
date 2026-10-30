@@ -185,7 +185,7 @@ class AttendancesWithScheduleInfoServiceTest {
         }
 
         @Test
-        fun `getByUserUuidFiltered returns attendances ordered by date`() {
+        fun `getByUserUuidFiltered returns attendances ordered by date descending`() {
             val attendance1 = anAttendance(scheduleUuid = testScheduleUuid, userUuid = testUserUuid, isAttending = true)
             val attendance2 =
                 anAttendance(scheduleUuid = testSchedule2Uuid, userUuid = testUserUuid, isAttending = true)
@@ -196,8 +196,8 @@ class AttendancesWithScheduleInfoServiceTest {
 
             assertEquals(2, attendances.size)
             // testSchedule is 7 days from now, testSchedule2 is 14 days from now
-            assertEquals(testScheduleUuid, attendances[0].scheduleUuid)
-            assertEquals(testSchedule2Uuid, attendances[1].scheduleUuid)
+            assertEquals(testSchedule2Uuid, attendances[0].scheduleUuid)
+            assertEquals(testScheduleUuid, attendances[1].scheduleUuid)
         }
     }
 }

@@ -201,8 +201,8 @@ class SchedulesWithAttendanceInfoServiceTest {
             val schedules = schedulesWithAttendanceInfoService.getFiltered(null, null)
 
             assertEquals(2, schedules.size)
-            assertEquals(testScheduleUuid, schedules[0].uuid) // 7 days from now
-            assertEquals(laterSchedule.uuid, schedules[1].uuid) // 14 days from now
+            assertEquals(laterSchedule.uuid, schedules[0].uuid) // 14 days from now
+            assertEquals(testScheduleUuid, schedules[1].uuid) // 7 days from now
         }
 
         @Test

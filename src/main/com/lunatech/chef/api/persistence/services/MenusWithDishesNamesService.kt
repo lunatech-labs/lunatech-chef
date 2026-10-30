@@ -5,10 +5,12 @@ import com.lunatech.chef.api.persistence.schemas.Dishes
 import com.lunatech.chef.api.persistence.schemas.DishesOnMenus
 import com.lunatech.chef.api.persistence.schemas.MenuNames
 import org.ktorm.database.Database
+import org.ktorm.dsl.asc
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.from
 import org.ktorm.dsl.leftJoin
 import org.ktorm.dsl.map
+import org.ktorm.dsl.orderBy
 import org.ktorm.dsl.select
 import org.ktorm.dsl.where
 import java.util.UUID
@@ -21,6 +23,7 @@ class MenusWithDishesNamesService(
             .from(MenuNames)
             .select()
             .where { MenuNames.isDeleted eq false }
+            .orderBy(MenuNames.name.asc())
             .map { MenuNames.createEntity(it) }
             .map { menu ->
                 val dishes =

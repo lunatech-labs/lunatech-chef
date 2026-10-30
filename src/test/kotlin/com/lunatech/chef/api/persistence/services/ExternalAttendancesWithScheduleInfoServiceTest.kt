@@ -171,7 +171,7 @@ class ExternalAttendancesWithScheduleInfoServiceTest {
         }
 
         @Test
-        fun `getAllFromDateAndOffice returns external attendances ordered by date`() {
+        fun `getAllFromDateAndOffice returns external attendances ordered by date descending`() {
             val externalAttendance1 =
                 anExternalAttendance(scheduleUuid = testScheduleUuid, attendancesCount = 5)
             val externalAttendance2 =
@@ -183,8 +183,8 @@ class ExternalAttendancesWithScheduleInfoServiceTest {
 
             assertEquals(2, externalAttendances.size)
             // testSchedule is 7 days from now, testSchedule2 is 14 days from now
-            assertEquals(testScheduleUuid, externalAttendances[0].scheduleUuid)
-            assertEquals(testSchedule2Uuid, externalAttendances[1].scheduleUuid)
+            assertEquals(testSchedule2Uuid, externalAttendances[0].scheduleUuid)
+            assertEquals(testScheduleUuid, externalAttendances[1].scheduleUuid)
         }
     }
 }

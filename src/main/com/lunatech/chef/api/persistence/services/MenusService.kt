@@ -10,12 +10,14 @@ import com.lunatech.chef.api.persistence.schemas.Schedules
 import com.lunatech.chef.api.routes.UpdatedMenu
 import org.ktorm.database.Database
 import org.ktorm.dsl.and
+import org.ktorm.dsl.asc
 import org.ktorm.dsl.delete
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.from
 import org.ktorm.dsl.greater
 import org.ktorm.dsl.insert
 import org.ktorm.dsl.map
+import org.ktorm.dsl.orderBy
 import org.ktorm.dsl.select
 import org.ktorm.dsl.update
 import org.ktorm.dsl.where
@@ -31,6 +33,7 @@ class MenusService(
             .from(MenuNames)
             .select()
             .where { MenuNames.isDeleted eq false }
+            .orderBy(MenuNames.name.asc())
             .map { MenuNames.createEntity(it) }
             .map { menuName ->
                 val dishes =

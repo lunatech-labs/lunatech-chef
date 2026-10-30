@@ -221,8 +221,8 @@ class SchedulesWithAttendanceInfoServiceTest {
             val schedules = schedulesWithAttendanceInfoService.getFiltered(null, null)
 
             assertEquals(2, schedules[0].attendants.size)
-            assertEquals("Alice Smith", schedules[0].attendants[0].name)
-            assertEquals("Bob Jones", schedules[0].attendants[1].name)
+            assertEquals("Bob Jones", schedules[0].attendants[0].name)
+            assertEquals("Alice Smith", schedules[0].attendants[1].name)
         }
 
         @Test

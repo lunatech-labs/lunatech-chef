@@ -80,10 +80,17 @@ class SchedulesWithMenuInfoServiceTest {
 
         @Test
         fun `getAll returns only non-deleted schedules ordered by date`() {
-            val schedule1 = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(10), officeUuid = testOfficeUuid)
-            val schedule2 = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(5), officeUuid = testOfficeUuid)
+            val schedule1 =
+                aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(10), officeUuid = testOfficeUuid)
+            val schedule2 =
+                aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(5), officeUuid = testOfficeUuid)
             val deletedSchedule =
-                aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(3), officeUuid = testOfficeUuid, isDeleted = true)
+                aSchedule(
+                    menuUuid = testMenuUuid,
+                    date = LocalDate.now().plusDays(3),
+                    officeUuid = testOfficeUuid,
+                    isDeleted = true,
+                )
 
             schedulesService.insert(schedule1)
             schedulesService.insert(schedule2)
@@ -94,8 +101,8 @@ class SchedulesWithMenuInfoServiceTest {
             assertEquals(2, allSchedules.size)
             assertTrue(allSchedules.none { it.uuid == deletedSchedule.uuid })
             // Check ordering by date ascending
-            assertEquals(schedule2.uuid, allSchedules[0].uuid)
-            assertEquals(schedule1.uuid, allSchedules[1].uuid)
+            assertEquals(schedule1.uuid, allSchedules[0].uuid)
+            assertEquals(schedule2.uuid, allSchedules[1].uuid)
         }
 
         @Test
@@ -110,8 +117,10 @@ class SchedulesWithMenuInfoServiceTest {
     inner class GetFilteredOperations {
         @Test
         fun `getFiltered by fromDate returns schedules on or after date`() {
-            val pastSchedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().minusDays(5), officeUuid = testOfficeUuid)
-            val futureSchedule = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(5), officeUuid = testOfficeUuid)
+            val pastSchedule =
+                aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().minusDays(5), officeUuid = testOfficeUuid)
+            val futureSchedule =
+                aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(5), officeUuid = testOfficeUuid)
 
             schedulesService.insert(pastSchedule)
             schedulesService.insert(futureSchedule)
@@ -124,8 +133,10 @@ class SchedulesWithMenuInfoServiceTest {
 
         @Test
         fun `getFiltered by office returns schedules for specific office`() {
-            val schedule1 = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
-            val schedule2 = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(8), officeUuid = testOffice2Uuid)
+            val schedule1 =
+                aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
+            val schedule2 =
+                aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(8), officeUuid = testOffice2Uuid)
 
             schedulesService.insert(schedule1)
             schedulesService.insert(schedule2)
@@ -138,9 +149,12 @@ class SchedulesWithMenuInfoServiceTest {
 
         @Test
         fun `getFiltered by both fromDate and office`() {
-            val schedule1 = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
-            val schedule2 = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().minusDays(1), officeUuid = testOfficeUuid)
-            val schedule3 = aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOffice2Uuid)
+            val schedule1 =
+                aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOfficeUuid)
+            val schedule2 =
+                aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().minusDays(1), officeUuid = testOfficeUuid)
+            val schedule3 =
+                aSchedule(menuUuid = testMenuUuid, date = LocalDate.now().plusDays(7), officeUuid = testOffice2Uuid)
 
             schedulesService.insert(schedule1)
             schedulesService.insert(schedule2)

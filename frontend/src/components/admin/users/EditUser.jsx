@@ -31,33 +31,12 @@ export function EditUser(props) {
         }
     }
 
-    const restrictionFields = [
-        { name: "optOutLunches", label: "Opted out from all lunches" },
-        { name: "isVegetarian", label: "Vegetarian" },
-        { name: "isGlutenIntolerant", label: "Gluten intolerant" },
-        { name: "isLactoseIntolerant", label: "Lactose intolerant" },
-        { name: "hasHalalRestriction", label: "Only eats halal food" },
-        { name: "hasNutsRestriction", label: "Nuts allergy" },
-        { name: "hasSeafoodRestriction", label: "Seafood allergy" },
-        { name: "hasPorkRestriction", label: "No pork" },
-        { name: "hasBeefRestriction", label: "No beef" },
-    ];
-
     function RenderData() {
         return (
             <Form
                 onSubmit={onSubmit}
                 initialValues={{
                     officeUuid: user.officeUuid,
-                    isVegetarian: user.isVegetarian,
-                    hasHalalRestriction: user.hasHalalRestriction,
-                    hasNutsRestriction: user.hasNutsRestriction,
-                    hasSeafoodRestriction: user.hasSeafoodRestriction,
-                    hasPorkRestriction: user.hasPorkRestriction,
-                    hasBeefRestriction: user.hasBeefRestriction,
-                    isGlutenIntolerant: user.isGlutenIntolerant,
-                    isLactoseIntolerant: user.isLactoseIntolerant,
-                    otherRestrictions: user.otherRestrictions,
                     optOutLunches: user.optOutLunches,
                 }}
                 render={({ handleSubmit, submitting }) => (
@@ -85,22 +64,12 @@ export function EditUser(props) {
                                 </div>
                             </Col>
                         </Row>
-                        {restrictionFields.map(({ name, label }) => (
-                            <Row key={name}>
-                                <Col lg="4">
-                                    <label>
-                                        <Field name={name} component="input" type="checkbox"></Field>
-                                        <span>  {label}</span>
-                                    </label>
-                                </Col>
-                            </Row>
-                        ))}
                         <Row>
-                            <Col lg="2">Other restrictions:</Col>
-                            <Col lg="5">
-                                <div className="d-grid">
-                                    <Field name="otherRestrictions" component="textarea" lines="2"></Field>
-                                </div>
+                            <Col lg="4">
+                                <label>
+                                    <Field name="optOutLunches" component="input" type="checkbox"></Field>
+                                    <span>  Opted out from all lunches</span>
+                                </label>
                             </Col>
                         </Row>
                         <Row className="mt-4">

@@ -26,27 +26,6 @@ export default function ListUsers(props) {
         return office ? office.city : "";
     };
 
-    const restrictionLabels = [
-        ["isVegetarian", "Vegetarian"],
-        ["isGlutenIntolerant", "Gluten intolerant"],
-        ["isLactoseIntolerant", "Lactose intolerant"],
-        ["hasHalalRestriction", "Halal"],
-        ["hasNutsRestriction", "Nuts allergy"],
-        ["hasSeafoodRestriction", "Seafood allergy"],
-        ["hasPorkRestriction", "No pork"],
-        ["hasBeefRestriction", "No beef"],
-    ];
-
-    const restrictionsSummary = (user) => {
-        const labels = restrictionLabels
-            .filter(([field]) => user[field])
-            .map(([, label]) => label);
-        if (user.otherRestrictions) {
-            labels.push(user.otherRestrictions);
-        }
-        return labels.join(", ");
-    };
-
     function RenderData({ isLoading, error, users }) {
         if (isLoading) {
             return (
@@ -69,7 +48,6 @@ export default function ListUsers(props) {
                                 <th>Name</th>
                                 <th>E-mail</th>
                                 <th>Office</th>
-                                <th>Restrictions</th>
                                 <th>Lunches</th>
                                 <th></th>
                                 <th></th>
@@ -89,7 +67,6 @@ export default function ListUsers(props) {
                                         </td>
                                         <td>{user.emailAddress}</td>
                                         <td>{officeCity(user.officeUuid)}</td>
-                                        <td>{restrictionsSummary(user)}</td>
                                         <td>{user.optOutLunches ? "Opted out" : ""}</td>
                                         <td>
                                             <Button

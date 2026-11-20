@@ -36,15 +36,6 @@ export const login = () => (dispatch) => {
 export const saveUserProfile = (userUuid, userProfile) => (dispatch) => {
     const userProfileToSave = {
         officeUuid: userProfile.officeUuid,
-        isVegetarian: userProfile.isVegetarian,
-        hasNutsRestriction: userProfile.hasNutsRestriction,
-        hasHalalRestriction: userProfile.hasHalalRestriction,
-        hasSeafoodRestriction: userProfile.hasSeafoodRestriction,
-        hasPorkRestriction: userProfile.hasPorkRestriction,
-        hasBeefRestriction: userProfile.hasBeefRestriction,
-        isGlutenIntolerant: userProfile.isGlutenIntolerant,
-        isLactoseIntolerant: userProfile.isLactoseIntolerant,
-        otherRestrictions: userProfile.otherRestrictions,
         optOutLunches: userProfile.optOutLunches,
     };
 
@@ -88,15 +79,6 @@ export const fetchAllUsers = () => (dispatch) => {
 export const editUser = (editedUser) => (dispatch) => {
     const userToSave = {
         officeUuid: editedUser.officeUuid,
-        isVegetarian: editedUser.isVegetarian,
-        hasHalalRestriction: editedUser.hasHalalRestriction,
-        hasNutsRestriction: editedUser.hasNutsRestriction,
-        hasSeafoodRestriction: editedUser.hasSeafoodRestriction,
-        hasPorkRestriction: editedUser.hasPorkRestriction,
-        hasBeefRestriction: editedUser.hasBeefRestriction,
-        isGlutenIntolerant: editedUser.isGlutenIntolerant,
-        isLactoseIntolerant: editedUser.isLactoseIntolerant,
-        otherRestrictions: editedUser.otherRestrictions,
         optOutLunches: editedUser.optOutLunches,
     };
 

@@ -7,15 +7,6 @@ const initState = {
     name: "",
     emailAddress: "",
     officeUuid: "",
-    isVegetarian: false,
-    hasHalalRestriction: false,
-    hasNutsRestriction: false,
-    hasSeafoodRestriction: false,
-    hasPorkRestriction: false,
-    hasBeefRestriction: false,
-    isGlutenIntolerant: false,
-    isLactoseIntolerant: false,
-    otherRestrictions: "",
     optOutLunches: false,
     error: null,
     allUsers: [],
@@ -37,15 +28,6 @@ const usersSlice = createSlice({
             state.name = action.payload.name;
             state.emailAddress = action.payload.emailAddress;
             state.officeUuid = action.payload.officeUuid;
-            state.isVegetarian = action.payload.isVegetarian;
-            state.hasHalalRestriction = action.payload.hasHalalRestriction;
-            state.hasNutsRestriction = action.payload.hasNutsRestriction;
-            state.hasSeafoodRestriction = action.payload.hasSeafoodRestriction;
-            state.hasPorkRestriction = action.payload.hasPorkRestriction;
-            state.hasBeefRestriction = action.payload.hasBeefRestriction;
-            state.isGlutenIntolerant = action.payload.isGlutenIntolerant;
-            state.isLactoseIntolerant = action.payload.isLactoseIntolerant;
-            state.otherRestrictions = action.payload.otherRestrictions;
             state.optOutLunches = action.payload.optOutLunches;
             state.error = null;
         },
@@ -59,15 +41,6 @@ const usersSlice = createSlice({
         },
         userUpdatedProfile(state, action) {
             state.officeUuid = action.payload.officeUuid;
-            state.isVegetarian = action.payload.isVegetarian;
-            state.hasHalalRestriction = action.payload.hasHalalRestriction;
-            state.hasNutsRestriction = action.payload.hasNutsRestriction;
-            state.hasSeafoodRestriction = action.payload.hasSeafoodRestriction;
-            state.hasPorkRestriction = action.payload.hasPorkRestriction;
-            state.hasBeefRestriction = action.payload.hasBeefRestriction;
-            state.isGlutenIntolerant = action.payload.isGlutenIntolerant;
-            state.isLactoseIntolerant = action.payload.isLactoseIntolerant;
-            state.otherRestrictions = action.payload.otherRestrictions;
             state.optOutLunches = action.payload.optOutLunches;
             state.error = null;
         },

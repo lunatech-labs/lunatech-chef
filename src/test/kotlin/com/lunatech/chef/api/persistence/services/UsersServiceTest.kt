@@ -96,7 +96,7 @@ class UsersServiceTest {
                     name = "John Doe",
                     emailAddress = uniqueEmail("john"),
                     officeUuid = testOfficeUuid,
-                    isVegetarian = true,
+                    optOutLunches = true,
                 )
 
             usersService.insert(user)
@@ -106,7 +106,7 @@ class UsersServiceTest {
             assertEquals(user.name, retrieved[0].name)
             assertEquals(user.emailAddress, retrieved[0].emailAddress)
             assertEquals(testOfficeUuid, retrieved[0].officeUuid)
-            assertTrue(retrieved[0].isVegetarian)
+            assertTrue(retrieved[0].optOutLunches)
         }
 
         @Test
@@ -126,39 +126,7 @@ class UsersServiceTest {
         }
 
         @Test
-        fun `insert user with all dietary restrictions`() {
-            val user =
-                aUser(
-                    name = "Restricted User",
-                    emailAddress = uniqueEmail("restricted"),
-                    officeUuid = testOfficeUuid,
-                    isVegetarian = true,
-                    hasHalalRestriction = true,
-                    hasNutsRestriction = true,
-                    hasSeafoodRestriction = true,
-                    hasPorkRestriction = true,
-                    hasBeefRestriction = true,
-                    isGlutenIntolerant = true,
-                    isLactoseIntolerant = true,
-                    otherRestrictions = "Many restrictions",
-                )
-
-            usersService.insert(user)
-            val retrieved = usersService.getByUuid(user.uuid)[0]
-
-            assertTrue(retrieved.isVegetarian, "isVegetarian should be true")
-            assertTrue(retrieved.hasHalalRestriction, "hasHalalRestriction should be true")
-            assertTrue(retrieved.hasNutsRestriction, "hasNutsRestriction should be true")
-            assertTrue(retrieved.hasSeafoodRestriction, "hasSeafoodRestriction should be true")
-            assertTrue(retrieved.hasPorkRestriction, "hasPorkRestriction should be true")
-            assertTrue(retrieved.hasBeefRestriction, "hasBeefRestriction should be true")
-            assertTrue(retrieved.isGlutenIntolerant, "isGlutenIntolerant should be true")
-            assertTrue(retrieved.isLactoseIntolerant, "isLactoseIntolerant should be true")
-            assertEquals("Many restrictions", retrieved.otherRestrictions)
-        }
-
-        @Test
-        fun `insert user with default dietary restrictions as false`() {
+        fun `insert user with opt out from lunches defaulting to false`() {
             val user =
                 aUser(
                     name = "Default User",
@@ -169,14 +137,7 @@ class UsersServiceTest {
             usersService.insert(user)
             val retrieved = usersService.getByUuid(user.uuid)[0]
 
-            assertFalse(retrieved.isVegetarian)
-            assertFalse(retrieved.hasHalalRestriction)
-            assertFalse(retrieved.hasNutsRestriction)
-            assertFalse(retrieved.hasSeafoodRestriction)
-            assertFalse(retrieved.hasPorkRestriction)
-            assertFalse(retrieved.hasBeefRestriction)
-            assertFalse(retrieved.isGlutenIntolerant)
-            assertFalse(retrieved.isLactoseIntolerant)
+            assertFalse(retrieved.optOutLunches)
         }
     }
 
@@ -264,57 +225,11 @@ class UsersServiceTest {
             val user = aUser(name = "John Doe", emailAddress = uniqueEmail("john"), officeUuid = testOfficeUuid)
             usersService.insert(user)
 
-            val updatedUser =
-                UpdatedUser(
-                    officeUuid = testOfficeUuid,
-                    isVegetarian = true,
-                    hasHalalRestriction = false,
-                    hasNutsRestriction = false,
-                    hasSeafoodRestriction = false,
-                    hasPorkRestriction = false,
-                    hasBeefRestriction = false,
-                    isGlutenIntolerant = false,
-                    isLactoseIntolerant = false,
-                    otherRestrictions = "",
-                )
+            val updatedUser = UpdatedUser(officeUuid = testOfficeUuid, optOutLunches = true)
 
             val updateResult = usersService.update(user.uuid, updatedUser)
 
             assertEquals(1, updateResult, "Update should return 1 for successful update")
-        }
-
-        @Test
-        fun `update modifies user dietary restrictions`() {
-            val user =
-                aUser(
-                    name = "John Doe",
-                    emailAddress = uniqueEmail("john"),
-                    officeUuid = testOfficeUuid,
-                    isVegetarian = false,
-                )
-            usersService.insert(user)
-
-            val updatedUser =
-                UpdatedUser(
-                    officeUuid = testOfficeUuid,
-                    isVegetarian = true,
-                    hasHalalRestriction = true,
-                    hasNutsRestriction = true,
-                    hasSeafoodRestriction = false,
-                    hasPorkRestriction = false,
-                    hasBeefRestriction = false,
-                    isGlutenIntolerant = false,
-                    isLactoseIntolerant = false,
-                    otherRestrictions = "No spicy food",
-                )
-            usersService.update(user.uuid, updatedUser)
-
-            val retrieved = usersService.getByUuid(user.uuid)[0]
-
-            assertTrue(retrieved.isVegetarian)
-            assertTrue(retrieved.hasHalalRestriction)
-            assertTrue(retrieved.hasNutsRestriction)
-            assertEquals("No spicy food", retrieved.otherRestrictions)
         }
 
         @Test
@@ -342,19 +257,7 @@ class UsersServiceTest {
         @Test
         fun `update returns 0 for non-existent user`() {
             val nonExistentUuid = UUID.randomUUID()
-            val updatedUser =
-                UpdatedUser(
-                    officeUuid = testOfficeUuid,
-                    isVegetarian = false,
-                    hasHalalRestriction = false,
-                    hasNutsRestriction = false,
-                    hasSeafoodRestriction = false,
-                    hasPorkRestriction = false,
-                    hasBeefRestriction = false,
-                    isGlutenIntolerant = false,
-                    isLactoseIntolerant = false,
-                    otherRestrictions = "",
-                )
+            val updatedUser = UpdatedUser(officeUuid = testOfficeUuid)
 
             val updateResult = usersService.update(nonExistentUuid, updatedUser)
 
@@ -495,7 +398,7 @@ class UsersServiceTest {
         @Test
         fun `update invalidates the cache so a later lookup sees fresh data`() {
             val email = uniqueEmail("cacheupdate")
-            val user = aUser(name = "John Doe", emailAddress = email, officeUuid = testOfficeUuid, isVegetarian = false)
+            val user = aUser(name = "John Doe", emailAddress = email, officeUuid = testOfficeUuid, optOutLunches = false)
             usersService.insert(user)
             usersService.getByEmailAddress(email)
 
@@ -503,22 +406,14 @@ class UsersServiceTest {
                 user.uuid,
                 UpdatedUser(
                     officeUuid = testOfficeUuid,
-                    isVegetarian = true,
-                    hasHalalRestriction = false,
-                    hasNutsRestriction = false,
-                    hasSeafoodRestriction = false,
-                    hasPorkRestriction = false,
-                    hasBeefRestriction = false,
-                    isGlutenIntolerant = false,
-                    isLactoseIntolerant = false,
-                    otherRestrictions = "",
+                    optOutLunches = true,
                 ),
             )
 
             val retrieved = usersService.getByEmailAddress(email)
 
             assertTrue(
-                retrieved!!.isVegetarian,
+                retrieved!!.optOutLunches,
                 "Lookup after update should reflect fresh data, not a stale cached entry",
             )
         }
@@ -588,15 +483,7 @@ class UsersServiceTest {
                 updatedUser.uuid,
                 UpdatedUser(
                     officeUuid = testOfficeUuid,
-                    isVegetarian = true,
-                    hasHalalRestriction = false,
-                    hasNutsRestriction = false,
-                    hasSeafoodRestriction = false,
-                    hasPorkRestriction = false,
-                    hasBeefRestriction = false,
-                    isGlutenIntolerant = false,
-                    isLactoseIntolerant = false,
-                    otherRestrictions = "",
+                    optOutLunches = true,
                 ),
             )
 

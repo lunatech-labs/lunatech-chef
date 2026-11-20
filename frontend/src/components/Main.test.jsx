@@ -31,15 +31,6 @@ const me = {
     emailAddress: "normal.user@lunatech.nl",
     isAdmin: false,
     officeUuid: "office-1",
-    isVegetarian: false,
-    hasHalalRestriction: false,
-    hasNutsRestriction: false,
-    hasSeafoodRestriction: false,
-    hasPorkRestriction: false,
-    hasBeefRestriction: false,
-    isGlutenIntolerant: false,
-    isLactoseIntolerant: false,
-    otherRestrictions: "",
     optOutLunches: false,
 };
 

@@ -59,7 +59,6 @@ class SchedulesWithAttendanceInfoServiceTest {
                 name = "Alice Smith",
                 emailAddress = uniqueEmail("alice"),
                 officeUuid = testOfficeUuid,
-                isVegetarian = true,
             )
         val testUser2 = aUser(name = "Bob Jones", emailAddress = uniqueEmail("bob"), officeUuid = testOfficeUuid)
         usersService.insert(testUser)

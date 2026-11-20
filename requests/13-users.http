@@ -5,16 +5,7 @@ Authorization: Bearer {{ token }}
 {
   "name": "Maria do Carmo",
   "emailAddress": "maria.do.carmo@lunatech.nl",
-  "officeUuid": "4f3a4488-241b-42f7-8c4e-de50fe4d1f57",
-  "isVegetarian": "false",
-  "hasHalalRestriction": "false",
-  "hasNutsRestriction": "false",
-  "hasSeafoodRestriction": "false",
-  "hasPorkRestriction": "true",
-  "hasBeefRestriction": "false",
-  "isGlutenIntolerant": "false",
-  "isLactoseIntolerant": "true",
-  "otherRestrictions": "spicy food"
+  "officeUuid": "4f3a4488-241b-42f7-8c4e-de50fe4d1f57"
 }
 
 ###
@@ -34,16 +25,7 @@ Content-Type: application/json
 Authorization: Bearer {{ token }}
 
 {
-  "officeUuid": "3d13f21d-a96e-4fd2-a2a9-3077f2729caf",
-  "isVegetarian": "false",
-  "hasHalalRestriction": "true",
-  "hasNutsRestriction": "false",
-  "hasSeafoodRestriction": "false",
-  "hasPorkRestriction": "true",
-  "hasBeefRestriction": "false",
-  "isGlutenIntolerant": "false",
-  "isLactoseIntolerant": "true",
-  "otherRestrictions": "I like vegetarian food a lot"
+  "officeUuid": "3d13f21d-a96e-4fd2-a2a9-3077f2729caf"
 }
 
 ###

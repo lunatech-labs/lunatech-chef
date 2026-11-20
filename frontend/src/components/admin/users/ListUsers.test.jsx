@@ -31,15 +31,6 @@ const adminMe = {
     emailAddress: "admin.user@lunatech.nl",
     isAdmin: true,
     officeUuid: "office-1",
-    isVegetarian: false,
-    hasHalalRestriction: false,
-    hasNutsRestriction: false,
-    hasSeafoodRestriction: false,
-    hasPorkRestriction: false,
-    hasBeefRestriction: false,
-    isGlutenIntolerant: false,
-    isLactoseIntolerant: false,
-    otherRestrictions: "",
     optOutLunches: false,
 };
 
@@ -54,15 +45,6 @@ const employees = [
         name: "John Smith",
         emailAddress: "john.smith@lunatech.nl",
         officeUuid: null,
-        isVegetarian: false,
-        hasHalalRestriction: false,
-        hasNutsRestriction: false,
-        hasSeafoodRestriction: false,
-        hasPorkRestriction: false,
-        hasBeefRestriction: false,
-        isGlutenIntolerant: false,
-        isLactoseIntolerant: false,
-        otherRestrictions: "",
         optOutLunches: true,
     },
     {
@@ -70,15 +52,6 @@ const employees = [
         name: "Jane Doe",
         emailAddress: "jane.doe@lunatech.nl",
         officeUuid: "office-2",
-        isVegetarian: true,
-        hasHalalRestriction: false,
-        hasNutsRestriction: false,
-        hasSeafoodRestriction: false,
-        hasPorkRestriction: false,
-        hasBeefRestriction: false,
-        isGlutenIntolerant: false,
-        isLactoseIntolerant: false,
-        otherRestrictions: "",
         optOutLunches: false,
     },
     {
@@ -86,15 +59,6 @@ const employees = [
         name: "Gone Person",
         emailAddress: "gone.person@lunatech.nl",
         officeUuid: "office-1",
-        isVegetarian: false,
-        hasHalalRestriction: false,
-        hasNutsRestriction: false,
-        hasSeafoodRestriction: false,
-        hasPorkRestriction: false,
-        hasBeefRestriction: false,
-        isGlutenIntolerant: false,
-        isLactoseIntolerant: false,
-        otherRestrictions: "",
         optOutLunches: false,
         isInactive: true,
     },
@@ -142,21 +106,12 @@ test("editing an employee saves the changed profile via the API", async () => {
     await userEvent.click(within(row).getByRole("button", { name: "Edit" }));
 
     expect(await screen.findByText("Editing Employee")).toBeInTheDocument();
-    await userEvent.click(screen.getByRole("checkbox", { name: /gluten intolerant/i }));
+    await userEvent.click(screen.getByRole("checkbox", { name: /opted out from all lunches/i }));
     await userEvent.click(screen.getByRole("button", { name: "Save Employee" }));
 
     expect(axiosInstance.put).toHaveBeenCalledWith("/users/user-1", {
         officeUuid: "office-2",
-        isVegetarian: true,
-        hasHalalRestriction: false,
-        hasNutsRestriction: false,
-        hasSeafoodRestriction: false,
-        hasPorkRestriction: false,
-        hasBeefRestriction: false,
-        isGlutenIntolerant: true,
-        isLactoseIntolerant: false,
-        otherRestrictions: "",
-        optOutLunches: false,
+        optOutLunches: true,
     });
     expect(await screen.findByText("Management of Employees")).toBeInTheDocument();
 });
@@ -179,11 +134,8 @@ test("non-admin users do not get an Employees entry in the sidebar", async () =>
     expect(screen.queryByText("Employees")).not.toBeInTheDocument();
 });
 
-test("the list shows dietary restrictions and opt-out status", async () => {
+test("the list shows opt-out status", async () => {
     renderAt("/allusers");
-
-    const jane = (await screen.findByText("Jane Doe")).closest("tr");
-    expect(within(jane).getByText("Vegetarian")).toBeInTheDocument();
 
     const john = (await screen.findByText("John Smith")).closest("tr");
     expect(within(john).getByText("Opted out")).toBeInTheDocument();

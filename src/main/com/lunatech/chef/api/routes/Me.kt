@@ -19,15 +19,6 @@ data class UserProfile(
     val name: String,
     val emailAddress: String,
     val officeUuid: String,
-    val isVegetarian: Boolean = false,
-    val hasHalalRestriction: Boolean = false,
-    val hasNutsRestriction: Boolean = false,
-    val hasSeafoodRestriction: Boolean = false,
-    val hasPorkRestriction: Boolean = false,
-    val hasBeefRestriction: Boolean = false,
-    val isGlutenIntolerant: Boolean = false,
-    val isLactoseIntolerant: Boolean = false,
-    val otherRestrictions: String = "",
     val optOutLunches: Boolean = false,
 ) {
     companion object {
@@ -41,15 +32,6 @@ data class UserProfile(
                 name = user.name,
                 emailAddress = user.emailAddress,
                 officeUuid = user.officeUuid?.toString() ?: "",
-                isVegetarian = user.isVegetarian,
-                hasHalalRestriction = user.hasHalalRestriction,
-                hasNutsRestriction = user.hasNutsRestriction,
-                hasSeafoodRestriction = user.hasSeafoodRestriction,
-                hasPorkRestriction = user.hasPorkRestriction,
-                hasBeefRestriction = user.hasBeefRestriction,
-                isGlutenIntolerant = user.isGlutenIntolerant,
-                isLactoseIntolerant = user.isLactoseIntolerant,
-                otherRestrictions = user.otherRestrictions,
                 optOutLunches = user.optOutLunches,
             )
     }

@@ -26,15 +26,6 @@ private val logger = KotlinLogging.logger {}
 
 data class UpdatedUser(
     val officeUuid: UUID?,
-    val isVegetarian: Boolean = false,
-    val hasHalalRestriction: Boolean = false,
-    val hasNutsRestriction: Boolean = false,
-    val hasSeafoodRestriction: Boolean = false,
-    val hasPorkRestriction: Boolean = false,
-    val hasBeefRestriction: Boolean = false,
-    val isGlutenIntolerant: Boolean = false,
-    val isLactoseIntolerant: Boolean = false,
-    val otherRestrictions: String = "",
     val optOutLunches: Boolean = false,
 )
 

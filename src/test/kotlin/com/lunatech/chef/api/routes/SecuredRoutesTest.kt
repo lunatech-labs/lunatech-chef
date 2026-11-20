@@ -124,7 +124,7 @@ class SecuredRoutesTest {
         }
     }
 
-    private fun anUpdatedUser() = UpdatedUser(officeUuid = testOfficeUuid, isVegetarian = true)
+    private fun anUpdatedUser() = UpdatedUser(officeUuid = testOfficeUuid, optOutLunches = true)
 
     @Nested
     inner class WithoutSession {

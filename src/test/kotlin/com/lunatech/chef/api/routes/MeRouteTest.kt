@@ -101,7 +101,7 @@ class MeRouteTest {
     fun `returns the stored profile for an existing user`() =
         testApplication {
             setupMeRoute()
-            val user = aUser(name = "Veggie User", emailAddress = uniqueEmail("veggie"), isVegetarian = true)
+            val user = aUser(name = "Existing User", emailAddress = uniqueEmail("existing"), optOutLunches = true)
             usersService.insert(user)
             val client = jsonClient()
 
@@ -109,7 +109,7 @@ class MeRouteTest {
 
             val profile = response.body<UserProfile>()
             assertEquals(user.uuid, profile.uuid)
-            assertTrue(profile.isVegetarian)
+            assertTrue(profile.optOutLunches)
         }
 
     @Test

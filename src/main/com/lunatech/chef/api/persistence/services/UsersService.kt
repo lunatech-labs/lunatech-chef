@@ -65,15 +65,6 @@ class UsersService(
                 set(it.name, user.name)
                 set(it.emailAddress, user.emailAddress)
                 set(it.officeUuid, user.officeUuid)
-                set(it.isVegetarian, user.isVegetarian)
-                set(it.hasHalalRestriction, user.hasHalalRestriction)
-                set(it.hasNutsRestriction, user.hasNutsRestriction)
-                set(it.hasSeafoodRestriction, user.hasSeafoodRestriction)
-                set(it.hasPorkRestriction, user.hasPorkRestriction)
-                set(it.hasBeefRestriction, user.hasBeefRestriction)
-                set(it.isGlutenIntolerant, user.isGlutenIntolerant)
-                set(it.isLactoseIntolerant, user.isLactoseIntolerant)
-                set(it.otherRestrictions, user.otherRestrictions)
                 set(it.optOutLunches, user.optOutLunches)
                 set(it.isInactive, user.isInactive)
                 set(it.isDeleted, user.isDeleted)
@@ -86,15 +77,6 @@ class UsersService(
         database
             .update(Users) {
                 set(it.officeUuid, user.officeUuid)
-                set(it.isVegetarian, user.isVegetarian)
-                set(it.hasHalalRestriction, user.hasHalalRestriction)
-                set(it.hasNutsRestriction, user.hasNutsRestriction)
-                set(it.hasSeafoodRestriction, user.hasSeafoodRestriction)
-                set(it.hasPorkRestriction, user.hasPorkRestriction)
-                set(it.hasBeefRestriction, user.hasBeefRestriction)
-                set(it.isGlutenIntolerant, user.isGlutenIntolerant)
-                set(it.isLactoseIntolerant, user.isLactoseIntolerant)
-                set(it.otherRestrictions, user.otherRestrictions)
                 set(it.optOutLunches, user.optOutLunches)
                 where {
                     it.uuid eq uuid

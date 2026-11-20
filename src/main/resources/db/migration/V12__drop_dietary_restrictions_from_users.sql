@@ -1,0 +1,10 @@
+ALTER TABLE users
+    DROP COLUMN is_vegetarian,
+    DROP COLUMN has_halal_restriction,
+    DROP COLUMN has_nuts_restriction,
+    DROP COLUMN has_seafood_restriction,
+    DROP COLUMN has_pork_restriction,
+    DROP COLUMN has_beef_restriction,
+    DROP COLUMN is_gluten_intolerant,
+    DROP COLUMN is_lactose_intolerant,
+    DROP COLUMN other_restrictions;

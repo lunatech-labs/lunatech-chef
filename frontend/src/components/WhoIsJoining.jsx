@@ -216,19 +216,6 @@ export default function WhoIsJoining(props) {
                                                     return (
                                                         <tr key={attendant.uuid}>
                                                             <td><b>{attendant.name} </b></td>
-                                                            {attendant.isVegetarian ? (<td>Vegetarian</td>) : ("")}
-                                                            {attendant.hasHalalRestriction ? (<td>Halal only</td>) : ("")}
-                                                            {attendant.hasNutsRestriction ? (<td>Nuts allergy</td>) : ("")}
-                                                            {attendant.hasSeafoodRestriction ? (
-                                                                <td>Seafood allergy</td>) : ("")}
-                                                            {attendant.hasPorkRestriction ? (<td>No pork</td>) : ("")}
-                                                            {attendant.hasBeefRestriction ? (<td>No beef</td>) : ("")}
-                                                            {attendant.isGlutenIntolerant ? (
-                                                                <td>Gluten intolerant</td>) : ("")}
-                                                            {attendant.isLactoseIntolerant ? (
-                                                                <td>Lactose intolerant</td>) : ("")}
-                                                            {attendant.otherRestrictions ? (
-                                                                <td>{attendant.otherRestrictions}</td>) : ("")}
                                                         </tr>
                                                     );
                                                 })}

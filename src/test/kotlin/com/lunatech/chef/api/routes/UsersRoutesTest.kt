@@ -163,7 +163,6 @@ class UsersRoutesTest {
                                 "name" to "Jane Doe",
                                 "emailAddress" to "jane@lunatech.nl",
                                 "officeUuid" to testOfficeUuid.toString(),
-                                "isVegetarian" to true,
                             ),
                         )
                     }
@@ -218,7 +217,7 @@ class UsersRoutesTest {
             testApplication {
                 setupUsersRoutes()
                 val client = authenticatedJsonClient(anAdminToken())
-                val user = aUser(name = "John Doe", emailAddress = uniqueEmail("john"), officeUuid = testOfficeUuid, isVegetarian = false)
+                val user = aUser(name = "John Doe", emailAddress = uniqueEmail("john"), officeUuid = testOfficeUuid)
                 usersService.insert(user)
 
                 val response =
@@ -227,24 +226,14 @@ class UsersRoutesTest {
                         setBody(
                             mapOf(
                                 "officeUuid" to testOfficeUuid.toString(),
-                                "isVegetarian" to true,
-                                "hasHalalRestriction" to true,
-                                "hasNutsRestriction" to false,
-                                "hasSeafoodRestriction" to false,
-                                "hasPorkRestriction" to false,
-                                "hasBeefRestriction" to false,
-                                "isGlutenIntolerant" to false,
-                                "isLactoseIntolerant" to false,
-                                "otherRestrictions" to "No spicy food",
+                                "optOutLunches" to true,
                             ),
                         )
                     }
 
                 assertEquals(HttpStatusCode.OK, response.status)
                 val updated = usersService.getByUuid(user.uuid)
-                assertTrue(updated[0].isVegetarian)
-                assertTrue(updated[0].hasHalalRestriction)
-                assertEquals("No spicy food", updated[0].otherRestrictions)
+                assertTrue(updated[0].optOutLunches)
             }
     }
 
